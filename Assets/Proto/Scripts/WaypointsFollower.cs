@@ -7,11 +7,13 @@ namespace AppleShooterProto{
 	public interface IWaypointsFollower{
 		void SetPosition(Vector3 position);
 		Vector3 GetPosition();
+		float GetSpeed();
 		IWaypoint GetCurrentWaypoint();
 		void SetNextWaypoint();
 		void SetWaypoints(
 			List<IWaypoint> waypoints
 		);
+		void StartFollowing();
 	}
 	public class WaypointsFollower: IWaypointsFollower{
 		public WaypointsFollower(
@@ -24,8 +26,11 @@ namespace AppleShooterProto{
 		readonly IWaypointsFollowerAdaptor thisAdaptor;
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisFollowSpeed;
+		public float GetSpeed(){
+			return thisFollowSpeed;
+		}
 		IFollowWaypointProcess thisProcess;
-		void StartFollowing(){
+		public void StartFollowing(){
 			thisProcess = thisProcessFactory.CreateFollowWaypointProcess(
 				this,
 				thisFollowSpeed
@@ -50,10 +55,15 @@ namespace AppleShooterProto{
 		}
 		List<IWaypoint> thisWaypointList;
 		public void SetNextWaypoint(){
-			int curIndex = thisWaypointList.IndexOf(thisCurWaypoint);
 			IWaypoint nextWaypoint = null;
-			if(curIndex != thisWaypointList.Count -1)
-				nextWaypoint = thisWaypointList[curIndex + 1];
+
+			if(thisCurWaypoint == null){
+				nextWaypoint = thisWaypointList[0];
+			}else{
+				int curIndex = thisWaypointList.IndexOf(thisCurWaypoint);
+				if(curIndex != thisWaypointList.Count -1)
+					nextWaypoint = thisWaypointList[curIndex + 1];
+			}
 			
 			thisCurWaypoint = nextWaypoint;
 		}

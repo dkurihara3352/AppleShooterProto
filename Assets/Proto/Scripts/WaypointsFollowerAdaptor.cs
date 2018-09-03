@@ -10,10 +10,12 @@ namespace AppleShooterProto{
 		
 	}
 	public interface IWaypointsFollowerAdaptor: IMonoBehaviourAdaptor{
+		void Initialize();
+		void SetUpWaypointsFollower();
 		IWaypointsFollower GetWaypointsFollower();
 	}
 	public class WaypointsFollowerAdaptor : MonoBehaviour, IWaypointsFollowerAdaptor {
-		void Initialize(){
+		public void Initialize(){
 			thisProcessFactory = new AppleShooterProcessFactory(
 				processManager
 			);
@@ -25,7 +27,7 @@ namespace AppleShooterProto{
 		}
 		IAppleShooterProcessFactory thisProcessFactory;
 		public float followSpeed;
-		void SetUpWaypointsFollower(){
+		public void SetUpWaypointsFollower(){
 			IWaypointsFollowerConstArg arg = new WaypointsFollowerConstArg(
 				this, 
 				thisProcessFactory,
