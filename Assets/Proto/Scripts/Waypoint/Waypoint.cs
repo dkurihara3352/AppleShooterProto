@@ -27,20 +27,23 @@ namespace AppleShooterProto{
 		public Vector3 GetPreviousWaypointPosition(){
 			return thisPreviousWaypointPosition;
 		}
-		Vector3 thisPreviousWaypointPosition;
+		Vector3 thisPreviousWaypointPosition{
+			get{
+				if(thisPrevWaypoint != null)
+					return thisPrevWaypoint.GetPosition();
+				else{
+					IWaypointsFollower follower = thisWaypointsManager.GetFollower();
+					return follower.GetPosition();
+				}
+			}
+		}
+		IWaypoint thisPrevWaypoint;
 		float thisDistanceFromPreviousWaypoint;
 		public void CacheDistanceFromPreviousWaypoint(
 			IWaypoint prevWaypoint
 		){
-			Vector3 prevWaypointPosition = new Vector3();
-			if(prevWaypoint == null){
-				IWaypointsFollower follower = thisWaypointsManager.GetFollower();
-				prevWaypointPosition = follower.GetPosition();
-			}else
-				prevWaypointPosition = prevWaypoint.GetPosition();
-
-			thisPreviousWaypointPosition = prevWaypointPosition;
-			Vector3 displacement = this.GetPosition() - prevWaypointPosition;
+			thisPrevWaypoint = prevWaypoint;
+			Vector3 displacement = this.GetPosition() - thisPreviousWaypointPosition;
 			thisDistanceFromPreviousWaypoint = displacement.magnitude;
 		}
 		float thisRequiredTime;

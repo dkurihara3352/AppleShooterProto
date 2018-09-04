@@ -14,11 +14,13 @@ namespace AppleShooterProto{
 			List<IWaypoint> waypoints
 		);
 		void StartFollowing();
+		void SetWaypointGroup(IWaypointGroup group);
 	}
 	public class WaypointsFollower: IWaypointsFollower{
 		public WaypointsFollower(
 			IWaypointsFollowerConstArg arg
 		){
+			thisWaypointsManager = arg.waypointsManager;
 			thisAdaptor = arg.adaptor;
 			thisProcessFactory = arg.processFactory;
 			thisFollowSpeed = arg.followSpeed;
@@ -26,6 +28,7 @@ namespace AppleShooterProto{
 		readonly IWaypointsFollowerAdaptor thisAdaptor;
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisFollowSpeed;
+		readonly IWaypointsManager thisWaypointsManager;
 		public float GetSpeed(){
 			return thisFollowSpeed;
 		}
@@ -49,6 +52,13 @@ namespace AppleShooterProto{
 		public Vector3 GetPosition(){
 			return thisAdaptor.GetPosition();
 		}
+
+
+		/* Waypoint access */
+		IWaypointGroup thisCurrentWaypointGroup;
+		public void SetWaypointGroup(IWaypointGroup group){
+			thisCurrentWaypointGroup = group;
+		}
 		IWaypoint thisCurWaypoint;
 		public IWaypoint GetCurrentWaypoint(){
 			return thisCurWaypoint;
@@ -58,11 +68,20 @@ namespace AppleShooterProto{
 			IWaypoint nextWaypoint = null;
 
 			if(thisCurWaypoint == null){
+				thisWaypointList = thisCurrentWaypointGroup.GetWaypoints();
 				nextWaypoint = thisWaypointList[0];
 			}else{
 				int curIndex = thisWaypointList.IndexOf(thisCurWaypoint);
-				if(curIndex != thisWaypointList.Count -1)
+				if(curIndex != thisWaypointList.Count -1){
 					nextWaypoint = thisWaypointList[curIndex + 1];
+				}else{
+					IWaypointGroup nextWaypointGroup = thisWaypointsManager.GetNextWaypointGroup(thisCurrentWaypointGroup);
+					if(nextWaypointGroup != null){
+						thisCurrentWaypointGroup = nextWaypointGroup;
+						thisWaypointList = nextWaypointGroup.GetWaypoints();
+						nextWaypoint = thisWaypointList[0];
+					}
+				}
 			}
 			
 			thisCurWaypoint = nextWaypoint;
@@ -74,20 +93,25 @@ namespace AppleShooterProto{
 
 
 	public interface IWaypointsFollowerConstArg{
+		IWaypointsManager waypointsManager{get;}
 		IWaypointsFollowerAdaptor adaptor{get;}
 		IAppleShooterProcessFactory processFactory{get;}
 		float followSpeed{get;}
 	}
 	public struct WaypointsFollowerConstArg: IWaypointsFollowerConstArg{
 		public WaypointsFollowerConstArg(
+			IWaypointsManager waypointsManager,
 			IWaypointsFollowerAdaptor adaptor,
 			IAppleShooterProcessFactory processFactory,
 			float followSpeed
 		){
+			thisManager = waypointsManager;
 			thisAdaptor = adaptor;
 			thisProcessFactory = processFactory;
 			thisFollowSpeed = followSpeed;
 		}
+		readonly IWaypointsManager thisManager;
+		public IWaypointsManager waypointsManager{get{return thisManager;}}
 		readonly IWaypointsFollowerAdaptor thisAdaptor;
 		public IWaypointsFollowerAdaptor adaptor{get{return thisAdaptor;}}
 		readonly IAppleShooterProcessFactory thisProcessFactory;

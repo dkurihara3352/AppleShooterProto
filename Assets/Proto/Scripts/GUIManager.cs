@@ -19,21 +19,31 @@ namespace AppleShooterProto{
 			Rect subR_1 = GetSubRect(
 				masterRect,
 				0,
-				2
+				3
 			);
 			Rect subR_2 = GetSubRect(
 				masterRect,
 				1,
-				2
+				3
+			);
+			Rect subR_3 = GetSubRect(
+				masterRect,
+				2,
+				3
 			);
 			if(drawsWaypointFollowerSetUp){
 				if(GUI.Button(
 					subR_1,
 					"SetUpFollwer"
 				))
-					gameManager.SetUpFollowerWithWaypoints();
+					gameManager.SetUpFollowerAndWithManager();
 				if(GUI.Button(
 					subR_2,
+					"PlaceWaypointGroups"
+				))
+					gameManager.PlaceWaypointGroups();
+				if(GUI.Button(
+					subR_3,
 					"StartFollowing"
 				))
 					gameManager.StartFollowerFollow();

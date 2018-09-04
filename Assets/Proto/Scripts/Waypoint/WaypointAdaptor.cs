@@ -6,6 +6,8 @@ namespace AppleShooterProto{
 	public interface IWaypointAdaptor{
 		IWaypoint GetWaypoint();
 		Vector3 GetPosition();
+		void SetWaypointManager(IWaypointsManager manager);
+		void CreateAndSetWaypoint();
 	}
 	public class WaypointAdaptor: MonoBehaviour, IWaypointAdaptor{
 		public void SetWaypointManager(IWaypointsManager manager){
