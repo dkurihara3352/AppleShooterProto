@@ -9,7 +9,7 @@ namespace AppleShooterProto{
 		void SetPosition(Vector3 position);
 		
 	}
-	public interface IWaypointsFollowerAdaptor: IMonoBehaviourAdaptor{
+	public interface IWaypointsFollowerAdaptor: ISmoothFollowTargetMBAdaptor{
 		void Initialize();
 		void SetUpWaypointsFollower(IWaypointsManager waypointsManager);
 		IWaypointsFollower GetWaypointsFollower();

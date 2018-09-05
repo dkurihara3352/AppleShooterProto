@@ -9,6 +9,11 @@ namespace AppleShooterProto{
 			IWaypointsFollower follower,
 			float speed
 		);
+		ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
+			ISmoothFollower follower,
+			ISmoothFollowTargetMBAdaptor target,
+			float smoothCoefficient
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -28,6 +33,20 @@ namespace AppleShooterProto{
 				speed
 			);
 			return new FollowWaypointProcess(arg);
+		}
+
+		public ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
+			ISmoothFollower smoothFollower,
+			ISmoothFollowTargetMBAdaptor target,
+			float smoothCoefficient
+		){
+			ISmoothFollowTargetProcessConstArg arg = new SmoothFollowTargetProcessConstArg(
+				thisProcessManager,
+				smoothFollower,
+				target,
+				smoothCoefficient
+			);
+			return new SmoothFollowTargetProcess(arg);
 		}
 	}
 }

@@ -10,6 +10,11 @@ namespace AppleShooterProto{
 		IWaypointConnection GetConnection();
 		void SetUpWaypoints(float speed);
 		void Connect(IWaypointGroup prevWaypointGroup);
+		void UpdateConnectedWaypointCacheData(
+			IWaypointGroup nextGroup, 
+			float speed
+		);
+		void SetPosition(Vector3 position);
 	}
 	public class WaypointGroup : IWaypointGroup {
 		public WaypointGroup(
@@ -28,16 +33,19 @@ namespace AppleShooterProto{
 		readonly List<IWaypointAdaptor> thisChildWaypointAdaptors;
 		List<IWaypoint> thisWaypoints;
 		public void SetUpWaypoints(float speed){
-			SetUpWaypointsOnAllAdaptors();
+			SetUpWaypointsOnAllWaypointAdaptors();
 			List<IWaypoint> waypoints = GetWaypointsFromAdaptors();
-			CacheDistanceOnAllWaypoints(waypoints);
+			thisWaypoints = waypoints;
+			CacheTravelData(speed);
+		}
+		void CacheTravelData(float speed){
+			CacheDistanceOnAllWaypoints(thisWaypoints);
 			CacheRequiredTimeOnAllWaypoints(
-				waypoints,
+				thisWaypoints,
 				speed
 			);
-			thisWaypoints = waypoints;
 		}
-		void SetUpWaypointsOnAllAdaptors(){
+		void SetUpWaypointsOnAllWaypointAdaptors(){
 			foreach(IWaypointAdaptor adaptor in thisChildWaypointAdaptors){
 				adaptor.SetWaypointManager(
 					thisManager
@@ -84,55 +92,67 @@ namespace AppleShooterProto{
 			return thisConnection;
 		}
 		public void Connect(IWaypointGroup prevWaypointGroup){
-			IWaypointConnection connection;
+			IWaypointConnection prevConnection;
 			if(prevWaypointGroup != null){
-				connection = prevWaypointGroup.GetConnection();
+				prevConnection = prevWaypointGroup.GetConnection();
 			}else{
-				connection = GetInitialConnection();
+				prevConnection = GetInitialConnection();
 			}
-			this.SetPosition(connection.position);
-			this.SetYRotation(connection.yRotation);
+			this.SetPosition(prevConnection.position);
+			this.SetRotation(prevConnection.rotation);
 			UpdateConnection();
 		}
 		IWaypointConnection GetInitialConnection(){
 			return thisManager.GetInitialConnection();
 		}
-		void SetPosition(Vector3 position){
+		public void SetPosition(Vector3 position){
 			thisAdaptor.SetPosition(position);
 		}
-		void SetYRotation(float yRotation){
-			thisAdaptor.SetYRotation(yRotation);
+		void SetRotation(Quaternion rotation){
+			thisAdaptor.SetRotation(rotation);
 		}
 		void UpdateConnection(){
 			Vector3 newConnectionPosition = thisAdaptor.GetConnectionPosition();
 			thisConnection.SetPosition(newConnectionPosition);
-			float newConnectionEulerY = thisAdaptor.GetConnectionEulerY();
-			thisConnection.SetYRotation(newConnectionEulerY);
+			Quaternion newConnectionRotation = thisAdaptor.GetConnectionRotation();
+			thisConnection.SetRotation(newConnectionRotation);
+		}
+		public void UpdateConnectedWaypointCacheData(IWaypointGroup prevGroup, float speed){
+			IWaypoint prevGroupLastWP;
+			if(prevGroup != null){
+				prevGroupLastWP = prevGroup.GetLastWaypoint();
+			}else{//init
+				prevGroupLastWP = null;
+			}
+				IWaypoint thisFirstWP = this.GetFirstWaypoint();
+				thisFirstWP.CacheDistanceFromPreviousWaypoint(prevGroupLastWP);
+				thisFirstWP.CacheRequiredTime(speed);
 		}
 	}
 	public interface IWaypointConnection{
 		Vector3 position{get;}
-		float yRotation{get;}
+		Quaternion rotation{get;}
 		void SetPosition(Vector3 position);
-		void SetYRotation(float yRotation);
+		void SetRotation(Quaternion rotation);
 	}
 	public class WaypointConnection: IWaypointConnection{
 		public WaypointConnection(
 			Vector3 position,
-			float yRotation
+			Quaternion rotation
 		){
 			thisPosition = position;
-			thisYRotation = yRotation;
+			thisRotation = rotation;
 		}
 		Vector3 thisPosition;
 		public Vector3 position{get{return thisPosition;}}
 		public void SetPosition(Vector3 position){
 			thisPosition = position;
 		}
-		float thisYRotation;
-		public float yRotation{get{return thisYRotation;}}
-		public void SetYRotation(float yRotation){
-			thisYRotation = yRotation;
+		Quaternion thisRotation;
+		public Quaternion rotation{get{return thisRotation;}}
+		public void SetRotation(Quaternion rotation){
+			thisRotation = rotation;
 		}
+
 	}
 }

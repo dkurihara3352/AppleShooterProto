@@ -6,9 +6,11 @@ namespace AppleShooterProto{
 	public interface IWaypointGroupAdaptor{
 		IWaypointGroup GetWaypointGroup();
 		void SetPosition(Vector3 position);
-		void SetYRotation(float yRotation);
+		// void SetYRotation(float yRotation);
+		void SetRotation(Quaternion rotation);
 		Vector3 GetConnectionPosition();
-		float GetConnectionEulerY();
+		// float GetConnectionEulerY();
+		Quaternion GetConnectionRotation();
 	}
 	public class WaypointGroupAdaptor : MonoBehaviour, IWaypointGroupAdaptor {
 		IWaypointsManager thisManager;
@@ -23,13 +25,17 @@ namespace AppleShooterProto{
 		public Vector3 GetConnectionPosition(){
 			return connectionPoint.position;
 		}
-		public float GetConnectionEulerY(){
-			return connectionPoint.eulerAngles.y;
+		// public float GetConnectionEulerY(){
+		// 	return connectionPoint.eulerAngles.y;
+		// }
+		public Quaternion GetConnectionRotation(){
+			return connectionPoint.rotation;
 		}
 		public void SetUpWaypointGroup(){
 			IWaypointConnection waypointConnection = new WaypointConnection(
 				GetConnectionPosition(),
-				GetConnectionEulerY()
+				// GetConnectionEulerY()
+				GetConnectionRotation()
 			);
 			List<IWaypointAdaptor> childWaypointAdaptors = GetChildWaypointAdaptors();
 			thisWaypointGroup = new WaypointGroup(
@@ -54,11 +60,14 @@ namespace AppleShooterProto{
 		public void SetPosition(Vector3 position){
 			this.transform.position = position;
 		}
-		public void SetYRotation(float yRotation){
-			this.transform.Rotate(
-				new Vector3(0f, yRotation, 0f),
-				Space.World
-			);
+		// public void SetYRotation(float yRotation){
+		// 	this.transform.Rotate(
+		// 		new Vector3(0f, yRotation, 0f),
+		// 		Space.World
+		// 	);
+		// }
+		public void SetRotation(Quaternion rotation){
+			this.transform.rotation = rotation;
 		}
 	}
 }

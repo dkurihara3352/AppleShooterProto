@@ -15,6 +15,7 @@ namespace AppleShooterProto{
 		);
 		void StartFollowing();
 		void SetWaypointGroup(IWaypointGroup group);
+		IWaypointGroup GetCurrentWaypointGroup();
 	}
 	public class WaypointsFollower: IWaypointsFollower{
 		public WaypointsFollower(
@@ -59,6 +60,9 @@ namespace AppleShooterProto{
 		public void SetWaypointGroup(IWaypointGroup group){
 			thisCurrentWaypointGroup = group;
 		}
+		public IWaypointGroup GetCurrentWaypointGroup(){
+			return thisCurrentWaypointGroup;
+		}
 		IWaypoint thisCurWaypoint;
 		public IWaypoint GetCurrentWaypoint(){
 			return thisCurWaypoint;
@@ -76,11 +80,10 @@ namespace AppleShooterProto{
 					nextWaypoint = thisWaypointList[curIndex + 1];
 				}else{
 					IWaypointGroup nextWaypointGroup = thisWaypointsManager.GetNextWaypointGroup(thisCurrentWaypointGroup);
-					if(nextWaypointGroup != null){
-						thisCurrentWaypointGroup = nextWaypointGroup;
-						thisWaypointList = nextWaypointGroup.GetWaypoints();
-						nextWaypoint = thisWaypointList[0];
-					}
+					thisWaypointsManager.CycleGroup();
+					thisCurrentWaypointGroup = nextWaypointGroup;
+					thisWaypointList = nextWaypointGroup.GetWaypoints();
+					nextWaypoint = thisWaypointList[0];
 				}
 			}
 			

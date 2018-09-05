@@ -4,50 +4,78 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public class GUIManager : MonoBehaviour {
-
+		void Awake(){
+			topLeftRect = GetGUIRect(
+				normalizedSize: new Vector2(.2f, .2f),
+				normalizedPosition: new Vector2(0f ,0f)
+			);
+			sTL_1 = GetSubRect(topLeftRect,0,4);
+			sTL_2 = GetSubRect(topLeftRect,1,4);
+			sTL_3 = GetSubRect(topLeftRect,2,4);
+			sTL_4 = GetSubRect(topLeftRect,3,4);
+			topRightRect = GetGUIRect(
+ 				normalizedSize: new Vector2(.1f, .1f),
+				normalizedPosition: new Vector2(1f, 0f)
+			);
+			sTR_1 = GetSubRect(topRightRect, 0, 2);
+			sTR_2 = GetSubRect(topRightRect, 1, 2);
+		}
+		Rect topLeftRect; Rect sTL_1; Rect sTL_2; Rect sTL_3; Rect sTL_4;
+		Rect topRightRect; Rect sTR_1; Rect sTR_2;
 		public ProtoGameManager gameManager;
 		public bool drawsWaypointFollowerSetUp = true;
 
 		void OnGUI(){
 			DrawWaypointFollowerSetUp();
+			DrawGroupSequence();
 		}
+
 		void DrawWaypointFollowerSetUp(){
-			Rect masterRect = GetGUIRect(
-				normalizedSize: new Vector2(.2f, .2f),
-				normalizedPosition: new Vector2(0f ,0f)
-			);
-			Rect subR_1 = GetSubRect(
-				masterRect,
-				0,
-				3
-			);
-			Rect subR_2 = GetSubRect(
-				masterRect,
-				1,
-				3
-			);
-			Rect subR_3 = GetSubRect(
-				masterRect,
-				2,
-				3
-			);
 			if(drawsWaypointFollowerSetUp){
 				if(GUI.Button(
-					subR_1,
+					sTL_1,
 					"SetUpFollwer"
 				))
 					gameManager.SetUpFollowerAndWithManager();
 				if(GUI.Button(
-					subR_2,
+					sTL_2,
 					"PlaceWaypointGroups"
 				))
 					gameManager.PlaceWaypointGroups();
 				if(GUI.Button(
-					subR_3,
+					sTL_3,
+					"SetUpSmoothFollower"
+				)){
+					gameManager.SetUpSmoothFollower();
+				}
+				if(GUI.Button(
+					sTL_4,
 					"StartFollowing"
-				))
+				)){
 					gameManager.StartFollowerFollow();
+					thisGroupSequenceIsReady = true;
+				}
 			}
+		}
+		bool thisGroupSequenceIsReady = false;
+		void DrawGroupSequence(){
+			if(thisGroupSequenceIsReady){
+				GUI.Label(
+					sTR_1, 
+					"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString()
+				);
+				GUI.Label(
+					sTR_2,
+					"sequence: " + GetSequenceIndexString()
+				);
+			}
+		}
+		string GetSequenceIndexString(){
+			int[] indexes = gameManager.GetCurrentGroupSequence();
+			string result = "";
+			foreach(int index in indexes)
+				result += index.ToString() + ",";
+			return result;
 		}
 		Rect GetGUIRect(
 			Vector2 normalizedSize,
