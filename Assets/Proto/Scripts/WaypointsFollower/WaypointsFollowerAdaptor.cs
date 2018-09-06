@@ -4,17 +4,12 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IMonoBehaviourAdaptor{
-		Vector3 GetPosition();
-		void SetPosition(Vector3 position);
-		
-	}
 	public interface IWaypointsFollowerAdaptor: ISmoothFollowTargetMBAdaptor{
 		void Initialize();
 		void SetUpWaypointsFollower(IWaypointsManager waypointsManager);
 		IWaypointsFollower GetWaypointsFollower();
 	}
-	public class WaypointsFollowerAdaptor : MonoBehaviour, IWaypointsFollowerAdaptor {
+	public class WaypointsFollowerAdaptor : MonoBehaviourAdaptor, IWaypointsFollowerAdaptor {
 		public void Initialize(){
 			thisProcessFactory = new AppleShooterProcessFactory(
 				processManager
@@ -35,12 +30,6 @@ namespace AppleShooterProto{
 				followSpeed
 			);
 			thisFollower = new WaypointsFollower(arg);
-		}
-		public Vector3 GetPosition(){
-			return this.transform.position;
-		}
-		public void SetPosition(Vector3 position){
-			this.transform.position = position;
 		}
 	}
 }

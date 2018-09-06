@@ -9,6 +9,8 @@ namespace AppleShooterProto{
 		public WaypointsFollowerAdaptor followerAdaptor;
 		IWaypointsFollower thisFollower;
 		public SmoothFollowerAdaptor smoothFollowerAdaptor;
+		public SmoothLookerAdaptor smoothLookerAdaptor;
+		public LookAtTargetAdaptor lookAtTargetAdaptor;
 
 		public void SetUpFollowerAndWithManager(){
 			SetUpFollwerAdaptor();
@@ -30,7 +32,12 @@ namespace AppleShooterProto{
 		public void SetUpSmoothFollower(){
 			smoothFollowerAdaptor.CreateAndSetSmoothFollower();
 		}
-
+		public void SetUpSmoothLooker(){
+			smoothLookerAdaptor.SetUpSmoothLooker();
+		}
+		public void SetUpLookAtTarget(ISmoothLooker looker){
+			lookAtTargetAdaptor.SetUpLookAtTarget(looker);
+		}
 		public void StartFollowerFollow(){
 			IWaypointGroup firstWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];
 			thisFollower.SetWaypointGroup(firstWaypointGroup);
@@ -38,6 +45,12 @@ namespace AppleShooterProto{
 
 			ISmoothFollower smoothFollower = smoothFollowerAdaptor.GetSmoothFollower();
 			smoothFollower.StartFollow();
+		}
+		public void StartSmootLook(){
+			ILookAtTarget lookAtTarget = lookAtTargetAdaptor.GetLookAtTarget();
+			lookAtTarget.StartLookAtTargetMotion();
+			ISmoothLooker looker = smoothLookerAdaptor.GetSmoothLooker();
+			looker.StartSmoothLook();
 		}
 		public int GetCurrentWaypointGroupIndex(){
 			IWaypointGroup group = thisFollower.GetCurrentWaypointGroup();

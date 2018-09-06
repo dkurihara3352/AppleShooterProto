@@ -6,13 +6,15 @@ namespace AppleShooterProto{
 	public class GUIManager : MonoBehaviour {
 		void Awake(){
 			topLeftRect = GetGUIRect(
-				normalizedSize: new Vector2(.2f, .2f),
+				normalizedSize: new Vector2(.2f, .4f),
 				normalizedPosition: new Vector2(0f ,0f)
 			);
-			sTL_1 = GetSubRect(topLeftRect,0,4);
-			sTL_2 = GetSubRect(topLeftRect,1,4);
-			sTL_3 = GetSubRect(topLeftRect,2,4);
-			sTL_4 = GetSubRect(topLeftRect,3,4);
+			sTL_1 = GetSubRect(topLeftRect,0,6);
+			sTL_2 = GetSubRect(topLeftRect,1,6);
+			sTL_3 = GetSubRect(topLeftRect,2,6);
+			sTL_4 = GetSubRect(topLeftRect,3,6);
+			sTL_5 = GetSubRect(topLeftRect,4,6);
+			sTL_6 = GetSubRect(topLeftRect,5,6);
 			topRightRect = GetGUIRect(
  				normalizedSize: new Vector2(.1f, .1f),
 				normalizedPosition: new Vector2(1f, 0f)
@@ -20,7 +22,7 @@ namespace AppleShooterProto{
 			sTR_1 = GetSubRect(topRightRect, 0, 2);
 			sTR_2 = GetSubRect(topRightRect, 1, 2);
 		}
-		Rect topLeftRect; Rect sTL_1; Rect sTL_2; Rect sTL_3; Rect sTL_4;
+		Rect topLeftRect; Rect sTL_1; Rect sTL_2; Rect sTL_3; Rect sTL_4; Rect sTL_5; Rect sTL_6;
 		Rect topRightRect; Rect sTR_1; Rect sTR_2;
 		public ProtoGameManager gameManager;
 		public bool drawsWaypointFollowerSetUp = true;
@@ -50,9 +52,20 @@ namespace AppleShooterProto{
 				}
 				if(GUI.Button(
 					sTL_4,
-					"StartFollowing"
+					"SetUpSmoothLookerAndTarget"
+				)){
+					gameManager.SetUpSmoothLooker();
+					ISmoothLooker looker = gameManager.smoothLookerAdaptor.GetSmoothLooker();
+					gameManager.SetUpLookAtTarget(looker);
+					ILookAtTarget target =gameManager.lookAtTargetAdaptor.GetLookAtTarget();
+					looker.SetLookAtTarget(target);
+				}
+				if(GUI.Button(
+					sTL_5,
+					"StartFollowingAndLook"
 				)){
 					gameManager.StartFollowerFollow();
+					gameManager.StartSmootLook();
 					thisGroupSequenceIsReady = true;
 				}
 			}

@@ -14,6 +14,15 @@ namespace AppleShooterProto{
 			ISmoothFollowTargetMBAdaptor target,
 			float smoothCoefficient
 		);
+		ILookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
+			ILookAtTarget lookAtTarget,
+			ISmoothLooker smoothLooker,
+			float smoothCoefficient
+		);
+		ILookAtTargetProcess CreateLookAtTargetProcess(
+			ISmoothLooker smoothLooker,
+			ILookAtTarget target
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -47,6 +56,30 @@ namespace AppleShooterProto{
 				smoothCoefficient
 			);
 			return new SmoothFollowTargetProcess(arg);
+		}
+		public ILookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
+			ILookAtTarget lookAtTarget,
+			ISmoothLooker smoothLooker,
+			float smoothCoefficient
+		){
+			ILookAtTargetMotionProcessConstArg arg = new LookAtTargetMotionProcessConstArg(
+				thisProcessManager,
+				lookAtTarget,
+				smoothLooker,
+				smoothCoefficient
+			);
+			return new LookAtTargetMotionProcess(arg);
+		}
+		public ILookAtTargetProcess CreateLookAtTargetProcess(
+			ISmoothLooker smoothLooker,
+			ILookAtTarget target
+		){
+			ILookAtTargetProcessConstArg arg = new LookAtTargetProcessConstArg(
+				thisProcessManager,
+				target,
+				smoothLooker
+			);
+			return new LookAtTargetProcess(arg);
 		}
 	}
 }
