@@ -41,9 +41,10 @@ namespace UISystem{
 	public class GenericSingleElementScrollerConstArg: ScrollerConstArg, IGenericSingleElementScrollerConstArg{
 		public GenericSingleElementScrollerConstArg(
 			Vector2 relativeCursorLength, 
+
 			ScrollerAxis scrollerAxis, 
-			Vector2 rubberBandLimitMultiplier, 
 			Vector2 relativeCursorPosition, 
+			Vector2 rubberBandLimitMultiplier, 
 			bool isEnabledInertia, 
 			float newScrollSpeedThreshold,
 

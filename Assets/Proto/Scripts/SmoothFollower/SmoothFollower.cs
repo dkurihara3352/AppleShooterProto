@@ -6,6 +6,7 @@ namespace AppleShooterProto{
 	public interface ISmoothFollower{
 		void SetFollowTarget(IMonoBehaviourAdaptor target);
 		void StartFollow();
+		void StopFollow();
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
 	}
@@ -25,19 +26,24 @@ namespace AppleShooterProto{
 		public void SetFollowTarget(IMonoBehaviourAdaptor target){
 			thisFollowTarget = target;
 		}
+		ISmoothFollowTargetProcess thisProcess;
 		public void StartFollow(){
-			ISmoothFollowTargetProcess process = thisProcessFactory.CreateSmoothFollowTargetProcess(
+			thisProcess = thisProcessFactory.CreateSmoothFollowTargetProcess(
 				this,
 				thisFollowTarget,
 				thisSmoothCoefficient
 			);
-			process.Run();
+			thisProcess.Run();
 		}
 		public void SetPosition(Vector3 position){
 			thisAdaptor.SetPosition(position);
 		}
 		public Vector3 GetPosition(){
 			return thisAdaptor.GetPosition();
+		}
+		public void StopFollow(){
+			if(thisProcess.IsRunning())
+				thisProcess.Stop();
 		}
 	}
 

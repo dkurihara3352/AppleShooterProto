@@ -19,6 +19,7 @@ namespace AppleShooterProto{
 			return thisInitialNormalizedCursorPosition;
 		}
 		readonly IPlayerInputManager thisInputManager;
+		
 		protected override void OnScrollerElementDisplace(
 			float normalizedCursoredPositionOnAxis, 
 			int dimension
@@ -36,7 +37,7 @@ namespace AppleShooterProto{
 	}
 	public class CoreGameplayInputScrollerConstArg: GenericSingleElementScrollerConstArg, ICoreGameplayInputScrollerConstArg{
 		public CoreGameplayInputScrollerConstArg(
-			IPlayerInputManager inputManager
+			IPlayerInputManager inputManager,
 
 			Vector2 relativeCursorLength, 
 			ScrollerAxis scrollerAxis, 
@@ -68,8 +69,10 @@ namespace AppleShooterProto{
 			image,
 			activationMode
 		){
-
+			thisInputManager = inputManager;
 		}
+		readonly IPlayerInputManager thisInputManager;
+		public IPlayerInputManager inputManager{get{return thisInputManager;}}
 	}
 }
 

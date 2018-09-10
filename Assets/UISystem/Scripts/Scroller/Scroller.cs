@@ -166,17 +166,10 @@ namespace UISystem{
 			}
 			protected virtual Vector2 CalcCursorLocalPos(){
 				Vector2 result = new Vector2();
-				Vector2 scrollerRectLengthV2 = new Vector2();
-				Vector2 cursorLengthV2 = new  Vector2();
-				Vector2 diffLV2 = new Vector2();
 				for(int i = 0; i < 2; i ++){
 					float scrollerRectLength = thisRectLength[i];
-						scrollerRectLengthV2[i] = scrollerRectLength;
 					float cursorLength = thisCursorLength[i];
-						cursorLengthV2[i] = cursorLength;
 					float diffL = scrollerRectLength - cursorLength;
-						diffLV2[i] = diffL;
-
 					float localPos;
 					if(thisRelativeCursorPosition[i] == 0f) 
 						localPos = 0f;
@@ -208,7 +201,7 @@ namespace UISystem{
 			){}
 			protected void SetScrollerElementLocalPosition(Vector2 position){
 				for(int i = 0; i < 2; i ++)
-					SetScrollerElementLocalPosOnAxis(position[9], i);
+					SetScrollerElementLocalPosOnAxis(position[i], i);
 			}
 		/* Drag */
 			protected bool thisShouldProcessDrag;

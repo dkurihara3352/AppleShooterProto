@@ -10,9 +10,10 @@ public interface IGenericSingleElementScrollerAdaptor: IScrollerAdaptor{
 		protected override IUIElement CreateUIElement(IUIImage image){
 			IGenericSingleElementScrollerConstArg arg = new GenericSingleElementScrollerConstArg(
 				relativeCursorLength, 
+				
 				scrollerAxis, 
-				rubberBandLimitMultiplier, 
 				relativeCursorPosition, 
+				rubberBandLimitMultiplier, 
 				isEnabledInertia, 
 				locksInputAboveThisVelocity,
 				

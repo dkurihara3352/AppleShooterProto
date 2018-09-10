@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 		public PlayerCharacterLookAtTargetAdaptor pcLookAtTargetAdaptor;
 		public SmoothFollowerAdaptor camSmoothFollowerAdaptor;
 		public SmoothLookerAdaptor camSmoothLookerAdaptor;
+		public SmoothFollowerAdaptor camLookAtTarget;
 
 		public MonoBehaviourAdaptorManager mbAdaptorManager;
 		IWaypointsFollower thisFollower;
@@ -35,6 +36,7 @@ namespace AppleShooterProto{
 			StartPCSmoothLook();
 			StartCameraSmoothFollow();
 			StartCameraSmoothLook();
+			StartCameraLookAtTargetSmoothFollow();
 		}
 		public void StartWaypointsFollower(){
 			IWaypointGroup firstWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];
@@ -59,6 +61,10 @@ namespace AppleShooterProto{
 		void StartCameraSmoothLook(){
 			ISmoothLooker looker = camSmoothLookerAdaptor.GetSmoothLooker();
 			looker.StartSmoothLook();
+		}
+		void StartCameraLookAtTargetSmoothFollow(){
+			ISmoothFollower follower = camLookAtTarget.GetSmoothFollower();
+			follower.StartFollow();
 		}
 		public int GetCurrentWaypointGroupIndex(){
 			IWaypointGroup group = thisFollower.GetCurrentWaypointGroup();
