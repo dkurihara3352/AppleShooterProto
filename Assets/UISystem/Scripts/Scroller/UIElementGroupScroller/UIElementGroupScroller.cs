@@ -86,8 +86,7 @@ namespace UISystem{
 					throw new System.InvalidOperationException("cursorLength cannot exceed this rect length. provide lesser cursor size");
 				}
 			}
-			public override void SetScrollerElementLocalPosOnAxis(float localPosOnAxis, int dimension){
-				base.SetScrollerElementLocalPosOnAxis(localPosOnAxis, dimension);
+			protected override void OnScrollerElementDisplace(float normalizedCursoredPositionOnAxis, int dimension){
 				EvaluateCursoredGroupElements();
 			}
 			protected override void OnRectsSetUpComplete(){

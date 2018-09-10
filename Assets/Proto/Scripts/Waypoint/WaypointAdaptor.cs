@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IWaypointAdaptor{
+	public interface IWaypointAdaptor: IMonoBehaviourAdaptor{
 		IWaypoint GetWaypoint();
-		Vector3 GetPosition();
-		void SetWaypointManager(IWaypointsManager manager);
-		void CreateAndSetWaypoint();
+		void SetWaypointsManager(IWaypointsManager manager);
 	}
-	public class WaypointAdaptor: MonoBehaviour, IWaypointAdaptor{
-		public void SetWaypointManager(IWaypointsManager manager){
-			thisWaypointsManager = manager;
-		}
-		IWaypointsManager thisWaypointsManager;
-		public void CreateAndSetWaypoint(){
+	public class WaypointAdaptor: MonoBehaviourAdaptor, IWaypointAdaptor{
+
+		/* disregard SetUp, it is taken care by group
+		 */
+		 IWaypointsManager thisWaypointsManager;
+		 public void SetWaypointsManager(IWaypointsManager manager){
+			 thisWaypointsManager = manager;
+		 }
+		public override void SetUp(){
 			thisWaypoint = new Waypoint(
 				this,
 				thisWaypointsManager
@@ -23,9 +24,6 @@ namespace AppleShooterProto{
 		IWaypoint thisWaypoint;
 		public IWaypoint GetWaypoint(){
 			return thisWaypoint;
-		}
-		public Vector3 GetPosition(){
-			return this.transform.position;
 		}
 	}
 }

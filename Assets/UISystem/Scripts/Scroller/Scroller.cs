@@ -192,10 +192,23 @@ namespace UISystem{
 				PlaceScrollerElement(initialCursorValue);
 			}
 			protected abstract Vector2 GetInitialNormalizedCursoredPosition();
-			public virtual void SetScrollerElementLocalPosOnAxis(float localPosOnAxis, int dimension){
+			public void SetScrollerElementLocalPosOnAxis(float localPosOnAxis, int dimension){
 				Vector2 newScrollerElementLocalPos = thisScrollerElement.GetLocalPosition();
 				newScrollerElementLocalPos[dimension] = localPosOnAxis;
 				thisScrollerElement.SetLocalPosition(newScrollerElementLocalPos);
+				float normalizedCursoredPositionOnAxis = GetNormalizedCursoredPositionOnAxis(localPosOnAxis, dimension);
+				OnScrollerElementDisplace(
+					normalizedCursoredPositionOnAxis,
+					dimension
+				);
+			}
+			protected virtual void OnScrollerElementDisplace(
+				float normalizedCursoredPositionOnAxis,
+				int dimension
+			){}
+			protected void SetScrollerElementLocalPosition(Vector2 position){
+				for(int i = 0; i < 2; i ++)
+					SetScrollerElementLocalPosOnAxis(position[9], i);
 			}
 		/* Drag */
 			protected bool thisShouldProcessDrag;
@@ -280,7 +293,7 @@ namespace UISystem{
 			protected virtual void DisplaceScrollerElement(Vector2 dragPosition){
 				Vector2 displacement = CalcDragDeltaSinceTouch(dragPosition);
 				Vector2 newElementLocalPosition =  GetScrollerElementRubberBandedLocalPosition(displacement);
-				thisScrollerElement.SetLocalPosition(newElementLocalPosition);
+				SetScrollerElementLocalPosition(newElementLocalPosition);
 			}
 			protected Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
 				Vector2 rawDisplacement = dragPosition - thisTouchPosition;

@@ -19,56 +19,41 @@ namespace AppleShooterProto{
  				normalizedSize: new Vector2(.1f, .1f),
 				normalizedPosition: new Vector2(1f, 0f)
 			);
-			sTR_1 = GetSubRect(topRightRect, 0, 2);
-			sTR_2 = GetSubRect(topRightRect, 1, 2);
+			sTR_1 = GetSubRect(topRightRect, 0, 3);
+			sTR_2 = GetSubRect(topRightRect, 1, 3);
 		}
 		Rect topLeftRect; Rect sTL_1; Rect sTL_2; Rect sTL_3; Rect sTL_4; Rect sTL_5; Rect sTL_6;
 		Rect topRightRect; Rect sTR_1; Rect sTR_2;
 		public ProtoGameManager gameManager;
 		public bool drawsWaypointFollowerSetUp = true;
+		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 
 		void OnGUI(){
-			DrawWaypointFollowerSetUp();
 			DrawGroupSequence();
+			DrawControl();
 		}
 
-		void DrawWaypointFollowerSetUp(){
-			if(drawsWaypointFollowerSetUp){
-				if(GUI.Button(
-					sTL_1,
-					"SetUpFollwer"
-				))
-					gameManager.SetUpFollowerAndWithManager();
-				if(GUI.Button(
-					sTL_2,
-					"PlaceWaypointGroups"
-				))
-					gameManager.PlaceWaypointGroups();
-				if(GUI.Button(
-					sTL_3,
-					"SetUpSmoothFollower"
-				)){
-					gameManager.SetUpSmoothFollower();
-				}
-				if(GUI.Button(
-					sTL_4,
-					"SetUpSmoothLookerAndTarget"
-				)){
-					gameManager.SetUpSmoothLooker();
-					ISmoothLooker looker = gameManager.smoothLookerAdaptor.GetSmoothLooker();
-					gameManager.SetUpLookAtTarget(looker);
-					ILookAtTarget target =gameManager.lookAtTargetAdaptor.GetLookAtTarget();
-					looker.SetLookAtTarget(target);
-				}
-				if(GUI.Button(
-					sTL_5,
-					"StartFollowingAndLook"
-				)){
-					gameManager.StartFollowerFollow();
-					gameManager.StartSmootLook();
-					thisGroupSequenceIsReady = true;
-				}
+		void DrawControl(){
+			if(GUI.Button(
+				sTL_1,
+				"SetUp"
+			))
+				gameManager.SetUp();
+			if(GUI.Button(
+				sTL_2,
+				"Run"
+			))
+				gameManager.RunSystem();
+			if(GUI.Button(
+				sTL_3,
+				"Get UI Ready"
+			)){
+				UISystem.IUIManager uim = uiManagerAdaptor.GetUIManager();
+				uim.GetReadyForUISystemActivation();
+				uim.ActivateUISystem(false);
 			}
+
+			
 		}
 		bool thisGroupSequenceIsReady = false;
 		void DrawGroupSequence(){

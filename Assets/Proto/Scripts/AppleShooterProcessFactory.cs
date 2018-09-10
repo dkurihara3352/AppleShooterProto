@@ -11,17 +11,17 @@ namespace AppleShooterProto{
 		);
 		ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
 			ISmoothFollower follower,
-			ISmoothFollowTargetMBAdaptor target,
+			IMonoBehaviourAdaptor target,
 			float smoothCoefficient
 		);
-		ILookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
-			ILookAtTarget lookAtTarget,
-			ISmoothLooker smoothLooker,
-			float smoothCoefficient
+		IPlayerCharacterLookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
+			IPlayerCharacterLookAtTarget lookAtTarget,
+			ISmoothLooker smoothLooker
 		);
-		ILookAtTargetProcess CreateLookAtTargetProcess(
+		ISmoothLookProcess CreateSmoothLookProcess(
 			ISmoothLooker smoothLooker,
-			ILookAtTarget target
+			IMonoBehaviourAdaptor lookAtTarget,
+			float smoothCoefficient
 		);
 	}
 
@@ -46,7 +46,7 @@ namespace AppleShooterProto{
 
 		public ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
 			ISmoothFollower smoothFollower,
-			ISmoothFollowTargetMBAdaptor target,
+			IMonoBehaviourAdaptor target,
 			float smoothCoefficient
 		){
 			ISmoothFollowTargetProcessConstArg arg = new SmoothFollowTargetProcessConstArg(
@@ -57,29 +57,29 @@ namespace AppleShooterProto{
 			);
 			return new SmoothFollowTargetProcess(arg);
 		}
-		public ILookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
-			ILookAtTarget lookAtTarget,
+		public IPlayerCharacterLookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
+			IPlayerCharacterLookAtTarget lookAtTarget,
+			ISmoothLooker smoothLooker
+		){
+			IPlayerCharacterLookAtTargetMotionProcessConstArg arg = new PlayerCharacterLookAtTargetMotionProcessConstArg(
+				thisProcessManager,
+				lookAtTarget,
+				smoothLooker
+			);
+			return new PlayerCharacterLookAtTargetMotionProcess(arg);
+		}
+		public ISmoothLookProcess CreateSmoothLookProcess(
 			ISmoothLooker smoothLooker,
+			IMonoBehaviourAdaptor lookAtTarget,
 			float smoothCoefficient
 		){
-			ILookAtTargetMotionProcessConstArg arg = new LookAtTargetMotionProcessConstArg(
+			ISmoothLookProcessConstArg arg = new SmoothLookProcessConstArg(
 				thisProcessManager,
 				lookAtTarget,
 				smoothLooker,
 				smoothCoefficient
 			);
-			return new LookAtTargetMotionProcess(arg);
-		}
-		public ILookAtTargetProcess CreateLookAtTargetProcess(
-			ISmoothLooker smoothLooker,
-			ILookAtTarget target
-		){
-			ILookAtTargetProcessConstArg arg = new LookAtTargetProcessConstArg(
-				thisProcessManager,
-				target,
-				smoothLooker
-			);
-			return new LookAtTargetProcess(arg);
+			return new SmoothLookProcess(arg);
 		}
 	}
 }

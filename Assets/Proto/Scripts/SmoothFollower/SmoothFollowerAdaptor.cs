@@ -4,36 +4,27 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface ISmoothFollowerAdaptor{
-		Vector3 GetPosition();
-		void SetPosition(Vector3 position);
+	public interface ISmoothFollowerAdaptor: IMonoBehaviourAdaptor{
 	}
-	public class SmoothFollowerAdaptor : MonoBehaviour, ISmoothFollowerAdaptor {
-		public Transform targetTransform;
+	public class SmoothFollowerAdaptor : MonoBehaviourAdaptor, ISmoothFollowerAdaptor {
+		public MonoBehaviourAdaptor followTarget;
 		public ProcessManager processManager;
-		public void CreateAndSetSmoothFollower(){
+		public float smoothCoefficient;
+		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
 				processManager
 			);
 			ISmoothFollowerConstArg arg = new SmoothFollowerConstArg(
 				this,
 				processFactory,
-				smoothCoefficient
+				smoothCoefficient,
+				followTarget
 			);
 			thisSmoothFollower = new SmoothFollower(arg);
-			ISmoothFollowTargetMBAdaptor target = (ISmoothFollowTargetMBAdaptor)targetTransform.GetComponent(typeof(ISmoothFollowTargetMBAdaptor));
-			thisSmoothFollower.SetFollowTarget(target);
 		}
-		public float smoothCoefficient;
 		ISmoothFollower thisSmoothFollower;
 		public ISmoothFollower GetSmoothFollower(){
 			return thisSmoothFollower;
-		}
-		public Vector3 GetPosition(){
-			return this.transform.position;
-		}
-		public void SetPosition(Vector3 position){
-			this.transform.position = position;
 		}
 	}
 }

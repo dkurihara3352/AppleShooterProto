@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IWaypointGroupAdaptor{
+	public interface IWaypointGroupAdaptor: IMonoBehaviourAdaptor{
 		IWaypointGroup GetWaypointGroup();
-		void SetPosition(Vector3 position);
-		// void SetYRotation(float yRotation);
 		void SetRotation(Quaternion rotation);
 		Vector3 GetConnectionPosition();
-		// float GetConnectionEulerY();
 		Quaternion GetConnectionRotation();
+		void SetWaypointsManager(IWaypointsManager manager);
+		void SetManagerOnAllWaypointAdaptors();
 	}
-	public class WaypointGroupAdaptor : MonoBehaviour, IWaypointGroupAdaptor {
+	public class WaypointGroupAdaptor : MonoBehaviourAdaptor, IWaypointGroupAdaptor {
 		IWaypointsManager thisManager;
 		public void SetWaypointsManager(IWaypointsManager manager){
 			thisManager = manager;
+		}
+		public void SetManagerOnAllWaypointAdaptors(){
+			foreach(IWaypointAdaptor wpAdaptor in GetChildWaypointAdaptors()){
+				wpAdaptor.SetWaypointsManager(thisManager);
+			}
 		}
 		IWaypointGroup thisWaypointGroup;
 		public IWaypointGroup GetWaypointGroup(){
@@ -25,26 +29,35 @@ namespace AppleShooterProto{
 		public Vector3 GetConnectionPosition(){
 			return connectionPoint.position;
 		}
-		// public float GetConnectionEulerY(){
-		// 	return connectionPoint.eulerAngles.y;
-		// }
 		public Quaternion GetConnectionRotation(){
 			return connectionPoint.rotation;
 		}
-		public void SetUpWaypointGroup(){
+		public override void SetUp(){
 			IWaypointConnection waypointConnection = new WaypointConnection(
 				GetConnectionPosition(),
-				// GetConnectionEulerY()
 				GetConnectionRotation()
 			);
-			List<IWaypointAdaptor> childWaypointAdaptors = GetChildWaypointAdaptors();
 			thisWaypointGroup = new WaypointGroup(
 				this,
 				thisManager,
-				waypointConnection,
-				childWaypointAdaptors
+				waypointConnection
 			);
+			thisChildWaypointAdaptors = GetChildWaypointAdaptors();
+			thisManager.AddWaypointGroup(thisWaypointGroup);
 		}
+		List<IWaypointAdaptor> thisChildWaypointAdaptors;
+		public override void SetUpReference(){
+			List<IWaypoint> waypoints = GetWaypointsFromAdaptors(thisChildWaypointAdaptors);
+			thisWaypointGroup.SetWaypoints(waypoints);
+			thisWaypointGroup.CacheTravelData(thisManager.GetSpeed());
+		}
+		List<IWaypoint> GetWaypointsFromAdaptors(List<IWaypointAdaptor> adaptors){
+			List<IWaypoint> result = new List<IWaypoint>();
+			foreach(IWaypointAdaptor adaptor in adaptors)
+				result.Add(adaptor.GetWaypoint());
+			return result;
+		}
+
 		List<IWaypointAdaptor> GetChildWaypointAdaptors(){
 			List<IWaypointAdaptor> result = new List<IWaypointAdaptor>();
 			int childCount = this.transform.childCount;
@@ -57,15 +70,6 @@ namespace AppleShooterProto{
 			}
 			return result;
 		}
-		public void SetPosition(Vector3 position){
-			this.transform.position = position;
-		}
-		// public void SetYRotation(float yRotation){
-		// 	this.transform.Rotate(
-		// 		new Vector3(0f, yRotation, 0f),
-		// 		Space.World
-		// 	);
-		// }
 		public void SetRotation(Quaternion rotation){
 			this.transform.rotation = rotation;
 		}

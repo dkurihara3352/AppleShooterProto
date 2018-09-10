@@ -5,9 +5,9 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface ISmoothLookerAdaptor: IMonoBehaviourAdaptor{
-		void SetUpSmoothLooker();
 		ISmoothLooker GetSmoothLooker();
 		void LookAt(Vector3 position);
+		void SetReady();
 	}
 	public class SmoothLookerAdaptor: MonoBehaviourAdaptor, ISmoothLookerAdaptor{
 		public ProcessManager processManager;
@@ -15,18 +15,40 @@ namespace AppleShooterProto{
 			return thisSmoothLooker;
 		}
 		ISmoothLooker thisSmoothLooker;
-		public void SetUpSmoothLooker(){
+		public float smoothCoefficient = 1f;
+		public MonoBehaviourAdaptor lookAtTarget;
+		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
 				processManager
 			);
 			ISmoothLookerConstArg arg = new SmoothLookerConstArg(
 				this,
-				processFactory
+				processFactory,
+				smoothCoefficient
 			);
 			thisSmoothLooker = new SmoothLooker(arg);
 		}
 		public void LookAt(Vector3 position){
 			this.transform.LookAt(position, Vector3.up);
+		}
+		void OnDrawGizmosSelected(){
+			DrawLookAtPosition();
+		}
+		public void SetReady(){
+			thisIsReady = true;
+		}
+		bool thisIsReady = false;
+		void DrawLookAtPosition(){
+			if(thisIsReady){
+				Vector3 lookAtPosition = thisSmoothLooker.GetLookAtPosition();
+				Gizmos.color = Color.red;
+				Gizmos.DrawSphere(lookAtPosition, 1f);
+			}
+		}
+		public override void SetUpReference(){
+			ISmoothLooker looker = GetSmoothLooker();
+			looker.SetLookAtTarget(lookAtTarget);
+			LookAt(lookAtTarget.GetPosition());
 		}
 	}
 }

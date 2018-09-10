@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface ISmoothFollower{
-		void SetFollowTarget(ISmoothFollowTargetMBAdaptor target);
+		void SetFollowTarget(IMonoBehaviourAdaptor target);
 		void StartFollow();
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
@@ -16,18 +16,19 @@ namespace AppleShooterProto{
 			thisAdaptor = arg.adaptor;
 			thisProcessFactory = arg.processFactory;
 			thisSmoothCoefficient = arg.smoothCoefficient;
+			thisFollowTarget = arg.followTarget;
 		}
 		readonly ISmoothFollowerAdaptor thisAdaptor;
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisSmoothCoefficient;
-		ISmoothFollowTargetMBAdaptor thisTarget;
-		public void SetFollowTarget(ISmoothFollowTargetMBAdaptor target){
-			thisTarget = target;
+		IMonoBehaviourAdaptor thisFollowTarget;
+		public void SetFollowTarget(IMonoBehaviourAdaptor target){
+			thisFollowTarget = target;
 		}
 		public void StartFollow(){
 			ISmoothFollowTargetProcess process = thisProcessFactory.CreateSmoothFollowTargetProcess(
 				this,
-				thisTarget,
+				thisFollowTarget,
 				thisSmoothCoefficient
 			);
 			process.Run();
@@ -45,16 +46,19 @@ namespace AppleShooterProto{
 		IAppleShooterProcessFactory processFactory{get;}
 		ISmoothFollowerAdaptor adaptor{get;}
 		float smoothCoefficient{get;}
+		IMonoBehaviourAdaptor followTarget{get;}
 	}
 	public struct SmoothFollowerConstArg: ISmoothFollowerConstArg{
 		public SmoothFollowerConstArg(
 			ISmoothFollowerAdaptor adaptor,
 			IAppleShooterProcessFactory processFactory,
-			float smoothCoefficient
+			float smoothCoefficient,
+			IMonoBehaviourAdaptor followTarget
 		){
 			thisAdaptor = adaptor;
 			thisProcessFactory = processFactory;
 			thisSmoothCoefficient = smoothCoefficient;
+			thisFollowTarget = followTarget;
 		}
 		readonly ISmoothFollowerAdaptor thisAdaptor;
 		public ISmoothFollowerAdaptor adaptor{get{return thisAdaptor;}}
@@ -62,7 +66,7 @@ namespace AppleShooterProto{
 		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
 		readonly float thisSmoothCoefficient;
 		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
-	}
-	public interface ISmoothFollowTargetMBAdaptor: IMonoBehaviourAdaptor{
+		readonly IMonoBehaviourAdaptor thisFollowTarget;
+		public IMonoBehaviourAdaptor followTarget{get{return thisFollowTarget;}}
 	}
 }

@@ -6,50 +6,58 @@ namespace AppleShooterProto{
 	public class ProtoGameManager : MonoBehaviour {
 
 		public WaypointsManager waypointsManager;
-		public WaypointsFollowerAdaptor followerAdaptor;
+		public WaypointsFollowerAdaptor wpFollowerAdaptor;
+		public SmoothFollowerAdaptor pcSmoothFollowerAdaptor;
+		public SmoothLookerAdaptor pcSmoothLookerAdaptor;
+		public PlayerCharacterLookAtTargetAdaptor pcLookAtTargetAdaptor;
+		public SmoothFollowerAdaptor camSmoothFollowerAdaptor;
+		public SmoothLookerAdaptor camSmoothLookerAdaptor;
+
+		public MonoBehaviourAdaptorManager mbAdaptorManager;
 		IWaypointsFollower thisFollower;
-		public SmoothFollowerAdaptor smoothFollowerAdaptor;
-		public SmoothLookerAdaptor smoothLookerAdaptor;
-		public LookAtTargetAdaptor lookAtTargetAdaptor;
+		public void SetUp(){
+			SetUpAllMonoBehaviourAdaptors();
+			SetUpAdaptorReference();
+			thisFollower = wpFollowerAdaptor.GetWaypointsFollower();
+		}
+		void SetUpAllMonoBehaviourAdaptors(){
+			mbAdaptorManager.SetUpAllMonoBehaviourAdaptors();
+		}
+		void SetUpAdaptorReference(){
+			mbAdaptorManager.SetUpAdaptorReference();
+		}
 
-		public void SetUpFollowerAndWithManager(){
-			SetUpFollwerAdaptor();
-			thisFollower = followerAdaptor.GetWaypointsFollower();
-			SetUpWaypointsManager();
-		}
-		void SetUpFollwerAdaptor(){
-			followerAdaptor.Initialize();
-			followerAdaptor.SetUpWaypointsFollower(waypointsManager);
-		}
-		void SetUpWaypointsManager(){
-			waypointsManager.SetFollower(thisFollower);
-			waypointsManager.SetUpAllWaypointGroups();
-		}
-		public void PlaceWaypointGroups(){
+
+		public void RunSystem(){
 			waypointsManager.PlaceWaypointGroups();
+			StartWaypointsFollower();
+			StartSmoothFollower();
+			StartPCSmoothLook();
+			StartCameraSmoothFollow();
+			StartCameraSmoothLook();
 		}
-
-		public void SetUpSmoothFollower(){
-			smoothFollowerAdaptor.CreateAndSetSmoothFollower();
-		}
-		public void SetUpSmoothLooker(){
-			smoothLookerAdaptor.SetUpSmoothLooker();
-		}
-		public void SetUpLookAtTarget(ISmoothLooker looker){
-			lookAtTargetAdaptor.SetUpLookAtTarget(looker);
-		}
-		public void StartFollowerFollow(){
+		public void StartWaypointsFollower(){
 			IWaypointGroup firstWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];
-			thisFollower.SetWaypointGroup(firstWaypointGroup);
-			thisFollower.StartFollowing();
-
-			ISmoothFollower smoothFollower = smoothFollowerAdaptor.GetSmoothFollower();
+			IWaypointsFollower follower = wpFollowerAdaptor.GetWaypointsFollower();
+			follower.SetWaypointGroup(firstWaypointGroup);
+			follower.StartFollowing();
+		}
+		public void StartSmoothFollower(){
+			ISmoothFollower smoothFollower = pcSmoothFollowerAdaptor.GetSmoothFollower();
 			smoothFollower.StartFollow();
 		}
-		public void StartSmootLook(){
-			ILookAtTarget lookAtTarget = lookAtTargetAdaptor.GetLookAtTarget();
+		public void StartPCSmoothLook(){
+			IPlayerCharacterLookAtTarget lookAtTarget = pcLookAtTargetAdaptor.GetLookAtTarget();
 			lookAtTarget.StartLookAtTargetMotion();
-			ISmoothLooker looker = smoothLookerAdaptor.GetSmoothLooker();
+			ISmoothLooker looker = pcSmoothLookerAdaptor.GetSmoothLooker();
+			looker.StartSmoothLook();
+		}
+		public void StartCameraSmoothFollow(){
+			ISmoothFollower follower = camSmoothFollowerAdaptor.GetSmoothFollower();
+			follower.StartFollow();
+		}
+		void StartCameraSmoothLook(){
+			ISmoothLooker looker = camSmoothLookerAdaptor.GetSmoothLooker();
 			looker.StartSmoothLook();
 		}
 		public int GetCurrentWaypointGroupIndex(){

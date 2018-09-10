@@ -16,7 +16,7 @@ namespace AppleShooterProto{
 			thisSmoothCoefficient = arg.smoothCoefficient;
 		}
 		ISmoothFollower thisSmoothFollower;
-		ISmoothFollowTargetMBAdaptor thisTarget;
+		IMonoBehaviourAdaptor thisTarget;
 		float thisSmoothCoefficient;
 		protected override void UpdateProcessImple(float deltaT){
 			Vector3 smoothFollowerPosition =thisSmoothFollower.GetPosition();
@@ -41,7 +41,7 @@ namespace AppleShooterProto{
 
 	public interface ISmoothFollowTargetProcessConstArg: IProcessConstArg{
 		ISmoothFollower smoothFollower{get;}
-		ISmoothFollowTargetMBAdaptor target{get;}
+		IMonoBehaviourAdaptor target{get;}
 		float smoothCoefficient{get;}
 	}
 	public class SmoothFollowTargetProcessConstArg: ProcessConstArg, ISmoothFollowTargetProcessConstArg{
@@ -49,7 +49,7 @@ namespace AppleShooterProto{
 			IProcessManager processManager,
 
 			ISmoothFollower smoothFollower,
-			ISmoothFollowTargetMBAdaptor target,
+			IMonoBehaviourAdaptor target,
 			float smoothCoefficient
 		): base(
 			processManager
@@ -60,8 +60,8 @@ namespace AppleShooterProto{
 		}
 		readonly ISmoothFollower thisFollower;
 		public ISmoothFollower smoothFollower{get{return thisFollower;}}
-		readonly ISmoothFollowTargetMBAdaptor thisTarget;
-		public ISmoothFollowTargetMBAdaptor target{get{return thisTarget;}}
+		readonly IMonoBehaviourAdaptor thisTarget;
+		public IMonoBehaviourAdaptor target{get{return thisTarget;}}
 		readonly float thisSmoothCoefficient;
 		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
 	}

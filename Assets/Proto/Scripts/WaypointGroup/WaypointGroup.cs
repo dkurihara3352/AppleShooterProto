@@ -5,10 +5,11 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IWaypointGroup{
 		List<IWaypoint> GetWaypoints();
+		void SetWaypoints(List<IWaypoint> waypoints);
 		IWaypoint GetFirstWaypoint();
 		IWaypoint GetLastWaypoint();
 		IWaypointConnection GetConnection();
-		void SetUpWaypoints(float speed);
+		void CacheTravelData(float speed);
 		void Connect(IWaypointGroup prevWaypointGroup);
 		void UpdateConnectedWaypointCacheData(
 			IWaypointGroup nextGroup, 
@@ -20,46 +21,26 @@ namespace AppleShooterProto{
 		public WaypointGroup(
 			IWaypointGroupAdaptor adaptor,
 			IWaypointsManager manager,
-			IWaypointConnection connection, 
-			List<IWaypointAdaptor> childWaypointAdaptors
+			IWaypointConnection connection
 		){
 			thisAdaptor = adaptor;
 			thisManager = manager;
 			thisConnection = connection;
-			thisChildWaypointAdaptors = childWaypointAdaptors;
 		}
 		readonly IWaypointGroupAdaptor thisAdaptor;
 		readonly IWaypointsManager thisManager;
-		readonly List<IWaypointAdaptor> thisChildWaypointAdaptors;
 		List<IWaypoint> thisWaypoints;
-		public void SetUpWaypoints(float speed){
-			SetUpWaypointsOnAllWaypointAdaptors();
-			List<IWaypoint> waypoints = GetWaypointsFromAdaptors();
+		public void SetWaypoints(List<IWaypoint> waypoints){
 			thisWaypoints = waypoints;
-			CacheTravelData(speed);
 		}
-		void CacheTravelData(float speed){
+		public void CacheTravelData(float speed){
 			CacheDistanceOnAllWaypoints(thisWaypoints);
 			CacheRequiredTimeOnAllWaypoints(
 				thisWaypoints,
 				speed
 			);
 		}
-		void SetUpWaypointsOnAllWaypointAdaptors(){
-			foreach(IWaypointAdaptor adaptor in thisChildWaypointAdaptors){
-				adaptor.SetWaypointManager(
-					thisManager
-				);
-				adaptor.CreateAndSetWaypoint();
-			}
-		}
-		List<IWaypoint> GetWaypointsFromAdaptors(){
-			List<IWaypoint> result = new List<IWaypoint>();
-			foreach(IWaypointAdaptor adaptor in thisChildWaypointAdaptors){
-				result.Add(adaptor.GetWaypoint());
-			}
-			return result;
-		}
+
 		void CacheDistanceOnAllWaypoints(List<IWaypoint> waypoints){
 			IWaypoint prevWaypoint = null;
 			foreach(IWaypoint waypoint in waypoints){

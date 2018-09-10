@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IWaypointsManager{
-		void SetFollower(IWaypointsFollower follower);
-		IWaypointsFollower GetFollower();
 		List<IWaypointGroup> GetWaypointGroupsInSequence();
+		// void SetUpAllWaypointGroups();
 		void PlaceWaypointGroups();
 		IWaypointConnection GetInitialConnection();
 		IWaypointGroup GetNextWaypointGroup(
@@ -14,37 +13,52 @@ namespace AppleShooterProto{
 		);
 		void CycleGroup();
 		int GetWaypointGroupIndex(IWaypointGroup group);
+		float GetSpeed();
+		IWaypointsFollower GetFollower();
+		void AddWaypointGroup(IWaypointGroup group);
 	}
+
 	public class WaypointsManager : MonoBehaviour, IWaypointsManager {
 		void Awake(){
+			thisWaypointGroups = new List<IWaypointGroup>();
 			thisGroupSequence = new List<IWaypointGroup>();
+			SetManagerOnAllGroupAndWaypointsAdaptors();
 		}
+		void SetManagerOnAllGroupAndWaypointsAdaptors(){
+			foreach(IWaypointGroupAdaptor groupAdaptor in waypointGroupAdaptors){
+				groupAdaptor.SetWaypointsManager(this);
+				groupAdaptor.SetManagerOnAllWaypointAdaptors();
+			}
+		}
+		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		IWaypointsFollower thisFollower;
 		public IWaypointsFollower GetFollower(){
+			if(thisFollower == null)
+				thisFollower = waypointsFollowerAdaptor.GetWaypointsFollower();
 			return thisFollower;
 		}
-		public void SetFollower(IWaypointsFollower follower){
-			thisFollower = follower;
-		}
-
+		public float GetSpeed(){return waypointsFollowerAdaptor.GetSpeed();}
 		public List<WaypointGroupAdaptor> waypointGroupAdaptors;
 		List<IWaypointGroup> thisWaypointGroups;
+		public void AddWaypointGroup(IWaypointGroup group){
+			thisWaypointGroups.Add(group);
+		}
 		public int GetWaypointGroupIndex(IWaypointGroup group){
 			return thisWaypointGroups.IndexOf(group);
 		}
-		public void SetUpAllWaypointGroups(){
-			List<IWaypointGroup> result = new List<IWaypointGroup>();
-			foreach(WaypointGroupAdaptor waypointGroupAdaptor in waypointGroupAdaptors){
-				waypointGroupAdaptor.SetWaypointsManager(this);
-				waypointGroupAdaptor.SetUpWaypointGroup();
-				IWaypointGroup waypointGroup = waypointGroupAdaptor.GetWaypointGroup();
-				float speed = thisFollower.GetSpeed();
-				waypointGroup.SetUpWaypoints(speed);
 
-				result.Add(waypointGroup);
-			}
-			thisWaypointGroups = result;
-		}
+		// public void SetUpAllWaypointGroups(){
+		// 	float followSpeed = waypointsFollowerAdaptor.GetSpeed();
+
+		// 	List<IWaypointGroup> result = new List<IWaypointGroup>();
+		// 	foreach(WaypointGroupAdaptor waypointGroupAdaptor in waypointGroupAdaptors){
+		// 		waypointGroupAdaptor.SetWaypointsManager(this);
+		// 		waypointGroupAdaptor.SetUpWaypointGroup(followSpeed);
+		// 		IWaypointGroup waypointGroup = waypointGroupAdaptor.GetWaypointGroup();
+		// 		result.Add(waypointGroup);
+		// 	}
+		// 	thisWaypointGroups = result;
+		// }
 
 		public void PlaceWaypointGroups(){
 			PlaceAllWaypointGroupAtReserve();
@@ -195,13 +209,6 @@ namespace AppleShooterProto{
 		void ReformList(
 			IWaypointGroup newGroupToAdd
 		){
-			// List<IWaypointGroup> result = new List<IWaypointGroup>();
-			// for(int i = 1; i < thisGroupSequence.Count; i ++){
-			// 	result.Add(thisGroupSequence[i]);
-			// }
-			// result.Add(newGroupToAdd);
-
-			// thisGroupSequence = result;
 			thisGroupSequence.Add(newGroupToAdd);
 		}
 	}
