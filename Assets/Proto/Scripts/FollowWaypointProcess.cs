@@ -18,44 +18,50 @@ namespace AppleShooterProto{
 		}
 		readonly IWaypointsFollower thisFollower;
 		readonly float thisSpeed;
-		IWaypoint thisTargetWaypoint;
-		float elapsedTimeForCurrentWaypoint;
-		float requiredTimeForCurrentWaypoint;
-		Vector3 thisTargetPosition;
-		Vector3 thisInitPosition;
-		void SetNewTargetWaypoint(){
+		protected IWaypoint thisTargetWaypoint;
+		protected float thisElapsedTimeForCurrentWaypoint;
+		protected float thisRequiredTimeForCurrentWaypoint;
+		protected Vector3 thisTargetPosition;
+		protected Vector3 thisInitPosition;
+		protected void SetNewTargetWaypoint(){
 			thisFollower.SetNextWaypoint();
 			IWaypoint nextWaypoint = thisFollower.GetCurrentWaypoint();
 			if(nextWaypoint != null){
-				thisTargetWaypoint = nextWaypoint;
-				thisInitPosition = thisTargetWaypoint.GetPreviousWaypointPosition();
-				thisTargetPosition = thisTargetWaypoint.GetPosition();
-				elapsedTimeForCurrentWaypoint = 0f;
-				requiredTimeForCurrentWaypoint = thisTargetWaypoint.GetRequiredTime();
+				SetUpWaypoint(nextWaypoint);
 			}
 			else
 				this.Expire();
 		}
+		protected void SetUpWaypoint(IWaypoint waypoint){
+			thisTargetWaypoint = waypoint;
+			thisInitPosition = thisTargetWaypoint.GetPreviousWaypointPosition();
+			thisTargetPosition = thisTargetWaypoint.GetPosition();
+			thisElapsedTimeForCurrentWaypoint = 0f;
+			thisRequiredTimeForCurrentWaypoint = thisTargetWaypoint.GetRequiredTime();
+		}
 		protected override void UpdateProcessImple(float deltaT){
 			if(RequiredTimeForCurrentWaypointHasPassed(deltaT))
 				SetNewTargetWaypoint();
-			MoveFollowerToTargetWaypoint(deltaT);
+			MoveFollowerToTargetWaypoint();
 		}
-		bool RequiredTimeForCurrentWaypointHasPassed(float deltaTime){
-			elapsedTimeForCurrentWaypoint += deltaTime;
-			if(requiredTimeForCurrentWaypoint <= elapsedTimeForCurrentWaypoint)
+		protected bool RequiredTimeForCurrentWaypointHasPassed(float deltaTime){
+			thisElapsedTimeForCurrentWaypoint += deltaTime;
+			if(thisRequiredTimeForCurrentWaypoint <= thisElapsedTimeForCurrentWaypoint)
 				return true;
 			return false;
 		}
 
-		void MoveFollowerToTargetWaypoint(float deltaTime){
-			float normalizedTime = elapsedTimeForCurrentWaypoint/ requiredTimeForCurrentWaypoint;
+		protected void MoveFollowerToTargetWaypoint(){
+			float normalizedTime = thisElapsedTimeForCurrentWaypoint/ thisRequiredTimeForCurrentWaypoint;
 			Vector3 newPosition = Vector3.Lerp(
 				thisInitPosition, 
 				thisTargetPosition, 
 				normalizedTime
 			);
 			thisFollower.SetPosition(newPosition);
+		}
+		protected float GetNormalizedTime(){
+			return thisElapsedTimeForCurrentWaypoint/ thisRequiredTimeForCurrentWaypoint;
 		}
 	}
 

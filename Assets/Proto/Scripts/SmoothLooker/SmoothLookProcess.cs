@@ -17,13 +17,39 @@ namespace AppleShooterProto{
 		readonly IMonoBehaviourAdaptor thisTarget;
 		readonly ISmoothLooker thisSmoothLooker;
 		readonly float thisSmoothCoefficient;
+		float angleThreshold = .1f;
 		protected override void UpdateProcessImple(float deltaT){
 			Vector3 targetLookAtPosition = thisTarget.GetPosition();
-			Vector3 currentLookAtPosition = thisSmoothLooker.GetLookAtPosition();
-			Vector3 displacement = targetLookAtPosition - currentLookAtPosition;
-			Vector3 deltaPosition = displacement * thisSmoothCoefficient * deltaT;
-			Vector3 newPosition = currentLookAtPosition + deltaPosition;
-			thisSmoothLooker.LookAt(newPosition);
+			Vector3 currentLookerPosition = thisSmoothLooker.GetPosition();
+			Quaternion targetLookAtRotation = Quaternion.LookRotation(
+				targetLookAtPosition - currentLookerPosition
+			);
+			Quaternion currentLookRotation = thisSmoothLooker.GetRotation();
+
+			float angle = Quaternion.Angle(
+				targetLookAtRotation,
+				currentLookRotation
+			);
+
+			Quaternion newRotation;
+			
+			if(angle < angleThreshold)
+				newRotation = targetLookAtRotation;
+			else{
+				float t = angle * thisSmoothCoefficient * deltaT;
+				newRotation = Quaternion.Slerp(
+					currentLookRotation,
+					targetLookAtRotation,
+					t
+				);
+			}
+			thisSmoothLooker.SetRotation(newRotation);
+		}
+		float displacementThreshold = .05f;
+		bool DisplacementIsSmallEnough(Vector3 displacement){
+			if(displacement.sqrMagnitude <= displacementThreshold * displacementThreshold)
+				return true;
+			return false;
 		}
 	}
 	public interface ISmoothLookProcessConstArg: IProcessConstArg{

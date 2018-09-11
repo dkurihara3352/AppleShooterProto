@@ -11,6 +11,8 @@ namespace AppleShooterProto{
 		Vector3 GetPosition();
 		void LookAt(Vector3 position);
 		Vector3 GetLookAtPosition();
+		Quaternion GetRotation();
+		void SetRotation(Quaternion rotation);
 	}
 	public class SmoothLooker :ISmoothLooker {
 		public SmoothLooker(
@@ -53,6 +55,13 @@ namespace AppleShooterProto{
 			thisLookAtPosition = position;
 			thisAdaptor.LookAt(position);
 		}
+		public Quaternion GetRotation(){
+			return thisAdaptor.GetRotation();
+		}
+		public void SetRotation(Quaternion rotation){
+			thisAdaptor.SetRotation(rotation);
+		}
+
 	}
 
 

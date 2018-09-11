@@ -5,7 +5,6 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IWaypointGroupAdaptor: IMonoBehaviourAdaptor{
 		IWaypointGroup GetWaypointGroup();
-		void SetRotation(Quaternion rotation);
 		Vector3 GetConnectionPosition();
 		Quaternion GetConnectionRotation();
 		void SetWaypointsManager(IWaypointsManager manager);
@@ -69,9 +68,6 @@ namespace AppleShooterProto{
 				}
 			}
 			return result;
-		}
-		public void SetRotation(Quaternion rotation){
-			this.transform.rotation = rotation;
 		}
 	}
 }

@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
 		void SetRotation(Quaternion rotation);
+		Quaternion GetRotation();
 		void Rotate(Vector3 euler);
 		void Rotate(float angleOnAxis, int axis);
 	}
@@ -35,6 +36,9 @@ namespace AppleShooterProto{
 		}
 		public void SetRotation(Quaternion rotation){
 			this.transform.rotation = rotation;
+		}
+		public Quaternion GetRotation(){
+			return this.transform.rotation;
 		}
 		public void Rotate(Vector3 euler){
 			this.transform.localEulerAngles = euler;

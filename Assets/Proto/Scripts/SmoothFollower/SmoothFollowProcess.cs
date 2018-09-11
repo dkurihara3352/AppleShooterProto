@@ -19,22 +19,35 @@ namespace AppleShooterProto{
 		IMonoBehaviourAdaptor thisTarget;
 		float thisSmoothCoefficient;
 		protected override void UpdateProcessImple(float deltaT){
-			Vector3 smoothFollowerPosition =thisSmoothFollower.GetPosition();
+			Vector3 smoothFollowerPosition = thisSmoothFollower.GetPosition();
 			Vector3 targetPosition = thisTarget.GetPosition();
 			Vector3 displacement = targetPosition - smoothFollowerPosition;
-
-			Vector3 deltaPosition = CalcDeltaPosition(
-				deltaT,
-				displacement
-			);
-			Vector3 newPosition = smoothFollowerPosition + deltaPosition;
+			Vector3 newPosition;
+			if(DisplacementIsSmallEnough(displacement))
+				newPosition = targetPosition;
+			else{
+				Vector3 deltaPosition = CalcDeltaPosition(
+					deltaT,
+					displacement
+				);
+				newPosition = smoothFollowerPosition + deltaPosition;
+			}
 			thisSmoothFollower.SetPosition(newPosition);
+		}
+		float displacemenetThreshold = .05f;
+		bool DisplacementIsSmallEnough(Vector3 displacement){
+			if(displacement.sqrMagnitude <= displacemenetThreshold * displacemenetThreshold)
+				return true;
+			return false;
 		}
 		Vector3 CalcDeltaPosition(
 			float deltaTime,
 			Vector3 displacemenet
 		){
-			return displacemenet * thisSmoothCoefficient * deltaTime;
+			Vector3 deltaPosition = displacemenet * thisSmoothCoefficient * deltaTime;
+			if(deltaPosition.sqrMagnitude > displacemenet.sqrMagnitude)
+				deltaPosition = displacemenet;
+			return deltaPosition;
 		}
 	}
 
