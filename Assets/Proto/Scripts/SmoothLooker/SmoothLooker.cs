@@ -9,10 +9,9 @@ namespace AppleShooterProto{
 		void StopSmoothLook();
 		void SetLookAtTarget(IMonoBehaviourAdaptor target);
 		Vector3 GetPosition();
-		void LookAt(Vector3 position);
-		Vector3 GetLookAtPosition();
 		Quaternion GetRotation();
 		void SetRotation(Quaternion rotation);
+		void RotateToward(Quaternion to, float step);
 	}
 	public class SmoothLooker :ISmoothLooker {
 		public SmoothLooker(
@@ -21,6 +20,7 @@ namespace AppleShooterProto{
 			thisAdaptor = arg.adaptor;
 			thisProcessFactory = arg.processFactory;
 			thisSmoothCoefficient = arg.smoothCoefficient;
+			thisProcessOrder = arg.processOrder;
 		}
 
 		readonly ISmoothLookerAdaptor thisAdaptor;
@@ -31,11 +31,13 @@ namespace AppleShooterProto{
 		}
 		ISmoothLookProcess thisProcess;
 		readonly float thisSmoothCoefficient;
+		readonly int thisProcessOrder;
 		public void StartSmoothLook(){
 			thisProcess = thisProcessFactory.CreateSmoothLookProcess(
 				this,
 				thisLookAtTarget,
-				thisSmoothCoefficient
+				thisSmoothCoefficient,
+				thisProcessOrder
 			);
 			thisProcess.Run();
 			thisAdaptor.SetReady();
@@ -48,18 +50,15 @@ namespace AppleShooterProto{
 			return thisAdaptor.GetPosition();
 		}
 		Vector3 thisLookAtPosition;
-		public Vector3 GetLookAtPosition(){
-			return thisLookAtPosition;
-		}
-		public void LookAt(Vector3 position){
-			thisLookAtPosition = position;
-			thisAdaptor.LookAt(position);
-		}
 		public Quaternion GetRotation(){
 			return thisAdaptor.GetRotation();
 		}
 		public void SetRotation(Quaternion rotation){
 			thisAdaptor.SetRotation(rotation);
+		}
+		public void RotateToward(Quaternion to, float step){
+			Quaternion newRotation = Quaternion.RotateTowards(GetRotation(), to, step);
+			thisAdaptor.SetRotation(newRotation);
 		}
 
 	}
@@ -70,16 +69,19 @@ namespace AppleShooterProto{
 		ISmoothLookerAdaptor adaptor{get;}
 		IAppleShooterProcessFactory processFactory{get;}
 		float smoothCoefficient{get;}
+		int processOrder{get;}
 	}
 	public struct SmoothLookerConstArg: ISmoothLookerConstArg{
 		public SmoothLookerConstArg(
 			ISmoothLookerAdaptor adaptor,
 			IAppleShooterProcessFactory processFactory,
-			float smoothCoefficient
+			float smoothCoefficient,
+			int processOrder
 		){
 			thisAdaptor = adaptor;
 			thisProcessFactory = processFactory;
 			thisSmoothCoefficient = smoothCoefficient;
+			thisProcessOrder = processOrder;
 		}
 		readonly ISmoothLookerAdaptor thisAdaptor;
 		public ISmoothLookerAdaptor adaptor{get{return thisAdaptor;}}
@@ -87,5 +89,7 @@ namespace AppleShooterProto{
 		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
 		readonly float thisSmoothCoefficient;
 		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 }

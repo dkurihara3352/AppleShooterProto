@@ -10,6 +10,7 @@ namespace DKUtility{
 		void Expire();
 		bool IsRunning();
 		float GetSpringT(float normalizedT);
+		int GetProcessOrder();
 	}
 	public abstract class AbsProcess: IProcess{
 		public AbsProcess(IProcessConstArg arg){
@@ -44,6 +45,9 @@ namespace DKUtility{
 		public float GetSpringT(float normlizedT){
 			return thisProcessManager.GetSpringT(normlizedT);
 		}
+		public virtual int GetProcessOrder(){//override this in order sensitive process
+			return -1;
+		}
 	}
 
 
@@ -59,6 +63,16 @@ namespace DKUtility{
 		}
 		readonly IProcessManager thisProcessManager;
 		public IProcessManager processManager{get{return thisProcessManager;}}
+	}
+
+	public interface IProcessComparer: IComparer<IProcess>{
+	}
+	public class ProcessComparer: IProcessComparer{
+		public int Compare(IProcess process, IProcess other){
+			return process.GetProcessOrder().CompareTo(
+				other.GetProcessOrder()
+			);
+		}
 	}
 }
 

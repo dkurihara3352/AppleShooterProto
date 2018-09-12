@@ -14,6 +14,7 @@ namespace AppleShooterProto{
 		){
 			thisFollower = arg.follower;
 			thisSpeed = arg.speed;
+			thisProcessOrder = arg.processOrder;
 			SetNewTargetWaypoint();
 		}
 		readonly IWaypointsFollower thisFollower;
@@ -63,22 +64,29 @@ namespace AppleShooterProto{
 		protected float GetNormalizedTime(){
 			return thisElapsedTimeForCurrentWaypoint/ thisRequiredTimeForCurrentWaypoint;
 		}
+		readonly int thisProcessOrder;
+		public override int GetProcessOrder(){
+			return thisProcessOrder;
+		}
 	}
 
 	
 	public interface IFollowWaypointProcessConstArg: IProcessConstArg{
 		IWaypointsFollower follower{get;}
 		float speed{get;}
+		int processOrder{get;}
 	}
 	public struct FollowWaypointProcessConstArg: IFollowWaypointProcessConstArg{
 		public FollowWaypointProcessConstArg(
 			IProcessManager processManager,
 			IWaypointsFollower follwer,
-			float speed
+			float speed,
+			int processOrder
 		){
 			thisProcessManager = processManager;
 			thisFollower = follwer;
 			thisSpeed = speed;
+			thisProcessOrder = processOrder;
 		}
 		readonly IProcessManager thisProcessManager;
 		public IProcessManager processManager{get{return thisProcessManager;}}
@@ -86,6 +94,8 @@ namespace AppleShooterProto{
 		public IWaypointsFollower follower{get{return thisFollower;}}
 		readonly float thisSpeed;
 		public float speed{get{return thisSpeed;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 	
 }

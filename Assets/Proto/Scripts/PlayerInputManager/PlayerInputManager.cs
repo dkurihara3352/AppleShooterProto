@@ -18,6 +18,27 @@ namespace AppleShooterProto{
 		public PlayerInputManager(/* IPlayerInputManagerConstArg arg */){
 		}
 		// IPlayerInputManagerStateEngine thisEngine;
+		/*  Player Input State
+				Idle
+					enter
+						CameraLookAtTarget start to smooth follow default position
+					OnBeginDrag
+						to LookingAround
+					OnTouch
+						to LookingAroung?
+					
+				LookingAround/Aiming
+					enter
+						CameraLookAtTarget stops following default position
+					when deltaPos is below threshold
+						to Drawing
+				Drawing
+					enter
+						Zoom
+							Change FOV and scroller coeff
+					when deltaPos is above threshold
+						to Looking
+		*/
 		bool panHasStarted = false;
 		public void LookAround(
 			float normalizedCameraPosition,

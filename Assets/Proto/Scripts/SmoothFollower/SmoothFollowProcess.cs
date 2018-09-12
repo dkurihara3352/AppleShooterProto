@@ -14,6 +14,7 @@ namespace AppleShooterProto{
 			thisSmoothFollower = arg.smoothFollower;
 			thisTarget = arg.target;
 			thisSmoothCoefficient = arg.smoothCoefficient;
+			thisProcessOrder = arg.processOrder;
 		}
 		ISmoothFollower thisSmoothFollower;
 		IMonoBehaviourAdaptor thisTarget;
@@ -49,6 +50,10 @@ namespace AppleShooterProto{
 				deltaPosition = displacemenet;
 			return deltaPosition;
 		}
+		readonly int thisProcessOrder;
+		public override int GetProcessOrder(){
+			return thisProcessOrder;
+		}
 	}
 
 
@@ -56,6 +61,7 @@ namespace AppleShooterProto{
 		ISmoothFollower smoothFollower{get;}
 		IMonoBehaviourAdaptor target{get;}
 		float smoothCoefficient{get;}
+		int processOrder{get;}
 	}
 	public class SmoothFollowTargetProcessConstArg: ProcessConstArg, ISmoothFollowTargetProcessConstArg{
 		public SmoothFollowTargetProcessConstArg(
@@ -63,13 +69,16 @@ namespace AppleShooterProto{
 
 			ISmoothFollower smoothFollower,
 			IMonoBehaviourAdaptor target,
-			float smoothCoefficient
+			float smoothCoefficient,
+			int processOrder
+
 		): base(
 			processManager
 		){
 			thisFollower = smoothFollower;
 			thisTarget = target;
 			thisSmoothCoefficient = smoothCoefficient;
+			thisProcessOrder = processOrder;
 		}
 		readonly ISmoothFollower thisFollower;
 		public ISmoothFollower smoothFollower{get{return thisFollower;}}
@@ -77,5 +86,7 @@ namespace AppleShooterProto{
 		public IMonoBehaviourAdaptor target{get{return thisTarget;}}
 		readonly float thisSmoothCoefficient;
 		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 }

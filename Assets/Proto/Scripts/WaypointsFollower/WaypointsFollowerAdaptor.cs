@@ -18,6 +18,7 @@ namespace AppleShooterProto{
 		public float followSpeed;
 		public float GetSpeed(){return followSpeed;}
 		public WaypointsManager thisWaypointsManager;
+		public int processOrder = 100;
 		public override void SetUp(){
 			thisProcessFactory = new AppleShooterProcessFactory(
 				processManager
@@ -26,7 +27,8 @@ namespace AppleShooterProto{
 				thisWaypointsManager,
 				this, 
 				thisProcessFactory,
-				followSpeed
+				followSpeed,
+				processOrder
 			);
 			thisFollower = new WaypointsFollower(arg);
 		}

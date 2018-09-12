@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		public MonoBehaviourAdaptor followTarget;
 		public ProcessManager processManager;
 		public float smoothCoefficient;
+		public int processOrder = 100;
 		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
 				processManager
@@ -18,7 +19,8 @@ namespace AppleShooterProto{
 				this,
 				processFactory,
 				smoothCoefficient,
-				followTarget
+				followTarget,
+				processOrder
 			);
 			thisSmoothFollower = new SmoothFollower(arg);
 		}

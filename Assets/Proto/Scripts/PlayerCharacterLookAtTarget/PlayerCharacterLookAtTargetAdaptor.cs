@@ -10,13 +10,15 @@ namespace AppleShooterProto{
 	public class PlayerCharacterLookAtTargetAdaptor: MonoBehaviourAdaptor, IPlayerCharacterLookAtTargetAdaptor{
 		public ProcessManager processManager;
 		IPlayerCharacterLookAtTarget thisLookAtTarget;
+		public int processOrder;
 		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
 				processManager
 			);
 			ILookAtTargetConstArg arg = new LookAtTargetConstArg(
 				this,
-				processFactory
+				processFactory,
+				processOrder
 			);
 			thisLookAtTarget = new PlayerCharacterLookAtTarget(arg);
 		}

@@ -7,21 +7,25 @@ namespace AppleShooterProto{
 	public interface IAppleShooterProcessFactory: IProcessFactory{
 		IFollowWaypointProcess CreateFollowWaypointProcess(
 			IWaypointsFollower follower,
-			float speed
+			float speed,
+			int processOrder
 		);
 		ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
 			ISmoothFollower follower,
 			IMonoBehaviourAdaptor target,
-			float smoothCoefficient
+			float smoothCoefficient,
+			int processOrder
 		);
 		IPlayerCharacterLookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
 			IPlayerCharacterLookAtTarget lookAtTarget,
-			ISmoothLooker smoothLooker
+			ISmoothLooker smoothLooker,
+			int processOrder
 		);
 		ISmoothLookProcess CreateSmoothLookProcess(
 			ISmoothLooker smoothLooker,
 			IMonoBehaviourAdaptor lookAtTarget,
-			float smoothCoefficient
+			float smoothCoefficient,
+			int processOrder
 		);
 	}
 
@@ -34,12 +38,14 @@ namespace AppleShooterProto{
 		}
 		public IFollowWaypointProcess CreateFollowWaypointProcess(
 			IWaypointsFollower follower,
-			float speed
+			float speed,
+			int processOrder
 		){
 			IFollowWaypointProcessConstArg arg = new FollowWaypointProcessConstArg(
 				thisProcessManager,
 				follower,
-				speed
+				speed,
+				processOrder
 			);
 			return new FollowWaypointProcess(arg);
 		}
@@ -47,37 +53,43 @@ namespace AppleShooterProto{
 		public ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
 			ISmoothFollower smoothFollower,
 			IMonoBehaviourAdaptor target,
-			float smoothCoefficient
+			float smoothCoefficient,
+			int processOrder
 		){
 			ISmoothFollowTargetProcessConstArg arg = new SmoothFollowTargetProcessConstArg(
 				thisProcessManager,
 				smoothFollower,
 				target,
-				smoothCoefficient
+				smoothCoefficient,
+				processOrder
 			);
 			return new SmoothFollowTargetProcess(arg);
 		}
 		public IPlayerCharacterLookAtTargetMotionProcess CreateLookAtTargetMotionProcess(
 			IPlayerCharacterLookAtTarget lookAtTarget,
-			ISmoothLooker smoothLooker
+			ISmoothLooker smoothLooker,
+			int processOrder
 		){
 			IPlayerCharacterLookAtTargetMotionProcessConstArg arg = new PlayerCharacterLookAtTargetMotionProcessConstArg(
 				thisProcessManager,
 				lookAtTarget,
-				smoothLooker
+				smoothLooker,
+				processOrder
 			);
 			return new PlayerCharacterLookAtTargetMotionProcess(arg);
 		}
 		public ISmoothLookProcess CreateSmoothLookProcess(
 			ISmoothLooker smoothLooker,
 			IMonoBehaviourAdaptor lookAtTarget,
-			float smoothCoefficient
+			float smoothCoefficient,
+			int processOrder
 		){
 			ISmoothLookProcessConstArg arg = new SmoothLookProcessConstArg(
 				thisProcessManager,
 				lookAtTarget,
 				smoothLooker,
-				smoothCoefficient
+				smoothCoefficient,
+				processOrder
 			);
 			return new SmoothLookProcess(arg);
 		}

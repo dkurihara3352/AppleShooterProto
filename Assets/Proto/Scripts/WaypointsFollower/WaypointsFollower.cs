@@ -25,6 +25,7 @@ namespace AppleShooterProto{
 			thisAdaptor = arg.adaptor;
 			thisProcessFactory = arg.processFactory;
 			thisFollowSpeed = arg.followSpeed;
+			thisProcessOrder = arg.processOrder;
 		}
 		readonly IWaypointsFollowerAdaptor thisAdaptor;
 		readonly IAppleShooterProcessFactory thisProcessFactory;
@@ -34,10 +35,12 @@ namespace AppleShooterProto{
 			return thisFollowSpeed;
 		}
 		IFollowWaypointProcess thisProcess;
+		readonly int thisProcessOrder;
 		public void StartFollowing(){
 			thisProcess = thisProcessFactory.CreateFollowWaypointProcess(
 				this,
-				thisFollowSpeed
+				thisFollowSpeed,
+				thisProcessOrder
 			);
 			thisProcess.Run();
 		}
@@ -100,18 +103,21 @@ namespace AppleShooterProto{
 		IWaypointsFollowerAdaptor adaptor{get;}
 		IAppleShooterProcessFactory processFactory{get;}
 		float followSpeed{get;}
+		int processOrder{get;}
 	}
 	public struct WaypointsFollowerConstArg: IWaypointsFollowerConstArg{
 		public WaypointsFollowerConstArg(
 			IWaypointsManager waypointsManager,
 			IWaypointsFollowerAdaptor adaptor,
 			IAppleShooterProcessFactory processFactory,
-			float followSpeed
+			float followSpeed,
+			int processOrder
 		){
 			thisManager = waypointsManager;
 			thisAdaptor = adaptor;
 			thisProcessFactory = processFactory;
 			thisFollowSpeed = followSpeed;
+			thisProcessOrder = processOrder;
 		}
 		readonly IWaypointsManager thisManager;
 		public IWaypointsManager waypointsManager{get{return thisManager;}}
@@ -121,6 +127,8 @@ namespace AppleShooterProto{
 		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
 		readonly float thisFollowSpeed;
 		public float followSpeed{get{return thisFollowSpeed;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 }
 

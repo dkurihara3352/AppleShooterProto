@@ -10,14 +10,28 @@ namespace DKUtility{
 			springCalculator = new NormalizedSpringValueCalculator(100);
 		}
 		void Update(){
+			// Debug.Log(
+			// 	Time.frameCount.ToString() + 
+			// 	" update"
+			// );
 			UpdateAllRegisteredProcesses(Time.deltaTime);
+			// CallUIEvents();// process queue
+			// LateUpdateAllLateProcesses(Time.deltaTime);//do camera stuf here
+		}
+		void LateUpdate(){
+			// Debug.Log(
+			// 	Time.frameCount.ToString() + 
+			// 	" late"
+			// );
 		}
 		List<IProcess> thisRunningProcesses;
+		IProcessComparer thisProcessComparer = new ProcessComparer();
 		public void AddRunningProcess(IProcess process){
 			if(!thisRunningProcesses.Contains(process)){
 				List<IProcess> newList = new List<IProcess>(thisRunningProcesses);
 				newList.Add(process);
 				thisRunningProcesses = newList;
+				thisRunningProcesses.Sort(thisProcessComparer);
 			}
 		}
 		public void RemoveRunningProcess(IProcess process){

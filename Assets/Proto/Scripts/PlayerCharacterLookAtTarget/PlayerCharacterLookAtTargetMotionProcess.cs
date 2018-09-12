@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 		){
 			thisSmoothLooker = arg.smoothLooker;
 			thisLookAtTarget = arg.lookAtTarget;
+			thisProcessOrder = arg.processOrder;
 		}
 		readonly ISmoothLooker thisSmoothLooker;
 		readonly IPlayerCharacterLookAtTarget thisLookAtTarget;
@@ -24,27 +25,36 @@ namespace AppleShooterProto{
 			thisLookAtTarget.SetDirection(newDirection);
 			prevPosition = lookerCurPosition;
 		}
+		readonly int thisProcessOrder;
+		public override int GetProcessOrder(){
+			return thisProcessOrder;
+		}
 	}
 	public interface IPlayerCharacterLookAtTargetMotionProcessConstArg: IProcessConstArg{
 		IPlayerCharacterLookAtTarget lookAtTarget{get;}
 		ISmoothLooker smoothLooker{get;}
+		int processOrder{get;}
 	}
 	public class PlayerCharacterLookAtTargetMotionProcessConstArg: ProcessConstArg, IPlayerCharacterLookAtTargetMotionProcessConstArg{
 		public PlayerCharacterLookAtTargetMotionProcessConstArg(
 			IProcessManager processManager,
 
 			IPlayerCharacterLookAtTarget lookAtTarget,
-			ISmoothLooker smoothLooker
+			ISmoothLooker smoothLooker,
+			int processOrder
 		): base(
 			processManager
 		){
 			thisLookAtTarget = lookAtTarget;
 			thisSmoothLooker = smoothLooker;
+			thisProcessOrder = processOrder;
 		}
 		readonly IPlayerCharacterLookAtTarget thisLookAtTarget;
 		public IPlayerCharacterLookAtTarget lookAtTarget{get{return thisLookAtTarget;}}
 		readonly ISmoothLooker thisSmoothLooker;
 		public ISmoothLooker smoothLooker{get{return thisSmoothLooker;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 }
 

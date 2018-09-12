@@ -320,6 +320,10 @@ namespace UISystem{
 				}
 			}
 			public void OnPointerDown(PointerEventData eventData){
+				// DKUtility.DebugHelper.PrintInRed(
+				// 	Time.frameCount.ToString() + 
+				// 	" PointerDown"
+				// );
 				if(!thisUIManager.TouchIDIsRegistered()){
 					thisUIManager.RegisterTouchID(eventData.pointerId);
 					ICustomEventData customEventData = new CustomEventData(eventData, Time.deltaTime);

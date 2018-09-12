@@ -17,6 +17,7 @@ namespace AppleShooterProto{
 		){
 			thisAdaptor = arg.adaptor;
 			thisProcessFactory = arg.processFactory;
+			thisProcessOrder = arg.processOrder;
 		}
 		readonly IPlayerCharacterLookAtTargetAdaptor thisAdaptor;
 		ISmoothLooker thisSmoothLooker;
@@ -24,10 +25,12 @@ namespace AppleShooterProto{
 		public void SetSmoothLooker(ISmoothLooker looker){
 			thisSmoothLooker = looker;
 		}
+		readonly int thisProcessOrder;
 		public void StartLookAtTargetMotion(){
 			IPlayerCharacterLookAtTargetMotionProcess process = thisProcessFactory.CreateLookAtTargetMotionProcess(
 				this,
-				thisSmoothLooker
+				thisSmoothLooker,
+				thisProcessOrder
 			);
 			process.Run();
 		}
@@ -55,18 +58,23 @@ namespace AppleShooterProto{
 	public interface ILookAtTargetConstArg{
 		IPlayerCharacterLookAtTargetAdaptor adaptor{get;}
 		IAppleShooterProcessFactory processFactory{get;}
+		int processOrder{get;}
 	}
 	public struct LookAtTargetConstArg: ILookAtTargetConstArg{
 		public LookAtTargetConstArg(
 			IPlayerCharacterLookAtTargetAdaptor adaptor,
-			IAppleShooterProcessFactory processFactory
+			IAppleShooterProcessFactory processFactory,
+			int processOrder
 		){
 			thisAdaptor = adaptor;
 			thisProcessFactory = processFactory;
+			thisProcessOrder = processOrder;
 		}
 		readonly IPlayerCharacterLookAtTargetAdaptor thisAdaptor;
 		public IPlayerCharacterLookAtTargetAdaptor adaptor{get{return thisAdaptor;}}
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 }

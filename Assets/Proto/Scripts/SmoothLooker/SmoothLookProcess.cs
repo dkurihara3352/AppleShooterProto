@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 			thisTarget = arg.target;
 			thisSmoothLooker = arg.smoothLooker;
 			thisSmoothCoefficient = arg.smoothCoefficient;
+			thisProcessOrder = arg.processOrder;
 		}
 		readonly IMonoBehaviourAdaptor thisTarget;
 		readonly ISmoothLooker thisSmoothLooker;
@@ -21,41 +22,37 @@ namespace AppleShooterProto{
 		protected override void UpdateProcessImple(float deltaT){
 			Vector3 targetLookAtPosition = thisTarget.GetPosition();
 			Vector3 currentLookerPosition = thisSmoothLooker.GetPosition();
-			Quaternion targetLookAtRotation = Quaternion.LookRotation(
-				targetLookAtPosition - currentLookerPosition
-			);
-			Quaternion currentLookRotation = thisSmoothLooker.GetRotation();
+			Vector3 displacement = targetLookAtPosition - currentLookerPosition;
 
-			float angle = Quaternion.Angle(
-				targetLookAtRotation,
-				currentLookRotation
-			);
+			if(displacement.sqrMagnitude > displacementThreshold * displacementThreshold){
 
-			Quaternion newRotation;
-			
-			if(angle < angleThreshold)
-				newRotation = targetLookAtRotation;
-			else{
-				float t = angle * thisSmoothCoefficient * deltaT;
-				newRotation = Quaternion.Slerp(
-					currentLookRotation,
-					targetLookAtRotation,
-					t
+				Quaternion targetLookAtRotation = Quaternion.LookRotation(
+					displacement
 				);
+				Quaternion currentLookRotation = thisSmoothLooker.GetRotation();
+
+				float angle = Quaternion.Angle(
+					targetLookAtRotation,
+					currentLookRotation
+				);
+
+				float t = angle * thisSmoothCoefficient * deltaT;
+					
+				thisSmoothLooker.RotateToward(targetLookAtRotation, t);
 			}
-			thisSmoothLooker.SetRotation(newRotation);
+
 		}
 		float displacementThreshold = .05f;
-		bool DisplacementIsSmallEnough(Vector3 displacement){
-			if(displacement.sqrMagnitude <= displacementThreshold * displacementThreshold)
-				return true;
-			return false;
+		readonly int thisProcessOrder;
+		public override int GetProcessOrder(){
+			return thisProcessOrder;
 		}
 	}
 	public interface ISmoothLookProcessConstArg: IProcessConstArg{
 		IMonoBehaviourAdaptor target{get;}
 		ISmoothLooker smoothLooker{get;}
 		float smoothCoefficient{get;}
+		int processOrder{get;}
 	}
 	public class SmoothLookProcessConstArg: ProcessConstArg, ISmoothLookProcessConstArg{
 		public SmoothLookProcessConstArg(
@@ -63,13 +60,15 @@ namespace AppleShooterProto{
 
 			IMonoBehaviourAdaptor target,
 			ISmoothLooker looker,
-			float smoothCoefficient
+			float smoothCoefficient,
+			int processOrder
 		): base(
 			processManager
 		){
 			thisTarget = target;
 			thisSmoothLooker = looker;
 			thisSmoothCoefficient = smoothCoefficient;
+			thisProcessOrder = processOrder;
 		}
 		readonly IMonoBehaviourAdaptor thisTarget;
 		public IMonoBehaviourAdaptor target{get{return thisTarget;}}
@@ -77,5 +76,7 @@ namespace AppleShooterProto{
 		public ISmoothLooker smoothLooker{get{return thisSmoothLooker;}}
 		readonly float thisSmoothCoefficient;
 		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 }

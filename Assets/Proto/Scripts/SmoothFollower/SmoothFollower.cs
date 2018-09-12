@@ -18,6 +18,7 @@ namespace AppleShooterProto{
 			thisProcessFactory = arg.processFactory;
 			thisSmoothCoefficient = arg.smoothCoefficient;
 			thisFollowTarget = arg.followTarget;
+			thisProcessOrder = arg.processOrder;
 		}
 		readonly ISmoothFollowerAdaptor thisAdaptor;
 		readonly IAppleShooterProcessFactory thisProcessFactory;
@@ -27,11 +28,13 @@ namespace AppleShooterProto{
 			thisFollowTarget = target;
 		}
 		ISmoothFollowTargetProcess thisProcess;
+		readonly  int thisProcessOrder;
 		public void StartFollow(){
 			thisProcess = thisProcessFactory.CreateSmoothFollowTargetProcess(
 				this,
 				thisFollowTarget,
-				thisSmoothCoefficient
+				thisSmoothCoefficient,
+				thisProcessOrder
 			);
 			thisProcess.Run();
 		}
@@ -53,18 +56,21 @@ namespace AppleShooterProto{
 		ISmoothFollowerAdaptor adaptor{get;}
 		float smoothCoefficient{get;}
 		IMonoBehaviourAdaptor followTarget{get;}
+		int processOrder{get;}
 	}
 	public struct SmoothFollowerConstArg: ISmoothFollowerConstArg{
 		public SmoothFollowerConstArg(
 			ISmoothFollowerAdaptor adaptor,
 			IAppleShooterProcessFactory processFactory,
 			float smoothCoefficient,
-			IMonoBehaviourAdaptor followTarget
+			IMonoBehaviourAdaptor followTarget,
+			int processOrder
 		){
 			thisAdaptor = adaptor;
 			thisProcessFactory = processFactory;
 			thisSmoothCoefficient = smoothCoefficient;
 			thisFollowTarget = followTarget;
+			thisProcessOrder = processOrder;
 		}
 		readonly ISmoothFollowerAdaptor thisAdaptor;
 		public ISmoothFollowerAdaptor adaptor{get{return thisAdaptor;}}
@@ -74,5 +80,7 @@ namespace AppleShooterProto{
 		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
 		readonly IMonoBehaviourAdaptor thisFollowTarget;
 		public IMonoBehaviourAdaptor followTarget{get{return thisFollowTarget;}}
+		readonly int thisProcessOrder;
+		public int processOrder{get{return thisProcessOrder;}}
 	}
 }

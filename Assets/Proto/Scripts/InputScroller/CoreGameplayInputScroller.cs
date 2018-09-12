@@ -29,6 +29,24 @@ namespace AppleShooterProto{
 				dimension
 			);
 		}
+		protected override void ProcessSwipe(ICustomEventData eventData){
+			base.ProcessSwipe(eventData);
+		}
+		protected override void OnTapImple(int tapCount){
+			base.OnTapImple(tapCount);
+		}
+		protected override void OnReleaseImple(){
+			base.OnReleaseImple();
+		}
+		protected override void OnTouchImple(int touchCount){
+			base.OnTouchImple(touchCount);
+		}
+		protected override void OnBeginDragImple(ICustomEventData eventData){
+			base.OnBeginDragImple(eventData);
+		}
+		protected override void OnDragImple(ICustomEventData eventData){
+			base.OnDragImple(eventData);
+		}
 	}
 
 
