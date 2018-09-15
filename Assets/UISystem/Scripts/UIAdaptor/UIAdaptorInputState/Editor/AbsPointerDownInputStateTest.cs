@@ -40,7 +40,7 @@ public class AbsPointerDownInputStateTest {
         bool expected
     ){
         IPointerDownInputStateConstArg arg = CreateMockArg();
-        arg.engine.GetSwipeVelocityThreshold().Returns(threshold);
+        arg.swipeVelocityThreshold.Returns(threshold);
         TestAbsPointerDownInputState state = new TestAbsPointerDownInputState(arg);
 
         bool actual = state.VelocityIsOverSwipeThreshold_Test(velocity);
@@ -199,12 +199,17 @@ public class AbsPointerDownInputStateTest {
         public void SetVelocityStack_Test(Vector2[] stack){
             thisVelocityStack = stack;
         }
+        public override string GetName(){
+            return "TestAbsPointerDownInputState";
+        }
     }
 	IPointerDownInputStateConstArg CreateMockArg(){
         IPointerDownInputStateConstArg arg = Substitute.For<IPointerDownInputStateConstArg>();
         arg.engine.Returns(Substitute.For<IUIAdaptorInputStateEngine>());
         arg.uiManager.Returns(Substitute.For<IUIManager>());
         arg.velocityStackSize.Returns(3);
+        arg.swipeVelocityThreshold.Returns(100f);
+        arg.swipeDistanceThreshold.Returns(10f);
 
         return arg;
     }

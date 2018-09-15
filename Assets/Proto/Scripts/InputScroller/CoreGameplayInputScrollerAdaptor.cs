@@ -4,13 +4,15 @@ using UnityEngine;
 using UISystem;
 
 namespace AppleShooterProto{
-	public interface ICoreGameplaceInputScrollerAdaptor: IGenericSingleElementScrollerAdaptor{}
-	public class CoreGameplayInputScrollerAdaptor : GenericSingleElementScrollerAdaptor, ICoreGameplaceInputScrollerAdaptor {
+	public interface ICoreGameplayInputScrollerAdaptor: IGenericSingleElementScrollerAdaptor{
+		ICoreGameplayInputScroller GetInputScroller();
+	}
+	public class CoreGameplayInputScrollerAdaptor : GenericSingleElementScrollerAdaptor, ICoreGameplayInputScrollerAdaptor {
 		public PlayerInputManagerAdaptor inputManagerAdaptor;
 		protected override IUIElement CreateUIElement(IUIImage image){
-			IPlayerInputManager inputManager = inputManagerAdaptor.GetInputManager();
+			// IPlayerInputManager inputManager = inputManagerAdaptor.GetInputManager();
 			ICoreGameplayInputScrollerConstArg arg = new CoreGameplayInputScrollerConstArg(
-				inputManager,
+				// inputManager,
 				
 				relativeCursorLength,
 				scrollerAxis,
@@ -27,6 +29,11 @@ namespace AppleShooterProto{
 				activationMode
 			);
 			return new CoreGameplayInputScroller(arg);
+		}
+		public ICoreGameplayInputScroller GetInputScroller(){
+			if(GetUIElement() == null)
+				Debug.Log("FUCK");
+			return (ICoreGameplayInputScroller)GetUIElement();
 		}
 	}
 }

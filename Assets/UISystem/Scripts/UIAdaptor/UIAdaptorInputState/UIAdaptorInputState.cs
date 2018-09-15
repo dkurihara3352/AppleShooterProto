@@ -15,6 +15,7 @@ namespace UISystem{
 	}
 	/* States */
 	public interface IUIAdaptorInputState: IRawInputHandler, ISwitchableState{
+		string GetName();
 	}
 	public abstract class AbsUIAdaptorInputState: IUIAdaptorInputState{
 		public AbsUIAdaptorInputState(
@@ -31,6 +32,7 @@ namespace UISystem{
 		public abstract void OnDrag(ICustomEventData eventData);
 		public abstract void OnPointerEnter(ICustomEventData eventData);
 		public abstract void OnPointerExit(ICustomEventData eventData);
+		public abstract string GetName();
 	}
 	public interface IUIAdaptorInputStateConstArg{
 		IUIAdaptorInputStateEngine engine{get;}

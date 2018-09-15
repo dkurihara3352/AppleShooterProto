@@ -22,14 +22,16 @@ namespace AppleShooterProto{
 			sTR_1 = GetSubRect(topRightRect, 0, 3);
 			sTR_2 = GetSubRect(topRightRect, 1, 3);
 		}
+
 		Rect topLeftRect; Rect sTL_1; Rect sTL_2; Rect sTL_3; Rect sTL_4; Rect sTL_5; Rect sTL_6;
 		Rect topRightRect; Rect sTR_1; Rect sTR_2;
 		public ProtoGameManager gameManager;
 		public bool drawsWaypointFollowerSetUp = true;
 		public UISystem.UIManagerAdaptor uiManagerAdaptor;
+		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 
 		void OnGUI(){
-			DrawGroupSequence();
+			DrawCurrentState();
 			DrawControl();
 		}
 
@@ -37,23 +39,18 @@ namespace AppleShooterProto{
 			if(GUI.Button(
 				sTL_1,
 				"SetUp"
-			))
-				gameManager.SetUp();
+			)){
+				gameManager.SetUpUISystem();
+				gameManager.SetUpMBAdaptors();
+			}
+
 			if(GUI.Button(
 				sTL_2,
 				"Run"
-			))
-				gameManager.RunSystem();
-			if(GUI.Button(
-				sTL_3,
-				"Get UI Ready"
 			)){
-				UISystem.IUIManager uim = uiManagerAdaptor.GetUIManager();
-				uim.GetReadyForUISystemActivation();
-				uim.ActivateUISystem(false);
+				gameManager.RunSystem();			
+				thisSystemIsReady = true;
 			}
-
-			
 		}
 		bool thisGroupSequenceIsReady = false;
 		void DrawGroupSequence(){
@@ -74,6 +71,17 @@ namespace AppleShooterProto{
 			foreach(int index in indexes)
 				result += index.ToString() + ",";
 			return result;
+		}
+		bool thisSystemIsReady = false;
+		void DrawCurrentState(){
+			if(thisSystemIsReady){
+				string stateName = playerInputManagerAdaptor.GetStateName();
+				GUI.Label(
+					sTR_1,
+					"CurState: " + stateName
+				);
+			}
+			
 		}
 		Rect GetGUIRect(
 			Vector2 normalizedSize,

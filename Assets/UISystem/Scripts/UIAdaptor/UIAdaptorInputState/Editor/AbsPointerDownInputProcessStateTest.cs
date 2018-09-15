@@ -116,6 +116,9 @@ public class AbsPointerDownInputProcessStateTest{
         public void SetProcess(IUIAdaptorInputProcess process){
             thisProcess = process;
         }
+        public override string GetName(){
+            return "TestAbsPointerDonwInputProcessState";
+        }
     }
     IPointerDownInputProcessStateConstArg CreateMockArg(){
         IPointerDownInputProcessStateConstArg arg = Substitute.For<IPointerDownInputProcessStateConstArg>();

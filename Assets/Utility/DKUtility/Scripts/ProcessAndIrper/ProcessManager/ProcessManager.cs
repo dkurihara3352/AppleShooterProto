@@ -10,19 +10,7 @@ namespace DKUtility{
 			springCalculator = new NormalizedSpringValueCalculator(100);
 		}
 		void Update(){
-			// Debug.Log(
-			// 	Time.frameCount.ToString() + 
-			// 	" update"
-			// );
 			UpdateAllRegisteredProcesses(Time.deltaTime);
-			// CallUIEvents();// process queue
-			// LateUpdateAllLateProcesses(Time.deltaTime);//do camera stuf here
-		}
-		void LateUpdate(){
-			// Debug.Log(
-			// 	Time.frameCount.ToString() + 
-			// 	" late"
-			// );
 		}
 		List<IProcess> thisRunningProcesses;
 		IProcessComparer thisProcessComparer = new ProcessComparer();
@@ -108,6 +96,10 @@ namespace DKUtility{
 		public float uiaWaitForNextTouchProcessExpireTime;
 		public float GetUIAWaitForNextTouchProcessExpireTime(){
 			return uiaWaitForNextTouchProcessExpireTime;
+		}
+		public float waitAndSwitchToIdleStateProcessExpireTime = 2f;
+		public float GetWaitAndSwitchToIdleStateProcessExpireTime(){
+			return waitAndSwitchToIdleStateProcessExpireTime;
 		}
 	}
 }

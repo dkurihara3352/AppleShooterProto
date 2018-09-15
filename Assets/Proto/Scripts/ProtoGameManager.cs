@@ -1,25 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UISystem;
 
 namespace AppleShooterProto{
 	public class ProtoGameManager : MonoBehaviour {
 
 		public WaypointsManager waypointsManager;
-		public WaypointsFollowerAdaptor wpFollowerAdaptor;
+		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		public SmoothFollowerAdaptor pcSmoothFollowerAdaptor;
 		public SmoothLookerAdaptor pcSmoothLookerAdaptor;
 		public PlayerCharacterLookAtTargetAdaptor pcLookAtTargetAdaptor;
 		public SmoothFollowerAdaptor camSmoothFollowerAdaptor;
 		public SmoothLookerAdaptor camSmoothLookerAdaptor;
-		public SmoothFollowerAdaptor camLookAtTarget;
 
 		public MonoBehaviourAdaptorManager mbAdaptorManager;
-		IWaypointsFollower thisFollower;
-		public void SetUp(){
+		public UIManagerAdaptor uiManagerAdaptor;
+
+		public CoreGameplayInputScrollerAdaptor coreGameplayInputScrollerAdaptor;
+		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
+
+		public void SetUpUISystem(){
+			IUIManager uim = uiManagerAdaptor.GetUIManager();
+			uim.GetReadyForUISystemActivation();
+		}
+		public void SetUpMBAdaptors(){
 			SetUpAllMonoBehaviourAdaptors();
 			SetUpAdaptorReference();
-			thisFollower = wpFollowerAdaptor.GetWaypointsFollower();
 		}
 		void SetUpAllMonoBehaviourAdaptors(){
 			mbAdaptorManager.SetUpAllMonoBehaviourAdaptors();
@@ -28,19 +35,29 @@ namespace AppleShooterProto{
 			mbAdaptorManager.SetUpAdaptorReference();
 		}
 
-
 		public void RunSystem(){
+			FinalizeUISystemSetUp();
+			ActivateUISystem();
+
 			waypointsManager.PlaceWaypointGroups();
 			StartWaypointsFollower();
 			StartSmoothFollower();
 			StartPCSmoothLook();
 			StartCameraSmoothFollow();
 			StartCameraSmoothLook();
-			StartCameraLookAtTargetSmoothFollow();
+		}
+		void FinalizeUISystemSetUp(){
+			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
+			IPlayerInputManager inputManager = playerInputManagerAdaptor.GetInputManager();
+			scroller.SetPlayerInputManager(inputManager);
+		}
+		void ActivateUISystem(){
+			IUIManager uim = uiManagerAdaptor.GetUIManager();
+			uim.ActivateUISystem(false);
 		}
 		public void StartWaypointsFollower(){
 			IWaypointGroup firstWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];
-			IWaypointsFollower follower = wpFollowerAdaptor.GetWaypointsFollower();
+			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 			follower.SetWaypointGroup(firstWaypointGroup);
 			follower.StartFollowing();
 		}
@@ -62,12 +79,9 @@ namespace AppleShooterProto{
 			ISmoothLooker looker = camSmoothLookerAdaptor.GetSmoothLooker();
 			looker.StartSmoothLook();
 		}
-		void StartCameraLookAtTargetSmoothFollow(){
-			ISmoothFollower follower = camLookAtTarget.GetSmoothFollower();
-			follower.StartFollow();
-		}
 		public int GetCurrentWaypointGroupIndex(){
-			IWaypointGroup group = thisFollower.GetCurrentWaypointGroup();
+			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
+			IWaypointGroup group = follower.GetCurrentWaypointGroup();
 			return waypointsManager.GetWaypointGroupIndex(group);
 		}
 		public int[] GetCurrentGroupSequence(){

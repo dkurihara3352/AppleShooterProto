@@ -27,6 +27,9 @@ namespace AppleShooterProto{
 			float smoothCoefficient,
 			int processOrder
 		);
+		IWaitAndSwitchToIdleStateProcess CreateWaitAndSwitchToIdleStateProcess(
+			IPlayerInputStateEngine engine
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -92,6 +95,16 @@ namespace AppleShooterProto{
 				processOrder
 			);
 			return new SmoothLookProcess(arg);
+		}
+		public IWaitAndSwitchToIdleStateProcess CreateWaitAndSwitchToIdleStateProcess(
+			IPlayerInputStateEngine engine
+		){
+			IWaitAndSwitchToIdleStateProcessConstArg arg = new WaitAndSwitchToIdleStateProcessCosntArg(
+				thisProcessManager,
+				thisProcessManager.GetWaitAndSwitchToIdleStateProcessExpireTime(),
+				engine
+			);
+			return new WaitAndSwitchToIdleStateProcess(arg);
 		}
 	}
 }

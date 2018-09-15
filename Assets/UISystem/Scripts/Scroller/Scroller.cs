@@ -208,6 +208,7 @@ namespace UISystem{
 		
 			public void ResetDrag(){
 				thisShouldProcessDrag = false;
+				thisIsEvaluatedDrag = false;
 				ClearTouchPositionCache();
 			}
 			protected Vector2 thisTouchPosition;
@@ -224,7 +225,10 @@ namespace UISystem{
 			protected override void OnBeginDragImple(ICustomEventData eventData){
 				if(thisTopmostScrollerInMotion != null){
 					EvaluateDrag(eventData);
-					thisUIM.SetInputHandlingScroller(this, UIManager.InputName.BeginDrag);
+					thisUIM.SetInputHandlingScroller(
+						this, 
+						UIManager.InputName.BeginDrag
+					);
 					if(thisIsTopmostScrollerInMotion){
 						CacheTouchPosition(eventData.position);
 					}else{
@@ -255,7 +259,9 @@ namespace UISystem{
 					base.OnDragImple(eventData);
 				}
 			}
+			bool thisIsEvaluatedDrag = false;
 			void EvaluateDrag(ICustomEventData eventData){
+				thisIsEvaluatedDrag = true;
 				thisShouldProcessDrag = DetermineIfThisShouldProcessDrag(eventData.deltaPos);
 			}
 			bool DetermineIfThisShouldProcessDrag(Vector2 deltaPos){
@@ -398,6 +404,8 @@ namespace UISystem{
 			}
 		/* Swipe */
 			protected override void OnSwipeImple(ICustomEventData eventData){
+				if(!thisIsEvaluatedDrag)
+					this.OnBeginDragImple(eventData);
 				if(thisShouldProcessDrag){
 					thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Swipe);
 					if(thisTopmostScrollerInMotion != null){

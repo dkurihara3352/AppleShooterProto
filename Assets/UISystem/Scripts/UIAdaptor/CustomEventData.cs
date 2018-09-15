@@ -16,9 +16,9 @@ namespace UISystem{
 			float deltaTime
 		){
 			/* do some conversion here */
-			thisDeltaP = sourceData.delta;
+			thisDeltaPosition = sourceData.delta;
 			thisPosition = sourceData.position;
-			Vector2 sourceVel = thisDeltaP/ deltaTime;
+			Vector2 sourceVel = thisDeltaPosition/ deltaTime;
 			if(sourceVel.sqrMagnitude > thisMaxVelocity * thisMaxVelocity)
 				thisVelocity = Vector2.ClampMagnitude(sourceVel, thisMaxVelocity);
 			else
@@ -30,12 +30,21 @@ namespace UISystem{
 			float deltaTime
 		){
 			thisPosition = position;
-			thisDeltaP = deltaP;
-			Vector2 sourceVel = thisDeltaP/ deltaTime;
+			thisDeltaPosition = deltaP;
+			Vector2 sourceVel = thisDeltaPosition/ deltaTime;
 			if(sourceVel.sqrMagnitude > thisMaxVelocity * thisMaxVelocity)
 				thisVelocity = Vector2.ClampMagnitude(sourceVel, thisMaxVelocity);
 			else
 				thisVelocity = sourceVel;
+		}
+		public CustomEventData(
+			Vector2 position,
+			Vector2 deltaPosition,
+			Vector2 velocity
+		){
+			thisPosition = position;
+			thisDeltaPosition = deltaPosition;
+			thisVelocity = velocity;
 		}
 		float MakeVelocityWithinLimit(float source){
 			if(source > thisMaxVelocity)
@@ -43,8 +52,8 @@ namespace UISystem{
 			return source;
 		}
 		const float thisMaxVelocity = 1000f;
-		public Vector2 deltaPos{get{return thisDeltaP;}}
-		Vector2 thisDeltaP;
+		public Vector2 deltaPos{get{return thisDeltaPosition;}}
+		Vector2 thisDeltaPosition;
 		public Vector2 position{get{return thisPosition;}}
 		Vector2 thisPosition;
 		public Vector2 velocity{get{return thisVelocity;}}

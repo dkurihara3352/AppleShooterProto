@@ -59,6 +59,9 @@ public class AbsPointerUpInputStateTest {
 		public override void OnPointerDown(ICustomEventData eventData){}
 		public override void OnEnter(){}
 		public override void OnExit(){}
+		public override string GetName(){
+			return "TestAbsPointerUpInputState";
+		}
 	}
 
 	IUIAdaptorInputStateConstArg CreateMockArg(){

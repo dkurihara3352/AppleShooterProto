@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IPlayerCamera{
-		void StartPan();
-		void EndPan();
 		void Pan(
 			float normalizedCameraPosition,
 			int axis
 		);
-		void SetLookAtTarget(ISmoothFollower lookAtTarget);
+		void SetFOV(float fov);
+		void SetInputScroller(ICoreGameplayInputScroller scroller);
+		void InitializeFOV();
 	}
 	public class PlayerCamera : IPlayerCamera {
 		/*  Make CameraParents the parent of both lookAtTarget and the Camera itself
@@ -29,13 +29,13 @@ namespace AppleShooterProto{
 		public PlayerCamera(IPlayerCameraConstArg arg){
 			thisRotationCoefficient = arg.rotationCoefficient;
 			thisLookAtPivot = arg.lookAtPivot;
+			thisCamera = arg.camera;
+			thisDefaultFOV = arg.defaultFOV;
+
+			thisDefaultTangent = Mathf.Tan(thisDefaultFOV);
 		}
-		ISmoothFollower thisCameraLookAtTarget;
-		public void SetLookAtTarget(ISmoothFollower lookAtTarget){
-			thisCameraLookAtTarget = lookAtTarget;
-		}
-		public void StartPan(){
-			thisCameraLookAtTarget.StopFollow();
+		public void InitializeFOV(){
+			SetFOV(thisDefaultFOV);
 		}
 		readonly Vector2 thisRotationCoefficient;
 		IMonoBehaviourAdaptor thisLookAtPivot;
@@ -52,32 +52,62 @@ namespace AppleShooterProto{
 
 			thisLookAtPivot.Rotate(angleOnAxis, axis);
 		}
-		public void EndPan(){
-			ResetLookAtPivotRotation();
-			thisCameraLookAtTarget.StartFollow();
+		void StartSmoothFollowTargetFOV(){
+			/*  
+				Start a process where camera's fov (and scroller's multiplier) constantly smooth follow target values and call SetFOV
+			*/
 		}
-		void ResetLookAtPivotRotation(){
-			thisLookAtPivot.Rotate(Vector3.zero);/* start process! */
+		readonly Camera thisCamera;
+		readonly float thisDefaultFOV;
+		readonly float thisDefaultTangent;
+		ICoreGameplayInputScroller thisInputScroller;
+		public void SetInputScroller(ICoreGameplayInputScroller scroller){
+			thisInputScroller = scroller;
+		}
+		public void SetFOV(float fov){
+			/*  
+				Discount the displacement of scroller element on drag and swipe
+					put a multiplier on deltaPos/ velocity for modification
+
+			*/
+			thisCamera.fieldOfView = fov;
+			float relativeScreenSize = CalculateRelativeScreenSize(fov);
+			thisInputScroller.SetScrollMultiplier(relativeScreenSize);
+		}
+		float CalculateRelativeScreenSize(float fov){
+			return Mathf.Tan(fov) / thisDefaultTangent;
 		}
 	}
+
+
 
 
 	public interface IPlayerCameraConstArg{
 		Vector2 rotationCoefficient{get;}
 		IMonoBehaviourAdaptor lookAtPivot{get;}
+		Camera camera{get;}
+		float defaultFOV{get;}
 	}
 	public struct PlayerCameraConstArg: IPlayerCameraConstArg{
 		public PlayerCameraConstArg(
 			Vector2 rotationCoefficient,
-			IMonoBehaviourAdaptor lookAtPivot
+			IMonoBehaviourAdaptor lookAtPivot,
+			Camera camera,
+			float defaultFOV
 
 		){
 			thisRotationCoefficient = rotationCoefficient;
 			thisLookAtPivot = lookAtPivot;
+			thisCamera = camera;
+			thisDefaultFOV = defaultFOV;
 		}
 		readonly Vector2 thisRotationCoefficient;
 		public Vector2 rotationCoefficient{get{return thisRotationCoefficient;}}
 		readonly IMonoBehaviourAdaptor thisLookAtPivot;
 		public IMonoBehaviourAdaptor lookAtPivot{get{return thisLookAtPivot;}}
+		readonly Camera thisCamera;
+		public Camera camera{get{return thisCamera;}}
+		readonly float thisDefaultFOV;
+		public float defaultFOV{get{return thisDefaultFOV;}}
 	}
 }

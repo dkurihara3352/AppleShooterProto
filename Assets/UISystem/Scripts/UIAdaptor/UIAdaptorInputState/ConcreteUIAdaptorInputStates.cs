@@ -26,9 +26,13 @@ namespace UISystem{
 		}
 		public override void OnExit(){}
 		public override void OnPointerDown(ICustomEventData eventData){
+			thisEngine.SetTouchPosition(eventData.position);
 			thisEngine.IncrementTouchCounter();
 			thisEngine.TouchUIE();
 			thisEngine.WaitForTap();
+		}
+		public override string GetName(){
+			return "WaitingForFirstTouchState";
 		}
 	}
 	public interface IWaitingForTapState: IUIAdaptorInputState{}
@@ -73,10 +77,12 @@ namespace UISystem{
 			Vector2 velocity = GetAverageVelocity();
 			eventData.SetVelocity(velocity);
 
-			if(VelocityIsOverSwipeThreshold(eventData.velocity))
+			if(this.ShouldSwipe(eventData))
 				thisEngine.SwipeUIE(eventData);
 			else
 				thisEngine.TapUIE();
+			
+			thisEngine.ClearTouchPosition();
 		}
 		public override void OnPointerEnter(ICustomEventData eventData){}
 		public override void OnPointerExit(ICustomEventData eventData){
@@ -84,6 +90,9 @@ namespace UISystem{
 		}
 		protected override IUIAWaitForTapProcess CreateProcess(){
 			return thisProcessFactory.CreateUIAWaitForTapProcess(this, thisEngine);
+		}
+		public override string GetName(){
+			return "WaitingForTapState";
 		}
 	}
 	public interface IWaitingForReleaseState: IUIAdaptorInputState{}
@@ -124,10 +133,12 @@ namespace UISystem{
 			Vector2 velocity = GetAverageVelocity();
 			eventData.SetVelocity(velocity);
 
-			if(VelocityIsOverSwipeThreshold(eventData.velocity))
+			if(this.ShouldSwipe(eventData))
 				thisEngine.SwipeUIE(eventData);
 			else
 				thisEngine.ReleaseUIE();
+			
+			thisEngine.ClearTouchPosition();
 		}
 		public override void OnPointerEnter(ICustomEventData eventData){
 			return;
@@ -137,6 +148,9 @@ namespace UISystem{
 		}
 		protected override IUIAWaitForReleaseProcess CreateProcess(){
 			return thisProcessFactory.CreateUIAWaitForReleaseProcess(this, thisEngine);
+		}
+		public override string GetName(){
+			return "WaitingForReleaseState";
 		}
 	}
 	public interface IWaitingForNextTouchState: IUIAdaptorInputState{}
@@ -162,9 +176,13 @@ namespace UISystem{
 			return thisProcessFactory.CreateUIAWaitForNextTouchProcess(this, thisEngine);
 		}
 		public override void OnPointerDown(ICustomEventData eventData){
+			thisEngine.SetTouchPosition(eventData.position);
 			thisEngine.IncrementTouchCounter();
 			thisEngine.TouchUIE();
 			thisEngine.WaitForTap();
+		}
+		public override string GetName(){
+			return "WaitingForNextTouchState";
 		}
 	}
 }

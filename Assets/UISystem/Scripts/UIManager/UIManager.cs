@@ -24,6 +24,7 @@ namespace UISystem{
 		float GetUIImageDarknedBrightness();
 		float GetUIImageDefaultBrightness();
 		float GetSwipeVelocityThreshold();
+		float GetSwipeDistanceThreshold();
 	}
 	public class UIManager: IUIManager {
 		public UIManager(
@@ -35,7 +36,8 @@ namespace UISystem{
 			float imageDarkenedBrightness,
 			float imageDefaultBrightness,
 
-			float swipeVelocityThreshold
+			float swipeVelocityThreshold,
+			float swipeDistanceThreshold
 		){
 			thisProcessManager = processManager;
 			thisRootUIAdaptor = rootUIAdaptor;
@@ -47,6 +49,7 @@ namespace UISystem{
 			thisPopUpManager = new PopUpManager();
 
 			thisSwipeVelocityThreshold = swipeVelocityThreshold;
+			thisSwipeDistanceThreshold = swipeDistanceThreshold;
 		}
 		readonly IUIAdaptor thisRootUIAdaptor;
 		public void GetReadyForUISystemActivation(){
@@ -130,29 +133,34 @@ namespace UISystem{
 
 
 		/* Debug */
-		readonly bool thisShowsInputability;
-		public bool ShowsInputability(){
-			return thisShowsInputability;
-		}
-		public bool ShowsNormal(){
-			return !ShowsInputability();
-		}
-		public void SetInputHandlingScroller(IScroller scroller, InputName inputName){
-			thisInputHandlingScroller = scroller;
-			thisInputName = inputName;
-		}
-		InputName thisInputName = InputName.None;
-		IScroller thisInputHandlingScroller;
-		public IScroller GetInputHandlingScroller(){
-			return thisInputHandlingScroller;
-		}
-		public string GetEventName(){
-			return thisInputName.ToString();
-		}
+			readonly bool thisShowsInputability;
+			public bool ShowsInputability(){
+				return thisShowsInputability;
+			}
+			public bool ShowsNormal(){
+				return !ShowsInputability();
+			}
+			public void SetInputHandlingScroller(IScroller scroller, InputName inputName){
+				thisInputHandlingScroller = scroller;
+				thisInputName = inputName;
+			}
+			InputName thisInputName = InputName.None;
+			IScroller thisInputHandlingScroller;
+			public IScroller GetInputHandlingScroller(){
+				return thisInputHandlingScroller;
+			}
+			public string GetEventName(){
+				return thisInputName.ToString();
+			}
+		/*  */
+		readonly float thisSwipeVelocityThreshold;
 		public float GetSwipeVelocityThreshold(){
 			return thisSwipeVelocityThreshold;
 		}
-		readonly float thisSwipeVelocityThreshold;
+		readonly float thisSwipeDistanceThreshold;
+		public float GetSwipeDistanceThreshold(){
+			return thisSwipeDistanceThreshold;
+		}
 		public enum InputName{
 			None,
 			Release,

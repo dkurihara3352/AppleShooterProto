@@ -28,5 +28,7 @@ namespace DKUtility{
 		/* UIA Input Process */
 		float GetUIAWaitForTapProcessExpireTime();
 		float GetUIAWaitForNextTouchProcessExpireTime();
+		/*  */
+		float GetWaitAndSwitchToIdleStateProcessExpireTime();
 	}	
 }

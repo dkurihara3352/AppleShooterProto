@@ -14,6 +14,9 @@ namespace UISystem{
 		void ResetTouchCounter();
 		void IncrementTouchCounter();
 		int GetTouchCount();
+		void SetTouchPosition(Vector2 touchPosition);
+		Vector2 GetTouchPosition();
+		void ClearTouchPosition();
 		void TouchUIE();
 		void TapUIE();
 		float GetTapExpireT();
@@ -25,8 +28,8 @@ namespace UISystem{
 		void DragUIE(ICustomEventData eventData);
 		void HoldUIE(float deltaT);
 		void SwipeUIE(ICustomEventData eventData);
-		float GetSwipeVelocityThreshold();
 		string GetName();
+		IUIAdaptorInputState GetCurrentState();
 	}
 	public class UIAdaptorInputStateEngine: AbsSwitchableStateEngine<IUIAdaptorInputState> ,IUIAdaptorInputStateEngine{
 		public UIAdaptorInputStateEngine(
@@ -48,6 +51,8 @@ namespace UISystem{
 				this,
 				thisUIManager,
 				thisVelocityStackSize,
+				thisUIManager.GetSwipeVelocityThreshold(),
+				thisUIManager.GetSwipeDistanceThreshold(),
 				procFac
 			);
 			thisWaitingForTapState = new WaitingForTapState(
@@ -67,6 +72,9 @@ namespace UISystem{
 			SetWithInitState();
 			ResetTouchCounter();
 		}
+		public IUIAdaptorInputState GetCurrentState(){
+			return thisCurState;
+		}
 		readonly IUIManager thisUIManager;
 		public string GetName(){
 			return thisUIE.GetName();
@@ -76,16 +84,31 @@ namespace UISystem{
 		void SetWithInitState(){
 			this.WaitForFirstTouch();
 		}
-		protected int thisTouchCount;
-		public void ResetTouchCounter(){
-			thisTouchCount = 0;
-		}
-		public void IncrementTouchCounter(){
-			thisTouchCount ++;
-		}
-		public int GetTouchCount(){
-			return thisTouchCount;
-		}
+		/* Touch Management */
+			protected int thisTouchCount;
+			public void ResetTouchCounter(){
+				thisTouchCount = 0;
+			}
+			public void IncrementTouchCounter(){
+				thisTouchCount ++;
+			}
+			public int GetTouchCount(){
+				return thisTouchCount;
+			}
+			Vector2 thisTouchPosition;
+			public void SetTouchPosition(Vector2 touchPosition){
+				thisTouchPosition = touchPosition;
+			}
+			public Vector2 GetTouchPosition(){
+				return thisTouchPosition;
+			}
+			Vector2 thisNonTouchPosition = new Vector2(-1000f, 0f);
+			public void ClearTouchPosition(){
+				SetTouchPosition(thisNonTouchPosition);
+			}
+			
+		/*  */
+
 		public void TouchUIE(){
 			thisUIE.OnTouch(GetTouchCount());
 		}

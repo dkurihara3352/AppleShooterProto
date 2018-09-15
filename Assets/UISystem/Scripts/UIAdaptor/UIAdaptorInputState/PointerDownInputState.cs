@@ -14,6 +14,7 @@ namespace UISystem{
 			thisVelocityStackSize = arg.velocityStackSize;
 
 			thisVelocityStack = new Vector2[thisVelocityStackSize];
+			thisSwipeDistanceThreshold = arg.swipeDistanceThreshold;
 		}
 		int thisVelocityStackSize;
 		public override void OnEnter(){
@@ -22,9 +23,26 @@ namespace UISystem{
 		public override void OnPointerDown(ICustomEventData eventData){
 			throw new System.InvalidOperationException("OnPointerDown should not be called while pointer is already held down");
 		}
+		readonly float thisSwipeVelocityThreshold;
 		protected bool VelocityIsOverSwipeThreshold(Vector2 velocity){
-			float velocityThreshold = thisEngine.GetSwipeVelocityThreshold();
-			if(velocity.sqrMagnitude >= velocityThreshold * velocityThreshold)
+			if(velocity.sqrMagnitude >= thisSwipeVelocityThreshold * thisSwipeVelocityThreshold)
+				return true;
+			else
+				return false;
+		}
+		protected bool ShouldSwipe(ICustomEventData eventData){
+			if(VelocityIsOverSwipeThreshold(eventData.velocity)){
+				if(EnoughDistanceIsCoveredSinceTouch(eventData.position)){
+					return true;
+				}
+			}
+			return false;
+		}
+		readonly float thisSwipeDistanceThreshold;
+		bool EnoughDistanceIsCoveredSinceTouch(Vector3 pointerPosition){
+			Vector3 touchPosition = thisEngine.GetTouchPosition();
+			Vector3 displacement = pointerPosition - touchPosition;
+			if(displacement.sqrMagnitude >= thisSwipeDistanceThreshold * thisSwipeDistanceThreshold)
 				return true;
 			else
 				return false;
@@ -70,17 +88,23 @@ namespace UISystem{
 	public interface IPointerDownInputStateConstArg: IUIAdaptorInputStateConstArg{
 		IUIManager uiManager{get;}
 		int velocityStackSize{get;}
+		float swipeVelocityThreshold{get;}
+		float swipeDistanceThreshold{get;}
 	}
 	public class PointerDownInputStateConstArg: UIAdaptorInputStateConstArg, IPointerDownInputStateConstArg{
 		public PointerDownInputStateConstArg(
 			IUIAdaptorInputStateEngine engine,
 			IUIManager uiManager,
-			int velocityStackSize
+			int velocityStackSize,
+			float swipeVelocityThreshold,
+			float swipeDistanceThreshold
 		): base(
 			engine
 		){
 			thisUIManager = uiManager;
 			thisVelocityStackSize = velocityStackSize;
+			thisSwipeVelocityThreshold = swipeVelocityThreshold;
+			thisSwipeDistanceThreshold = swipeDistanceThreshold;
 		}
 		readonly IUIManager thisUIManager;
 		public IUIManager uiManager{get{return thisUIManager;}}
@@ -88,6 +112,10 @@ namespace UISystem{
 		public int velocityStackSize{
 			get{return thisVelocityStackSize;}
 		}
+		readonly float thisSwipeVelocityThreshold;
+		public float swipeVelocityThreshold{get{return thisSwipeVelocityThreshold;}}
+		readonly float thisSwipeDistanceThreshold;
+		public float swipeDistanceThreshold{get{return thisSwipeDistanceThreshold;}}
 	}
 	public abstract class AbsPointerDownInputProcessState<T>: AbsPointerDownInputState where T: class, IUIAdaptorInputProcess{
 		public AbsPointerDownInputProcessState(
@@ -125,11 +153,16 @@ namespace UISystem{
 			IUIAdaptorInputStateEngine engine,
 			IUIManager uiManager,
 			int velocityStackSize,
+			float swipeVelocityThreshold,
+			float swipeDistanceThreshold,
+
 			IUISystemProcessFactory processFactory
 		):base(
 			engine,
 			uiManager,
-			velocityStackSize
+			velocityStackSize,
+			swipeVelocityThreshold,
+			swipeDistanceThreshold
 		){
 			thisProcessFactory = processFactory;
 		}

@@ -16,6 +16,7 @@ namespace UISystem{
 		public float uiImageDarkenedBrightness = .4f;
 		public float uiImageDefaultBrightness = .8f;
 		public float swipeVelocityThreshold = 400f;
+		public float swipeDistanceThreshold = 20f;
 
 		public void Awake(){
 			thisUIManager = new UIManager(
@@ -25,7 +26,8 @@ namespace UISystem{
 				showsInputability,
 				uiImageDarkenedBrightness,
 				uiImageDefaultBrightness,
-				swipeVelocityThreshold
+				swipeVelocityThreshold,
+				swipeDistanceThreshold
 			);
 		}
 	}	
