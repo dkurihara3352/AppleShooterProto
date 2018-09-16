@@ -30,6 +30,9 @@ namespace AppleShooterProto{
 		IWaitAndSwitchToIdleStateProcess CreateWaitAndSwitchToIdleStateProcess(
 			IPlayerInputStateEngine engine
 		);
+		IDrawProcess CreateDrawProcess(
+			IShootingManager shootingManager
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -105,6 +108,15 @@ namespace AppleShooterProto{
 				engine
 			);
 			return new WaitAndSwitchToIdleStateProcess(arg);
+		}
+		public IDrawProcess CreateDrawProcess(
+			IShootingManager shootingManager
+		){
+			IDrawProcessConstArg arg = new DrawProcessConstArg(
+				thisProcessManager,
+				shootingManager
+			);
+			return new DrawProcess(arg);
 		}
 	}
 }

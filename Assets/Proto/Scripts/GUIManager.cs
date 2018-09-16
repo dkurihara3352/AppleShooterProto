@@ -16,7 +16,7 @@ namespace AppleShooterProto{
 			sTL_5 = GetSubRect(topLeftRect,4,6);
 			sTL_6 = GetSubRect(topLeftRect,5,6);
 			topRightRect = GetGUIRect(
- 				normalizedSize: new Vector2(.1f, .1f),
+ 				normalizedSize: new Vector2(.3f, .1f),
 				normalizedPosition: new Vector2(1f, 0f)
 			);
 			sTR_1 = GetSubRect(topRightRect, 0, 3);
@@ -29,10 +29,12 @@ namespace AppleShooterProto{
 		public bool drawsWaypointFollowerSetUp = true;
 		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
+		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
 
 		void OnGUI(){
 			DrawCurrentState();
 			DrawControl();
+			DrawScrollMultiplier();
 		}
 
 		void DrawControl(){
@@ -81,7 +83,15 @@ namespace AppleShooterProto{
 					"CurState: " + stateName
 				);
 			}
-			
+		}
+		void DrawScrollMultiplier(){
+			if(thisSystemIsReady){
+				float scrollMultiplier = inputScrollerAdaptor.GetScrollMultiplier();
+				GUI.Label(
+					sTR_2,
+					"Scroll Mult: " + scrollMultiplier.ToString()
+				);
+			}
 		}
 		Rect GetGUIRect(
 			Vector2 normalizedSize,

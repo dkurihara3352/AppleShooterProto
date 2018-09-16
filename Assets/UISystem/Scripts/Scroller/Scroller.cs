@@ -248,8 +248,9 @@ namespace UISystem{
 				if(thisShouldProcessDrag){
 					thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Drag);
 					if(thisTopmostScrollerInMotion != null){
-						if(thisIsTopmostScrollerInMotion)
+						if(thisIsTopmostScrollerInMotion){
 							DisplaceScrollerElement(eventData.position);
+						}
 						else
 							thisTopmostScrollerInMotion.OnDrag(eventData);
 					}else{
@@ -294,7 +295,7 @@ namespace UISystem{
 				Vector2 newElementLocalPosition =  GetScrollerElementRubberBandedLocalPosition(displacement);
 				SetScrollerElementLocalPosition(newElementLocalPosition);
 			}
-			protected Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
+			protected virtual Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
 				Vector2 rawDisplacement = dragPosition - thisTouchPosition;
 				if(thisScrollerAxis == ScrollerAxis.Both)
 					return rawDisplacement;

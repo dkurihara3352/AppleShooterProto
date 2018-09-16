@@ -10,7 +10,6 @@ namespace AppleShooterProto{
 
 		void ResetCameraZoom();
 		void ResetCameraPan();
-		void StopResetCameraPan();
 		void PanCamera(
 			float normalizedCameraPosition,
 			int axis
@@ -20,6 +19,8 @@ namespace AppleShooterProto{
 		void Fire();
 
 		IPlayerInputState GetCurrentState();
+		void SetMaxZoom(float fov);
+		void Zoom(float normalizedZoom);
 	}
 	public class PlayerInputManager : IPlayerInputManager {
 		public PlayerInputManager(IPlayerInputManagerConstArg arg){
@@ -32,6 +33,12 @@ namespace AppleShooterProto{
 				arg.processFactory
 			);
 			thisEngine = new PlayerInputStateEngine(engineConstArg);
+			
+			IShootingManagerConstArg shootingManagerConstArg = new ShootingManagerConstArg(
+				this,
+				arg.processFactory
+			);
+			thisShootingManager = new ShootingManager(shootingManagerConstArg);
 		}
 		readonly float thisDefaultFOV;
 		IPlayerInputStateEngine thisEngine;
@@ -85,18 +92,31 @@ namespace AppleShooterProto{
 				/*  camera's actual FOV always smooth follow target value
 					when zooming in/ drawing, the target value itself is interpolated, so the FOV smooth follows a moving target
 				*/
-				thisPlayerCamera.SetFOV(thisDefaultFOV);
+				Zoom(0f);
+				thisShootingManager.ResetDraw();
 			}
 			public void ResetCameraPan(){
 				thisInputScroller.SnapToCenter();
 			}
-			public void StopResetCameraPan(){
-				// thisInputScroller.AbortSnap();
+			float thisMaxZoom;
+			public void SetMaxZoom(float fov){
+				thisMaxZoom = fov;
 			}
+			public void Zoom(float normalizedZoom){
+				float targetFOV = Mathf.Lerp(thisDefaultFOV, thisMaxZoom, normalizedZoom);
+				thisPlayerCamera.SetFOV(targetFOV);
+			}
+			readonly IShootingManager thisShootingManager;
 		/* Shooting */
-			public void StartDraw(){}
-			public void HoldDraw(){}
-			public void Fire(){}
+			public void StartDraw(){
+				thisShootingManager.StartDraw();
+			}
+			public void HoldDraw(){
+				thisShootingManager.HoldDraw();
+			}
+			public void Fire(){
+				thisShootingManager.Fire();
+			}
 		/*  */
 	}
 

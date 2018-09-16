@@ -6,6 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface ICoreGameplayInputScroller: IGenericSingleElementScroller{
 		void SetScrollMultiplier(float multiplier);
+		float GetScrollMultiplier();
 		void SetPlayerInputManager(IPlayerInputManager inputManager);
 		void SnapToCenter();
 		// void AbortSnap();
@@ -17,7 +18,6 @@ namespace AppleShooterProto{
 		): base(
 			arg
 		){
-			// thisInputManager = arg.inputManager;
 		}
 		Vector2 thisInitialNormalizedCursorPosition = new Vector2(.5f, .5f);
 		protected override Vector2 GetInitialNormalizedCursoredPosition(){
@@ -41,6 +41,9 @@ namespace AppleShooterProto{
 			thisScrollMultiplier = multiplier;
 		}
 		float thisScrollMultiplier = 1.0f;
+		public float GetScrollMultiplier(){
+			return thisScrollMultiplier;
+		}
 		ICustomEventData CreateAdjustedData(ICustomEventData source){
 			Vector3 adjustedDeltaPosition = source.deltaPos * thisScrollMultiplier;
 			Vector3 adjustedVelocity = source.velocity * thisScrollMultiplier;
@@ -50,6 +53,9 @@ namespace AppleShooterProto{
 				adjustedDeltaPosition,
 				adjustedVelocity
 			);
+		}
+		protected override Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
+			return base.CalcDragDeltaSinceTouch(dragPosition) * thisScrollMultiplier;
 		}
 		protected override void ProcessSwipe(ICustomEventData eventData){
 			ICustomEventData adjustedData = CreateAdjustedData(eventData);

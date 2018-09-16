@@ -104,7 +104,6 @@ namespace AppleShooterProto{
 		}
 		public override void OnTouch(int touchCount){
 			thisEngine.SwitchToDrawingState();
-			thisEngine.StopResetCameraPan();
 		}
 		public override void OnScrollerElementDisplace(
 			float normalizedCursoredPosition, 
@@ -162,7 +161,7 @@ namespace AppleShooterProto{
 	public class PlayerInputLookingAroundState: AbsPlayerInputPointerDownState, IPlayerInputLookingAroundState{
 		public PlayerInputLookingAroundState(IPlayerInputStateConstArg arg): base(arg){}
 		public override void OnEnter(){
-			thisEngine.ResetCameraZoom();
+			// thisEngine.ResetCameraZoom();
 			return;
 		}
 		public override void OnDrag(ICustomEventData eventData){

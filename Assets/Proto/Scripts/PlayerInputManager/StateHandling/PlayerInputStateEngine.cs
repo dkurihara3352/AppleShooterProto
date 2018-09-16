@@ -25,7 +25,6 @@ namespace AppleShooterProto{
 
 		void ResetCameraZoom();
 		void ResetCameraPan();
-		void StopResetCameraPan();
 		void StartDraw();
 		void HoldDraw();
 		void Fire();
@@ -66,48 +65,24 @@ namespace AppleShooterProto{
 
 		/* Delegate To States */
 			public void OnTouch(int touchCount){
-				Debug.Log(
-					GetCurrentState().GetName() + " " + 
-					"Touched"
-				);
 				thisCurState.OnTouch(touchCount);
 			}
 			public void OnDrag(ICustomEventData eventData){
-				Debug.Log(
-					GetCurrentState().GetName() + " " + 
-					"Dragged"
-				);
 				thisCurState.OnDrag(eventData);
 			}
 			public void OnTap(int tapCount){
-				Debug.Log(
-					GetCurrentState().GetName() + " " + 
-					"Tapped"
-				);
 				thisCurState.OnTap(tapCount);
 			}
 			public void OnRelease(){
-				Debug.Log(
-					GetCurrentState().GetName() + " " + 
-					"Released"
-				);
 				thisCurState.OnRelease();
 			}
 			public void ProcessSwipe(ICustomEventData eventData){
-				Debug.Log(
-					GetCurrentState().GetName() + " " + 
-					"Swiped"
-				);
 				thisCurState.ProcessSwipe(eventData);
 			}
 			public void OnScrollerElementDisplace(
 				float normalizedCurosredPosition,
 				int axis
 			){
-				Debug.Log(
-					GetCurrentState().GetName() + " " + 
-					"Displaced"
-				);
 				thisCurState.OnScrollerElementDisplace(
 					normalizedCurosredPosition,
 					axis
@@ -133,9 +108,6 @@ namespace AppleShooterProto{
 			}
 			public void ResetCameraPan(){
 				thisPlayerInputManager.ResetCameraPan();
-			}
-			public void StopResetCameraPan(){
-				thisPlayerInputManager.StopResetCameraPan();
 			}
 
 			public void StartDraw(){

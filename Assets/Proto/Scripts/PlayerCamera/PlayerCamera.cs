@@ -32,7 +32,8 @@ namespace AppleShooterProto{
 			thisCamera = arg.camera;
 			thisDefaultFOV = arg.defaultFOV;
 
-			thisDefaultTangent = Mathf.Tan(thisDefaultFOV);
+			float defFOVInRadian = Mathf.Deg2Rad * thisDefaultFOV;
+			thisDefaultTangent = Mathf.Tan(defFOVInRadian);
 		}
 		public void InitializeFOV(){
 			SetFOV(thisDefaultFOV);
@@ -75,7 +76,9 @@ namespace AppleShooterProto{
 			thisInputScroller.SetScrollMultiplier(relativeScreenSize);
 		}
 		float CalculateRelativeScreenSize(float fov){
-			return Mathf.Tan(fov) / thisDefaultTangent;
+			float targetFOVInRadian = Mathf.Deg2Rad * fov;
+			float result = Mathf.Tan(targetFOVInRadian) / thisDefaultTangent;
+			return result;
 		}
 	}
 

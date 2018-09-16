@@ -31,9 +31,10 @@ namespace AppleShooterProto{
 			return new CoreGameplayInputScroller(arg);
 		}
 		public ICoreGameplayInputScroller GetInputScroller(){
-			if(GetUIElement() == null)
-				Debug.Log("FUCK");
 			return (ICoreGameplayInputScroller)GetUIElement();
+		}
+		public float GetScrollMultiplier(){
+			return GetInputScroller().GetScrollMultiplier();
 		}
 	}
 }
