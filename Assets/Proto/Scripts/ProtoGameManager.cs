@@ -19,6 +19,7 @@ namespace AppleShooterProto{
 
 		public CoreGameplayInputScrollerAdaptor coreGameplayInputScrollerAdaptor;
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
+		public SmoothLookerAdaptor recticleSmoothLookerAdaptor;
 
 		public void SetUpUISystem(){
 			IUIManager uim = uiManagerAdaptor.GetUIManager();
@@ -44,6 +45,7 @@ namespace AppleShooterProto{
 			StartSmoothFollower();
 			StartPCSmoothLook();
 			StartCameraSmoothFollow();
+			StartRecticleSmoothLook();
 			StartCameraSmoothLook();
 		}
 		void FinalizeUISystemSetUp(){
@@ -77,6 +79,10 @@ namespace AppleShooterProto{
 		}
 		void StartCameraSmoothLook(){
 			ISmoothLooker looker = camSmoothLookerAdaptor.GetSmoothLooker();
+			looker.StartSmoothLook();
+		}
+		void StartRecticleSmoothLook(){
+			ISmoothLooker looker = recticleSmoothLookerAdaptor.GetSmoothLooker();
 			looker.StartSmoothLook();
 		}
 		public int GetCurrentWaypointGroupIndex(){
