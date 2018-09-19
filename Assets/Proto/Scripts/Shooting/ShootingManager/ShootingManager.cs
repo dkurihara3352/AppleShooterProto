@@ -22,6 +22,7 @@ namespace AppleShooterProto{
 		){
 			thisProcessFactory = arg.processFactory;
 			thisAdaptor = arg.adaptor;
+			thisDrawProcessOrder = arg.drawProcessOrder;
 		}
 		IPlayerInputManager thisInputManager;
 		public void SetInputManager(IPlayerInputManager inputManager){
@@ -40,9 +41,12 @@ namespace AppleShooterProto{
 		public void SetTrajectory(ITrajectory trajectory){
 			thisTrajectory = trajectory;
 		}
-
+		readonly int thisDrawProcessOrder;
 		public void StartDraw(){
-			thisDrawProcess = thisProcessFactory.CreateDrawProcess(this);
+			thisDrawProcess = thisProcessFactory.CreateDrawProcess(
+				this,
+				thisDrawProcessOrder
+			);
 			thisDrawProcess.Run();
 		}
 		public float initialSpeed{
@@ -94,18 +98,23 @@ namespace AppleShooterProto{
 	public interface IShootingManagerConstArg{
 		IAppleShooterProcessFactory processFactory{get;}
 		IShootingManagerAdaptor adaptor{get;}
+		int drawProcessOrder{get;}
 	}
 	public class ShootingManagerConstArg: IShootingManagerConstArg{
 		public ShootingManagerConstArg(
 			IAppleShooterProcessFactory processFactory,
-			IShootingManagerAdaptor adaptor
+			IShootingManagerAdaptor adaptor,
+			int drawProcessOrder
 		){
 			thisProcessFactory = processFactory;
 			thisAdaptor = adaptor;
+			thisDrawProcessOrder = drawProcessOrder;
 		}
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
 		readonly IShootingManagerAdaptor thisAdaptor;
 		public IShootingManagerAdaptor adaptor{get{return thisAdaptor;}}
+		readonly int thisDrawProcessOrder;
+		public int drawProcessOrder{get{return thisDrawProcessOrder;}}
 	}
 }

@@ -188,200 +188,195 @@ namespace UISystem{
 		/* UIInput */
 			protected bool thisIsEnabledInput = true;
 			/* Touch */
-			public void OnTouch(int touchCount){
-				if(this.IsActivated() && thisIsEnabledInput){
-					IScroller scrollerToStartPauseMotorProcess = GetTargetUIEOrItsProximateParentAsScroller(this);
-					if(scrollerToStartPauseMotorProcess != null)
-						scrollerToStartPauseMotorProcess.PauseRunningMotorProcessRecursivelyUp();
-					OnTouchImple(touchCount);
-				}
-				else
-					PassOnTouchUpward(touchCount);
-			}
-			protected virtual void OnTouchImple(int touchCount){
-				PassOnTouchUpward(touchCount);
-			}
-			void PassOnTouchUpward(int touchCount){
-				if(thisParentUIE != null)
-					thisParentUIE.OnTouch(touchCount);
-			}
-			/* delayed touch */
-			public void OnDelayedTouch(){
-				if(this.IsActivated() && thisIsEnabledInput)
-					OnDelayedTouchImple();
-				else
-					PassOnDelayedTouchUpward();
-			}
-			protected virtual void OnDelayedTouchImple(){
-				PassOnDelayedTouchUpward();
-			}
-			void PassOnDelayedTouchUpward(){
-				if(thisParentUIE != null)
-					thisParentUIE.OnDelayedTouch();
-			}
-			/* Release */
-			public void OnRelease(){
-				Debug.Log(
-					"released"
-				);
-				if(this.IsActivated() && thisIsEnabledInput){
-					CheckAndPerformStaticBoundarySnapFrom(this);
-					OnReleaseImple();
-				}
-				else
-					PassOnReleaseUpward();
-			}
-			protected virtual void OnReleaseImple(){
-				PassOnReleaseUpward();
-			}
-			void PassOnReleaseUpward(){
-				if(thisParentUIE != null)
-					thisParentUIE.OnRelease();
-			}
-			/* tap */
-			public void OnTap(int tapCount){
-				Debug.Log("tapped");
-				if(this.IsActivated()){
-					if(thisIsDisabledForPopUp)
-						thisPopUpManager.CheckAndHideActivePopUp();
-					else{
-						if(thisIsEnabledInput){
-							CheckAndPerformStaticBoundarySnapFrom(this);
-							OnTapImple(tapCount);
-						}
-						else
-							PassOnTapUpward(tapCount);
+				public void OnTouch(int touchCount){
+					if(this.IsActivated() && thisIsEnabledInput){
+						IScroller scrollerToStartPauseMotorProcess = GetTargetUIEOrItsProximateParentAsScroller(this);
+						if(scrollerToStartPauseMotorProcess != null)
+							scrollerToStartPauseMotorProcess.PauseRunningMotorProcessRecursivelyUp();
+						OnTouchImple(touchCount);
 					}
-				}
-			}
-			protected virtual void OnTapImple(int tapCount){
-				PassOnTapUpward(tapCount);
-			}
-			void PassOnTapUpward(int tapCount){
-				if(thisParentUIE != null)
-					thisParentUIE.OnTap(tapCount);
-			}
-			public void CheckAndPerformStaticBoundarySnapFrom(IUIElement uieToStartCheck){
-				ClearTopMostScroller();
-				IScroller scrollerToStartCheck = GetTargetUIEOrItsProximateParentAsScroller(uieToStartCheck);
-				IScroller scrollerToExamine = scrollerToStartCheck;
-				while(true){
-					if(scrollerToExamine == null)
-						break;
-					scrollerToExamine.ResetDrag();
-					scrollerToExamine.CheckAndPerformStaticBoundarySnap();
-					scrollerToExamine = scrollerToExamine.GetProximateParentScroller();
-				}
-			}
-			IScroller GetTargetUIEOrItsProximateParentAsScroller(IUIElement targetUIElement){
-				if(targetUIElement != null){
-					if(targetUIElement is IScroller)
-						return (IScroller)targetUIElement;
 					else
-						return targetUIElement.GetProximateParentScroller();
-				}else
-					return null;
-			}
-			readonly protected IScroller thisProximateParentScroller;
-			public IScroller GetProximateParentScroller(){
-				return thisProximateParentScroller;
-			}
-			protected virtual IScroller FindProximateParentScroller(){
-				return FindProximateParentTypedUIElement<IScroller>();
-			}
-			public virtual T FindProximateParentTypedUIElement<T>() where T: class, IUIElement{
-				IProximateParentTypedUIECalculator<T> calculator = new ProximateParentTypedUIECalculator<T>(this);
-				return calculator.Calculate();
-			}
-			void ClearTopMostScroller(){
-				ClearAllParentScrollerVelocity();
-				if(thisTopmostScrollerInMotion != null)
-					thisTopmostScrollerInMotion.EnableScrollInputRecursively();
-			}
-			void ClearAllParentScrollerVelocity(){
-				IScroller scrollerToExamine = GetTargetUIEOrItsProximateParentAsScroller(this);
-				while(true){
-					if(scrollerToExamine == null)
-						break;
-					for(int i = 0; i < 2; i ++){
-						scrollerToExamine.UpdateVelocity(0f, i);
-					}
-					scrollerToExamine = scrollerToExamine.GetProximateParentScroller();
+						PassOnTouchUpward(touchCount);
 				}
-			}
-			/*  */
-			public void OnDelayedRelease(){
-				if(this.IsActivated() && thisIsEnabledInput)
-					OnDelayedReleaseImple();
-				else
+				protected virtual void OnTouchImple(int touchCount){
+					PassOnTouchUpward(touchCount);
+				}
+				void PassOnTouchUpward(int touchCount){
+					if(thisParentUIE != null)
+						thisParentUIE.OnTouch(touchCount);
+				}
+			/* delayed touch */
+				public void OnDelayedTouch(){
+					if(this.IsActivated() && thisIsEnabledInput)
+						OnDelayedTouchImple();
+					else
+						PassOnDelayedTouchUpward();
+				}
+				protected virtual void OnDelayedTouchImple(){
+					PassOnDelayedTouchUpward();
+				}
+				void PassOnDelayedTouchUpward(){
+					if(thisParentUIE != null)
+						thisParentUIE.OnDelayedTouch();
+				}
+			/* Release */
+				public void OnRelease(){
+					if(this.IsActivated() && thisIsEnabledInput){
+						CheckAndPerformStaticBoundarySnapFrom(this);
+						OnReleaseImple();
+					}
+					else
+						PassOnReleaseUpward();
+				}
+				protected virtual void OnReleaseImple(){
+					PassOnReleaseUpward();
+				}
+				void PassOnReleaseUpward(){
+					if(thisParentUIE != null)
+						thisParentUIE.OnRelease();
+				}
+			/* tap */
+				public void OnTap(int tapCount){
+					if(this.IsActivated()){
+						if(thisIsDisabledForPopUp)
+							thisPopUpManager.CheckAndHideActivePopUp();
+						else{
+							if(thisIsEnabledInput){
+								CheckAndPerformStaticBoundarySnapFrom(this);
+								OnTapImple(tapCount);
+							}
+							else
+								PassOnTapUpward(tapCount);
+						}
+					}
+				}
+				protected virtual void OnTapImple(int tapCount){
+					PassOnTapUpward(tapCount);
+				}
+				void PassOnTapUpward(int tapCount){
+					if(thisParentUIE != null)
+						thisParentUIE.OnTap(tapCount);
+				}
+			/* Scroller Helper */
+				public void CheckAndPerformStaticBoundarySnapFrom(IUIElement uieToStartCheck){
+					ClearTopMostScroller();
+					IScroller scrollerToStartCheck = GetTargetUIEOrItsProximateParentAsScroller(uieToStartCheck);
+					IScroller scrollerToExamine = scrollerToStartCheck;
+					while(true){
+						if(scrollerToExamine == null)
+							break;
+						scrollerToExamine.ResetDrag();
+						scrollerToExamine.CheckAndPerformStaticBoundarySnap();
+						scrollerToExamine = scrollerToExamine.GetProximateParentScroller();
+					}
+				}
+				IScroller GetTargetUIEOrItsProximateParentAsScroller(IUIElement targetUIElement){
+					if(targetUIElement != null){
+						if(targetUIElement is IScroller)
+							return (IScroller)targetUIElement;
+						else
+							return targetUIElement.GetProximateParentScroller();
+					}else
+						return null;
+				}
+				readonly protected IScroller thisProximateParentScroller;
+				public IScroller GetProximateParentScroller(){
+					return thisProximateParentScroller;
+				}
+				protected virtual IScroller FindProximateParentScroller(){
+					return FindProximateParentTypedUIElement<IScroller>();
+				}
+				public virtual T FindProximateParentTypedUIElement<T>() where T: class, IUIElement{
+					IProximateParentTypedUIECalculator<T> calculator = new ProximateParentTypedUIECalculator<T>(this);
+					return calculator.Calculate();
+				}
+				void ClearTopMostScroller(){
+					ClearAllParentScrollerVelocity();
+					if(thisTopmostScrollerInMotion != null)
+						thisTopmostScrollerInMotion.EnableScrollInputRecursively();
+				}
+				void ClearAllParentScrollerVelocity(){
+					IScroller scrollerToExamine = GetTargetUIEOrItsProximateParentAsScroller(this);
+					while(true){
+						if(scrollerToExamine == null)
+							break;
+						for(int i = 0; i < 2; i ++){
+							scrollerToExamine.UpdateVelocity(0f, i);
+						}
+						scrollerToExamine = scrollerToExamine.GetProximateParentScroller();
+					}
+				}
+			/* Delayed Release */
+				public void OnDelayedRelease(){
+					if(this.IsActivated() && thisIsEnabledInput)
+						OnDelayedReleaseImple();
+					else
+						PassOnDelayedReleaseUpward();
+				}
+				protected virtual void OnDelayedReleaseImple(){
 					PassOnDelayedReleaseUpward();
-			}
-			protected virtual void OnDelayedReleaseImple(){
-				PassOnDelayedReleaseUpward();
-			}
-			void PassOnDelayedReleaseUpward(){
-				if(thisParentUIE != null)
-					thisParentUIE.OnDelayedRelease();
-			}
-			public void OnBeginDrag(ICustomEventData eventData){
-				if(this.IsActivated() && thisIsEnabledInput)
-					OnBeginDragImple(eventData);
-				else
+				}
+				void PassOnDelayedReleaseUpward(){
+					if(thisParentUIE != null)
+						thisParentUIE.OnDelayedRelease();
+				}
+			/* BeginDrag */
+				public void OnBeginDrag(ICustomEventData eventData){
+					if(this.IsActivated() && thisIsEnabledInput)
+						OnBeginDragImple(eventData);
+					else
+						PassOnBeginDragUpward(eventData);
+				}
+				protected virtual void OnBeginDragImple(ICustomEventData eventData){
 					PassOnBeginDragUpward(eventData);
-			}
-			protected virtual void OnBeginDragImple(ICustomEventData eventData){
-				PassOnBeginDragUpward(eventData);
-			}
-			void PassOnBeginDragUpward(ICustomEventData eventData){
-				if(thisParentUIE != null)
-					thisParentUIE.OnBeginDrag(eventData);
-			}
-
-			public void OnDrag( ICustomEventData eventData){
-				if(this.IsActivated() && thisIsEnabledInput)
-					OnDragImple(eventData);
-				else
+				}
+				void PassOnBeginDragUpward(ICustomEventData eventData){
+					if(thisParentUIE != null)
+						thisParentUIE.OnBeginDrag(eventData);
+				}
+			/* Drag */
+				public void OnDrag( ICustomEventData eventData){
+					if(this.IsActivated() && thisIsEnabledInput)
+						OnDragImple(eventData);
+					else
+						PassOnDragUpward(eventData);
+				}
+				protected virtual void OnDragImple(ICustomEventData eventData){
 					PassOnDragUpward(eventData);
-			}
-			protected virtual void OnDragImple(ICustomEventData eventData){
-				PassOnDragUpward(eventData);
-			}
-			void PassOnDragUpward(ICustomEventData eventData){
-				if(thisParentUIE != null)
-					thisParentUIE.OnDrag(eventData);
-			}
-
-			public void OnHold( float elapsedT){
-				if(this.IsActivated() && thisIsEnabledInput)
-					OnHoldImple(elapsedT);
-				else
+				}
+				void PassOnDragUpward(ICustomEventData eventData){
+					if(thisParentUIE != null)
+						thisParentUIE.OnDrag(eventData);
+				}
+			/* Hold */
+				public void OnHold( float elapsedT){
+					if(this.IsActivated() && thisIsEnabledInput)
+						OnHoldImple(elapsedT);
+					else
+						PassOnHoldUpward(elapsedT);
+				}
+				protected virtual void OnHoldImple(float elapsedT){
 					PassOnHoldUpward(elapsedT);
-			}
-			protected virtual void OnHoldImple(float elapsedT){
-				PassOnHoldUpward(elapsedT);
-			}
-			void PassOnHoldUpward(float elapsedT){
-				if(thisParentUIE != null)
-					thisParentUIE.OnHold(elapsedT);
-			}
-
-			public void OnSwipe( ICustomEventData eventData){
-				if(this.IsActivated() && thisIsEnabledInput)
-					OnSwipeImple(eventData);
-				else
+				}
+				void PassOnHoldUpward(float elapsedT){
+					if(thisParentUIE != null)
+						thisParentUIE.OnHold(elapsedT);
+				}
+			/* Swipe */
+				public void OnSwipe( ICustomEventData eventData){
+					if(this.IsActivated() && thisIsEnabledInput)
+						OnSwipeImple(eventData);
+					else
+						PassOnSwipeUpward(eventData);
+				}
+				protected virtual void OnSwipeImple(ICustomEventData eventData){
 					PassOnSwipeUpward(eventData);
-			}
-			protected virtual void OnSwipeImple(ICustomEventData eventData){
-				PassOnSwipeUpward(eventData);
-			}
-			void PassOnSwipeUpward(ICustomEventData eventData){
-				if(thisParentUIE != null)
-					thisParentUIE.OnSwipe(eventData);
-			}
-
-
-
-		
+				}
+				void PassOnSwipeUpward(ICustomEventData eventData){
+					if(thisParentUIE != null)
+						thisParentUIE.OnSwipe(eventData);
+				}
+			/*  */
 		/*  */
 		public void EnableInput(){
 			thisIsEnabledInput = true;

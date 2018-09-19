@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 		public SmoothLookerAdaptor pcSmoothLookerAdaptor;
 		public PlayerCharacterLookAtTargetAdaptor pcLookAtTargetAdaptor;
 		public SmoothFollowerAdaptor camSmoothFollowerAdaptor;
+		public SmoothLookerAdaptor cameraPivotSmoothLookerAdaptor;
 		public SmoothLookerAdaptor camSmoothLookerAdaptor;
 
 		public MonoBehaviourAdaptorManager mbAdaptorManager;
@@ -42,13 +43,16 @@ namespace AppleShooterProto{
 			ActivateUISystem();
 
 			waypointsManager.PlaceWaypointGroups();
-			// StartWaypointsFollower();
-			// StartSmoothFollower();
-			// StartPCSmoothLook();
-			// StartCameraSmoothFollow();
-			// StartRecticleSmoothLook();
-			StartCameraSmoothLook();
-			StartSmoothZoom();
+			StartWaypointsFollower();//		100
+			StartSmoothFollower();//		110, lookAtTargetMotion: 120
+			StartPCSmoothLook();//			130
+			StartCameraSmoothFollow();//	140
+			StartCameraPivotSmoothLook();//	150
+			// StartRecticleSmoothLook();//	155
+			StartCameraSmoothLook();//		160
+			// StartSmoothZoom();//			170
+
+			//Trajectory drawing: 			200
 		}
 		void FinalizeUISystemSetUp(){
 			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
@@ -78,6 +82,10 @@ namespace AppleShooterProto{
 		public void StartCameraSmoothFollow(){
 			ISmoothFollower follower = camSmoothFollowerAdaptor.GetSmoothFollower();
 			follower.StartFollow();
+		}
+		void StartCameraPivotSmoothLook(){
+			ISmoothLooker cameraPivotSmoothLooker = cameraPivotSmoothLookerAdaptor.GetSmoothLooker();
+			cameraPivotSmoothLooker.StartSmoothLook();
 		}
 		void StartCameraSmoothLook(){
 			ISmoothLooker looker = camSmoothLookerAdaptor.GetSmoothLooker();

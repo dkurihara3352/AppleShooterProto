@@ -31,7 +31,8 @@ namespace AppleShooterProto{
 			IPlayerInputStateEngine engine
 		);
 		IDrawProcess CreateDrawProcess(
-			IShootingManager shootingManager
+			IShootingManager shootingManager,
+			int processOrder
 		);
 		ISmoothZoomProcess CreateSmoothZoomProcess(
 			IPlayerCamera playerCamera,
@@ -114,11 +115,13 @@ namespace AppleShooterProto{
 			return new WaitAndSwitchToIdleStateProcess(arg);
 		}
 		public IDrawProcess CreateDrawProcess(
-			IShootingManager shootingManager
+			IShootingManager shootingManager,
+			int processOrder
 		){
 			IDrawProcessConstArg arg = new DrawProcessConstArg(
 				thisProcessManager,
-				shootingManager
+				shootingManager,
+				processOrder
 			);
 			return new DrawProcess(arg);
 		}

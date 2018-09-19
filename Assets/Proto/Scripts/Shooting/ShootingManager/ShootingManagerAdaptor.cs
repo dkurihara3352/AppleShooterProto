@@ -13,11 +13,13 @@ namespace AppleShooterProto{
 
 		IShootingManager thisShootingManager;
 		public ProcessManager processManager;
+		public int drawProcessOrder;
 		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(processManager);
 			IShootingManagerConstArg arg = new ShootingManagerConstArg(
 				processFactory,
-				this
+				this,
+				drawProcessOrder
 			);
 			thisShootingManager = new ShootingManager(arg);
 		}

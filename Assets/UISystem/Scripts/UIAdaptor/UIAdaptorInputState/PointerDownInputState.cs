@@ -15,6 +15,7 @@ namespace UISystem{
 
 			thisVelocityStack = new Vector2[thisVelocityStackSize];
 			thisSwipeDistanceThreshold = arg.swipeDistanceThreshold;
+			thisSwipeVelocityThreshold = arg.swipeVelocityThreshold;
 		}
 		int thisVelocityStackSize;
 		public override void OnEnter(){
