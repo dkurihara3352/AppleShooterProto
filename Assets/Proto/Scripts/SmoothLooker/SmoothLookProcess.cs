@@ -23,9 +23,7 @@ namespace AppleShooterProto{
 			Vector3 targetLookAtPosition = thisTarget.GetPosition();
 			Vector3 currentLookerPosition = thisSmoothLooker.GetPosition();
 			Vector3 displacement = targetLookAtPosition - currentLookerPosition;
-
-			if(displacement.sqrMagnitude > displacementThreshold * displacementThreshold){
-
+			if(displacement.sqrMagnitude >= displacementThreshold * displacementThreshold){
 				Quaternion targetLookAtRotation = Quaternion.LookRotation(
 					displacement
 				);

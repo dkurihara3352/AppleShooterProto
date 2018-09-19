@@ -428,27 +428,104 @@ namespace UISystem{
 			}
 			protected virtual void ProcessSwipe(ICustomEventData eventData){
 				if(thisIsEnabledInertia){
-					StartInertialScroll(eventData.velocity);
+
+					ResetDrag();
+
+					if(InitialVelocityIsOverThreshold(eventData.velocity))
+						DisableScrollInputRecursively(this);
+
+					for(int i = 0; i < 2; i ++){
+						if(!this.IsOutOfBounds(i)){
+							StartInertialScrollOnAxis(
+								eventData.velocity,
+								i
+							);
+						}else{
+							CheckAndPerformStaticBoundarySnapOnAxis(i);
+						}
+					}
 					CheckAndPerformStaticBoundarySnapFrom(thisProximateParentScroller);
-				}
-				else
+					// 	StartInertialScroll(eventData.velocity);
+					// 	CheckAndPerformStaticBoundarySnapFrom(thisProximateParentScroller);
+					// 	return;
+				}else
 					CheckAndPerformStaticBoundarySnapFrom(this);
 			}
 			protected bool InitialVelocityIsOverThreshold(Vector2 velocity){
 				return velocity.sqrMagnitude >= thisNewScrollSpeedThreshold * thisNewScrollSpeedThreshold;
 			}
 			readonly protected bool thisIsEnabledInertia;
-			protected virtual void StartInertialScroll(Vector2 swipeVelocity){
-				ResetDrag();
+			protected void StartInertialScrollOnAxis(
+				Vector2 velocity,
+				int axis
+			){
+				float decelerationOnAxis = CalcDecelerationOnAxis(
+					velocity,
+					axis
+				);
+				IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(
+					velocity[axis],
+					decelerationOnAxis,
+					this,
+					thisScrollerElement,
+					axis
+				);
+				process.Run();
+			}
+			float CalcDecelerationOnAxis(
+				Vector2 velocity,
+				int axis
+			){
+				if(
+					(thisScrollerAxis == ScrollerAxis.Horizontal && axis == 0) ||
+					(thisScrollerAxis == ScrollerAxis.Vertical && axis == 1)
+				){
+					return 1f;
+				}else{
+					if(thisScrollerAxis == ScrollerAxis.Both){
+						float sine;
+						float cosine;
+						DKUtility.Calculator.CalcSineAndCosine(
+							velocity,
+							out sine,
+							out cosine
+						);
+						if(sine < 0f)
+							sine *= -1f;
+						if(cosine < 0f)
+							cosine *= -1f;
+						if(axis == 0)
+							return cosine;
+						else
+							return sine;
+					}
+				}
+				return 0f;
+			}
 
-				if(InitialVelocityIsOverThreshold(swipeVelocity))
-					DisableScrollInputRecursively(this);
+			protected virtual void StartInertialScroll(Vector2 swipeVelocity){
+				// ResetDrag();
+
+				// if(InitialVelocityIsOverThreshold(swipeVelocity))
+				// 	DisableScrollInputRecursively(this);
 
 				if(thisScrollerAxis == ScrollerAxis.Horizontal){
-					IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(swipeVelocity[0], 1f, this, thisScrollerElement, 0);
+					IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(
+						swipeVelocity[0], 
+						1f, 
+						this, 
+						thisScrollerElement, 
+						0
+					);
 					process.Run();
 				}else if(thisScrollerAxis == ScrollerAxis.Vertical){
-					IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(swipeVelocity[1], 1f, this, thisScrollerElement, 1);
+					IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(
+						swipeVelocity[1], 
+						1f, 
+						this, 
+						thisScrollerElement, 
+						1
+					);
 					process.Run();
 				}else{
 					float sine;
@@ -459,9 +536,21 @@ namespace UISystem{
 					if(cosine < 0f)
 						cosine *= -1f;
 
-					IInertialScrollProcess horizontalProcess = thisProcessFactory.CreateInertialScrollProcess(swipeVelocity[0], cosine, this, thisScrollerElement, 0);
+					IInertialScrollProcess horizontalProcess = thisProcessFactory.CreateInertialScrollProcess(
+						swipeVelocity[0], 
+						cosine, 
+						this, 
+						thisScrollerElement, 
+						0
+					);
 					horizontalProcess.Run();
-					IInertialScrollProcess verticalProcess = thisProcessFactory.CreateInertialScrollProcess(swipeVelocity[1], sine, this, thisScrollerElement, 1);
+					IInertialScrollProcess verticalProcess = thisProcessFactory.CreateInertialScrollProcess(
+						swipeVelocity[1], 
+						sine, 
+						this, 
+						thisScrollerElement, 
+						1
+					);
 					verticalProcess.Run();
 				}
 			}
@@ -488,12 +577,15 @@ namespace UISystem{
 			protected virtual void CheckAndPerformStaticBoundarySnapOnAxis(int dimension){
 				float scrollerElementLocalPosOnAxis = thisScrollerElement.GetLocalPosition()[dimension];
 				float cursorOffset = GetElementCursorOffsetInPixel(scrollerElementLocalPosOnAxis, dimension);
+
 				if(cursorOffset != 0f){
 					float snapTargetNormPos;
 					if(cursorOffset < 0f)
 						snapTargetNormPos = 0f;
 					else
 						snapTargetNormPos = 1f;
+
+
 					SnapTo(snapTargetNormPos, 0f, dimension);
 					return;
 				}else{
@@ -551,10 +643,49 @@ namespace UISystem{
 			}
 			Vector2 thisVelocity;
 			public Vector2 GetVelocity(){return thisVelocity;}
+			// bool isSnapped = false;
 			public void UpdateVelocity(float velocityOnAxis, int dimension){
 				thisVelocity[dimension] = velocityOnAxis;
 				CheckAndTriggerScrollInputEnable();
+				// float normalizedCursoredPosition;
+				// if(!isSnapped)
+				// 	if(this.IsOutOfBounds(dimension, out normalizedCursoredPosition)){
+				// 		if(VelocityIsUnderBoundarySnapThreshold(velocityOnAxis)){
+				// 			isSnapped = true;
+				// 			CheckAndPerformStaticBoundarySnap();
+				// 			// float snapTarget;
+				// 			// if(normalizedCursoredPosition > 1f)
+				// 			// 	snapTarget = 1f;
+				// 			// else
+				// 			// 	snapTarget = 0f;
+				// 			// SnapTo(
+				// 			// 	snapTarget,
+				// 			// 	velocityOnAxis,
+				// 			// 	dimension
+				// 			// );
+				// 		}
+				// 	}	
 			}
+			bool IsOutOfBounds(int axis){
+				float normalizedCursoredPosition;
+				return IsOutOfBounds(axis, out normalizedCursoredPosition);
+			}
+			bool IsOutOfBounds(int dimension, out float normalizedCursoredPosition){
+				float scrollerElementLocalPosOnAxis = thisScrollerElement.GetLocalPosition()[dimension];
+				float thisNormalizedCursoredPosition = GetNormalizedCursoredPositionOnAxis(
+					scrollerElementLocalPosOnAxis, 
+					dimension
+				);
+				normalizedCursoredPosition = thisNormalizedCursoredPosition;
+				return thisNormalizedCursoredPosition > 1f || thisNormalizedCursoredPosition < 0f;
+			}
+			// float thisStartBoundarySnapVelocity = 10f;
+			// bool VelocityIsUnderBoundarySnapThreshold(float velocityOnAxis){
+			// 	return velocityOnAxis <= thisStartBoundarySnapVelocity;
+			// }
+
+
+			/*  */
 			void CheckAndTriggerScrollInputEnable(){
 				if(thisTopmostScrollerInMotion != null){
 					if(thisIsTopmostScrollerInMotion){
@@ -587,6 +718,7 @@ namespace UISystem{
 
 			protected override void OnTouchImple(int touchCount){
 				thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Touch);
+				// isSnapped = false;
 			}
 			public void PauseRunningMotorProcessRecursivelyUp(){
 				PauseAllRunningElementMotorProcess();

@@ -24,15 +24,11 @@ namespace AppleShooterProto{
 			Vector3 targetPosition = thisTarget.GetPosition();
 			Vector3 displacement = targetPosition - smoothFollowerPosition;
 			Vector3 newPosition;
-			if(DisplacementIsSmallEnough(displacement))
-				newPosition = targetPosition;
-			else{
-				Vector3 deltaPosition = CalcDeltaPosition(
-					deltaT,
-					displacement
-				);
-				newPosition = smoothFollowerPosition + deltaPosition;
-			}
+			Vector3 deltaPosition = CalcDeltaPosition(
+				deltaT,
+				displacement
+			);
+			newPosition = smoothFollowerPosition + deltaPosition;
 			thisSmoothFollower.SetPosition(newPosition);
 		}
 		float displacemenetThreshold = .05f;
@@ -46,8 +42,6 @@ namespace AppleShooterProto{
 			Vector3 displacemenet
 		){
 			Vector3 deltaPosition = displacemenet * thisSmoothCoefficient * deltaTime;
-			if(deltaPosition.sqrMagnitude > displacemenet.sqrMagnitude)
-				deltaPosition = displacemenet;
 			return deltaPosition;
 		}
 		readonly int thisProcessOrder;

@@ -58,9 +58,9 @@ namespace AppleShooterProto{
 			return base.CalcDragDeltaSinceTouch(dragPosition) * thisScrollMultiplier;
 		}
 		protected override void ProcessSwipe(ICustomEventData eventData){
-			ICustomEventData adjustedData = CreateAdjustedData(eventData);
-			base.ProcessSwipe(adjustedData);
-			thisInputManager.ProcessSwipe(adjustedData);
+			// ICustomEventData adjustedData = CreateAdjustedData(eventData);
+			base.ProcessSwipe(/* adjustedData */eventData);
+			thisInputManager.ProcessSwipe(/* adjustedData */eventData);
 		}
 		protected override void OnTapImple(int tapCount){
 			base.OnTapImple(tapCount);

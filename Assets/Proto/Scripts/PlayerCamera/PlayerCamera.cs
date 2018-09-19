@@ -8,9 +8,13 @@ namespace AppleShooterProto{
 			float normalizedCameraPosition,
 			int axis
 		);
-		void SetFOV(float fov);
 		void SetInputScroller(ICoreGameplayInputScroller scroller);
 		void InitializeFOV();
+		void StartSmoothZoom();
+		void SetTargetFOV(float fov);
+		float GetTargetFOV();
+		float GetCurrentFOV();
+		void SetFOV(float fov);
 	}
 	public class PlayerCamera : IPlayerCamera {
 		/*  Make CameraParents the parent of both lookAtTarget and the Camera itself
@@ -34,8 +38,12 @@ namespace AppleShooterProto{
 
 			float defFOVInRadian = Mathf.Deg2Rad * thisDefaultFOV;
 			thisDefaultTangent = Mathf.Tan(defFOVInRadian);
+
+			thisProcessFactory = arg.processFactory;
+			thisSmoothCoefficient = arg.smoothCoefficient;
 		}
 		public void InitializeFOV(){
+			SetTargetFOV(thisDefaultFOV);
 			SetFOV(thisDefaultFOV);
 		}
 		readonly Vector2 thisRotationCoefficient;
@@ -65,6 +73,26 @@ namespace AppleShooterProto{
 		public void SetInputScroller(ICoreGameplayInputScroller scroller){
 			thisInputScroller = scroller;
 		}
+
+		readonly IAppleShooterProcessFactory thisProcessFactory;
+		readonly float thisSmoothCoefficient;
+		public void StartSmoothZoom(){
+			ISmoothZoomProcess process = thisProcessFactory.CreateSmoothZoomProcess(
+				this,
+				thisSmoothCoefficient
+			);
+			process.Run();
+		}
+		public float GetCurrentFOV(){
+			return thisCamera.fieldOfView;
+		}
+		float thisTargetFOV;
+		public void SetTargetFOV(float fov){
+			thisTargetFOV = fov;
+		}
+		public float GetTargetFOV(){
+			return thisTargetFOV;
+		}
 		public void SetFOV(float fov){
 			/*  
 				Discount the displacement of scroller element on drag and swipe
@@ -90,19 +118,24 @@ namespace AppleShooterProto{
 		IMonoBehaviourAdaptor lookAtPivot{get;}
 		Camera camera{get;}
 		float defaultFOV{get;}
+		IAppleShooterProcessFactory processFactory{get;}
+		float smoothCoefficient{get;}
 	}
 	public struct PlayerCameraConstArg: IPlayerCameraConstArg{
 		public PlayerCameraConstArg(
 			Vector2 rotationCoefficient,
 			IMonoBehaviourAdaptor lookAtPivot,
 			Camera camera,
-			float defaultFOV
-
+			float defaultFOV,
+			IAppleShooterProcessFactory processFactory,
+			float smoothCoefficient
 		){
 			thisRotationCoefficient = rotationCoefficient;
 			thisLookAtPivot = lookAtPivot;
 			thisCamera = camera;
 			thisDefaultFOV = defaultFOV;
+			thisProcessFactory = processFactory;
+			thisSmoothCoefficient = smoothCoefficient;
 		}
 		readonly Vector2 thisRotationCoefficient;
 		public Vector2 rotationCoefficient{get{return thisRotationCoefficient;}}
@@ -112,5 +145,9 @@ namespace AppleShooterProto{
 		public Camera camera{get{return thisCamera;}}
 		readonly float thisDefaultFOV;
 		public float defaultFOV{get{return thisDefaultFOV;}}
+		readonly IAppleShooterProcessFactory thisProcessFactory;
+		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+		readonly float thisSmoothCoefficient;
+		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
 	}
 }

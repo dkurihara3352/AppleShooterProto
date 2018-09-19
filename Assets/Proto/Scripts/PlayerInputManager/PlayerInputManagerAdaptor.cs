@@ -22,11 +22,14 @@ namespace AppleShooterProto{
 			);
 			thisInputManager = new PlayerInputManager(arg);
 		}
+		public ShootingManagerAdaptor shootingManagerAdaptor;
 		public override void SetUpReference(){
 			IPlayerCamera playerCamera = playerCameraAdaptor.GetPlayerCamera();
 			thisInputManager.SetPlayerCamera(playerCamera);
 			ICoreGameplayInputScroller scroller = inputScrollerAdaptor.GetInputScroller();
 			thisInputManager.SetInputScroller(scroller);
+			IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
+			thisInputManager.SetShootingManager(shootingManager);
 		}
 		public PlayerCameraAdaptor playerCameraAdaptor;
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;

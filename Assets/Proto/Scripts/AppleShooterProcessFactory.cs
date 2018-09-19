@@ -33,6 +33,10 @@ namespace AppleShooterProto{
 		IDrawProcess CreateDrawProcess(
 			IShootingManager shootingManager
 		);
+		ISmoothZoomProcess CreateSmoothZoomProcess(
+			IPlayerCamera playerCamera,
+			float smoothCoefficient
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -117,6 +121,17 @@ namespace AppleShooterProto{
 				shootingManager
 			);
 			return new DrawProcess(arg);
+		}
+		public ISmoothZoomProcess CreateSmoothZoomProcess(
+			IPlayerCamera playerCamera,
+			float smoothCoefficient
+		){
+			ISmoothZoomProcessConstArg arg = new SmoothZoomProcessConstArg(
+				playerCamera,
+				smoothCoefficient,
+				thisProcessManager
+			);
+			return new SmoothZoomProcess(arg);
 		}
 	}
 }

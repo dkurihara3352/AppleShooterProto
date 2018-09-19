@@ -324,12 +324,13 @@ namespace UISystem{
 				if(thisSwipeToSnapNext){
 					SnapNext(swipeDeltaPos, eventData.velocity);
 				}else{
-					if(thisIsEnabledInertia){
-						StartInertialScroll(eventData.velocity);
-						CheckAndPerformStaticBoundarySnapFrom(thisProximateParentScroller);
-					}
-					else
-						CheckAndPerformStaticBoundarySnapFrom(this);
+					// if(thisIsEnabledInertia){
+					// 	StartInertialScroll(eventData.velocity);
+					// 	CheckAndPerformStaticBoundarySnapFrom(thisProximateParentScroller);
+					// }
+					// else
+					// 	CheckAndPerformStaticBoundarySnapFrom(this);
+					base.ProcessSwipe(eventData);
 				}
 			}
 			readonly bool thisSwipeToSnapNext;

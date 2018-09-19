@@ -21,20 +21,22 @@ namespace AppleShooterProto{
 			);
 			sTR_1 = GetSubRect(topRightRect, 0, 3);
 			sTR_2 = GetSubRect(topRightRect, 1, 3);
+			sTR_3 = GetSubRect(topRightRect, 2, 3);
 		}
 
 		Rect topLeftRect; Rect sTL_1; Rect sTL_2; Rect sTL_3; Rect sTL_4; Rect sTL_5; Rect sTL_6;
-		Rect topRightRect; Rect sTR_1; Rect sTR_2;
+		Rect topRightRect; Rect sTR_1; Rect sTR_2;Rect sTR_3;
 		public ProtoGameManager gameManager;
 		public bool drawsWaypointFollowerSetUp = true;
 		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
-
+		public LaunchPointAdaptor launchPointAdaptor;
 		void OnGUI(){
 			DrawCurrentState();
 			DrawControl();
 			DrawScrollMultiplier();
+			DrawLaunchAngle();
 		}
 
 		void DrawControl(){
@@ -90,6 +92,15 @@ namespace AppleShooterProto{
 				GUI.Label(
 					sTR_2,
 					"Scroll Mult: " + scrollMultiplier.ToString()
+				);
+			}
+		}
+		void DrawLaunchAngle(){
+			if(thisSystemIsReady){
+				GUI.Label(
+					sTR_3,
+					"LaunchDirection: " + 
+					launchPointAdaptor.GetWorldDirection().ToString()
 				);
 			}
 		}

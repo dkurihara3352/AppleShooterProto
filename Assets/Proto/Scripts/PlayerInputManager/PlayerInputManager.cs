@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 	public interface IPlayerInputManager: IPlayerInputHandler{
 		void SetPlayerCamera(IPlayerCamera playerCamera);
 		void SetInputScroller(ICoreGameplayInputScroller inputScroller);
+		void SetShootingManager(IShootingManager shootingManager);
 
 		void ResetCameraZoom();
 		void ResetCameraPan();
@@ -33,12 +34,6 @@ namespace AppleShooterProto{
 				arg.processFactory
 			);
 			thisEngine = new PlayerInputStateEngine(engineConstArg);
-			
-			IShootingManagerConstArg shootingManagerConstArg = new ShootingManagerConstArg(
-				this,
-				arg.processFactory
-			);
-			thisShootingManager = new ShootingManager(shootingManagerConstArg);
 		}
 		readonly float thisDefaultFOV;
 		IPlayerInputStateEngine thisEngine;
@@ -104,10 +99,14 @@ namespace AppleShooterProto{
 			}
 			public void Zoom(float normalizedZoom){
 				float targetFOV = Mathf.Lerp(thisDefaultFOV, thisMaxZoom, normalizedZoom);
-				thisPlayerCamera.SetFOV(targetFOV);
+				thisPlayerCamera.SetTargetFOV(targetFOV);
 			}
-			readonly IShootingManager thisShootingManager;
 		/* Shooting */
+			IShootingManager thisShootingManager;
+			public void SetShootingManager(IShootingManager shootingManager){
+				thisShootingManager = shootingManager;
+			}
+
 			public void StartDraw(){
 				thisShootingManager.StartDraw();
 			}

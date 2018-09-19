@@ -221,6 +221,9 @@ namespace UISystem{
 			}
 			/* Release */
 			public void OnRelease(){
+				Debug.Log(
+					"released"
+				);
 				if(this.IsActivated() && thisIsEnabledInput){
 					CheckAndPerformStaticBoundarySnapFrom(this);
 					OnReleaseImple();
@@ -237,6 +240,7 @@ namespace UISystem{
 			}
 			/* tap */
 			public void OnTap(int tapCount){
+				Debug.Log("tapped");
 				if(this.IsActivated()){
 					if(thisIsDisabledForPopUp)
 						thisPopUpManager.CheckAndHideActivePopUp();
