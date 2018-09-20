@@ -217,11 +217,14 @@ namespace UISystem{
 			public void ClearTouchPositionCache(){
 				thisTouchPosition = noTouchPosition;
 				thisElementLocalPositionAtTouch = noTouchPosition;
+				thisElementDisplacementSinceLastTouch = Vector2.zero;
 			}
 			void CacheTouchPosition(Vector2 touchPosition){
 				thisTouchPosition = touchPosition;
 				thisElementLocalPositionAtTouch = thisScrollerElement.GetLocalPosition();
+
 			}
+			protected Vector2 thisElementDisplacementSinceLastTouch;
 			/* OnBeginDrag */
 				protected override void OnBeginDragImple(ICustomEventData eventData){
 					if(thisTopmostScrollerInMotion != null){
@@ -281,24 +284,30 @@ namespace UISystem{
 						thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Drag);
 						if(thisTopmostScrollerInMotion != null){
 							if(thisIsTopmostScrollerInMotion){
-								DisplaceScrollerElement(eventData.position);
+								DisplaceScrollerElement(eventData.deltaPos);
 							}
 							else
 								thisTopmostScrollerInMotion.OnDrag(eventData);
 						}else{
-							DisplaceScrollerElement(eventData.position);
+							DisplaceScrollerElement(eventData.deltaPos);
 						}
 					}else{
 						base.OnDragImple(eventData);
 					}
 				}
-				protected virtual void DisplaceScrollerElement(Vector2 dragPosition){
-					Vector2 displacement = CalcDragDeltaSinceTouch(dragPosition);
+				protected virtual void DisplaceScrollerElement(
+					Vector2 deltaPosition
+				){
+
+					thisElementDisplacementSinceLastTouch += deltaPosition;
+					Vector2 displacement = CalcDragDeltaSinceTouch(
+						thisElementDisplacementSinceLastTouch
+					);
 					Vector2 newElementLocalPosition =  GetScrollerElementRubberBandedLocalPosition(displacement);
 					SetScrollerElementLocalPosition(newElementLocalPosition);
 				}
-				protected virtual Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
-					Vector2 rawDisplacement = dragPosition - thisTouchPosition;
+				protected virtual Vector2 CalcDragDeltaSinceTouch(Vector2 displacementSinceTouch){
+					Vector2 rawDisplacement = displacementSinceTouch;
 					if(thisScrollerAxis == ScrollerAxis.Both)
 						return rawDisplacement;
 					else if(thisScrollerAxis == ScrollerAxis.Horizontal)

@@ -54,8 +54,8 @@ namespace AppleShooterProto{
 				adjustedVelocity
 			);
 		}
-		protected override Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
-			return base.CalcDragDeltaSinceTouch(dragPosition) * thisScrollMultiplier;
+		protected override void DisplaceScrollerElement(Vector2 deltaPosition){
+			base.DisplaceScrollerElement(deltaPosition * thisScrollMultiplier);
 		}
 		protected override void ProcessSwipe(ICustomEventData eventData){
 			// ICustomEventData adjustedData = CreateAdjustedData(eventData);
