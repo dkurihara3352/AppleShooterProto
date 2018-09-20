@@ -203,7 +203,7 @@ namespace UISystem{
 				for(int i = 0; i < 2; i ++)
 					SetScrollerElementLocalPosOnAxis(position[i], i);
 			}
-		/* Drag */
+		/* Draggin in general */
 			protected bool thisShouldProcessDrag;
 		
 			public void ResetDrag(){
@@ -222,124 +222,127 @@ namespace UISystem{
 				thisTouchPosition = touchPosition;
 				thisElementLocalPositionAtTouch = thisScrollerElement.GetLocalPosition();
 			}
-			protected override void OnBeginDragImple(ICustomEventData eventData){
-				if(thisTopmostScrollerInMotion != null){
-					EvaluateDrag(eventData);
-					thisUIM.SetInputHandlingScroller(
-						this, 
-						UIManager.InputName.BeginDrag
-					);
-					if(thisIsTopmostScrollerInMotion){
-						CacheTouchPosition(eventData.position);
-					}else{
-						thisTopmostScrollerInMotion.OnBeginDrag(eventData);
-					}
-				}else{
-					EvaluateDrag(eventData);
-					if(thisShouldProcessDrag){
-						thisUIM.SetInputHandlingScroller(this, UIManager.InputName.BeginDrag);
-						CacheTouchPosition(eventData.position);
-					}
-					else
-						base.OnBeginDragImple(eventData);
-				}
-			}
-			protected override void OnDragImple(ICustomEventData eventData){
-				if(thisShouldProcessDrag){
-					thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Drag);
+			/* OnBeginDrag */
+				protected override void OnBeginDragImple(ICustomEventData eventData){
 					if(thisTopmostScrollerInMotion != null){
+						EvaluateDrag(eventData);
+						thisUIM.SetInputHandlingScroller(
+							this, 
+							UIManager.InputName.BeginDrag
+						);
 						if(thisIsTopmostScrollerInMotion){
+							CacheTouchPosition(eventData.position);
+						}else{
+							thisTopmostScrollerInMotion.OnBeginDrag(eventData);
+						}
+					}else{
+						EvaluateDrag(eventData);
+						if(thisShouldProcessDrag){
+							thisUIM.SetInputHandlingScroller(this, UIManager.InputName.BeginDrag);
+							CacheTouchPosition(eventData.position);
+						}
+						else
+							base.OnBeginDragImple(eventData);
+					}
+				}
+				bool thisIsEvaluatedDrag = false;
+				void EvaluateDrag(ICustomEventData eventData){
+					thisIsEvaluatedDrag = true;
+					thisShouldProcessDrag = DetermineIfThisShouldProcessDrag(eventData.deltaPos);
+				}
+				bool DetermineIfThisShouldProcessDrag(Vector2 deltaPos){
+					if(thisTopmostScrollerInMotion != null){
+						return true;
+					}else{
+						if(thisScrollerAxis == ScrollerAxis.Both)
+							return true;
+						else{
+							if(DeltaPosIsHorizontal(deltaPos))
+								return thisScrollerAxis == ScrollerAxis.Horizontal;
+							else
+								return thisScrollerAxis == ScrollerAxis.Vertical;
+						}
+					}
+				}
+				bool DeltaPosIsHorizontal(Vector2 deltaPos){
+					return Mathf.Abs(deltaPos.x) >= Mathf.Abs(deltaPos.y);
+				}
+				protected Vector2 CalcDragDeltaPos(Vector2 deltaP){
+					if(thisScrollerAxis == ScrollerAxis.Both)
+						return deltaP;
+					else if(thisScrollerAxis == ScrollerAxis.Horizontal)
+						return new Vector2(deltaP.x, 0f);
+					else
+						return new Vector2(0f, deltaP.y);
+				}
+			/* Drag */
+				protected override void OnDragImple(ICustomEventData eventData){
+					if(thisShouldProcessDrag){
+						thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Drag);
+						if(thisTopmostScrollerInMotion != null){
+							if(thisIsTopmostScrollerInMotion){
+								DisplaceScrollerElement(eventData.position);
+							}
+							else
+								thisTopmostScrollerInMotion.OnDrag(eventData);
+						}else{
 							DisplaceScrollerElement(eventData.position);
 						}
-						else
-							thisTopmostScrollerInMotion.OnDrag(eventData);
 					}else{
-						DisplaceScrollerElement(eventData.position);
+						base.OnDragImple(eventData);
 					}
-				}else{
-					base.OnDragImple(eventData);
 				}
-			}
-			bool thisIsEvaluatedDrag = false;
-			void EvaluateDrag(ICustomEventData eventData){
-				thisIsEvaluatedDrag = true;
-				thisShouldProcessDrag = DetermineIfThisShouldProcessDrag(eventData.deltaPos);
-			}
-			bool DetermineIfThisShouldProcessDrag(Vector2 deltaPos){
-				if(thisTopmostScrollerInMotion != null){
-					return true;
-				}else{
+				protected virtual void DisplaceScrollerElement(Vector2 dragPosition){
+					Vector2 displacement = CalcDragDeltaSinceTouch(dragPosition);
+					Vector2 newElementLocalPosition =  GetScrollerElementRubberBandedLocalPosition(displacement);
+					SetScrollerElementLocalPosition(newElementLocalPosition);
+				}
+				protected virtual Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
+					Vector2 rawDisplacement = dragPosition - thisTouchPosition;
 					if(thisScrollerAxis == ScrollerAxis.Both)
-						return true;
-					else{
-						if(DeltaPosIsHorizontal(deltaPos))
-							return thisScrollerAxis == ScrollerAxis.Horizontal;
-						else
-							return thisScrollerAxis == ScrollerAxis.Vertical;
+						return rawDisplacement;
+					else if(thisScrollerAxis == ScrollerAxis.Horizontal)
+						return new Vector2(rawDisplacement.x, 0f);
+					else
+						return new Vector2(0f, rawDisplacement.y);
+					
+				}
+				protected Vector2 GetScrollerElementRubberBandedLocalPosition(Vector2 displacement){
+					Vector2 result = new Vector2();
+					for(int i = 0; i < 2; i ++){
+						float displacementAfterRubberBand;
+						displacementAfterRubberBand = displacement[i];
+						float prospectiveElementLocalPosOnAxis = thisElementLocalPositionAtTouch[i] + displacement[i];
+						float cursorOffsetInPixel = GetElementCursorOffsetInPixel(prospectiveElementLocalPosOnAxis, i);
+						if(cursorOffsetInPixel != 0f){
+							float nonRubberedDisplacement = displacement[i];
+							float rubberedDisplacement = 0f;
+							if(cursorOffsetInPixel < 0f && displacement[i] > 0f){
+								cursorOffsetInPixel *= -1f;
+								nonRubberedDisplacement = displacement[i] - cursorOffsetInPixel;
+								rubberedDisplacement = thisRubberBandCalculator[i].CalcRubberBandValue(cursorOffsetInPixel, invert: false);
+							}else if(cursorOffsetInPixel > 0f && displacement[i] < 0f){
+								cursorOffsetInPixel *= -1f;
+								nonRubberedDisplacement = displacement[i] - cursorOffsetInPixel;
+								rubberedDisplacement = thisRubberBandCalculator[i].CalcRubberBandValue(cursorOffsetInPixel, invert: true);
+							}
+							displacementAfterRubberBand = nonRubberedDisplacement + rubberedDisplacement;
+						}		
+						result[i] = thisElementLocalPositionAtTouch[i] + displacementAfterRubberBand;
 					}
+					return result;
 				}
-			}
-			bool DeltaPosIsHorizontal(Vector2 deltaPos){
-				return Mathf.Abs(deltaPos.x) >= Mathf.Abs(deltaPos.y);
-			}
-			protected Vector2 CalcDragDeltaPos(Vector2 deltaP){
-				if(thisScrollerAxis == ScrollerAxis.Both)
-					return deltaP;
-				else if(thisScrollerAxis == ScrollerAxis.Horizontal)
-					return new Vector2(deltaP.x, 0f);
-				else
-					return new Vector2(0f, deltaP.y);
-			}
-			protected virtual void DisplaceScrollerElement(Vector2 dragPosition){
-				Vector2 displacement = CalcDragDeltaSinceTouch(dragPosition);
-				Vector2 newElementLocalPosition =  GetScrollerElementRubberBandedLocalPosition(displacement);
-				SetScrollerElementLocalPosition(newElementLocalPosition);
-			}
-			protected virtual Vector2 CalcDragDeltaSinceTouch(Vector2 dragPosition){
-				Vector2 rawDisplacement = dragPosition - thisTouchPosition;
-				if(thisScrollerAxis == ScrollerAxis.Both)
-					return rawDisplacement;
-				else if(thisScrollerAxis == ScrollerAxis.Horizontal)
-					return new Vector2(rawDisplacement.x, 0f);
-				else
-					return new Vector2(0f, rawDisplacement.y);
-				
-			}
-			protected Vector2 GetScrollerElementRubberBandedLocalPosition(Vector2 displacement){
-				Vector2 result = new Vector2();
-				for(int i = 0; i < 2; i ++){
-					float displacementAfterRubberBand;
-					displacementAfterRubberBand = displacement[i];
-					float prospectiveElementLocalPosOnAxis = thisElementLocalPositionAtTouch[i] + displacement[i];
-					float cursorOffsetInPixel = GetElementCursorOffsetInPixel(prospectiveElementLocalPosOnAxis, i);
-					if(cursorOffsetInPixel != 0f){
-						float nonRubberedDisplacement = displacement[i];
-						float rubberedDisplacement = 0f;
-						if(cursorOffsetInPixel < 0f && displacement[i] > 0f){
-							cursorOffsetInPixel *= -1f;
-							nonRubberedDisplacement = displacement[i] - cursorOffsetInPixel;
-							rubberedDisplacement = thisRubberBandCalculator[i].CalcRubberBandValue(cursorOffsetInPixel, invert: false);
-						}else if(cursorOffsetInPixel > 0f && displacement[i] < 0f){
-							cursorOffsetInPixel *= -1f;
-							nonRubberedDisplacement = displacement[i] - cursorOffsetInPixel;
-							rubberedDisplacement = thisRubberBandCalculator[i].CalcRubberBandValue(cursorOffsetInPixel, invert: true);
-						}
-						displacementAfterRubberBand = nonRubberedDisplacement + rubberedDisplacement;
-					}		
-					result[i] = thisElementLocalPositionAtTouch[i] + displacementAfterRubberBand;
+				IElementIsScrolledToIncreaseCursorOffsetCalculator thisElementIsScrolledToIncreaseCursorOffsetCalculator;
+				protected bool ElementIsScrolledToIncreaseCursorOffset(float deltaPosOnAxis, float scrollerElementLocalPosOnAxis, int dimension){
+					return thisElementIsScrolledToIncreaseCursorOffsetCalculator.Calculate(deltaPosOnAxis, scrollerElementLocalPosOnAxis, dimension);
 				}
-				return result;
-			}
-			IElementIsScrolledToIncreaseCursorOffsetCalculator thisElementIsScrolledToIncreaseCursorOffsetCalculator;
-			protected bool ElementIsScrolledToIncreaseCursorOffset(float deltaPosOnAxis, float scrollerElementLocalPosOnAxis, int dimension){
-				return thisElementIsScrolledToIncreaseCursorOffsetCalculator.Calculate(deltaPosOnAxis, scrollerElementLocalPosOnAxis, dimension);
-			}
-			protected bool thisRequiresToCheckForHorizontalAxis{
-				get{return thisScrollerAxis == ScrollerAxis.Horizontal || thisScrollerAxis == ScrollerAxis.Both;}
-			}
-			protected bool thisRequiresToCheckForVerticalAxis{
-				get{return thisScrollerAxis == ScrollerAxis.Vertical || thisScrollerAxis == ScrollerAxis.Both;}
-			}
+				protected bool thisRequiresToCheckForHorizontalAxis{
+					get{return thisScrollerAxis == ScrollerAxis.Horizontal || thisScrollerAxis == ScrollerAxis.Both;}
+				}
+				protected bool thisRequiresToCheckForVerticalAxis{
+					get{return thisScrollerAxis == ScrollerAxis.Vertical || thisScrollerAxis == ScrollerAxis.Both;}
+				}
+			/*  */
 		/* Rect calculation */
 			public bool ScrollerElementIsUndersizedTo(Vector2 referenceLength, int dimension){
 				return thisScrollerElementLength[dimension] <= referenceLength[dimension];

@@ -44,14 +44,16 @@ namespace AppleShooterProto{
 
 			waypointsManager.PlaceWaypointGroups();
 			StartWaypointsFollower();//		100
-			StartSmoothFollower();//		110, lookAtTargetMotion: 120
+			StartSmoothFollower();//		110
+			// PCLookAtTargetMotion			120
 			StartPCSmoothLook();//			130
 			StartCameraSmoothFollow();//	140
 			StartCameraPivotSmoothLook();//	150
 			// StartRecticleSmoothLook();//	155
 			StartCameraSmoothLook();//		160
-			// StartSmoothZoom();//			170
-
+			//Bow drawing					165
+			StartSmoothZoom();//			170
+			
 			//Trajectory drawing: 			200
 		}
 		void FinalizeUISystemSetUp(){
