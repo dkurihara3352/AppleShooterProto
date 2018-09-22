@@ -13,7 +13,6 @@ namespace AppleShooterProto{
 		void HoldDraw();
 		void Fire();
 		void ResetDraw();
-		float GetMaxZoom();
 	}
 	public class ShootingManager : IShootingManager {
 
@@ -28,12 +27,19 @@ namespace AppleShooterProto{
 		public void SetInputManager(IPlayerInputManager inputManager){
 			thisInputManager = inputManager;
 		}
-		public float GetMaxZoom(){
-			return thisMaxZoom;
+		float maxZoom{
+			get{return thisInputManager.GetMaxZoom();}
 		}
-		float thisMaxZoom = 20f;
-		float thisMaxDrawTime = 3f;
 		float thisDrawElapsedTime = 0f;
+		float thisMaxDrawTime{
+			get{return thisAdaptor.GetMaxDrawTime();}
+		}
+		float GetNormalizedDraw(){
+			float result = thisDrawElapsedTime/ thisMaxDrawTime;
+			if(result > 1f)
+				result = 1f;
+			return result;
+		}
 		IDrawProcess thisDrawProcess;
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		readonly IShootingManagerAdaptor thisAdaptor;
@@ -52,6 +58,9 @@ namespace AppleShooterProto{
 		public float initialSpeed{
 			get{return thisAdaptor.GetInitialSpeed();}
 		}
+		public float maxFlightSpeed{
+			get{return thisAdaptor.GetMaxFlightSpeed();}
+		}
 		public float gravity{
 			get{return thisAdaptor.GetGravity();}
 		}
@@ -65,10 +74,9 @@ namespace AppleShooterProto{
 		public void Draw(float deltaTime){
 			if(thisDrawElapsedTime < thisMaxDrawTime){
 				thisDrawElapsedTime += deltaTime;
-				float normalizedDrawTime = thisDrawElapsedTime/ thisMaxDrawTime;
-				if(normalizedDrawTime > 1f)
-					normalizedDrawTime = 1f;
-				thisInputManager.Zoom(normalizedDrawTime);
+				float normalizedDraw = GetNormalizedDraw();
+				thisInputManager.Zoom(normalizedDraw);
+				this.UpdateFlightSpeed();
 			}
 			DrawTrajectory();
 		}
@@ -76,11 +84,26 @@ namespace AppleShooterProto{
 		public void SetLaunchPoint(ILaunchPoint launchPoint){
 			thisLaunchPoint = launchPoint;
 		}
+		void UpdateFlightSpeed(){
+			thisFlightSpeed = CalcFlightSpeed(
+				GetNormalizedDraw()
+			);
+		}
+		float thisFlightSpeed;
+		float CalcFlightSpeed(
+			float normalizedDraw
+		){
+			return Mathf.Lerp(
+				initialSpeed,
+				maxFlightSpeed,
+				normalizedDraw
+			);
+		}
 		void DrawTrajectory(){
 			Vector3 aimDirection = thisLaunchPoint.GetWorldDirection();
 			thisTrajectory.DrawTrajectory(
 				aimDirection,
-				initialSpeed,
+				thisFlightSpeed,
 				gravity,
 				thisLaunchPoint.GetWorldPosition()
 			);
@@ -91,6 +114,7 @@ namespace AppleShooterProto{
 		public void ResetDraw(){
 			HoldDraw();
 			thisDrawElapsedTime = 0f;
+			UpdateFlightSpeed();
 		}
 	}
 

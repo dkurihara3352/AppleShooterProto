@@ -20,12 +20,13 @@ namespace AppleShooterProto{
 		void Fire();
 
 		IPlayerInputState GetCurrentState();
-		void SetMaxZoom(float fov);
+		float GetMaxZoom();
 		void Zoom(float normalizedZoom);
 	}
 	public class PlayerInputManager : IPlayerInputManager {
 		public PlayerInputManager(IPlayerInputManagerConstArg arg){
 			thisDefaultFOV = arg.defaultFOV;
+			thisAdaptor = arg.adaptor;
 
 
 			IPlayerInputStateEngineConstArg engineConstArg = new PlayerInputStateEngineConstArg(
@@ -35,6 +36,7 @@ namespace AppleShooterProto{
 			);
 			thisEngine = new PlayerInputStateEngine(engineConstArg);
 		}
+		readonly IPlayerInputManagerAdaptor thisAdaptor;
 		readonly float thisDefaultFOV;
 		IPlayerInputStateEngine thisEngine;
 		public IPlayerInputState GetCurrentState(){
@@ -93,12 +95,14 @@ namespace AppleShooterProto{
 			public void ResetCameraPan(){
 				thisInputScroller.SnapToCenter();
 			}
-			float thisMaxZoom;
-			public void SetMaxZoom(float fov){
-				thisMaxZoom = fov;
+			float maxZoom{
+				get{return thisAdaptor.GetMaxZoom();}
+			}
+			public float GetMaxZoom(){
+				return maxZoom;
 			}
 			public void Zoom(float normalizedZoom){
-				float targetFOV = Mathf.Lerp(thisDefaultFOV, thisMaxZoom, normalizedZoom);
+				float targetFOV = Mathf.Lerp(thisDefaultFOV, maxZoom, normalizedZoom);
 				thisPlayerCamera.SetTargetFOV(targetFOV);
 			}
 		/* Shooting */
@@ -127,17 +131,20 @@ namespace AppleShooterProto{
 		float defaultFOV{get;}
 		float drawDeltaThreshold{get;}
 		IAppleShooterProcessFactory processFactory{get;}
+		IPlayerInputManagerAdaptor adaptor{get;}
 	}
 	public struct PlayerInputManagerConstArg: IPlayerInputManagerConstArg{
 		public PlayerInputManagerConstArg(
 			float defaultFOV,
 			float drawDeltaThreshold,
-			IAppleShooterProcessFactory processFactory
+			IAppleShooterProcessFactory processFactory,
+			IPlayerInputManagerAdaptor adaptor
 
 		){
 			thisDefaultFOV = defaultFOV;
 			thisDrawDeltaThreshold = drawDeltaThreshold;
 			thisProcessFactory = processFactory;
+			thisAdaptor = adaptor;
 		}
 		readonly float thisDefaultFOV;
 		public float defaultFOV{get{return thisDefaultFOV;}}
@@ -145,5 +152,7 @@ namespace AppleShooterProto{
 		public float drawDeltaThreshold{get{return thisDrawDeltaThreshold;}}
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+		readonly IPlayerInputManagerAdaptor thisAdaptor;
+		public IPlayerInputManagerAdaptor adaptor{get{return thisAdaptor;}}
 	}
 }

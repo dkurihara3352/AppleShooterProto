@@ -7,7 +7,9 @@ namespace AppleShooterProto{
 	public interface IShootingManagerAdaptor: IMonoBehaviourAdaptor{
 		IShootingManager GetShootingManager();
 		float GetInitialSpeed();
+		float GetMaxFlightSpeed();
 		float GetGravity();
+		float GetMaxDrawTime();
 	}
 	public class ShootingManagerAdaptor : MonoBehaviourAdaptor, IShootingManagerAdaptor{
 
@@ -29,9 +31,17 @@ namespace AppleShooterProto{
 		public PlayerInputManagerAdaptor inputManagerAdaptor;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public TrajectoryAdaptor trajectoryAdaptor;
-		public float shotInitialSpeed;
+		public float initialFlightSpeed;
 		public float GetInitialSpeed(){
-			return shotInitialSpeed;
+			return initialFlightSpeed;
+		}
+		public float maxFlightSpeed;
+		public float GetMaxFlightSpeed(){
+			return maxFlightSpeed;
+		}
+		public float maxDrawTime;
+		public float GetMaxDrawTime(){
+			return maxDrawTime;
 		}
 		public float shotGravity;
 		public float GetGravity(){
@@ -40,8 +50,6 @@ namespace AppleShooterProto{
 		public override void SetUpReference(){
 			IPlayerInputManager inputManager = inputManagerAdaptor.GetInputManager();
 			thisShootingManager.SetInputManager(inputManager);
-
-			inputManager.SetMaxZoom(thisShootingManager.GetMaxZoom());
 
 			ILaunchPoint launchPoint = launchPointAdaptor.GetLaunchPoint();
 			thisShootingManager.SetLaunchPoint(launchPoint);

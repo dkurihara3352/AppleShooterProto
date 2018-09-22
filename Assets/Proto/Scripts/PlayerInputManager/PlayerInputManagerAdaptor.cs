@@ -7,18 +7,23 @@ namespace AppleShooterProto{
 		IPlayerInputManager GetInputManager();
 		/* Debug */
 		string GetStateName();
-
+		float GetMaxZoom();
 	}
 	public class PlayerInputManagerAdaptor : MonoBehaviourAdaptor, IPlayerInputManagerAdaptor {
 		public float defaultFOV = 60f;
 		public float drawDeltaThreshold = 100f;
+		public float maxZoom;
+		public float GetMaxZoom(){
+			return maxZoom;
+		}
 		public DKUtility.ProcessManager processManager;
 		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(processManager);
 			IPlayerInputManagerConstArg arg = new PlayerInputManagerConstArg(
 				defaultFOV,
 				drawDeltaThreshold,
-				processFactory
+				processFactory,
+				this
 			);
 			thisInputManager = new PlayerInputManager(arg);
 		}

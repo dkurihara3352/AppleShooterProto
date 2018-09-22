@@ -52,9 +52,9 @@ namespace AppleShooterProto{
 			// StartRecticleSmoothLook();//	155
 			StartCameraSmoothLook();//		160
 			//Bow drawing					165
+				//trajectory here
 			StartSmoothZoom();//			170
 			
-			//Trajectory drawing: 			200
 		}
 		void FinalizeUISystemSetUp(){
 			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
