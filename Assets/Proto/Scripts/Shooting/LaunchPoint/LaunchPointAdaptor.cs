@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface ILaunchPointAdaptor: IMonoBehaviourAdaptor{
-		Vector3 GetWorldDirection();
+		Vector3 GetWorldForwardDirection();
 		Vector3 GetWorldPosition();
 		ILaunchPoint GetLaunchPoint();
 	}
@@ -17,7 +17,7 @@ namespace AppleShooterProto{
 		public ILaunchPoint GetLaunchPoint(){
 			return thisLaunchPoint;
 		}
-		public Vector3 GetWorldDirection(){
+		public Vector3 GetWorldForwardDirection(){
 			return this.transform.forward;
 		}
 		public Vector3 GetWorldPosition(){
@@ -29,7 +29,7 @@ namespace AppleShooterProto{
 			Vector3 worldPos = this.GetWorldPosition();
 			Gizmos.DrawLine(
 				worldPos,
-				worldPos + GetWorldDirection() * 10f
+				worldPos + GetWorldForwardDirection() * 10f
 			);
 		}
 	}

@@ -25,13 +25,15 @@ namespace AppleShooterProto{
 
 		void ResetCameraZoom();
 		void ResetCameraPan();
+		void TryNock();
 		void StartDraw();
 		void HoldDraw();
-		void Fire();
+		void Release();
 		void PanCamera(
 			float normalizedCurosredPosition,
 			int axis
 		);
+		void TryResetArrow();
 	}
 	public class PlayerInputStateEngine : AbsSwitchableStateEngine<IPlayerInputState>, IPlayerInputStateEngine {
 
@@ -109,15 +111,17 @@ namespace AppleShooterProto{
 			public void ResetCameraPan(){
 				thisPlayerInputManager.ResetCameraPan();
 			}
-
+			public void TryNock(){
+				thisPlayerInputManager.TryNock();
+			}
 			public void StartDraw(){
 				thisPlayerInputManager.StartDraw();
 			}
 			public void HoldDraw(){
 				thisPlayerInputManager.HoldDraw();
 			}
-			public void Fire(){
-				thisPlayerInputManager.Fire();
+			public void Release(){
+				thisPlayerInputManager.Release();
 			}
 			public void PanCamera(
 				float normalizedCursoredPosition,
@@ -127,6 +131,9 @@ namespace AppleShooterProto{
 					normalizedCursoredPosition,
 					axis
 				);
+			}
+			public void TryResetArrow(){
+				thisPlayerInputManager.TryResetArrow();
 			}
 		/*  */
 	}

@@ -38,6 +38,18 @@ namespace AppleShooterProto{
 			IPlayerCamera playerCamera,
 			float smoothCoefficient
 		);
+		IShootingProcess CreateShootingProcess(
+			IShootingManager shootingManager,
+			float fireRate
+		);
+		IArrowFlightProcess CreateArrowFlightProcess(
+			IArrow arrow,
+			float flightSpeed,
+			Vector3 worldDirection,
+			float flightGravity,
+			Vector3 launcherDeltaPosition,
+			Vector3 launchPosition
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -135,6 +147,37 @@ namespace AppleShooterProto{
 				thisProcessManager
 			);
 			return new SmoothZoomProcess(arg);
+		}
+		public IShootingProcess CreateShootingProcess(
+			IShootingManager shootingManager,
+			float fireRate
+		){
+			IShootingProcessConstArg arg = new ShootingProcessConstArg(
+				shootingManager,
+				fireRate,
+				thisProcessManager
+			);
+			return new ShootingProcess(arg);
+		}
+		public IArrowFlightProcess CreateArrowFlightProcess(
+			IArrow arrow,
+			float flightSpeed,
+			Vector3 flightDirection,
+			float flightGravity,
+			Vector3 launcherVelocity,
+			Vector3 launchPosition
+		){
+			IArrowFlightProcessConstArg arg = new ArrowFlightProcessConstArg(
+				arrow,
+				flightSpeed,
+				flightDirection,
+				flightGravity,
+				launcherVelocity,
+				launchPosition,
+
+				thisProcessManager
+			);
+			return new ArrowFlightProcess(arg);
 		}
 	}
 }

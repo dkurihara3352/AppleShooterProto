@@ -30,5 +30,6 @@ namespace DKUtility{
 		float GetUIAWaitForNextTouchProcessExpireTime();
 		/*  */
 		float GetWaitAndSwitchToIdleStateProcessExpireTime();
+		float GetArrowFlightExpireTime();
 	}	
 }

@@ -9,6 +9,9 @@ namespace AppleShooterProto{
 		void StopFollow();
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
+		Vector3 GetDeltaPosition();
+		void SetVelocity(Vector3 velocity);
+		Vector3 GetVelocity();
 	}
 	public class SmoothFollower : ISmoothFollower{
 		public SmoothFollower(
@@ -19,6 +22,8 @@ namespace AppleShooterProto{
 			thisSmoothCoefficient = arg.smoothCoefficient;
 			thisFollowTarget = arg.followTarget;
 			thisProcessOrder = arg.processOrder;
+
+			thisPrevPosition = GetPosition();
 		}
 		readonly ISmoothFollowerAdaptor thisAdaptor;
 		readonly IAppleShooterProcessFactory thisProcessFactory;
@@ -39,6 +44,7 @@ namespace AppleShooterProto{
 			thisProcess.Run();
 		}
 		public void SetPosition(Vector3 position){
+			thisPrevPosition = GetPosition();
 			thisAdaptor.SetPosition(position);
 		}
 		public Vector3 GetPosition(){
@@ -47,6 +53,17 @@ namespace AppleShooterProto{
 		public void StopFollow(){
 			if(thisProcess.IsRunning())
 				thisProcess.Stop();
+		}
+		Vector3 thisPrevPosition;
+		public Vector3 GetDeltaPosition(){
+			return GetPosition() - thisPrevPosition;
+		}
+		Vector3 thisVelocity;
+		public void SetVelocity(Vector3 velocity){
+			thisVelocity = velocity;
+		}
+		public Vector3 GetVelocity(){
+			return thisVelocity;
 		}
 	}
 

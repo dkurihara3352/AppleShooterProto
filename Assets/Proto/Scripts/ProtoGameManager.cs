@@ -54,6 +54,8 @@ namespace AppleShooterProto{
 			//Bow drawing					165
 				//trajectory here
 			StartSmoothZoom();//			170
+
+			//arrow flight process			200 ->
 			
 		}
 		void FinalizeUISystemSetUp(){

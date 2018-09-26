@@ -79,7 +79,7 @@ public class ConstrainedProcessTest {
 			return thisRateOfChange;
 		}
 		public float GetExpireT(){
-			return thisExpireT;
+			return thisExpireTime;
 		}
 	}
 	public IConstrainedProcessConstArg CreateMockArg(){

@@ -28,6 +28,7 @@ namespace AppleShooterProto{
 			thisInputManager = new PlayerInputManager(arg);
 		}
 		public ShootingManagerAdaptor shootingManagerAdaptor;
+		public SmoothFollowerAdaptor cameraPivotSmoothFollowerAdaptor;
 		public override void SetUpReference(){
 			IPlayerCamera playerCamera = playerCameraAdaptor.GetPlayerCamera();
 			thisInputManager.SetPlayerCamera(playerCamera);
@@ -35,6 +36,9 @@ namespace AppleShooterProto{
 			thisInputManager.SetInputScroller(scroller);
 			IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
 			thisInputManager.SetShootingManager(shootingManager);
+
+			ISmoothFollower follower = cameraPivotSmoothFollowerAdaptor.GetSmoothFollower();
+			thisInputManager.SetCameraPivotSmoothFollower(follower);
 		}
 		public PlayerCameraAdaptor playerCameraAdaptor;
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;

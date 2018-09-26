@@ -24,35 +24,36 @@ namespace DKUtility{
 				throw new System.InvalidOperationException("Override GetLatesetInitialValueDifference if the process constraint is rate of change");
 			return 0f;
 		}
-		protected override void RunImple(){			
+		public override void Run(){
 			CalcAndSetConstraintValues();
+			base.Run();
 		}
 		void CalcAndSetConstraintValues(){
 			if(thisProcessConstraint == ProcessConstraint.RateOfChange){
 				thisRateOfChange = thisConstraintValue;
 				float valueDiff = GetLatestInitialValueDifference();
 				if(valueDiff == 0f)
-					thisExpireT = 0f;
+					thisExpireTime = 0f;
 				else
-					thisExpireT = valueDiff / thisRateOfChange;
-				if(thisExpireT < 0f)
-					thisExpireT *= -1f;
+					thisExpireTime = valueDiff / thisRateOfChange;
+				if(thisExpireTime < 0f)
+					thisExpireTime *= -1f;
 			}else if(thisProcessConstraint == ProcessConstraint.ExpireTime){
 				float constVal = thisConstraintValue;
 				if(constVal < 0f)
 					constVal *= -1f;
-				thisExpireT = constVal;
+				thisExpireTime = constVal;
 			}else{
 				return;
 			}
 		}
-		protected float thisElapsedT;
-		protected float thisExpireT;
+		protected float thisElapsedTime;
+		protected float thisExpireTime;
 		protected float thisRateOfChange;
 		sealed public override void UpdateProcess(float deltaT){
-			thisElapsedT += deltaT;
+			thisElapsedTime += deltaT;
 			if(thisProcessConstraint != ProcessConstraint.none){
-				if(thisElapsedT >= thisExpireT){
+				if(thisElapsedTime >= thisExpireTime){
 					Expire();
 					return;
 				}

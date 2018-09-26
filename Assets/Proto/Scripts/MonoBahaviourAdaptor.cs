@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 		Quaternion GetRotation();
 		void Rotate(Vector3 euler);
 		void Rotate(float angleOnAxis, int axis);
+		Transform GetTransform();
 	}
 	public class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		void Awake(){
@@ -60,6 +61,9 @@ namespace AppleShooterProto{
 					angleOnAxis,
 					original.z
 				);
+		}
+		public Transform GetTransform(){
+			return this.transform;
 		}
 		public virtual void SetUp(){}
 		public virtual void SetUpReference(){}

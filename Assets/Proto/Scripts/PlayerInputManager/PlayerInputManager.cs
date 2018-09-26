@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 		void SetPlayerCamera(IPlayerCamera playerCamera);
 		void SetInputScroller(ICoreGameplayInputScroller inputScroller);
 		void SetShootingManager(IShootingManager shootingManager);
+		void SetCameraPivotSmoothFollower(ISmoothFollower follower);
 
 		void ResetCameraZoom();
 		void ResetCameraPan();
@@ -15,13 +16,16 @@ namespace AppleShooterProto{
 			float normalizedCameraPosition,
 			int axis
 		);
+		void TryNock();
 		void StartDraw();
 		void HoldDraw();
-		void Fire();
+		void Release();
+		void TryResetArrow();
 
 		IPlayerInputState GetCurrentState();
 		float GetMaxZoom();
 		void Zoom(float normalizedZoom);
+		Vector3 GetLauncherVelocity();
 	}
 	public class PlayerInputManager : IPlayerInputManager {
 		public PlayerInputManager(IPlayerInputManagerConstArg arg){
@@ -110,17 +114,31 @@ namespace AppleShooterProto{
 			public void SetShootingManager(IShootingManager shootingManager){
 				thisShootingManager = shootingManager;
 			}
-
+			public void TryNock(){
+				thisShootingManager.TryNock();
+			}
 			public void StartDraw(){
 				thisShootingManager.StartDraw();
 			}
 			public void HoldDraw(){
 				thisShootingManager.HoldDraw();
 			}
-			public void Fire(){
-				thisShootingManager.Fire();
+			public void Release(){
+				thisShootingManager.Release();
+			}
+			public void TryResetArrow(){
+				thisShootingManager.TryResetArrow();
 			}
 		/*  */
+			ISmoothFollower thisCameraPivotSmoothFollower;
+			public void SetCameraPivotSmoothFollower(
+				ISmoothFollower follower
+			){
+				thisCameraPivotSmoothFollower = follower;
+			}
+			public Vector3 GetLauncherVelocity(){
+				return thisCameraPivotSmoothFollower.GetVelocity();
+			}
 	}
 
 

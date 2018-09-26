@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 		}
 		readonly ILaunchPointAdaptor thisAdaptor;
 		public Vector3 GetWorldDirection(){
-			return thisAdaptor.GetWorldDirection();
+			return thisAdaptor.GetWorldForwardDirection();
 		}
 		public Vector3 GetWorldPosition(){
 			return thisAdaptor.GetWorldPosition();

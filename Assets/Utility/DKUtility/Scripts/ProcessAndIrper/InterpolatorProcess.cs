@@ -14,10 +14,10 @@ namespace DKUtility{
 		readonly bool thisUseSpringT;
 		protected float thisNormalizedT{
 			get{
-				if(thisElapsedT == 0f)
+				if(thisElapsedTime == 0f)
 					return 0f;
 				else{
-					float result = thisElapsedT/ thisExpireT;
+					float result = thisElapsedTime/ thisExpireTime;
 					if(result > 1f)
 						result = 1f;
 					return result;

@@ -30,6 +30,8 @@ namespace AppleShooterProto{
 			);
 			newPosition = smoothFollowerPosition + deltaPosition;
 			thisSmoothFollower.SetPosition(newPosition);
+			Vector3 velocity = deltaPosition/ deltaT;
+			thisSmoothFollower.SetVelocity(velocity);
 		}
 		float displacemenetThreshold = .05f;
 		bool DisplacementIsSmallEnough(Vector3 displacement){

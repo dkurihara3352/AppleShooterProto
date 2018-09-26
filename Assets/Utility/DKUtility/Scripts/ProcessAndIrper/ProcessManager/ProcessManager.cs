@@ -101,5 +101,9 @@ namespace DKUtility{
 		public float GetWaitAndSwitchToIdleStateProcessExpireTime(){
 			return waitAndSwitchToIdleStateProcessExpireTime;
 		}
+		public float arrowFlightExpireTime = 5f;
+		public float GetArrowFlightExpireTime(){
+			return arrowFlightExpireTime;
+		}
 	}
 }
