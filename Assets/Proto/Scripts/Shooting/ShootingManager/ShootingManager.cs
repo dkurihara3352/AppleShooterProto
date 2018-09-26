@@ -30,6 +30,8 @@ namespace AppleShooterProto{
 
 		void AddArrowToReserve(IArrow arrow);
 		void RemoveArrowFromReserve(IArrow arrow);
+		void AddArrowToFlight(IArrow arrow);
+		void RemoveArrowFromFlight(IArrow arrow);
 
 		float GetFlightSpeed();
 		Vector3 GetFlightDirection();
@@ -37,6 +39,7 @@ namespace AppleShooterProto{
 		Vector3 GetLauncherVelocity();
 
 		int GetArrowReserveID(IArrow arrow);
+		int GetFlightID(IArrow arrow);
 	}
 	public class ShootingManager : IShootingManager {
 		/* SetUp */
@@ -68,8 +71,12 @@ namespace AppleShooterProto{
 			IArrow thisNockedArrow;
 			public void TryNock(){
 				if(thisNockedArrow == null){
-					IArrow firstArrowInReserve = thisArrowsInReserve[0];
-					firstArrowInReserve.TryNock();
+					IArrow arrowToNock;
+					if(thisArrowsInReserve.Count > 0)
+						arrowToNock = thisArrowsInReserve[0];
+					else
+						arrowToNock = thisArrowsInFlight[0];
+					arrowToNock.TryNock();
 				}
 			}
 			public void SetNockedArrow(IArrow arrow){
@@ -192,6 +199,8 @@ namespace AppleShooterProto{
 					list.Add(thisNockedArrow);
 				foreach(IArrow arrow in thisArrowsInReserve)
 					list.Add(arrow);
+				foreach(IArrow arrow in thisArrowsInFlight)
+					list.Add(arrow);
 				
 				return list.ToArray();
 			}
@@ -202,6 +211,22 @@ namespace AppleShooterProto{
 			public void RemoveArrowFromReserve(IArrow arrow){
 				if(thisArrowsInReserve.Contains(arrow))
 					thisArrowsInReserve.Remove(arrow);
+			}
+			List<IArrow> thisArrowsInFlight = new List<IArrow>();
+			public void AddArrowToFlight(IArrow arrow){
+				if(!thisArrowsInFlight.Contains(arrow))
+					thisArrowsInFlight.Add(arrow);
+			}
+			public void RemoveArrowFromFlight(IArrow arrow){
+				if(thisArrowsInFlight.Contains(arrow))
+					thisArrowsInFlight.Remove(arrow);
+			}
+			public int GetFlightID(IArrow arrow){
+				if(thisArrowsInFlight.Contains(arrow))
+					return thisArrowsInFlight.IndexOf(arrow);
+				throw new System.InvalidOperationException(
+					"given arrow is not in flight list"
+				);
 			}
 		/*  */
 			public void Release(){

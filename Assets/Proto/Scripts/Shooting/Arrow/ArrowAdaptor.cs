@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		IArrow GetArrow();
 		void BecomeChildToLaunchPoint();
 		void BecomeChildToReserve();
-		void ResetTransform();
+		void ResetLocalTransform();
 
 		void SetIndex(int index);
 		string GetParentName();
@@ -58,7 +58,7 @@ namespace AppleShooterProto{
 			public void BecomeChildToReserve(){
 				this.transform.SetParent(thisArrowReserve.GetTransform(), true);
 			}
-			public void ResetTransform(){
+			public void ResetLocalTransform(){
 				this.transform.localPosition  = Vector3.zero;
 				this.transform.localRotation = Quaternion.identity;
 			}

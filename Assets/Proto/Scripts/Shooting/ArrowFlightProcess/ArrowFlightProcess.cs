@@ -26,10 +26,6 @@ namespace AppleShooterProto{
 		protected override void RunImple(){
 			thisArrow.BecomeChildToReserve();
 			CacheInitialVelocity();
-			Debug.Log(
-				"flightSpeed: " + thisFlightSpeed.ToString() + ", "+
-				"launcherVelocity: "+ thisLauncherVelocity.ToString()
-			);
 		}
 		void CacheInitialVelocity(){
 			thisInitialVelocity = thisFlightDirection * thisFlightSpeed;

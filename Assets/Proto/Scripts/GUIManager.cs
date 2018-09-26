@@ -162,7 +162,10 @@ namespace AppleShooterProto{
 			IArrowState state = arrow.GetCurrentState();
 			string result = state.GetName();
 			if(!(state is IArrowNockedState)){
-				result += ": " + arrow.GetIDInReserve();
+				if(state is IArrowShotState)
+					result += ": " + arrow.GetFlightID();
+				else
+					result += ": " + arrow.GetIDInReserve();
 			}
 			return result;
 		}

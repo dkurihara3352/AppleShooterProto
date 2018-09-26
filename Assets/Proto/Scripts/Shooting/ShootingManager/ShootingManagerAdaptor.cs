@@ -72,6 +72,7 @@ namespace AppleShooterProto{
 				arrowGO.transform.position = Vector3.zero;
 				arrowGO.transform.rotation = Quaternion.identity;
 
+
 				IArrowAdaptor arrowAdaptor = arrowGO.AddComponent<ArrowAdaptor>();
 				arrowAdaptor.SetProcessManager(processManager);
 				arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);

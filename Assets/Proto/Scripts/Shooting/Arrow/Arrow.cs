@@ -26,6 +26,7 @@ namespace AppleShooterProto{
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
 		string GetParentName();
+		int GetFlightID();
 	}
 	public class Arrow : IArrow {
 		/* Setup */
@@ -69,20 +70,22 @@ namespace AppleShooterProto{
 			public void Nock(){
 				thisShootingManager.SetNockedArrow(this);
 				thisShootingManager.RemoveArrowFromReserve(this);
+				thisShootingManager.RemoveArrowFromFlight(this);
 				MoveToLaunchPosition();
 			}
 			void MoveToLaunchPosition(){
 				thisAdaptor.BecomeChildToLaunchPoint();
-				thisAdaptor.ResetTransform();
+				thisAdaptor.ResetLocalTransform();
 			}
 			public void ResetArrow(){
 				thisShootingManager.AddArrowToReserve(this);
+				thisShootingManager.RemoveArrowFromFlight(this);
 				thisShootingManager.CheckAndClearNockedArrow(this);
 				MoveToReservePosition();
 			}
 			void MoveToReservePosition(){
 				thisAdaptor.BecomeChildToReserve();
-				thisAdaptor.ResetTransform();
+				thisAdaptor.ResetLocalTransform();
 			}
 			public void TryRegisterShot(){
 				if(thisShootingManager.AcceptsNewShot())
@@ -91,7 +94,7 @@ namespace AppleShooterProto{
 					TryResetArrow();
 			}
 			public void Fire(){
-				thisShootingManager.AddArrowToReserve(this);
+				thisShootingManager.AddArrowToFlight(this);
 				thisShootingManager.RegisterShot(this);
 			}
 		/* Flight */
@@ -137,6 +140,9 @@ namespace AppleShooterProto{
 			}
 			public string GetParentName(){
 				return thisAdaptor.GetParentName();
+			}
+			public int GetFlightID(){
+				return thisShootingManager.GetFlightID(this);
 			}
 		/*  */
 	}
