@@ -104,7 +104,7 @@ namespace UISystem{
 				}
 				return null;
 			}
-			List<IUIAdaptor> thisChildUIAdaptors;
+			protected List<IUIAdaptor> thisChildUIAdaptors;
 			List<IUIAdaptor> CalcChildUIAdaptors(){
 				List<IUIAdaptor> result = new List<IUIAdaptor>();
 				for(int i = 0; i < transform.childCount; i ++){

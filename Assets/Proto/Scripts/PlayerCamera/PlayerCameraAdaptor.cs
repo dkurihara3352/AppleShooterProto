@@ -6,11 +6,37 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface IPlayerCameraAdaptor{
 		IPlayerCamera GetPlayerCamera();
+		Vector2 GetDefaultFOVs();
+		Vector2 GetMaxPanAngle();
 	}
 	public class PlayerCameraAdaptor : MonoBehaviourAdaptor, IPlayerCameraAdaptor {
-		public Vector2 rotationCoefficient;
+		public Vector2 maxPanAngle;
+		public Vector2 GetMaxPanAngle(){
+			return maxPanAngle;
+		}
 		public MonoBehaviourAdaptor lookAtPivot;
-		public float defaultFOV = 60f;
+		public float defaultVerticalFOV = 60f;
+		public Vector2 GetDefaultFOVs(){
+			Vector2 result = new Vector2();
+			result[1] = defaultVerticalFOV;
+			float aspectRatio = mainCamera.aspect;
+			float defaultHorizontalFOV = CalculateHorizontalFOV(
+				defaultVerticalFOV,
+				aspectRatio
+			);
+			result[0] = defaultHorizontalFOV;
+			return result;
+		}
+		float CalculateHorizontalFOV(
+			float verticalFOV,
+			float aspectRatio
+		){
+			float verAngInRad = verticalFOV * Mathf.Deg2Rad;
+			float tanHalfVerTheta = Mathf.Tan(verAngInRad * .5f);
+			float halfResultInRad = Mathf.Atan(tanHalfVerTheta * aspectRatio);
+			float result = halfResultInRad * Mathf.Rad2Deg * 2f;
+			return result;
+		}
 		public Camera mainCamera;
 		public ProcessManager processManager; 
 		public float smoothCoefficient = 5f;
@@ -19,10 +45,10 @@ namespace AppleShooterProto{
 				processManager
 			);
 			IPlayerCameraConstArg arg = new PlayerCameraConstArg(
-				rotationCoefficient,
+				maxPanAngle,
 				lookAtPivot,
 				mainCamera,
-				defaultFOV,
+				defaultVerticalFOV,
 				processFactory,
 				smoothCoefficient
 			);
