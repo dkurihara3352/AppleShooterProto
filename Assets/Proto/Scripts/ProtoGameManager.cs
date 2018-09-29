@@ -22,12 +22,18 @@ namespace AppleShooterProto{
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public SmoothLookerAdaptor recticleSmoothLookerAdaptor;
 		public PlayerCameraAdaptor playerCameraAdaptor;
+		public EventReferencePointAdaptor eventReferencePointAdaptor;
 
-		public void SetUpUISystem(){
+		public void SetUp(){
+			SetUpUISystem();
+			SetUpMBAdaptors();
+		}
+
+		void SetUpUISystem(){
 			IUIManager uim = uiManagerAdaptor.GetUIManager();
 			uim.GetReadyForUISystemActivation();
 		}
-		public void SetUpMBAdaptors(){
+		void SetUpMBAdaptors(){
 			SetUpAllMonoBehaviourAdaptors();
 			SetUpAdaptorReference();
 		}
@@ -39,10 +45,12 @@ namespace AppleShooterProto{
 		}
 
 		public void RunSystem(){
+
 			FinalizeUISystemSetUp();
 			ActivateUISystem();
+			
+			FinalizeWaypointSetUp();
 
-			waypointsManager.PlaceWaypointGroups();
 			StartWaypointsFollower();//		100
 			StartSmoothFollower();//		110
 			// PCLookAtTargetMotion			120
@@ -66,6 +74,13 @@ namespace AppleShooterProto{
 		void ActivateUISystem(){
 			IUIManager uim = uiManagerAdaptor.GetUIManager();
 			uim.ActivateUISystem(false);
+		}
+		void FinalizeWaypointSetUp(){
+			waypointsManager.PlaceWaypointGroups();
+			IEventReferencePoint refPoint = eventReferencePointAdaptor.GetEventReferencePoint();
+			IWaypointGroup initialWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];
+			refPoint.SetInitialWaypointGroup(initialWaypointGroup);
+			refPoint.SetInitialWaypointIndex(0);
 		}
 		public void StartWaypointsFollower(){
 			IWaypointGroup firstWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];

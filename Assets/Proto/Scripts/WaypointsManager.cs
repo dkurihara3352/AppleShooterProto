@@ -5,7 +5,6 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IWaypointsManager{
 		List<IWaypointGroup> GetWaypointGroupsInSequence();
-		// void SetUpAllWaypointGroups();
 		void PlaceWaypointGroups();
 		IWaypointConnection GetInitialConnection();
 		IWaypointGroup GetNextWaypointGroup(
@@ -47,30 +46,18 @@ namespace AppleShooterProto{
 			return thisWaypointGroups.IndexOf(group);
 		}
 
-		// public void SetUpAllWaypointGroups(){
-		// 	float followSpeed = waypointsFollowerAdaptor.GetSpeed();
-
-		// 	List<IWaypointGroup> result = new List<IWaypointGroup>();
-		// 	foreach(WaypointGroupAdaptor waypointGroupAdaptor in waypointGroupAdaptors){
-		// 		waypointGroupAdaptor.SetWaypointsManager(this);
-		// 		waypointGroupAdaptor.SetUpWaypointGroup(followSpeed);
-		// 		IWaypointGroup waypointGroup = waypointGroupAdaptor.GetWaypointGroup();
-		// 		result.Add(waypointGroup);
-		// 	}
-		// 	thisWaypointGroups = result;
-		// }
-
 		public void PlaceWaypointGroups(){
 			PlaceAllWaypointGroupAtReserve();
-			List<IWaypointGroup> sequence = CreateSequenceOfWaypointGroups();
-			thisGroupSequence = sequence;
-			IWaypointGroup prevWaypointGroup = null;
-			foreach(IWaypointGroup group in sequence){
-				group.Connect(prevWaypointGroup);
-				prevWaypointGroup = group;
-			}
+			thisGroupSequence = CreateSequenceOfWaypointGroups();
+			ConnectWaypointGroupSequence();
 			UpdateConnectedWaypointCacheDataOnAllGroupInSequence();
 		}
+		void PlaceAllWaypointGroupAtReserve(){
+			foreach(IWaypointGroup group in thisWaypointGroups){
+				group.SetPosition(thisReservePosition);
+			}
+		}
+		
 		/* Creating sequence */
 			public int groupCountInSequence = 3;
 			List<IWaypointGroup> thisGroupSequence;
@@ -88,7 +75,7 @@ namespace AppleShooterProto{
 					used.Add(index);
 					indexes[i] = index;
 				}
-				return GetWaypointsListAtIndexes(indexes);
+				return GetWaypointGroupsAtIndexes(indexes);
 			}
 			int GetRandomInt(
 				int max,
@@ -107,7 +94,7 @@ namespace AppleShooterProto{
 				int randomIndex = Random.Range(0, nonUsedIndexes.Count);
 				return nonUsedIndexes[randomIndex];
 			}
-			List<IWaypointGroup> GetWaypointsListAtIndexes(int[] indexes){
+			List<IWaypointGroup> GetWaypointGroupsAtIndexes(int[] indexes){
 				List<IWaypointGroup> result = new List<IWaypointGroup>();
 				foreach(int index in indexes)
 					result.Add(
@@ -122,6 +109,13 @@ namespace AppleShooterProto{
 				return thisGroupSequence[groupCountInSequence - 1];
 			}
 		/*  */
+		void ConnectWaypointGroupSequence(){
+			IWaypointGroup prevWaypointGroup = null;
+			foreach(IWaypointGroup group in thisGroupSequence){
+				group.Connect(prevWaypointGroup);
+				prevWaypointGroup = group;
+			}
+		}
 		void UpdateConnectedWaypointCacheDataOnAllGroupInSequence(){
 			float speed = thisFollower.GetSpeed();
 			IWaypointGroup prevWaypointGroup = null;
@@ -136,11 +130,6 @@ namespace AppleShooterProto{
 		public Transform groupReservePointTransform;
 		Vector3 thisReservePosition{
 			get{return groupReservePointTransform.position;}
-		}
-		void PlaceAllWaypointGroupAtReserve(){
-			foreach(IWaypointGroup group in thisWaypointGroups){
-				group.SetPosition(thisReservePosition);
-			}
 		}
 		public IWaypointGroup GetNextWaypointGroup(IWaypointGroup group){
 			int indexOfGroup = thisGroupSequence.IndexOf(group);

@@ -89,7 +89,6 @@ namespace AppleShooterProto{
 					nextWaypoint = thisWaypointList[0];
 				}
 			}
-			
 			thisCurWaypoint = nextWaypoint;
 		}
 		public void SetWaypoints(List<IWaypoint> waypoints){

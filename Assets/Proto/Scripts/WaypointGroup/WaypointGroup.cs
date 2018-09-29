@@ -16,6 +16,7 @@ namespace AppleShooterProto{
 			float speed
 		);
 		void SetPosition(Vector3 position);
+		float GetSumOfAllSegments();
 	}
 	public class WaypointGroup : IWaypointGroup {
 		public WaypointGroup(
@@ -34,11 +35,33 @@ namespace AppleShooterProto{
 			thisWaypoints = waypoints;
 		}
 		public void CacheTravelData(float speed){
+			CacheIndex(thisWaypoints);
 			CacheDistanceOnAllWaypoints(thisWaypoints);
+			CacheSumOfAllPrecedingSegmentsOnAllWaypoints(thisWaypoints);
 			CacheRequiredTimeOnAllWaypoints(
 				thisWaypoints,
 				speed
 			);
+		}
+		void CacheIndex(List<IWaypoint> waypoints){
+			foreach(IWaypoint waypoint in waypoints){
+				waypoint.SetIndex(waypoints.IndexOf(waypoint));
+			}
+		}
+		void CacheSumOfAllPrecedingSegmentsOnAllWaypoints(List<IWaypoint> waypoints){
+			float sum = 0f;
+			foreach(IWaypoint waypoint in waypoints){
+				waypoint.SetSumOfAllPrecedingSegments(sum);
+				sum += waypoint.GetSegmentLength();
+			}
+			this.SetSumOfAllSegments(sum);
+		}
+		float thisSumOfAllSegments;
+		void SetSumOfAllSegments(float sum){
+			thisSumOfAllSegments = sum;
+		}
+		public float GetSumOfAllSegments(){
+			return thisSumOfAllSegments;
 		}
 
 		void CacheDistanceOnAllWaypoints(List<IWaypoint> waypoints){
@@ -106,6 +129,7 @@ namespace AppleShooterProto{
 				prevGroupLastWP = null;
 			}
 				IWaypoint thisFirstWP = this.GetFirstWaypoint();
+				thisFirstWP.SetPreviousWaypoint(prevGroupLastWP);
 				thisFirstWP.CacheDistanceFromPreviousWaypoint(prevGroupLastWP);
 				thisFirstWP.CacheRequiredTime(speed);
 		}

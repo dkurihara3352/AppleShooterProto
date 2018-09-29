@@ -16,12 +16,12 @@ namespace AppleShooterProto{
 			sTL_5 = GetSubRect(topLeftRect,4,6);
 			sTL_6 = GetSubRect(topLeftRect,5,6);
 			topRightRect = GetGUIRect(
- 				normalizedSize: new Vector2(.3f, .1f),
+ 				normalizedSize: new Vector2(.3f, .3f),
 				normalizedPosition: new Vector2(1f, 0f)
 			);
-			sTR_1 = GetSubRect(topRightRect, 0, 3);
-			sTR_2 = GetSubRect(topRightRect, 1, 3);
-			sTR_3 = GetSubRect(topRightRect, 2, 3);
+			sTR_1 = GetSubRect(topRightRect, 0, 2);
+			sTR_2 = GetSubRect(topRightRect, 1, 2);
+			// sTR_3 = GetSubRect(topRightRect, 2, 3);
 
 			buttomLeftRect = GetGUIRect(
 				normalizedSize: new Vector2(.35f, .6f),
@@ -51,6 +51,7 @@ namespace AppleShooterProto{
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public ShootingManagerAdaptor shootingManagerAdaptor;
+		public EventReferencePointAdaptor eventReferencePointAdaptor;
 		void OnGUI(){
 			/* left */
 				DrawControl();
@@ -60,6 +61,7 @@ namespace AppleShooterProto{
 				// DrawScrollMultiplier();
 				// DrawLaunchAngle();
 				// DrawFlightSpeed();
+				DrawEventReferencePoint(sTR_2);
 		}
 
 		void DrawControl(){
@@ -67,8 +69,8 @@ namespace AppleShooterProto{
 				sTL_1,
 				"SetUp"
 			)){
-				gameManager.SetUpUISystem();
-				gameManager.SetUpMBAdaptors();
+				gameManager.SetUp();
+
 			}
 
 			if(GUI.Button(
@@ -156,6 +158,20 @@ namespace AppleShooterProto{
 						"parent : " + arrow.GetParentName()
 					);
 				}
+			}
+		}
+		void DrawEventReferencePoint(Rect rect){
+			if(thisSystemIsReady){
+				IEventReferencePoint refPoint = eventReferencePointAdaptor.GetEventReferencePoint();
+				int groupIndex = refPoint.GetCurrentWaypointGroupIndex();
+				float normalizedPos = refPoint.GetNormalizedPositionInGroup();
+				GUI.Label(
+					rect,
+
+					"group: " + groupIndex.ToString() + ", " +
+					"normalizedPos: " + normalizedPos.ToString() + ", " + 
+					"normPOnSeg: " + refPoint.GetNormalizedPositionOnSegment().ToString()
+				);
 			}
 		}
 		string GetArrowStateString(IArrow arrow){

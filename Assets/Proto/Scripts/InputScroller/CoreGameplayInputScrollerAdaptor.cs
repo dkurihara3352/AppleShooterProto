@@ -10,9 +10,7 @@ namespace AppleShooterProto{
 	public class CoreGameplayInputScrollerAdaptor : GenericSingleElementScrollerAdaptor, ICoreGameplayInputScrollerAdaptor {
 		public PlayerInputManagerAdaptor inputManagerAdaptor;
 		protected override IUIElement CreateUIElement(IUIImage image){
-			// IPlayerInputManager inputManager = inputManagerAdaptor.GetInputManager();
 			ICoreGameplayInputScrollerConstArg arg = new CoreGameplayInputScrollerConstArg(
-				// inputManager,
 				
 				relativeCursorLength,
 				scrollerAxis,
