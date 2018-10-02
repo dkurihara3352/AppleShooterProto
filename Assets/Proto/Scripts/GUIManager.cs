@@ -21,7 +21,7 @@ namespace AppleShooterProto{
 			);
 			sTR_1 = GetSubRect(topRightRect, 0, 2);
 			sTR_2 = GetSubRect(topRightRect, 1, 2);
-			// sTR_3 = GetSubRect(topRightRect, 2, 3);
+			sTR_3 = GetSubRect(topRightRect, 2, 3);
 
 			buttomLeftRect = GetGUIRect(
 				normalizedSize: new Vector2(.35f, .6f),
@@ -51,7 +51,7 @@ namespace AppleShooterProto{
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public ShootingManagerAdaptor shootingManagerAdaptor;
-		public EventReferencePointAdaptor eventReferencePointAdaptor;
+		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		void OnGUI(){
 			/* left */
 				DrawControl();
@@ -61,130 +61,128 @@ namespace AppleShooterProto{
 				// DrawScrollMultiplier();
 				// DrawLaunchAngle();
 				// DrawFlightSpeed();
-				DrawEventReferencePoint(sTR_2);
+				DrawWaypointsFollower(sTR_2);
+				DrawCurveSequence(sTR_3);
 		}
+		/* left */
+			void DrawControl(){
+				if(GUI.Button(
+					sTL_1,
+					"SetUp"
+				)){
+					gameManager.SetUp();
 
-		void DrawControl(){
-			if(GUI.Button(
-				sTL_1,
-				"SetUp"
-			)){
-				gameManager.SetUp();
+				}
 
+				if(GUI.Button(
+					sTL_2,
+					"Run"
+				)){
+					gameManager.RunSystem();			
+					thisSystemIsReady = true;
+				}
 			}
-
-			if(GUI.Button(
-				sTL_2,
-				"Run"
-			)){
-				gameManager.RunSystem();			
-				thisSystemIsReady = true;
+			void DrawArrowsState(){
+				if(thisSystemIsReady){
+					IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
+					IArrow[] arrows = shootingManager.GetAllArrows();
+					foreach(IArrow arrow in arrows){
+						Rect guiSubRect = GetSubRect(
+							buttomLeftRect, 
+							arrow.GetIndex(), 
+							arrows.Length
+						);
+						GUI.Label(
+							guiSubRect,
+							"id: " + arrow.GetIndex() + ", " +
+							"state: " + GetArrowStateString(arrow) + ", " +
+							"position: " + arrow.GetPosition().ToString() + ", " +
+							"parent : " + arrow.GetParentName()
+						);
+					}
+				}
 			}
-		}
-		bool thisGroupSequenceIsReady = false;
-		void DrawGroupSequence(){
-			if(thisGroupSequenceIsReady){
-				GUI.Label(
-					sTR_1, 
-					"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString()
-				);
-				GUI.Label(
-					sTR_2,
-					"sequence: " + GetSequenceIndexString()
-				);
+			string GetArrowStateString(IArrow arrow){
+				IArrowState state = arrow.GetCurrentState();
+				string result = state.GetName();
+				if(!(state is IArrowNockedState)){
+					if(state is IArrowShotState)
+						result += ": " + arrow.GetFlightID();
+					else
+						result += ": " + arrow.GetIDInReserve();
+				}
+				return result;
 			}
-		}
-		string GetSequenceIndexString(){
-			int[] indexes = gameManager.GetCurrentGroupSequence();
-			string result = "";
-			foreach(int index in indexes)
-				result += index.ToString() + ",";
-			return result;
-		}
-		bool thisSystemIsReady = false;
-		void DrawCurrentState(Rect rect){
-			if(thisSystemIsReady){
-				string stateName = playerInputManagerAdaptor.GetStateName();
-				GUI.Label(
-					rect,
-					"CurState: " + stateName
-				);
-			}
-		}
-		void DrawScrollMultiplier(){
-			if(thisSystemIsReady){
-				float scrollMultiplier = inputScrollerAdaptor.GetScrollMultiplier();
-				GUI.Label(
-					sTR_2,
-					"Scroll Mult: " + scrollMultiplier.ToString()
-				);
-			}
-		}
-		void DrawFlightSpeed(){
-			if(thisSystemIsReady){
-				IShootingManager manager = shootingManagerAdaptor.GetShootingManager();
-				float flightSpeed = manager.GetFlightSpeed();
-				GUI.Label(
-					sTR_2,
-					"flightSpeed: " + flightSpeed.ToString()
-				);
-			}
-		}
-		void DrawLaunchAngle(){
-			if(thisSystemIsReady){
-				GUI.Label(
-					sTR_3,
-					"LaunchDirection: " + 
-					launchPointAdaptor.GetWorldForwardDirection().ToString()
-				);
-			}
-		}
-
-		void DrawArrowsState(){
-			if(thisSystemIsReady){
-				IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
-				IArrow[] arrows = shootingManager.GetAllArrows();
-				foreach(IArrow arrow in arrows){
-					Rect guiSubRect = GetSubRect(
-						buttomLeftRect, 
-						arrow.GetIndex(), 
-						arrows.Length
-					);
+		/* right */
+			bool thisGroupSequenceIsReady = false;
+			void DrawCurveSequence(Rect rect){
+				if(thisSystemIsReady){
 					GUI.Label(
-						guiSubRect,
-						"id: " + arrow.GetIndex() + ", " +
-						"state: " + GetArrowStateString(arrow) + ", " +
-						"position: " + arrow.GetPosition().ToString() + ", " +
-						"parent : " + arrow.GetParentName()
+						rect, 
+						"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString() + " ,\b" +
+						"sequence: " + GetSequenceIndexString()
 					);
 				}
 			}
-		}
-		void DrawEventReferencePoint(Rect rect){
-			if(thisSystemIsReady){
-				IEventReferencePoint refPoint = eventReferencePointAdaptor.GetEventReferencePoint();
-				int groupIndex = refPoint.GetCurrentWaypointGroupIndex();
-				float normalizedPos = refPoint.GetNormalizedPositionInGroup();
-				GUI.Label(
-					rect,
+			string GetSequenceIndexString(){
+				int[] indexes = gameManager.GetCurrentGroupSequence();
+				string result = "";
+				foreach(int index in indexes)
+					result += index.ToString() + ",";
+				return result;
+			}
+			bool thisSystemIsReady = false;
+			void DrawCurrentState(Rect rect){
+				if(thisSystemIsReady){
+					string stateName = playerInputManagerAdaptor.GetStateName();
+					GUI.Label(
+						rect,
+						"CurState: " + stateName
+					);
+				}
+			}
+			void DrawScrollMultiplier(){
+				if(thisSystemIsReady){
+					float scrollMultiplier = inputScrollerAdaptor.GetScrollMultiplier();
+					GUI.Label(
+						sTR_2,
+						"Scroll Mult: " + scrollMultiplier.ToString()
+					);
+				}
+			}
+			void DrawFlightSpeed(){
+				if(thisSystemIsReady){
+					IShootingManager manager = shootingManagerAdaptor.GetShootingManager();
+					float flightSpeed = manager.GetFlightSpeed();
+					GUI.Label(
+						sTR_2,
+						"flightSpeed: " + flightSpeed.ToString()
+					);
+				}
+			}
+			void DrawLaunchAngle(){
+				if(thisSystemIsReady){
+					GUI.Label(
+						sTR_3,
+						"LaunchDirection: " + 
+						launchPointAdaptor.GetWorldForwardDirection().ToString()
+					);
+				}
+			}
+			void DrawWaypointsFollower(Rect rect){
+				if(thisSystemIsReady){
+					IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
+					int currentCurveIndex = follower.GetCurrentWaypointCurveIndex();
+					float normalizedPosInCurve = follower.GetNormalizedPositionInCurve();
 
-					"group: " + groupIndex.ToString() + ", " +
-					"normalizedPos: " + normalizedPos.ToString() + ", " + 
-					"normPOnSeg: " + refPoint.GetNormalizedPositionOnSegment().ToString()
-				);
+					GUI.Label(
+						rect,
+						"curveID: " + currentCurveIndex.ToString() + ", " +
+						"normPos: " + normalizedPosInCurve.ToString()
+					);
+				}
 			}
-		}
-		string GetArrowStateString(IArrow arrow){
-			IArrowState state = arrow.GetCurrentState();
-			string result = state.GetName();
-			if(!(state is IArrowNockedState)){
-				if(state is IArrowShotState)
-					result += ": " + arrow.GetFlightID();
-				else
-					result += ": " + arrow.GetIDInReserve();
-			}
-			return result;
-		}
+		/*  */
 		Rect GetGUIRect(
 			Vector2 normalizedSize,
 			Vector2 normalizedPosition

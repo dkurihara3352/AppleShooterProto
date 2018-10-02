@@ -7,6 +7,10 @@ namespace AppleShooterProto{
 	public interface IWaypointsFollowerAdaptor: IMonoBehaviourAdaptor{
 		IWaypointsFollower GetWaypointsFollower();
 		float GetSpeed();
+		void SetLookRotation(
+			Vector3 forward,
+			Vector3 upward
+		);
 	}
 	public class WaypointsFollowerAdaptor : MonoBehaviourAdaptor, IWaypointsFollowerAdaptor {
 		public ProcessManager processManager;
@@ -17,20 +21,29 @@ namespace AppleShooterProto{
 		IAppleShooterProcessFactory thisProcessFactory;
 		public float followSpeed;
 		public float GetSpeed(){return followSpeed;}
-		public WaypointsManager thisWaypointsManager;
+		public WaypointsManagerAdaptor waypointsManagerAdaptor;
 		public int processOrder = 100;
 		public override void SetUp(){
 			thisProcessFactory = new AppleShooterProcessFactory(
 				processManager
 			);
 			IWaypointsFollowerConstArg arg = new WaypointsFollowerConstArg(
-				thisWaypointsManager,
 				this, 
 				thisProcessFactory,
 				followSpeed,
 				processOrder
 			);
 			thisFollower = new WaypointsFollower(arg);
+		}
+		public override void SetUpReference(){
+			IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+			thisFollower.SetWaypointsManager(waypointsManager);
+		}
+		public void SetLookRotation(
+			Vector3 forward,
+			Vector3 upward
+		){
+			this.transform.rotation = Quaternion.LookRotation(forward, upward);
 		}
 	}
 }

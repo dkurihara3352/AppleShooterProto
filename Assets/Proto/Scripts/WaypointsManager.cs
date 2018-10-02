@@ -4,78 +4,96 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IWaypointsManager{
-		List<IWaypointGroup> GetWaypointGroupsInSequence();
-		void PlaceWaypointGroups();
-		IWaypointConnection GetInitialConnection();
-		IWaypointGroup GetNextWaypointGroup(
-			IWaypointGroup currentGroup
+
+		void SetWaypointsFollower(IWaypointsFollower follower);
+		void SetWaypointCurves(List<IWaypointCurve> curves);
+
+		List<IWaypointCurve> GetWaypointCurvesInSequence();
+
+		void PlaceWaypointCurves();
+		IWaypointCurve GetNextWaypointCurve(
+			IWaypointCurve currentGroup
 		);
-		void CycleGroup();
-		int GetWaypointGroupIndex(IWaypointGroup group);
-		float GetSpeed();
+		void CycleCurve();
+		int GetWaypointCurveIndex(IWaypointCurve curve);
 		IWaypointsFollower GetFollower();
-		void AddWaypointGroup(IWaypointGroup group);
+
+		IWaypointCurve GetNextCurve(IWaypointCurve currentCurve);
 	}
 
-	public class WaypointsManager : MonoBehaviour, IWaypointsManager {
-		void Awake(){
-			thisWaypointGroups = new List<IWaypointGroup>();
-			thisGroupSequence = new List<IWaypointGroup>();
-			SetManagerOnAllGroupAndWaypointsAdaptors();
+	public class WaypointsManager : IWaypointsManager {
+		public WaypointsManager(IWaypointsManagerConstArg arg){
+			thisCurveReservePointTransform = arg.curveReserveTransform;
+			thisCurveCountInSequence = arg.curvesCountInSequence;
+			thisInitialCurvePosition = arg.initialCurvePosition;
+			thisInitialCurveRotation = arg.initialCurveRotation;
 		}
-		void SetManagerOnAllGroupAndWaypointsAdaptors(){
-			foreach(IWaypointGroupAdaptor groupAdaptor in waypointGroupAdaptors){
-				groupAdaptor.SetWaypointsManager(this);
-				groupAdaptor.SetManagerOnAllWaypointAdaptors();
-			}
+		readonly Transform thisCurveReservePointTransform;
+		Vector3 thisReservePosition{
+			get{return thisCurveReservePointTransform.position;}
 		}
-		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
+		readonly Vector3 thisInitialCurvePosition;
+		readonly Quaternion thisInitialCurveRotation;
+		readonly int thisCurveCountInSequence;
+
+
 		IWaypointsFollower thisFollower;
 		public IWaypointsFollower GetFollower(){
-			if(thisFollower == null)
-				thisFollower = waypointsFollowerAdaptor.GetWaypointsFollower();
 			return thisFollower;
 		}
-		public float GetSpeed(){return waypointsFollowerAdaptor.GetSpeed();}
-		public List<WaypointGroupAdaptor> waypointGroupAdaptors;
-		List<IWaypointGroup> thisWaypointGroups;
-		public void AddWaypointGroup(IWaypointGroup group){
-			thisWaypointGroups.Add(group);
+		public void SetWaypointsFollower(IWaypointsFollower follower){
+			thisFollower = follower;
 		}
-		public int GetWaypointGroupIndex(IWaypointGroup group){
-			return thisWaypointGroups.IndexOf(group);
+		public float GetSpeed(){return thisFollower.GetFollowSpeed();}
+		List<IWaypointCurve> thisWaypointCurves;
+		public void SetWaypointCurves(List<IWaypointCurve> curves){
+			thisWaypointCurves = curves;
+		}
+		public int GetWaypointCurveIndex(IWaypointCurve curve){
+			return thisWaypointCurves.IndexOf(curve);
 		}
 
-		public void PlaceWaypointGroups(){
-			PlaceAllWaypointGroupAtReserve();
-			thisGroupSequence = CreateSequenceOfWaypointGroups();
-			ConnectWaypointGroupSequence();
-			UpdateConnectedWaypointCacheDataOnAllGroupInSequence();
+		public void PlaceWaypointCurves(){
+			PlaceAllWaypointCurvesAtReserve();
+			thisCurveSequence = CreateSequenceOfWaypointCurves();
+			ConnectWaypointCurveSequence();
 		}
-		void PlaceAllWaypointGroupAtReserve(){
-			foreach(IWaypointGroup group in thisWaypointGroups){
-				group.SetPosition(thisReservePosition);
+		void PlaceAllWaypointCurvesAtReserve(){
+			foreach(IWaypointCurve curve in thisWaypointCurves){
+				curve.SetPosition(thisReservePosition);
 			}
 		}
 		
 		/* Creating sequence */
-			public int groupCountInSequence = 3;
-			List<IWaypointGroup> thisGroupSequence;
-			public List<IWaypointGroup> GetWaypointGroupsInSequence(){
-				return thisGroupSequence;
+			List<IWaypointCurve> thisCurveSequence;
+			public List<IWaypointCurve> GetWaypointCurvesInSequence(){
+				return thisCurveSequence;
 			}
-			List<IWaypointGroup> CreateSequenceOfWaypointGroups(){
-				int[] indexes = new int[groupCountInSequence];
+			public IWaypointCurve GetNextCurve(IWaypointCurve currentCurve){
+				if(!thisCurveSequence.Contains(currentCurve))
+					throw new System.InvalidOperationException(
+						"currentCurve is not in the sequence!"
+					);
+				int currentCurveIndexInSequence = thisCurveSequence.IndexOf(currentCurve);
+				if(currentCurveIndexInSequence == thisCurveSequence.Count - 1)
+					// throw new System.InvalidOperationException(
+					// 	"currentCurve is the last in the sequence, there's no next one"
+					// );
+					return null;
+				return thisCurveSequence[currentCurveIndexInSequence + 1];
+			}
+			List<IWaypointCurve> CreateSequenceOfWaypointCurves(){
+				int[] indexes = new int[thisCurveCountInSequence];
 				List<int> used = new List<int>();
-				for(int i = 0; i < groupCountInSequence; i ++){
+				for(int i = 0; i < thisCurveCountInSequence; i ++){
 					int index = GetRandomInt(
-						groupCountInSequence,
+						thisCurveCountInSequence,
 						used
 					);
 					used.Add(index);
 					indexes[i] = index;
 				}
-				return GetWaypointGroupsAtIndexes(indexes);
+				return GetWaypointCurvesAtIndexes(indexes);
 			}
 			int GetRandomInt(
 				int max,
@@ -94,75 +112,50 @@ namespace AppleShooterProto{
 				int randomIndex = Random.Range(0, nonUsedIndexes.Count);
 				return nonUsedIndexes[randomIndex];
 			}
-			List<IWaypointGroup> GetWaypointGroupsAtIndexes(int[] indexes){
-				List<IWaypointGroup> result = new List<IWaypointGroup>();
+			List<IWaypointCurve> GetWaypointCurvesAtIndexes(int[] indexes){
+				List<IWaypointCurve> result = new List<IWaypointCurve>();
 				foreach(int index in indexes)
 					result.Add(
-						thisWaypointGroups[index]
+						thisWaypointCurves[index]
 					);
 				return result;
 			}
-			public IWaypointGroup GetFirstGroupInSequence(){
-				return thisGroupSequence[0];
-			}
-			public IWaypointGroup GetLastGroupInSequence(){
-				return thisGroupSequence[groupCountInSequence - 1];
-			}
 		/*  */
-		void ConnectWaypointGroupSequence(){
-			IWaypointGroup prevWaypointGroup = null;
-			foreach(IWaypointGroup group in thisGroupSequence){
-				group.Connect(prevWaypointGroup);
-				prevWaypointGroup = group;
+		void ConnectWaypointCurveSequence(){
+			IWaypointCurve prevWaypointCurve = null;
+			foreach(IWaypointCurve curve in thisCurveSequence){
+				if(prevWaypointCurve == null)
+					ConnectCurveToCurvesOrigin(curve);
+				else
+					curve.Connect(prevWaypointCurve);
+				prevWaypointCurve = curve;
 			}
 		}
-		void UpdateConnectedWaypointCacheDataOnAllGroupInSequence(){
-			float speed = thisFollower.GetSpeed();
-			IWaypointGroup prevWaypointGroup = null;
-			foreach(IWaypointGroup group in thisGroupSequence){
-				group.UpdateConnectedWaypointCacheData(
-					prevWaypointGroup,
-					speed
-				);
-				prevWaypointGroup = group;
-			}
+
+		void ConnectCurveToCurvesOrigin(IWaypointCurve curve){
+			curve.SetPosition(thisInitialCurvePosition);
+			curve.SetRotation(thisInitialCurveRotation);
 		}
-		public Transform groupReservePointTransform;
-		Vector3 thisReservePosition{
-			get{return groupReservePointTransform.position;}
-		}
-		public IWaypointGroup GetNextWaypointGroup(IWaypointGroup group){
-			int indexOfGroup = thisGroupSequence.IndexOf(group);
-			if(indexOfGroup != thisGroupSequence.Count -1){
-				return thisGroupSequence[indexOfGroup + 1];
+		public IWaypointCurve GetNextWaypointCurve(IWaypointCurve curve){
+			int indexOfCurve = thisCurveSequence.IndexOf(curve);
+			if(indexOfCurve != thisCurveSequence.Count -1){
+				return thisCurveSequence[indexOfCurve + 1];
 			}
 				return null;
 		}
-		public IWaypointConnection GetInitialConnection(){
-			Vector3 origin = Vector3.zero;
-			IWaypointConnection result = new WaypointConnection(
-				origin,
-				Quaternion.identity
-			);
-			return result;
-		}
-		public void CycleGroup(){
+
+		public void CycleCurve(){
 			/*  move first group to reserve 
 				get random one from reserve and place it
 			*/
 			if(ShouldCycle()){
-				IWaypointGroup lastWaypointGroup = thisGroupSequence[thisGroupSequence.Count - 1];
-				RemoveFirstWaypointGroupToReserve();
-				IWaypointGroup newGroupToAdd = GetNewWaypointGroupToAddToSequence();
-				ReformList(
-					newGroupToAdd
-				);
-				newGroupToAdd.Connect(lastWaypointGroup);
-				float speed = thisFollower.GetSpeed();
-				newGroupToAdd.UpdateConnectedWaypointCacheData(
-					lastWaypointGroup,
-					speed
-				);
+				IWaypointCurve lastWaypointCurve = thisCurveSequence[thisCurveSequence.Count - 1];
+				RemoveFirstWaypointCurveToReserve();
+				IWaypointCurve newCurveToAdd = GetNewWaypointCurveToAddToSequence();
+				AddCurveToSequence(newCurveToAdd);
+				newCurveToAdd.Connect(lastWaypointCurve);
+				float speed = thisFollower.GetFollowSpeed();
+
 			}
 		}
 		bool thisCycleHasStarted = false;
@@ -171,34 +164,69 @@ namespace AppleShooterProto{
 			if(thisCycleHasStarted){
 				return true;
 			}else{
-				IWaypointGroup currentGroup = thisFollower.GetCurrentWaypointGroup();
-				int indexOfCurGroup = thisGroupSequence.IndexOf(currentGroup);
-				if(indexOfCurGroup == thisIndexToStartCycle){
+				IWaypointCurve currentCurve = thisFollower.GetCurrentWaypointCurve();
+				int indexOfCurCurve = thisCurveSequence.IndexOf(currentCurve);
+				if(indexOfCurCurve == thisIndexToStartCycle){
 					thisCycleHasStarted = true;
 					return true;
 				}
 			}
 				return false;
 		}
-		void RemoveFirstWaypointGroupToReserve(){
-			IWaypointGroup firstGroupInSequence = thisGroupSequence[0];
-			firstGroupInSequence.SetPosition(thisReservePosition);
-			List<IWaypointGroup> reducedSequence = new List<IWaypointGroup>(thisGroupSequence);
-			reducedSequence.Remove(firstGroupInSequence);
-			thisGroupSequence = reducedSequence;
+		void RemoveFirstWaypointCurveToReserve(){
+			IWaypointCurve firstCurveInSequence = thisCurveSequence[0];
+			firstCurveInSequence.SetPosition(thisReservePosition);
+			List<IWaypointCurve> reducedSequence = new List<IWaypointCurve>(thisCurveSequence);
+			reducedSequence.Remove(firstCurveInSequence);
+			thisCurveSequence = reducedSequence;
 		}
-		IWaypointGroup GetNewWaypointGroupToAddToSequence(){
-			List<IWaypointGroup> groupsInReserve = new List<IWaypointGroup>();
-			foreach(IWaypointGroup group in thisWaypointGroups)
-				if(!thisGroupSequence.Contains(group))
-					groupsInReserve.Add(group);
-			int randomIndex = Random.Range(0, groupsInReserve.Count);
-			return groupsInReserve[randomIndex];
+		IWaypointCurve GetNewWaypointCurveToAddToSequence(){
+			List<IWaypointCurve> curvesInReserve = new List<IWaypointCurve>();
+			foreach(IWaypointCurve curve in thisWaypointCurves)
+				if(!thisCurveSequence.Contains(curve))
+					curvesInReserve.Add(curve);
+			int randomIndex = Random.Range(0, curvesInReserve.Count);
+			return curvesInReserve[randomIndex];
 		}
-		void ReformList(
-			IWaypointGroup newGroupToAdd
+		void AddCurveToSequence(
+			IWaypointCurve newCurveToAdd
 		){
-			thisGroupSequence.Add(newGroupToAdd);
+			thisCurveSequence.Add(newCurveToAdd);
+		}
+	}
+	public interface IWaypointsManagerConstArg{
+		Transform curveReserveTransform{get;}
+		int curvesCountInSequence{get;}
+		Vector3 initialCurvePosition{get;}
+		Quaternion initialCurveRotation{get;}
+	}
+
+	public struct WaypointsManagerConstArg: IWaypointsManagerConstArg{
+		public WaypointsManagerConstArg(
+			Transform curveReserveTransform,
+			int curvesCountInSequence,
+			Vector3 initialPosition,
+			Quaternion initialRotation
+
+		){
+			thisCurveReserveTransform = curveReserveTransform;
+			thisCurvesCountInSequence = curvesCountInSequence;
+			thisInitialCurvePosition = initialPosition;
+			thisInitialCurveRotation = initialRotation;
+		}
+		readonly Transform thisCurveReserveTransform;
+		public Transform curveReserveTransform{
+			get{return thisCurveReserveTransform;}
+		}
+		readonly int thisCurvesCountInSequence;
+		public int curvesCountInSequence{get{return thisCurvesCountInSequence;}}
+		readonly Vector3 thisInitialCurvePosition;
+		public Vector3 initialCurvePosition{
+			get{return thisInitialCurvePosition;}
+		}
+		readonly Quaternion thisInitialCurveRotation;
+		public Quaternion initialCurveRotation{
+			get{return thisInitialCurveRotation;}
 		}
 	}
 }

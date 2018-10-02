@@ -6,11 +6,13 @@ using UISystem;
 namespace AppleShooterProto{
 	public class ProtoGameManager : MonoBehaviour {
 
-		public WaypointsManager waypointsManager;
+		// public WaypointsManager waypointsManager;
+		public WaypointsManagerAdaptor waypointsManagerAdaptor;
+		IWaypointsManager thisWaypointsManager;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
-		public SmoothFollowerAdaptor pcSmoothFollowerAdaptor;
-		public SmoothLookerAdaptor pcSmoothLookerAdaptor;
-		public PlayerCharacterLookAtTargetAdaptor pcLookAtTargetAdaptor;
+		// public SmoothFollowerAdaptor pcSmoothFollowerAdaptor;
+		// public SmoothLookerAdaptor pcSmoothLookerAdaptor;
+		// public PlayerCharacterLookAtTargetAdaptor pcLookAtTargetAdaptor;
 		public SmoothFollowerAdaptor camSmoothFollowerAdaptor;
 		public SmoothLookerAdaptor cameraPivotSmoothLookerAdaptor;
 		public SmoothLookerAdaptor camSmoothLookerAdaptor;
@@ -22,11 +24,12 @@ namespace AppleShooterProto{
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public SmoothLookerAdaptor recticleSmoothLookerAdaptor;
 		public PlayerCameraAdaptor playerCameraAdaptor;
-		public EventReferencePointAdaptor eventReferencePointAdaptor;
 
 		public void SetUp(){
 			SetUpUISystem();
 			SetUpMBAdaptors();
+			FinalizeUISystemSetUp();
+			FinalizeWaypointSetUp();
 		}
 
 		void SetUpUISystem(){
@@ -36,6 +39,7 @@ namespace AppleShooterProto{
 		void SetUpMBAdaptors(){
 			SetUpAllMonoBehaviourAdaptors();
 			SetUpAdaptorReference();
+			thisWaypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
 		}
 		void SetUpAllMonoBehaviourAdaptors(){
 			mbAdaptorManager.SetUpAllMonoBehaviourAdaptors();
@@ -43,18 +47,26 @@ namespace AppleShooterProto{
 		void SetUpAdaptorReference(){
 			mbAdaptorManager.SetUpAdaptorReference();
 		}
+		void FinalizeUISystemSetUp(){
+			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
+			IPlayerInputManager inputManager = playerInputManagerAdaptor.GetInputManager();
+			scroller.SetPlayerInputManager(inputManager);
+		}
+		void FinalizeWaypointSetUp(){
+			thisWaypointsManager.PlaceWaypointCurves();
+			IWaypointCurve initialWaypointCurve = thisWaypointsManager.GetWaypointCurvesInSequence()[0];
+			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
+			follower.SetWaypointCurve(initialWaypointCurve);
+		}
 
 		public void RunSystem(){
 
-			FinalizeUISystemSetUp();
 			ActivateUISystem();
-			
-			FinalizeWaypointSetUp();
 
 			StartWaypointsFollower();//		100
-			StartSmoothFollower();//		110
-			// PCLookAtTargetMotion			120
-			StartPCSmoothLook();//			130
+			// StartSmoothFollower();//		110 obsolete
+			// PCLookAtTargetMotion			120	obsolete
+			// StartPCSmoothLook();//		130 obsolete
 			StartCameraSmoothFollow();//	140
 			StartCameraPivotSmoothLook();//	150
 			// StartRecticleSmoothLook();//	155
@@ -66,38 +78,26 @@ namespace AppleShooterProto{
 			//arrow flight process			200 ->
 			
 		}
-		void FinalizeUISystemSetUp(){
-			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
-			IPlayerInputManager inputManager = playerInputManagerAdaptor.GetInputManager();
-			scroller.SetPlayerInputManager(inputManager);
-		}
 		void ActivateUISystem(){
 			IUIManager uim = uiManagerAdaptor.GetUIManager();
 			uim.ActivateUISystem(false);
 		}
-		void FinalizeWaypointSetUp(){
-			waypointsManager.PlaceWaypointGroups();
-			IEventReferencePoint refPoint = eventReferencePointAdaptor.GetEventReferencePoint();
-			IWaypointGroup initialWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];
-			refPoint.SetInitialWaypointGroup(initialWaypointGroup);
-			refPoint.SetInitialWaypointIndex(0);
-		}
 		public void StartWaypointsFollower(){
-			IWaypointGroup firstWaypointGroup = waypointsManager.GetWaypointGroupsInSequence()[0];
+			// IWaypointCurve firstWaypointGroup = waypointsManager.GetWaypointCurvesInSequence()[0];
+			// follower.SetWaypointCurve(firstWaypointGroup);
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
-			follower.SetWaypointGroup(firstWaypointGroup);
 			follower.StartFollowing();
 		}
-		public void StartSmoothFollower(){
-			ISmoothFollower smoothFollower = pcSmoothFollowerAdaptor.GetSmoothFollower();
-			smoothFollower.StartFollow();
-		}
-		public void StartPCSmoothLook(){
-			IPlayerCharacterLookAtTarget lookAtTarget = pcLookAtTargetAdaptor.GetLookAtTarget();
-			lookAtTarget.StartLookAtTargetMotion();
-			ISmoothLooker looker = pcSmoothLookerAdaptor.GetSmoothLooker();
-			looker.StartSmoothLook();
-		}
+		// public void StartSmoothFollower(){
+		// 	ISmoothFollower smoothFollower = pcSmoothFollowerAdaptor.GetSmoothFollower();
+		// 	smoothFollower.StartFollow();
+		// }
+		// public void StartPCSmoothLook(){
+		// 	IPlayerCharacterLookAtTarget lookAtTarget = pcLookAtTargetAdaptor.GetLookAtTarget();
+		// 	lookAtTarget.StartLookAtTargetMotion();
+		// 	ISmoothLooker looker = pcSmoothLookerAdaptor.GetSmoothLooker();
+		// 	looker.StartSmoothLook();
+		// }
 		public void StartCameraSmoothFollow(){
 			ISmoothFollower follower = camSmoothFollowerAdaptor.GetSmoothFollower();
 			follower.StartFollow();
@@ -120,14 +120,14 @@ namespace AppleShooterProto{
 		}
 		public int GetCurrentWaypointGroupIndex(){
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
-			IWaypointGroup group = follower.GetCurrentWaypointGroup();
-			return waypointsManager.GetWaypointGroupIndex(group);
+			IWaypointCurve group = follower.GetCurrentWaypointCurve();
+			return thisWaypointsManager.GetWaypointCurveIndex(group);
 		}
 		public int[] GetCurrentGroupSequence(){
-			List<IWaypointGroup> groupsInSequence = waypointsManager.GetWaypointGroupsInSequence();
+			List<IWaypointCurve> curvesInSequence = thisWaypointsManager.GetWaypointCurvesInSequence();
 			List<int> resultList = new List<int>();
-			foreach(IWaypointGroup group in groupsInSequence){
-				int index = waypointsManager.GetWaypointGroupIndex(group);
+			foreach(IWaypointCurve group in curvesInSequence){
+				int index = thisWaypointsManager.GetWaypointCurveIndex(group);
 				resultList.Add(index);
 			}
 			return resultList.ToArray();

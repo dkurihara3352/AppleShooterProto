@@ -8,7 +8,9 @@ namespace AppleShooterProto{
 		IFollowWaypointProcess CreateFollowWaypointProcess(
 			IWaypointsFollower follower,
 			float speed,
-			int processOrder
+			int processOrder,
+			IWaypointCurve initialCurve,
+			IWaypointsManager waypointsManager
 		);
 		ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
 			ISmoothFollower follower,
@@ -62,13 +64,18 @@ namespace AppleShooterProto{
 		public IFollowWaypointProcess CreateFollowWaypointProcess(
 			IWaypointsFollower follower,
 			float speed,
-			int processOrder
+			int processOrder,
+			IWaypointCurve initialCurve,
+			IWaypointsManager waypointsManager
 		){
 			IFollowWaypointProcessConstArg arg = new FollowWaypointProcessConstArg(
 				thisProcessManager,
 				follower,
 				speed,
-				processOrder
+				processOrder,
+
+				initialCurve,
+				waypointsManager
 			);
 			return new FollowWaypointProcess(arg);
 		}
