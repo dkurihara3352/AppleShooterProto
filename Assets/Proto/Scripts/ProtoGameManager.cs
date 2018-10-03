@@ -6,13 +6,9 @@ using UISystem;
 namespace AppleShooterProto{
 	public class ProtoGameManager : MonoBehaviour {
 
-		// public WaypointsManager waypointsManager;
 		public WaypointsManagerAdaptor waypointsManagerAdaptor;
 		IWaypointsManager thisWaypointsManager;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
-		// public SmoothFollowerAdaptor pcSmoothFollowerAdaptor;
-		// public SmoothLookerAdaptor pcSmoothLookerAdaptor;
-		// public PlayerCharacterLookAtTargetAdaptor pcLookAtTargetAdaptor;
 		public SmoothFollowerAdaptor camSmoothFollowerAdaptor;
 		public SmoothLookerAdaptor cameraPivotSmoothLookerAdaptor;
 		public SmoothLookerAdaptor camSmoothLookerAdaptor;

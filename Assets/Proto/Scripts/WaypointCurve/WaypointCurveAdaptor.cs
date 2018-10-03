@@ -7,36 +7,45 @@ namespace AppleShooterProto{
 
 	public interface IWaypointCurveAdaptor: IMonoBehaviourAdaptor{
 		IWaypointCurve GetWaypointCurve();
+		Transform GetCurvePointsParentTransform();
 	}
 	[ExecuteInEditMode]
 	public class WaypointCurveAdaptor : MonoBehaviourAdaptor, IWaypointCurveAdaptor {
 		public Color lineColor = new Color(.2f, 1f, 1f, 1f);
 		public Color upDirColor = new Color(1f, .5f, 1f, 1f);
 		public float upDirLineLength = 1f;
-		
+		public Transform curvePointsParent;
+		public Transform controlPointsParent;
+		public Transform GetCurvePointsParentTransform(){
+			return curvePointsParent;
+		}
 		#if UNITY_EDITOR
 		int cachedResolution = 0;
 		public void Start(){
 			UpdateControlPoints();
-			CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
+			// CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
 		}
 		public void Update (){
 			/*  need to check if child has changed, and perform UpdateControlPoints if changed
 			*/
+			CheckAndUpdateControlPoints();
 			UpdateCurvePoints();
 		}
+		public bool drawGizmos = true;
 		void OnDrawGizmos(){
-			if(thisCurvePoints != null){
-				ICurvePoint prev = null;
-				foreach(CurvePoint curvePoint in thisCurvePoints){
-					if(thisCurvePoints.IndexOf(curvePoint) != 0){
-						Vector3 position = curvePoint.position;
-						Gizmos.color = lineColor;
-						Gizmos.DrawLine(position, prev.GetPosition());
-						Gizmos.color = upDirColor;
-						Gizmos.DrawLine(position, position + curvePoint.GetUpDirection() * upDirLineLength);
+			if(drawGizmos){
+				if(thisCurvePoints != null){
+					ICurvePoint prev = null;
+					foreach(CurvePoint curvePoint in thisCurvePoints){
+						if(thisCurvePoints.IndexOf(curvePoint) != 0){
+							Vector3 position = curvePoint.position;
+							Gizmos.color = lineColor;
+							Gizmos.DrawLine(position, prev.GetPosition());
+							Gizmos.color = upDirColor;
+							Gizmos.DrawLine(position, position + curvePoint.GetUpDirection() * upDirLineLength);
+						}
+						prev = curvePoint;
 					}
-					prev = curvePoint;
 				}
 			}
 		}
@@ -59,19 +68,22 @@ namespace AppleShooterProto{
 		List<ICurveSegment> thisCurveSegments;
 
 		void UpdateControlPoints(){
-			Debug.Log("controlPoints updated");
+			thisControlPoints = GetLatestControlPoints();
+			MakeSureHeadAndTailControlPointsAreSet();
+			UpdateCurveSegments();
+			CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
+		}
+		List<ICurveControlPoint> GetLatestControlPoints(){
 			List<ICurveControlPoint> result = new List<ICurveControlPoint>();
-			for(int i = 0; i < transform.childCount; i ++){
-				Transform child = transform.GetChild(i);
+			int controlPointCount = controlPointsParent.childCount;
+			for(int i = 0; i < controlPointCount; i ++){
+				Transform child = controlPointsParent.GetChild(i);
 				ICurveControlPoint controlPoint = (ICurveControlPoint)child.GetComponent(typeof(ICurveControlPoint));
 				if(controlPoint != null){
 					result.Add(controlPoint);
 				}
 			}
-			thisControlPoints = result;
-			MakeSureHeadAndTailControlPointsAreSet();
-			UpdateCurveSegments();
-			// CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
+			return result;
 		}
 		void MakeSureHeadAndTailControlPointsAreSet(){
 			if(!(thisControlPoints[0] is TailCurveControlPoint))
@@ -120,6 +132,28 @@ namespace AppleShooterProto{
 		void UpdateCurvePointsTransformForEachCurveSegment(){
 			foreach(ICurveSegment segment in thisCurveSegments){
 				segment.UpdateCurvePointsTransform();
+			}
+		}
+		void CheckAndUpdateControlPoints(){
+			if(thisControlPoints == null)
+				UpdateControlPoints();
+			else{
+				List<ICurveControlPoint> controlPoints = GetLatestControlPoints();
+				if(!ControlPointsMatchesWithCache(controlPoints)){
+					UpdateControlPoints();
+				}
+			}
+		}
+		bool ControlPointsMatchesWithCache(List<ICurveControlPoint> newControlPoints){
+			int cachedCount = thisControlPoints.Count;
+			if(cachedCount != newControlPoints.Count){
+				return false;
+			}else{
+				for(int i = 0 ; i < cachedCount; i ++){
+					if(thisControlPoints[i] != newControlPoints[i])
+						return false;
+				}
+				return true;
 			}
 		}
 	}

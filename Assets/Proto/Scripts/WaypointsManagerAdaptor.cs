@@ -9,13 +9,22 @@ namespace AppleShooterProto{
 	public class WaypointsManagerAdaptor : MonoBehaviourAdaptor, IWaypointsManagerAdaptor {
 		
 		public override void SetUp(){
+			MakeSureCycleStartIndexIsValid();
 			IWaypointsManagerConstArg arg = new WaypointsManagerConstArg(
 				reserve,
 				curvesCountInSequence,
 				initialCurvePosition,
-				initialCurveRotation
+				initialCurveRotation,
+				cycleStartIndex
 			);
 			thisWaypointsManager = new WaypointsManager(arg);
+		}
+		void MakeSureCycleStartIndexIsValid(){
+			if(cycleStartIndex < 1){
+				throw new System.InvalidCastException(
+					"cycleStartIndex should be at least 1"
+				);
+			}
 		}
 		IWaypointsManager thisWaypointsManager;
 		public IWaypointsManager GetWaypointsManager(){
@@ -27,6 +36,7 @@ namespace AppleShooterProto{
 		public List<WaypointCurveAdaptor> waypointCurveAdaptors;
 		public Transform reserve;
 		public int curvesCountInSequence;
+		public int cycleStartIndex = 1;
 		public override void SetUpReference(){
 
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();

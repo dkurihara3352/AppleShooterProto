@@ -52,6 +52,7 @@ namespace AppleShooterProto{
 		public LaunchPointAdaptor launchPointAdaptor;
 		public ShootingManagerAdaptor shootingManagerAdaptor;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
+		public WaypointsManagerAdaptor waypointsManagerAdaptor;
 		void OnGUI(){
 			/* left */
 				DrawControl();
@@ -117,10 +118,13 @@ namespace AppleShooterProto{
 			bool thisGroupSequenceIsReady = false;
 			void DrawCurveSequence(Rect rect){
 				if(thisSystemIsReady){
+					IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
 					GUI.Label(
 						rect, 
-						"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString() + " ,\b" +
-						"sequence: " + GetSequenceIndexString()
+						"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString() + " ,\n" +
+						"sequence: " + GetSequenceIndexString() + ",\n" + 
+						"reserved: " + GetReservedCurvesIDString(waypointsManager.GetReservedCurvesIDs()) + ",\n" +
+						"idInSQ: " + waypointsManager.GetCurrentCurveIDInSequence().ToString()
 					);
 				}
 			}
@@ -130,6 +134,13 @@ namespace AppleShooterProto{
 				foreach(int index in indexes)
 					result += index.ToString() + ",";
 				return result;
+			}
+			string GetReservedCurvesIDString(int[] ids){
+				string result = "";
+				foreach(int id in ids){
+					result += id.ToString() + ", ";
+ 				}
+				 return result;
 			}
 			bool thisSystemIsReady = false;
 			void DrawCurrentState(Rect rect){

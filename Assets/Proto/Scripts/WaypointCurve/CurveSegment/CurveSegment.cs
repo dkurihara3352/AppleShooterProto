@@ -52,7 +52,7 @@ namespace AppleShooterProto{
 		}
 		ICurvePoint CreateCurvePoint(float normalizedT){
 			GameObject curvePointGO = new GameObject("curvePoint");
-			Transform parent = thisWaypointCurveAdaptor.GetTransform();
+			Transform parent = thisWaypointCurveAdaptor.GetCurvePointsParentTransform();
 
 			curvePointGO.transform.SetParent(parent);
 			ICurvePointAdaptor curvePointAdaptor = (ICurvePointAdaptor)curvePointGO.AddComponent<CurvePointAdaptor>();

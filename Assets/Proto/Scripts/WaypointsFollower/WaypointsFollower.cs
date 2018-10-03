@@ -78,7 +78,10 @@ namespace AppleShooterProto{
 			return thisCurrentWaypointCurve.GetIndex();
 		}
 		public float GetNormalizedPositionInCurve(){
-			return thisProcess.GetNormalizedPositionOnCurve();
+			if(thisProcess != null)
+				return thisProcess.GetNormalizedPositionOnCurve();
+			else
+				return 0f;
 		}
 
 	}
