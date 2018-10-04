@@ -29,6 +29,8 @@ namespace AppleShooterProto{
 		);
 		Vector3 GetPosition();
 		Quaternion GetRotation();
+		List<IWaypointEvent> GetWaypointEvents();
+		void SetWaypointEvents(List<IWaypointEvent> events);
 	}
 	public class WaypointCurve: IWaypointCurve{
 		public WaypointCurve(
@@ -165,6 +167,14 @@ namespace AppleShooterProto{
 		}
 		public Quaternion GetRotation(){
 			return thisAdaptor.GetRotation();
+		}
+		/*  */
+		public List<IWaypointEvent> GetWaypointEvents(){
+			return thisWaypointEvents;
+		}
+		List<IWaypointEvent> thisWaypointEvents;
+		public void SetWaypointEvents(List<IWaypointEvent> events){
+			thisWaypointEvents = events;
 		}
 	}
 

@@ -16,7 +16,7 @@ namespace AppleShooterProto{
 			sTL_5 = GetSubRect(topLeftRect,4,6);
 			sTL_6 = GetSubRect(topLeftRect,5,6);
 			topRightRect = GetGUIRect(
- 				normalizedSize: new Vector2(.3f, .3f),
+ 				normalizedSize: new Vector2(.3f, .5f),
 				normalizedPosition: new Vector2(1f, 0f)
 			);
 			sTR_1 = GetSubRect(topRightRect, 0, 2);
@@ -124,7 +124,8 @@ namespace AppleShooterProto{
 						"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString() + " ,\n" +
 						"sequence: " + GetSequenceIndexString() + ",\n" + 
 						"reserved: " + GetReservedCurvesIDString(waypointsManager.GetReservedCurvesIDs()) + ",\n" +
-						"idInSQ: " + waypointsManager.GetCurrentCurveIDInSequence().ToString()
+						"idInSQ: " + waypointsManager.GetCurrentCurveIDInSequence().ToString() + ", \n" +
+						"eventCount: " + waypointsManager.GetWaypointCurvesInSequence()[waypointsManager.GetCurrentCurveIDInSequence()].GetWaypointEvents().Count.ToString()
 					);
 				}
 			}

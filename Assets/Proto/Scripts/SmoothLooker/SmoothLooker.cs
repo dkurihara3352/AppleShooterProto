@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 		Quaternion GetRotation();
 		void SetRotation(Quaternion rotation);
 		void RotateToward(Quaternion to, float step);
+		void SetSmoothCoefficient(float k);
 	}
 	public class SmoothLooker :ISmoothLooker {
 		public SmoothLooker(
@@ -28,9 +29,16 @@ namespace AppleShooterProto{
 		IMonoBehaviourAdaptor thisLookAtTarget;
 		public void SetLookAtTarget(IMonoBehaviourAdaptor target){
 			thisLookAtTarget = target;
+			if(thisProcess != null && thisProcess.IsRunning())
+				thisProcess.UpdateLookAtTarget(thisLookAtTarget);
 		}
 		ISmoothLookProcess thisProcess;
-		readonly float thisSmoothCoefficient;
+		float thisSmoothCoefficient;
+		public void SetSmoothCoefficient(float k){
+			thisSmoothCoefficient = k;
+			if(thisProcess != null && thisProcess.IsRunning())
+				thisProcess.UpdateSmoothCoefficient(k);
+		}
 		readonly int thisProcessOrder;
 		public void StartSmoothLook(){
 			thisProcess = thisProcessFactory.CreateSmoothLookProcess(

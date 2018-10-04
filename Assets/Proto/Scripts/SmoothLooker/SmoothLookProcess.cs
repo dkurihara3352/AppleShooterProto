@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 namespace AppleShooterProto{
-	public interface ISmoothLookProcess: IProcess{}
+	public interface ISmoothLookProcess: IProcess{
+		void UpdateSmoothCoefficient(float k);
+		void UpdateLookAtTarget(IMonoBehaviourAdaptor target);
+	}
 	public class SmoothLookProcess : AbsProcess, ISmoothLookProcess{
 		public SmoothLookProcess(
 			ISmoothLookProcessConstArg arg
@@ -15,9 +18,15 @@ namespace AppleShooterProto{
 			thisSmoothCoefficient = arg.smoothCoefficient;
 			thisProcessOrder = arg.processOrder;
 		}
-		readonly IMonoBehaviourAdaptor thisTarget;
+		IMonoBehaviourAdaptor thisTarget;
+		public void UpdateLookAtTarget(IMonoBehaviourAdaptor target){
+			thisTarget = target;
+		}
 		readonly ISmoothLooker thisSmoothLooker;
-		readonly float thisSmoothCoefficient;
+		float thisSmoothCoefficient;
+		public void UpdateSmoothCoefficient(float k){
+			thisSmoothCoefficient = k;
+		}
 		float angleThreshold = .1f;
 		protected override void UpdateProcessImple(float deltaT){
 			Vector3 targetLookAtPosition = thisTarget.GetPosition();

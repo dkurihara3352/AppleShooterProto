@@ -156,5 +156,46 @@ namespace AppleShooterProto{
 				return true;
 			}
 		}
+		public override void SetUpReference(){
+			List<IWaypointEvent> waypointEvents = CollectWaypointEvents();
+			thisWaypointCurve.SetWaypointEvents(waypointEvents);
+		}
+		List<IWaypointEvent> CollectWaypointEvents(){
+			List<IWaypointEvent> result = new List<IWaypointEvent>();
+			// for(int i = 0; i < transform.childCount; i ++){
+			// 	Transform child = transform.GetChild(i);
+			// 	IWaypointEventAdaptor waypointEventAdaptor = (IWaypointEventAdaptor)child.GetComponent(typeof(IWaypointEventAdaptor));
+			// 	if(waypointEventAdaptor != null)
+			// 		result.Add(waypointEventAdaptor.GetWaypointEvent());
+			// }
+			// IWaypointEventAdaptor[] adaptors;  = this.transform.GetComponents(typeof(IWaypointEventAdaptor)) as IWaypointEventAdaptor[];
+			List<IWaypointEventAdaptor> adaptors = new List<IWaypointEventAdaptor>();
+			Component[] components = this.transform.GetComponents(typeof(Component));
+			foreach(Component component in components){
+				if(component is IWaypointEventAdaptor)
+					adaptors.Add((IWaypointEventAdaptor)component);
+			}
+			Debug.Log(
+				this.transform.name + "'s components count: " + components.Length.ToString()
+			);
+			if(adaptors != null){
+				foreach(IWaypointEventAdaptor adaptor in adaptors)
+					result.Add(adaptor.GetWaypointEvent());
+				IWaypointEventComparer comparer = new WaypointEventComparer();
+				result.Sort(comparer);
+			}
+			Debug.Log(
+				this.transform.name +  "'s eventCount: " + result.Count.ToString()
+			);
+			return result;
+		}
 	}
+	public interface IWaypointEventComparer: IComparer<IWaypointEvent>{
+	}
+	public class WaypointEventComparer: IWaypointEventComparer{
+		public int Compare(IWaypointEvent a, IWaypointEvent b){
+			return a.GetEventPoint().CompareTo(b.GetEventPoint());
+		}
+	}
+	
 }

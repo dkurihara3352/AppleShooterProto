@@ -17,10 +17,12 @@ namespace AppleShooterProto{
 			thisSpeed = arg.speed;
 			thisProcessOrder = arg.processOrder;
 			thisWaypointsManager = arg.waypointsManager;
+			thisWaypointEventManager = new WaypointEventManager();
 			SetNewCurve(
 				arg.initialCurve,
 				0f
 			);
+			thisWaypointEventManager.SetNewCurve(arg.initialCurve);
 		}
 		readonly IWaypointsFollower thisFollower;
 		readonly float thisSpeed;
@@ -29,6 +31,8 @@ namespace AppleShooterProto{
 			return thisProcessOrder;
 		}
 		readonly IWaypointsManager thisWaypointsManager;
+		readonly IWaypointEventManager thisWaypointEventManager;
+		
 
 
 		IWaypointCurve thisCurrentCurve;
@@ -40,6 +44,7 @@ namespace AppleShooterProto{
 			thisFollower.SetWaypointCurve(curve);
 			thisRequiredTimeForCurrentCurve = curve.GetTotalDistance() / thisSpeed;
 			thisTotalElapsedTimeOnCurrentCurve = initialTime;
+			thisWaypointEventManager.SetNewCurve(curve);
 		}
 		float thisTotalElapsedTimeOnCurrentCurve = 0f;
 		float thisRequiredTimeForCurrentCurve;
@@ -85,6 +90,7 @@ namespace AppleShooterProto{
 			);
 			thisFollower.SetPosition(targetPosition);
 			thisFollower.SetRotation(targetRotation);
+			thisWaypointEventManager.CheckForWaypointEvent(GetNormalizedPositionOnCurve());
 		}
 		public float GetNormalizedPositionOnCurve(){
 			return thisTotalElapsedTimeOnCurrentCurve/ thisRequiredTimeForCurrentCurve;

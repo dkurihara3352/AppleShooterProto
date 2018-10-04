@@ -60,9 +60,6 @@ namespace AppleShooterProto{
 			ActivateUISystem();
 
 			StartWaypointsFollower();//		100
-			// StartSmoothFollower();//		110 obsolete
-			// PCLookAtTargetMotion			120	obsolete
-			// StartPCSmoothLook();//		130 obsolete
 			StartCameraSmoothFollow();//	140
 			StartCameraPivotSmoothLook();//	150
 			// StartRecticleSmoothLook();//	155
@@ -79,21 +76,9 @@ namespace AppleShooterProto{
 			uim.ActivateUISystem(false);
 		}
 		public void StartWaypointsFollower(){
-			// IWaypointCurve firstWaypointGroup = waypointsManager.GetWaypointCurvesInSequence()[0];
-			// follower.SetWaypointCurve(firstWaypointGroup);
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 			follower.StartFollowing();
 		}
-		// public void StartSmoothFollower(){
-		// 	ISmoothFollower smoothFollower = pcSmoothFollowerAdaptor.GetSmoothFollower();
-		// 	smoothFollower.StartFollow();
-		// }
-		// public void StartPCSmoothLook(){
-		// 	IPlayerCharacterLookAtTarget lookAtTarget = pcLookAtTargetAdaptor.GetLookAtTarget();
-		// 	lookAtTarget.StartLookAtTargetMotion();
-		// 	ISmoothLooker looker = pcSmoothLookerAdaptor.GetSmoothLooker();
-		// 	looker.StartSmoothLook();
-		// }
 		public void StartCameraSmoothFollow(){
 			ISmoothFollower follower = camSmoothFollowerAdaptor.GetSmoothFollower();
 			follower.StartFollow();
