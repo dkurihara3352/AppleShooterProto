@@ -63,23 +63,36 @@ namespace AppleShooterProto{
 		}
 		public int arrowCount = 20;
 		public MonoBehaviourAdaptor arrowReserve;
+		public GameObject arrowPrefab;
 		void SetUpArrows(){
 			IArrow[] arrows = new IArrow[arrowCount];
 			IArrowAdaptor[] arrowAdaptors = new IArrowAdaptor[arrowCount];
 			for(int i = 0; i < arrowCount; i++){
-				GameObject arrowGO = new GameObject("arrowGO");
-				arrowGO.transform.parent = arrowReserve.GetTransform();
-				arrowGO.transform.position = Vector3.zero;
-				arrowGO.transform.rotation = Quaternion.identity;
-
-
-				IArrowAdaptor arrowAdaptor = arrowGO.AddComponent<ArrowAdaptor>();
+				GameObject arrowGO = Instantiate(arrowPrefab, Vector3.zero, Quaternion.identity, arrowReserve.GetTransform());
+				IArrowAdaptor arrowAdaptor = arrowGO.GetComponent(typeof(IArrowAdaptor)) as IArrowAdaptor;
+				if(arrowAdaptor == null)
+					throw new System.InvalidOperationException(
+						"eh?"
+					);
 				arrowAdaptor.SetProcessManager(processManager);
 				arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);
-				arrowAdaptor.SetIndex(i);
 				arrowAdaptor.SetArrowReserve(arrowReserve);
+				arrowAdaptor.SetIndex(i);
 				arrowAdaptor.SetUp();
 				IArrow arrow = arrowAdaptor.GetArrow();
+				// GameObject arrowGO = new GameObject("arrowGO");
+				// arrowGO.transform.parent = arrowReserve.GetTransform();
+				// arrowGO.transform.position = Vector3.zero;
+				// arrowGO.transform.rotation = Quaternion.identity;
+
+
+				// IArrowAdaptor arrowAdaptor = arrowGO.AddComponent<ArrowAdaptor>();
+				// arrowAdaptor.SetProcessManager(processManager);
+				// arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);
+				// arrowAdaptor.SetArrowReserve(arrowReserve);
+				// arrowAdaptor.SetIndex(i);
+				// arrowAdaptor.SetUp();
+				// IArrow arrow = arrowAdaptor.GetArrow();
 				arrows[i] = arrow;
 				arrowAdaptors[i] = arrowAdaptor;
 

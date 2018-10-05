@@ -135,6 +135,7 @@ namespace AppleShooterProto{
 		}
 		public override void ProcessSwipe(ICustomEventData eventData){
 			thisEngine.HoldDraw();
+			// thisEngine.StopDraw();
 			thisEngine.TryResetArrow();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}
@@ -172,6 +173,7 @@ namespace AppleShooterProto{
 			}
 		}
 		public override void ProcessSwipe(ICustomEventData eventData){
+			// thisEngine.StopDraw();
 			thisEngine.TryResetArrow();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}

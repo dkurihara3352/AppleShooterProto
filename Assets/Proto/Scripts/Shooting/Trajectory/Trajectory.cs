@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 			float gravity,
 			Vector3 launchPoint
 		);
+		void Clear();
 	}
 	public class Trajectory : ITrajectory {
 
@@ -47,6 +48,9 @@ namespace AppleShooterProto{
 				trajectoryPoints[i] = trajectoryPoint;
 			}
 			thisAdaptor.DrawTrajectory(trajectoryPoints);
+		}
+		public void Clear(){
+			thisAdaptor.Clear();
 		}
 	}
 

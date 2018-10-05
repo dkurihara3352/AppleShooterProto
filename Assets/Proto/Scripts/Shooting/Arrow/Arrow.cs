@@ -81,6 +81,7 @@ namespace AppleShooterProto{
 				thisShootingManager.AddArrowToReserve(this);
 				thisShootingManager.RemoveArrowFromFlight(this);
 				thisShootingManager.CheckAndClearNockedArrow(this);
+				// thisShootingManager.StopDraw();
 				MoveToReservePosition();
 			}
 			void MoveToReservePosition(){
@@ -96,6 +97,7 @@ namespace AppleShooterProto{
 			public void Fire(){
 				thisShootingManager.AddArrowToFlight(this);
 				thisShootingManager.RegisterShot(this);
+				// thisShootingManager.StopDraw();
 			}
 		/* Flight */
 			IArrowFlightProcess thisFlightProcess;

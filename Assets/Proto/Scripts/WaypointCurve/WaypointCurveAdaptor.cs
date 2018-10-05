@@ -23,7 +23,6 @@ namespace AppleShooterProto{
 		int cachedResolution = 0;
 		public void Start(){
 			UpdateControlPoints();
-			// CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
 		}
 		public void Update (){
 			/*  need to check if child has changed, and perform UpdateControlPoints if changed
@@ -162,13 +161,6 @@ namespace AppleShooterProto{
 		}
 		List<IWaypointEvent> CollectWaypointEvents(){
 			List<IWaypointEvent> result = new List<IWaypointEvent>();
-			// for(int i = 0; i < transform.childCount; i ++){
-			// 	Transform child = transform.GetChild(i);
-			// 	IWaypointEventAdaptor waypointEventAdaptor = (IWaypointEventAdaptor)child.GetComponent(typeof(IWaypointEventAdaptor));
-			// 	if(waypointEventAdaptor != null)
-			// 		result.Add(waypointEventAdaptor.GetWaypointEvent());
-			// }
-			// IWaypointEventAdaptor[] adaptors;  = this.transform.GetComponents(typeof(IWaypointEventAdaptor)) as IWaypointEventAdaptor[];
 			List<IWaypointEventAdaptor> adaptors = new List<IWaypointEventAdaptor>();
 			Component[] components = this.transform.GetComponents(typeof(Component));
 			foreach(Component component in components){

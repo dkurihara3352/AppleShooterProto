@@ -4,7 +4,9 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IDrawProcess: IProcess{}
+	public interface IDrawProcess: IProcess{
+		void Hold();
+	}
 	public class DrawProcess : AbsProcess, IDrawProcess {
 
 		public DrawProcess(
@@ -17,11 +19,18 @@ namespace AppleShooterProto{
 		}
 		readonly IShootingManager thisShootingManager;
 		protected override void UpdateProcessImple(float deltaT){
-			thisShootingManager.Draw(deltaT);
+			float drawDeltaTime = deltaT;
+			if(isHeld)
+				drawDeltaTime = 0f;
+			thisShootingManager.Draw(drawDeltaTime);
 		}
 		readonly int thisProcessOrder;
 		public override int GetProcessOrder(){
 			return thisProcessOrder;
+		}
+		bool isHeld = false;
+		public void Hold(){
+			isHeld = true;
 		}
 	}
 

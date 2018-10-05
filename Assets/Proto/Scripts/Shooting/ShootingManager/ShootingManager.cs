@@ -17,6 +17,7 @@ namespace AppleShooterProto{
 		void StartDraw();
 		void Draw(float deltaTime);
 		void HoldDraw();
+		void StopDraw();
 
 		void Release();
 		void ResetDraw();
@@ -91,6 +92,7 @@ namespace AppleShooterProto{
 			}
 		/* Draw */
 			public void StartDraw(){
+				StopDraw();
 				thisDrawProcess = thisProcessFactory.CreateDrawProcess(
 					this,
 					thisDrawProcessOrder
@@ -107,11 +109,13 @@ namespace AppleShooterProto{
 				DrawTrajectory();
 			}
 			public void HoldDraw(){
-				if(thisDrawProcess != null)
-					if(thisDrawProcess.IsRunning()){
-						thisDrawProcess.Stop();
-						thisDrawProcess = null;
-					}
+				thisDrawProcess.Hold();
+			}
+			public void StopDraw(){
+				if(thisDrawProcess != null && thisDrawProcess.IsRunning()){
+					thisDrawProcess.Stop();
+				}
+				thisDrawProcess = null;
 			}
 			float maxZoom{
 				get{return thisInputManager.GetMaxZoom();}
@@ -236,9 +240,11 @@ namespace AppleShooterProto{
 				ResetDraw();
 			}
 			public void ResetDraw(){
-				HoldDraw();
+				// HoldDraw();
+				StopDraw();
 				thisDrawElapsedTime = 0f;
 				UpdateFlightSpeed();
+				thisTrajectory.Clear();
 			}
 			public void TryResetArrow(){
 				if(thisNockedArrow != null)

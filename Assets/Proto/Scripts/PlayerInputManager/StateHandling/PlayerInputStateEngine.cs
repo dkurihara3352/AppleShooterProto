@@ -28,6 +28,7 @@ namespace AppleShooterProto{
 		void TryNock();
 		void StartDraw();
 		void HoldDraw();
+		void StopDraw();
 		void Release();
 		void PanCamera(
 			float normalizedCurosredPosition,
@@ -119,6 +120,9 @@ namespace AppleShooterProto{
 			}
 			public void HoldDraw(){
 				thisPlayerInputManager.HoldDraw();
+			}
+			public void StopDraw(){
+				thisPlayerInputManager.StopDraw();
 			}
 			public void Release(){
 				thisPlayerInputManager.Release();
