@@ -64,6 +64,8 @@ namespace AppleShooterProto{
 		public int arrowCount = 20;
 		public MonoBehaviourAdaptor arrowReserve;
 		public GameObject arrowPrefab;
+		public int collisionDetectionIntervalFrameCount = 3;
+		public float arrowAttack = 100f;
 		void SetUpArrows(){
 			IArrow[] arrows = new IArrow[arrowCount];
 			IArrowAdaptor[] arrowAdaptors = new IArrowAdaptor[arrowCount];
@@ -78,21 +80,10 @@ namespace AppleShooterProto{
 				arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);
 				arrowAdaptor.SetArrowReserve(arrowReserve);
 				arrowAdaptor.SetIndex(i);
+				arrowAdaptor.SetCollisionDetectionIntervalFrameCount(collisionDetectionIntervalFrameCount);
+				arrowAdaptor.SetAttack(arrowAttack);
 				arrowAdaptor.SetUp();
 				IArrow arrow = arrowAdaptor.GetArrow();
-				// GameObject arrowGO = new GameObject("arrowGO");
-				// arrowGO.transform.parent = arrowReserve.GetTransform();
-				// arrowGO.transform.position = Vector3.zero;
-				// arrowGO.transform.rotation = Quaternion.identity;
-
-
-				// IArrowAdaptor arrowAdaptor = arrowGO.AddComponent<ArrowAdaptor>();
-				// arrowAdaptor.SetProcessManager(processManager);
-				// arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);
-				// arrowAdaptor.SetArrowReserve(arrowReserve);
-				// arrowAdaptor.SetIndex(i);
-				// arrowAdaptor.SetUp();
-				// IArrow arrow = arrowAdaptor.GetArrow();
 				arrows[i] = arrow;
 				arrowAdaptors[i] = arrowAdaptor;
 

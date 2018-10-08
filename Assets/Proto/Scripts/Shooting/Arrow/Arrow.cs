@@ -15,10 +15,13 @@ namespace AppleShooterProto{
 		void ResetArrow();
 		void TryRegisterShot();
 		void Fire();
+		void Land(IShootingTarget target);
 
 		void StartFlight();
 		void BecomeChildToReserve();
 		void StopFlight();
+		void StartCollisionCheck();
+		void StopColllisionCheck();
 
 		int GetIndex();
 		IArrowState GetCurrentState();
@@ -27,6 +30,8 @@ namespace AppleShooterProto{
 		void SetPosition(Vector3 position);
 		string GetParentName();
 		int GetFlightID();
+
+		float GetAttack();
 	}
 	public class Arrow : IArrow {
 		/* Setup */
@@ -43,6 +48,7 @@ namespace AppleShooterProto{
 				thisStateEngine = new ArrowStateEngine(
 					stateEngineConstArg
 				);
+				thisAttack = arg.attack;
 			}
 			readonly IArrowAdaptor thisAdaptor;
 			readonly IAppleShooterProcessFactory thisProcessFactory;
@@ -81,8 +87,14 @@ namespace AppleShooterProto{
 				thisShootingManager.AddArrowToReserve(this);
 				thisShootingManager.RemoveArrowFromFlight(this);
 				thisShootingManager.CheckAndClearNockedArrow(this);
-				// thisShootingManager.StopDraw();
 				MoveToReservePosition();
+				CheckAndStopFlightProcess();
+			}
+			void CheckAndStopFlightProcess(){
+				if(thisFlightProcess != null && thisFlightProcess.IsRunning()){
+					thisFlightProcess.Stop();
+					thisFlightProcess = null;
+				}
 			}
 			void MoveToReservePosition(){
 				thisAdaptor.BecomeChildToReserve();
@@ -97,7 +109,6 @@ namespace AppleShooterProto{
 			public void Fire(){
 				thisShootingManager.AddArrowToFlight(this);
 				thisShootingManager.RegisterShot(this);
-				// thisShootingManager.StopDraw();
 			}
 		/* Flight */
 			IArrowFlightProcess thisFlightProcess;
@@ -117,8 +128,17 @@ namespace AppleShooterProto{
 					if(thisFlightProcess.IsRunning())
 						thisFlightProcess.Stop();
 			}
+			public void Land(IShootingTarget target){
+				TryResetArrow();
+			}
 			public void BecomeChildToReserve(){
 				thisAdaptor.BecomeChildToReserve();
+			}
+			public void StartCollisionCheck(){
+				thisAdaptor.StartCollisionCheck();
+			}
+			public void StopColllisionCheck(){
+				thisAdaptor.StopCollisionCheck();
 			}
 		/* Debug */
 			readonly int thisIndex;
@@ -147,6 +167,11 @@ namespace AppleShooterProto{
 				return thisShootingManager.GetFlightID(this);
 			}
 		/*  */
+			float thisAttack;
+			public float GetAttack(){
+				return thisAttack;
+			}
+		/*  */
 	}
 
 
@@ -155,16 +180,19 @@ namespace AppleShooterProto{
 		IArrowAdaptor adaptor{get;}
 		IAppleShooterProcessFactory processFactory{get;}
 		int index{get;}
+		float attack{get;}
 	}
 	public struct ArrowConstArg: IArrowConstArg{
 		public ArrowConstArg(
 			IArrowAdaptor adaptor,
 			IAppleShooterProcessFactory processFactory,
-			int index
+			int index,
+			float attack
 		){
 			thisAdaptor = adaptor;
 			thisProcessFactory = processFactory;
 			thisIndex = index;
+			thisAttack = attack;
 		}
 		readonly IArrowAdaptor thisAdaptor;
 		public IArrowAdaptor adaptor{get{return thisAdaptor;}}
@@ -172,5 +200,7 @@ namespace AppleShooterProto{
 		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
 		readonly int thisIndex;
 		public int index{get{return thisIndex;}}
+		readonly float thisAttack;
+		public float attack{get{return thisAttack;}}
 	}
 }

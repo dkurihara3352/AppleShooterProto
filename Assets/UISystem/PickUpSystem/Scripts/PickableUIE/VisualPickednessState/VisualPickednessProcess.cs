@@ -18,7 +18,7 @@ namespace UISystem.PickUpUISystem{
 		protected override float GetLatestInitialValueDifference(){
 			return thisTargetPickedness - thisPickableUIImage.GetVisualPickedness();
 		}
-		protected override IPickableUIImageVisualPickednessInterpolator InstantiateInterpolatorWithValues(){
+		protected override IPickableUIImageVisualPickednessInterpolator CreateInterpolator(){
 			return new PickableUIImageVisualPickednessInterpolator(
 				thisPickableUIImage, 
 				thisPickableUIImage.GetVisualPickedness(), 

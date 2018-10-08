@@ -20,7 +20,7 @@ namespace UISystem.PickUpUISystem{
 		protected override float GetLatestInitialValueDifference(){
 			return 0f - thisItemIconImage.GetEmptiness();
 		}
-		protected override IItemIconImageEmptinessInterpolator InstantiateInterpolatorWithValues(){
+		protected override IItemIconImageEmptinessInterpolator CreateInterpolator(){
 			return new ItemIconImageEmptinessInterpolator(thisItemIconImage, thisItemIconImage.GetEmptiness(), 0f);
 		}
 		protected override void ExpireImple(){

@@ -19,7 +19,7 @@ namespace UISystem{
 		readonly Color thisTargetColor;
 		readonly bool thisFlashes;
 		protected override float GetLatestInitialValueDifference(){return 1f;}
-		protected override IImageColorInterpolator InstantiateInterpolatorWithValues(){
+		protected override IImageColorInterpolator CreateInterpolator(){
 			if(!thisFlashes)
 				return new ImageColorInterpolator(thisUIImage, thisTargetColor);
 			else

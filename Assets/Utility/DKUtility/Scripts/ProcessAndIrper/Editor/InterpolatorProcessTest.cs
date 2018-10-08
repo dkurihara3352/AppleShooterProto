@@ -60,7 +60,7 @@ public class InterpolatorProcessTest{
             arg    
         ){
         }
-        protected override IInterpolator InstantiateInterpolatorWithValues(){
+        protected override IInterpolator CreateInterpolator(){
             IInterpolator irper = Substitute.For<IInterpolator>();
             return irper;
         }

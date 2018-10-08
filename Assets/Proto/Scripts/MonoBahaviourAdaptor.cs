@@ -15,7 +15,7 @@ namespace AppleShooterProto{
 		Transform GetTransform();
 	}
 	public class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
-		void Awake(){
+		protected virtual void Awake(){
 			thisMBAdaptorManager = FindAndSetMonoBehaviourAdaptor();
 			thisMBAdaptorManager.AddAdaptor(this);
 

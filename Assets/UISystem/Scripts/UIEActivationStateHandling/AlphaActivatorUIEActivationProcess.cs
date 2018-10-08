@@ -37,7 +37,7 @@ namespace UISystem{
 				return 1f;
 			else return source;
 		}
-		protected override IGroupAlphaInterpolator InstantiateInterpolatorWithValues(){
+		protected override IGroupAlphaInterpolator CreateInterpolator(){
 			float targetGroupAlpha = thisDoesActivate? 1f: 0f;
 			IGroupAlphaInterpolator irper = new GroupAlphaInterpolator(thisUIAdaptor, targetGroupAlpha);
 			return irper;

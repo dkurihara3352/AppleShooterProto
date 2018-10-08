@@ -52,6 +52,11 @@ namespace AppleShooterProto{
 			Vector3 launcherDeltaPosition,
 			Vector3 launchPosition
 		);
+		IFadeProcess CreateFadeProcess(
+			IFadable fadable,
+			bool fadeIn,
+			float fadeTime
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -185,6 +190,20 @@ namespace AppleShooterProto{
 				thisProcessManager
 			);
 			return new ArrowFlightProcess(arg);
+		}
+		public IFadeProcess CreateFadeProcess(
+			IFadable fadable,
+			bool fadeIn,
+			float fadeTime
+		){
+			FadeProcess.IConstArg arg = new FadeProcess.ConstArg(
+				fadable,
+				fadeIn,
+				fadeTime,
+
+				thisProcessManager
+			);
+			return new FadeProcess(arg);
 		}
 	}
 }

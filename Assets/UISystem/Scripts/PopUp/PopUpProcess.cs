@@ -33,7 +33,7 @@ namespace UISystem{
 			float curAlpha = thisPopUpAdaptor.GetGroupAlpha();
 			return targetAlpha - curAlpha;
 		}
-		protected override IGroupAlphaInterpolator InstantiateInterpolatorWithValues(){
+		protected override IGroupAlphaInterpolator CreateInterpolator(){
 			IGroupAlphaInterpolator interpolator = new GroupAlphaInterpolator(
 				thisPopUpAdaptor, 
 				targetAlpha

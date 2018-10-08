@@ -26,6 +26,7 @@ namespace AppleShooterProto{
 		protected override void RunImple(){
 			thisArrow.BecomeChildToReserve();
 			CacheInitialVelocity();
+			thisArrow.StartCollisionCheck();
 		}
 		void CacheInitialVelocity(){
 			thisInitialVelocity = thisFlightDirection * thisFlightSpeed;
@@ -43,6 +44,9 @@ namespace AppleShooterProto{
 		}
 		protected override void ExpireImple(){
 			thisArrow.TryResetArrow();
+		}
+		protected override void StopImple(){
+			thisArrow.StopColllisionCheck();
 		}
 		public override int GetProcessOrder(){
 			return 200;

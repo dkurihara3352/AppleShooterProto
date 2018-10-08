@@ -18,7 +18,7 @@ namespace UISystem.PickUpUISystem{
 			float targetEmptiness = 1f;
 			return targetEmptiness - curEmptiness;
 		}
-		protected override IItemIconImageEmptinessInterpolator InstantiateInterpolatorWithValues(){
+		protected override IItemIconImageEmptinessInterpolator CreateInterpolator(){
 			float curEmptiness = thisItemIconImage.GetEmptiness();
 			IItemIconImageEmptinessInterpolator irper = new ItemIconImageEmptinessInterpolator(thisItemIconImage, curEmptiness, 1f);
 			return irper;

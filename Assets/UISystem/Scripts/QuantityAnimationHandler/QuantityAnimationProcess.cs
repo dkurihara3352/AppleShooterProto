@@ -27,7 +27,7 @@ namespace UISystem{
 		): base(
 			arg
 		){}
-		protected override IIncrementalQuantityAnimationInterpolator InstantiateInterpolatorWithValues(){
+		protected override IIncrementalQuantityAnimationInterpolator CreateInterpolator(){
 			return new IncrementalQuantityAnimationInterpolator(thisTargetQuantity, thisQuantityRoller);
 		}
 	}
@@ -39,7 +39,7 @@ namespace UISystem{
 		): base(
 			arg
 		){}
-		protected override IOneshotQuantityAnimationInterpolator InstantiateInterpolatorWithValues(){
+		protected override IOneshotQuantityAnimationInterpolator CreateInterpolator(){
 			return null;
 		}
 	}

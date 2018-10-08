@@ -25,9 +25,9 @@ namespace DKUtility{
 			}
 		}
 		protected T thisInterpolator;
-		protected abstract T InstantiateInterpolatorWithValues();
+		protected abstract T CreateInterpolator();
 		public override void Run(){
-			thisInterpolator = InstantiateInterpolatorWithValues();
+			thisInterpolator = CreateInterpolator();
 			base.Run();
 		}
 		protected override void UpdateProcessImple(float deltaT){
