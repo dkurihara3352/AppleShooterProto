@@ -5,7 +5,8 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface ITestShootingTargetAdaptor: IShootingTargetAdaptor{
-		void ToggleOffCollider();
+		void SetProcessManager(IProcessManager processManager);
+		void ToggleCollider(bool on);
 		void SetColor(Color color);
 		void StartHitAnimation(float magnitude);
 		void StopHitAnimation();
@@ -24,7 +25,7 @@ namespace AppleShooterProto{
 		public override void SetUp(){
 			SetColor(defaultColor);
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				processManager
+				thisProcessManager
 			);
 			TestShootingTarget.IConstArg arg = new TestShootingTarget.ConstArg(
 				health,
@@ -37,16 +38,19 @@ namespace AppleShooterProto{
 			Debug.Log("now what");
 			thisAnimator = transform.GetComponent<Animator>();
 		}
-		public ProcessManager processManager;
+		IProcessManager thisProcessManager;
+		public void SetProcessManager(IProcessManager processManager){
+			thisProcessManager = processManager;
+		}
 		public float health;
 		public Color defaultColor;
 		public float fadeTime;
 		public override void SetUpReference(){
 
 		}
-		public void ToggleOffCollider(){
+		public void ToggleCollider( bool on){
 			Collider collider = this.transform.GetComponent<Collider>();
-			collider.enabled = false;
+			collider.enabled = on;
 		}
 		Material thisMaterial;
 		public void SetColor(Color color){

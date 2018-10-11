@@ -13,6 +13,8 @@ namespace AppleShooterProto{
 		void Rotate(Vector3 euler);
 		void Rotate(float angleOnAxis, int axis);
 		Transform GetTransform();
+		void SetParent(Transform parent);
+		void ResetTransform();
 	}
 	public class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -65,6 +67,14 @@ namespace AppleShooterProto{
 		public Transform GetTransform(){
 			return this.transform;
 		}
+		public void SetParent(Transform parent){
+			this.transform.SetParent(parent, true);
+		}
+		public void ResetTransform(){
+			this.transform.localPosition = Vector3.zero;
+			this.transform.localRotation = Quaternion.identity;
+		}
+		
 		public virtual void SetUp(){}
 		public virtual void SetUpReference(){}
 	}

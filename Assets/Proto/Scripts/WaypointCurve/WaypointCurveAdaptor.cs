@@ -53,7 +53,7 @@ namespace AppleShooterProto{
 
 		IWaypointCurve thisWaypointCurve;
 		public override void SetUp(){
-			IWaypointCurveConstArg arg = new WaypointCurveConstArg(
+			WaypointCurve.IConstArg arg = new WaypointCurve.ConstArg(
 				this,
 				thisControlPoints,
 				thisCurvePoints
@@ -155,9 +155,12 @@ namespace AppleShooterProto{
 				return true;
 			}
 		}
+		public TestTargetSpawnManagerAdaptor testTargetSpawnManagerAdaptor;
 		public override void SetUpReference(){
 			List<IWaypointEvent> waypointEvents = CollectWaypointEvents();
 			thisWaypointCurve.SetWaypointEvents(waypointEvents);
+			ITargetSpawnManager targetSpawnManager = testTargetSpawnManagerAdaptor.GetTestTargetSpawnManager();
+			thisWaypointCurve.SetTargetSpawnManager(targetSpawnManager);
 		}
 		List<IWaypointEvent> CollectWaypointEvents(){
 			List<IWaypointEvent> result = new List<IWaypointEvent>();

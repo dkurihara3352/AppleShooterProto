@@ -15,15 +15,17 @@ namespace AppleShooterProto{
 		int GetWaypointCurveIndex(IWaypointCurve curve);
 		IWaypointsFollower GetFollower();
 
+		IWaypointCurve GetCurrentCurve();
 		IWaypointCurve GetNextCurve(IWaypointCurve currentCurve);
 
 		/* Debug */
 		int[] GetReservedCurvesIDs();
 		int GetCurrentCurveIDInSequence();
+		void SpawnTargetsOnNextWaypointCurve();
 	}
 
 	public class WaypointsManager : IWaypointsManager {
-		public WaypointsManager(IWaypointsManagerConstArg arg){
+		public WaypointsManager(IConstArg arg){
 			thisCurveReservePointTransform = arg.curveReserveTransform;
 			thisCurveCountInSequence = arg.curvesCountInSequence;
 			thisInitialCurvePosition = arg.initialCurvePosition;
@@ -105,7 +107,7 @@ namespace AppleShooterProto{
 				return result;
 			}
 			List<IWaypointCurve> CreateSequenceOfWaypointCurves(){
-				int[] indexes = GetRandomIntegers(
+				int[] indexes = DKUtility.Calculator.GetRandomIntegers(
 					thisCurveCountInSequence,
 					GetAllCurveIDs()
 				);
@@ -123,40 +125,7 @@ namespace AppleShooterProto{
 					);
 				return result;
 			}
-			int[] GetRandomIntegers(int count, int[] pool){
-				int[] result = new int[count];
-				int counter = 0;
-				int[] unused = pool;
-				while(counter < count){
-					int randomInt = GetRandomInt(
-						ref unused
-					);
-					result[counter] = randomInt;
-					counter ++;
-				}
-				return result;
-			}
-			int GetRandomInt(
-				ref int[] unused
-			){
-				int randomIndex = Random.Range(0, unused.Length);
-				int result = unused[randomIndex];
-				int[] newUnused = CreateNewUnused(unused, result);
-				unused = newUnused;
-				return result;
-			}
-			int[] CreateNewUnused(
-				int[] unused,
-				int used
-			){
-				List<int> result = new List<int>();
-				foreach(int i in unused){
-					if(i != used){
-						result.Add(i);
-					}
-				}
-				return result.ToArray();
-			}
+
 			int[] GetAllCurveIDs(){
 				int totalCount = thisWaypointCurves.Count;
 				int[] result = new int[totalCount];
@@ -214,6 +183,7 @@ namespace AppleShooterProto{
 			List<IWaypointCurve> reducedSequence = new List<IWaypointCurve>(thisCurveSequence);
 			reducedSequence.Remove(firstCurveInSequence);
 			ReserveCurve(firstCurveInSequence);
+			firstCurveInSequence.DespawnTargets();
 			thisCurveSequence = reducedSequence;
 		}
 		IWaypointCurve GetNewWaypointCurveToAddToSequence(){
@@ -233,49 +203,60 @@ namespace AppleShooterProto{
 			}
 			return result.ToArray();
 		}
+		public IWaypointCurve GetCurrentCurve(){
+			return thisFollower.GetCurrentWaypointCurve();
+		}
 		public int GetCurrentCurveIDInSequence(){
-			IWaypointCurve currentCurve = thisFollower.GetCurrentWaypointCurve();
+			IWaypointCurve currentCurve = GetCurrentCurve();
 			return thisCurveSequence.IndexOf(currentCurve);
 		}
-	}
-	public interface IWaypointsManagerConstArg{
-		Transform curveReserveTransform{get;}
-		int curvesCountInSequence{get;}
-		Vector3 initialCurvePosition{get;}
-		Quaternion initialCurveRotation{get;}
-		int cycleStartIndex{get;}
+
+		public void SpawnTargetsOnNextWaypointCurve(){
+			IWaypointCurve currentCurve = GetCurrentCurve();
+			IWaypointCurve nextCurve = GetNextCurve(currentCurve);
+			nextCurve.SpawnTargets();
+		}
+		/* Const */
+			public interface IConstArg{
+				Transform curveReserveTransform{get;}
+				int curvesCountInSequence{get;}
+				Vector3 initialCurvePosition{get;}
+				Quaternion initialCurveRotation{get;}
+				int cycleStartIndex{get;}
+			}
+			public struct ConstArg: IConstArg{
+				public ConstArg(
+					Transform curveReserveTransform,
+					int curvesCountInSequence,
+					Vector3 initialPosition,
+					Quaternion initialRotation,
+					int cycleStartIndex
+
+				){
+					thisCurveReserveTransform = curveReserveTransform;
+					thisCurvesCountInSequence = curvesCountInSequence;
+					thisInitialCurvePosition = initialPosition;
+					thisInitialCurveRotation = initialRotation;
+					thisCycleStartIndex = cycleStartIndex;
+				}
+				readonly Transform thisCurveReserveTransform;
+				public Transform curveReserveTransform{
+					get{return thisCurveReserveTransform;}
+				}
+				readonly int thisCurvesCountInSequence;
+				public int curvesCountInSequence{get{return thisCurvesCountInSequence;}}
+				readonly Vector3 thisInitialCurvePosition;
+				public Vector3 initialCurvePosition{
+					get{return thisInitialCurvePosition;}
+				}
+				readonly Quaternion thisInitialCurveRotation;
+				public Quaternion initialCurveRotation{
+					get{return thisInitialCurveRotation;}
+				}
+				readonly int thisCycleStartIndex;
+				public int cycleStartIndex{get{return thisCycleStartIndex;}}
+			}
+		/*  */
 	}
 
-	public struct WaypointsManagerConstArg: IWaypointsManagerConstArg{
-		public WaypointsManagerConstArg(
-			Transform curveReserveTransform,
-			int curvesCountInSequence,
-			Vector3 initialPosition,
-			Quaternion initialRotation,
-			int cycleStartIndex
-
-		){
-			thisCurveReserveTransform = curveReserveTransform;
-			thisCurvesCountInSequence = curvesCountInSequence;
-			thisInitialCurvePosition = initialPosition;
-			thisInitialCurveRotation = initialRotation;
-			thisCycleStartIndex = cycleStartIndex;
-		}
-		readonly Transform thisCurveReserveTransform;
-		public Transform curveReserveTransform{
-			get{return thisCurveReserveTransform;}
-		}
-		readonly int thisCurvesCountInSequence;
-		public int curvesCountInSequence{get{return thisCurvesCountInSequence;}}
-		readonly Vector3 thisInitialCurvePosition;
-		public Vector3 initialCurvePosition{
-			get{return thisInitialCurvePosition;}
-		}
-		readonly Quaternion thisInitialCurveRotation;
-		public Quaternion initialCurveRotation{
-			get{return thisInitialCurveRotation;}
-		}
-		readonly int thisCycleStartIndex;
-		public int cycleStartIndex{get{return thisCycleStartIndex;}}
-	}
 }

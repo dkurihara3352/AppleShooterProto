@@ -20,6 +20,7 @@ namespace AppleShooterProto{
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public SmoothLookerAdaptor recticleSmoothLookerAdaptor;
 		public PlayerCameraAdaptor playerCameraAdaptor;
+		public TestShootingTargetReserveAdaptor testShootingTargetReserveAdaptor;
 
 		public void SetUp(){
 			SetUpUISystem();
@@ -58,6 +59,8 @@ namespace AppleShooterProto{
 		public void RunSystem(){
 
 			ActivateUISystem();
+			GetTargetsReadyAtReserve();
+			SpawnTargetsOnFirstWaypointCurve();
 
 			StartWaypointsFollower();//		100
 			StartCameraSmoothFollow();//	140
@@ -74,6 +77,16 @@ namespace AppleShooterProto{
 		void ActivateUISystem(){
 			IUIManager uim = uiManagerAdaptor.GetUIManager();
 			uim.ActivateUISystem(false);
+		}
+		public void SpawnTargetsOnFirstWaypointCurve(){
+			IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+			IWaypointCurve firstWaypointCurve = waypointsManager.GetWaypointCurvesInSequence()[0];
+			firstWaypointCurve.SpawnTargets();
+		}
+
+		public void GetTargetsReadyAtReserve(){
+			ITestShootingTargetReserve reserve = testShootingTargetReserveAdaptor.GetTestShootingTargetReserve();
+			reserve.GetTargetsReadyInReserve();
 		}
 		public void StartWaypointsFollower(){
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();

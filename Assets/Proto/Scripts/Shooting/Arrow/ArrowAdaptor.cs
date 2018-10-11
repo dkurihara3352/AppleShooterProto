@@ -23,12 +23,7 @@ namespace AppleShooterProto{
 		string GetParentName();
 	}
 	public class ArrowAdaptor : MonoBehaviourAdaptor, IArrowAdaptor {
-		public void Awake(){
-			// int layerMask = LayerMask.GetMask(
-			// 	"shootingTarget"
-			// );
-			// Debug.Log("layer: " + layerMask.ToString());
-		}
+		
 		/* Ref */
 			ILaunchPointAdaptor thisLaunchPointAdaptor;
 			public void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor){
@@ -50,6 +45,9 @@ namespace AppleShooterProto{
 			}
 			float thisAttack;
 		/*  */
+		protected override void Awake(){
+			return;
+		}
 		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
 				thisProcessManager

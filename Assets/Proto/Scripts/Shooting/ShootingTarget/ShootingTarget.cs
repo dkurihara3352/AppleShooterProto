@@ -5,14 +5,23 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IShootingTarget{
 		void Hit(IArrow arrow);
+		void SetPosition(Vector3 position);
+		void SetRotation(Quaternion rotation);
+		void SetParent(Transform parent);
+		void ResetTransform();
+		void ResetTarget();
 	}
 	public abstract class AbsShootingTarget : IShootingTarget {
 		public AbsShootingTarget(
-			IShootingTargetConstArg arg
+			IAbsConstArg arg
 		){
-			thisHealth = arg.health;
+			thisOriginalHealth = arg.health;
+			thisHealth = thisOriginalHealth;
+			thisAdaptor = arg.adaptor;
 		}
+		protected float thisOriginalHealth;
 		protected float thisHealth;
+		protected readonly IShootingTargetAdaptor thisAdaptor;
 		public void Hit(IArrow arrow){
 			float attack = arrow.GetAttack();
 			thisHealth -= attack;
@@ -42,18 +51,26 @@ namespace AppleShooterProto{
 		protected abstract void IndicateHit(
 			float delta
 		);
+		public void SetPosition(Vector3 position){
+			thisAdaptor.SetPosition(position);
+		}
+		public void SetRotation(Quaternion rotation){
+			thisAdaptor.SetRotation(rotation);
+		}
+		public void SetParent(Transform parent){
+			thisAdaptor.SetParent(parent);
+		}
+		public void ResetTransform(){
+			thisAdaptor.ResetTransform();
+		}
+		public virtual void ResetTarget(){
+			thisHealth = thisOriginalHealth;
+		}
+		/*  */
+		public interface IAbsConstArg{
+			float health{get;}
+			IShootingTargetAdaptor adaptor{get;}
+		}
 	}
 
-	public interface IShootingTargetConstArg{
-		float health{get;}
-	}
-	public struct ShootingTargetConstArg: IShootingTargetConstArg{
-		public ShootingTargetConstArg(
-			float health
-		){
-			thisHealth = health;
-		}
-		readonly float thisHealth;
-		public float health{get{return thisHealth;}}
-	}
 }

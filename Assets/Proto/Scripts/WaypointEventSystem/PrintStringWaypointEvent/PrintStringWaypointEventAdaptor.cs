@@ -10,7 +10,7 @@ namespace AppleShooterProto{
 		public float eventPoint;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		public override void SetUp(){
-			IPrintStringWaypointEventConstArg arg = new PrintStringWaypointEventConstArg(
+			PrintStringWaypointEvent.IConstArg arg = new PrintStringWaypointEvent.ConstArg(
 				stringToPrint,
 				eventPoint
 			);

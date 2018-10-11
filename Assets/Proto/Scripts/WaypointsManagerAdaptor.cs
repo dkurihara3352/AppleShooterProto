@@ -10,7 +10,7 @@ namespace AppleShooterProto{
 		
 		public override void SetUp(){
 			MakeSureCycleStartIndexIsValid();
-			IWaypointsManagerConstArg arg = new WaypointsManagerConstArg(
+			WaypointsManager.IConstArg arg = new WaypointsManager.ConstArg(
 				reserve,
 				curvesCountInSequence,
 				initialCurvePosition,

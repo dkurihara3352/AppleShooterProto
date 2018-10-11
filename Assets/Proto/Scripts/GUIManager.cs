@@ -19,9 +19,10 @@ namespace AppleShooterProto{
  				normalizedSize: new Vector2(.3f, .5f),
 				normalizedPosition: new Vector2(1f, 0f)
 			);
-			sTR_1 = GetSubRect(topRightRect, 0, 2);
-			sTR_2 = GetSubRect(topRightRect, 1, 2);
-			sTR_3 = GetSubRect(topRightRect, 2, 3);
+			sTR_1 = GetSubRect(topRightRect, 0, 4);
+			sTR_2 = GetSubRect(topRightRect, 1, 4);
+			sTR_3 = GetSubRect(topRightRect, 2, 4);
+			sTR_4 = GetSubRect(topRightRect, 3, 4);
 
 			buttomLeftRect = GetGUIRect(
 				normalizedSize: new Vector2(.35f, .6f),
@@ -43,6 +44,7 @@ namespace AppleShooterProto{
 		Rect sTR_1;
 		Rect sTR_2;
 		Rect sTR_3;
+		Rect sTR_4;
 
 		public ProtoGameManager gameManager;
 		public bool drawsWaypointFollowerSetUp = true;
@@ -64,6 +66,7 @@ namespace AppleShooterProto{
 				// DrawFlightSpeed();
 				DrawWaypointsFollower(sTR_2);
 				DrawCurveSequence(sTR_3);
+				DrawSpawnIndices(sTR_4);
 		}
 		/* left */
 			void DrawControl(){
@@ -193,6 +196,24 @@ namespace AppleShooterProto{
 						"normPos: " + normalizedPosInCurve.ToString()
 					);
 				}
+			}
+			void DrawSpawnIndices(Rect rect){
+				if(thisSystemIsReady){
+					IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+					IWaypointCurve currentCurve = waypointsManager.GetCurrentCurve();
+					int[] indices = currentCurve.GetSpawnIndices();
+
+					string indicesString = "";
+					foreach(int i in indices){
+						indicesString += ", " + i.ToString();
+					}
+					GUI.Label(
+						rect,
+						indicesString
+					);
+				}
+
+				
 			}
 		/*  */
 		Rect GetGUIRect(

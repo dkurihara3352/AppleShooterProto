@@ -8,7 +8,7 @@ namespace AppleShooterProto{
 	}
 	public class PrintStringWaypointEvent: AbsWaypointEvent, IPrintStringWaypointEvent{
 		public PrintStringWaypointEvent(
-			IPrintStringWaypointEventConstArg arg
+			IConstArg arg
 		): base(arg){
 			thisString = arg.stringToPrint;
 		}
@@ -23,25 +23,25 @@ namespace AppleShooterProto{
 				thisString
 			);
 		}
-	}
-
-
-	public interface IPrintStringWaypointEventConstArg: IWaypointEventConstArg{
-		string stringToPrint{get;}
-	}
-	public struct PrintStringWaypointEventConstArg: IPrintStringWaypointEventConstArg{
-		public PrintStringWaypointEventConstArg(
-			string stringToPrint,
-			float eventPoint
-		){
-			thisEventPoint = eventPoint;
-			thisStringToPrint = stringToPrint;
+		public interface IConstArg: IAbsConstArg{
+			string stringToPrint{get;}
 		}
-		readonly float thisEventPoint;
-		public float eventPoint{get{return thisEventPoint;}}
-		readonly string thisStringToPrint;
-		public string stringToPrint{get{return thisStringToPrint;}}
+		public struct ConstArg: IConstArg{
+			public ConstArg(
+				string stringToPrint,
+				float eventPoint
+			){
+				thisEventPoint = eventPoint;
+				thisStringToPrint = stringToPrint;
+			}
+			readonly float thisEventPoint;
+			public float eventPoint{get{return thisEventPoint;}}
+			readonly string thisStringToPrint;
+			public string stringToPrint{get{return thisStringToPrint;}}
+		}
 	}
+
+
 
 }
 

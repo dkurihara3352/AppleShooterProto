@@ -6,7 +6,7 @@ namespace AppleShooterProto{
 	public interface IChangeCameraPivotLATargetWaypointEventAdaptor: IWaypointEventAdaptor{}
 	public class ChangeCameraPivotLATargetWaypointEventAdaptor: MonoBehaviourAdaptor, IChangeCameraPivotLATargetWaypointEventAdaptor{
 		public override void SetUp(){
-			IChangeCameraPivotLATargetWaypointEventConstArg arg = new ChangeCameraPivotLATargetWaypointEventConstArg(
+			ChangeCameraPivotLATargetWaypointEvent.IConstArg arg = new ChangeCameraPivotLATargetWaypointEvent.ConstArg(
 				eventPoint,
 				targetMBAdaptor,
 				smoothCoefficient

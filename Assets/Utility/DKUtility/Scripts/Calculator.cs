@@ -17,5 +17,53 @@ namespace DKUtility{
 			sine = sin;
 			cosine = cos;
 		}
+		public static int[] GetRandomIntegers(
+			int count, 
+			int[] pool
+		){
+			int[] result = new int[count];
+			int counter = 0;
+			int[] unused = pool;
+			while(counter < count){
+				int randomInt = GetRandomInt(
+					ref unused
+				);
+				result[counter] = randomInt;
+				counter ++;
+			}
+			return result;
+		}
+		public static int[] GetRandomIntegers(
+			int count,
+			int maxNumber
+ 		){
+			 int[] pool = new int[maxNumber + 1];
+			 pool[0] = 0;
+			 for(int i = 1; i < maxNumber + 1; i ++){
+				 pool[i] = i;
+			 }
+			 return GetRandomIntegers(count, pool);
+		 }
+		static int GetRandomInt(
+			ref int[] unused
+		){
+			int randomIndex = Random.Range(0, unused.Length);
+			int result = unused[randomIndex];
+			int[] newUnused = CreateNewUnused(unused, result);
+			unused = newUnused;
+			return result;
+		}
+		static int[] CreateNewUnused(
+			int[] unused,
+			int used
+		){
+			List<int> result = new List<int>();
+			foreach(int i in unused){
+				if(i != used){
+					result.Add(i);
+				}
+			}
+			return result.ToArray();
+		}
 	}
 }

@@ -31,10 +31,15 @@ namespace AppleShooterProto{
 		Quaternion GetRotation();
 		List<IWaypointEvent> GetWaypointEvents();
 		void SetWaypointEvents(List<IWaypointEvent> events);
+		void SetTargetSpawnManager(ITargetSpawnManager targetSpawnManager);
+		void SpawnTargets();
+		void DespawnTargets();
+
+		int[] GetSpawnIndices();
 	}
 	public class WaypointCurve: IWaypointCurve{
 		public WaypointCurve(
-			IWaypointCurveConstArg arg
+			IConstArg arg
 		){
 			thisAdaptor = arg.adaptor;
 			thisCurvePoints = arg.curvePoints;
@@ -176,29 +181,44 @@ namespace AppleShooterProto{
 		public void SetWaypointEvents(List<IWaypointEvent> events){
 			thisWaypointEvents = events;
 		}
-	}
-
-
-	public interface IWaypointCurveConstArg{
-		IWaypointCurveAdaptor adaptor{get;}
-		List<ICurveControlPoint> controlPoints{get;}
-		List<ICurvePoint> curvePoints{get;}
-	}
-	public struct WaypointCurveConstArg: IWaypointCurveConstArg{
-		public WaypointCurveConstArg(
-			IWaypointCurveAdaptor adaptor,
-			List<ICurveControlPoint> controlPoints,
-			List<ICurvePoint> curvePoints
-		){
-			thisAdaptor = adaptor;
-			thisControlPoints = controlPoints;
-			thisCurvePoints = curvePoints;
+		/* target Spawn */
+			ITargetSpawnManager thisTargetSpawnManager;
+			public void SetTargetSpawnManager(ITargetSpawnManager manager){
+				thisTargetSpawnManager = manager;
+			}
+			public void SpawnTargets(){
+				thisTargetSpawnManager.Spawn();
+			}
+			public void DespawnTargets(){
+				thisTargetSpawnManager.Despawn();
+			}
+		/*  */
+			public int[] GetSpawnIndices(){
+				return thisTargetSpawnManager.GetSpawnPointIndices();
+			}
+		/* Const */
+			public interface IConstArg{
+				IWaypointCurveAdaptor adaptor{get;}
+				List<ICurveControlPoint> controlPoints{get;}
+				List<ICurvePoint> curvePoints{get;}
+			}
+			public struct ConstArg: IConstArg{
+				public ConstArg(
+					IWaypointCurveAdaptor adaptor,
+					List<ICurveControlPoint> controlPoints,
+					List<ICurvePoint> curvePoints
+				){
+					thisAdaptor = adaptor;
+					thisControlPoints = controlPoints;
+					thisCurvePoints = curvePoints;
+				}
+				readonly IWaypointCurveAdaptor thisAdaptor;
+				public IWaypointCurveAdaptor adaptor{get{return thisAdaptor;}}
+				readonly List<ICurveControlPoint> thisControlPoints;
+				public List<ICurveControlPoint> controlPoints{get{return thisControlPoints;}}
+				readonly List<ICurvePoint> thisCurvePoints;
+				public List<ICurvePoint> curvePoints{get{return thisCurvePoints;}}
+			}
 		}
-		readonly IWaypointCurveAdaptor thisAdaptor;
-		public IWaypointCurveAdaptor adaptor{get{return thisAdaptor;}}
-		readonly List<ICurveControlPoint> thisControlPoints;
-		public List<ICurveControlPoint> controlPoints{get{return thisControlPoints;}}
-		readonly List<ICurvePoint> thisCurvePoints;
-		public List<ICurvePoint> curvePoints{get{return thisCurvePoints;}}
-	}
+	/*  */
 }
