@@ -27,12 +27,14 @@ namespace AppleShooterProto{
 			thisArrow.BecomeChildToReserve();
 			CacheInitialVelocity();
 			thisArrow.StartCollisionCheck();
+			thisPrevPosition = thisArrow.GetPosition();
 		}
 		void CacheInitialVelocity(){
 			thisInitialVelocity = thisFlightDirection * thisFlightSpeed;
 			thisInitialVelocity += thisLauncherVelocity;
 		}
 		Vector3 thisInitialVelocity;
+		Vector3 thisPrevPosition;
 		protected override void UpdateProcessImple(float deltaT){
 			Vector3 newPosition = new Vector3();
 			newPosition.x = thisInitialVelocity.x * thisElapsedTime;
@@ -41,6 +43,8 @@ namespace AppleShooterProto{
 
 			newPosition += thisLaunchPosition;
 			thisArrow.SetPosition(newPosition);
+			Vector3 movingDirection = newPosition - thisPrevPosition;
+			thisArrow.SetLookRotation(movingDirection);
 		}
 		protected override void ExpireImple(){
 			thisArrow.TryResetArrow();

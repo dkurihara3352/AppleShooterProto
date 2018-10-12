@@ -15,7 +15,10 @@ namespace AppleShooterProto{
 		void ResetArrow();
 		void TryRegisterShot();
 		void Fire();
-		void Land(IShootingTarget target);
+		void Land(
+			IShootingTarget target,
+			Vector3 hitPosition
+		);
 
 		void StartFlight();
 		void BecomeChildToReserve();
@@ -28,6 +31,7 @@ namespace AppleShooterProto{
 		int GetIDInReserve();
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
+		void SetLookRotation(Vector3 forward);
 		string GetParentName();
 		int GetFlightID();
 
@@ -35,7 +39,7 @@ namespace AppleShooterProto{
 	}
 	public class Arrow : IArrow {
 		/* Setup */
-			public Arrow(IArrowConstArg arg){
+			public Arrow(IConstArg arg){
 
 				thisAdaptor = arg.adaptor;
 				thisProcessFactory = arg.processFactory;
@@ -88,6 +92,7 @@ namespace AppleShooterProto{
 				thisShootingManager.RemoveArrowFromFlight(this);
 				thisShootingManager.CheckAndClearNockedArrow(this);
 				MoveToReservePosition();
+				thisAdaptor.SetRotation(Quaternion.identity);
 				CheckAndStopFlightProcess();
 			}
 			void CheckAndStopFlightProcess(){
@@ -128,7 +133,15 @@ namespace AppleShooterProto{
 					if(thisFlightProcess.IsRunning())
 						thisFlightProcess.Stop();
 			}
-			public void Land(IShootingTarget target){
+			public void Land(
+				IShootingTarget target,
+				Vector3 hitPosition
+			){
+				thisShootingManager.SpawnLandedArrowOn(
+					target,
+					hitPosition,
+					thisAdaptor.GetRotation()
+				);
 				TryResetArrow();
 			}
 			public void BecomeChildToReserve(){
@@ -160,6 +173,9 @@ namespace AppleShooterProto{
 			public void SetPosition(Vector3 position){
 				thisAdaptor.SetPosition(position);
 			}
+			public void SetLookRotation(Vector3 forward){
+				thisAdaptor.SetLookRotation(forward);
+			}
 			public string GetParentName(){
 				return thisAdaptor.GetParentName();
 			}
@@ -171,36 +187,37 @@ namespace AppleShooterProto{
 			public float GetAttack(){
 				return thisAttack;
 			}
+		/* Const */
+			public interface IConstArg{
+				IArrowAdaptor adaptor{get;}
+				IAppleShooterProcessFactory processFactory{get;}
+				int index{get;}
+				float attack{get;}
+			}
+			public struct ConstArg: IConstArg{
+				public ConstArg(
+					IArrowAdaptor adaptor,
+					IAppleShooterProcessFactory processFactory,
+					int index,
+					float attack
+				){
+					thisAdaptor = adaptor;
+					thisProcessFactory = processFactory;
+					thisIndex = index;
+					thisAttack = attack;
+				}
+				readonly IArrowAdaptor thisAdaptor;
+				public IArrowAdaptor adaptor{get{return thisAdaptor;}}
+				readonly IAppleShooterProcessFactory thisProcessFactory;
+				public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+				readonly int thisIndex;
+				public int index{get{return thisIndex;}}
+				readonly float thisAttack;
+				public float attack{get{return thisAttack;}}
+			}
 		/*  */
 	}
 
 
 
-	public interface IArrowConstArg{
-		IArrowAdaptor adaptor{get;}
-		IAppleShooterProcessFactory processFactory{get;}
-		int index{get;}
-		float attack{get;}
-	}
-	public struct ArrowConstArg: IArrowConstArg{
-		public ArrowConstArg(
-			IArrowAdaptor adaptor,
-			IAppleShooterProcessFactory processFactory,
-			int index,
-			float attack
-		){
-			thisAdaptor = adaptor;
-			thisProcessFactory = processFactory;
-			thisIndex = index;
-			thisAttack = attack;
-		}
-		readonly IArrowAdaptor thisAdaptor;
-		public IArrowAdaptor adaptor{get{return thisAdaptor;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly int thisIndex;
-		public int index{get{return thisIndex;}}
-		readonly float thisAttack;
-		public float attack{get{return thisAttack;}}
-	}
 }

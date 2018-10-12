@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ITestShootingTargetReserve: IShootingTargetReserve<ITestShootingTarget>{}
+	public interface ITestShootingTargetReserve: IShootingTargetReserve<ITestShootingTarget>{
+		ITestShootingTarget[] GetTestTargetsInReserve();
+	}
 	public class TestShootingTargetReserve : ITestShootingTargetReserve {
 		public TestShootingTargetReserve(IConstArg arg){
 			thisAdaptor = arg.adaptor;
@@ -12,6 +14,9 @@ namespace AppleShooterProto{
 		readonly int thisTotalTargesCount;
 		ITestShootingTargetReserveAdaptor thisAdaptor;
 		Queue<ITestShootingTarget> thisTargets;
+		public ITestShootingTarget[] GetTestTargetsInReserve(){
+			return thisTargets.ToArray();
+		}
 		public void Reserve(ITestShootingTarget target){
 			target.ResetTarget();
 			target.SetParent(thisAdaptor.GetTransform());
@@ -26,6 +31,7 @@ namespace AppleShooterProto{
 			thisTargets = new Queue<ITestShootingTarget>();
 			for(int i = 0; i < thisTotalTargesCount; i ++){
 				ITestShootingTarget target = thisAdaptor.CreateTestShootingTarget();
+				target.SetIndex(i);
 				this.Reserve(target);
 			}
 		}

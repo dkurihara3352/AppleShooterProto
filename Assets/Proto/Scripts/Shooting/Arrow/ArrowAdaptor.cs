@@ -14,7 +14,6 @@ namespace AppleShooterProto{
 		IArrow GetArrow();
 		void BecomeChildToLaunchPoint();
 		void BecomeChildToReserve();
-		void ResetLocalTransform();
 
 		void StartCollisionCheck();
 		void StopCollisionCheck();
@@ -52,7 +51,7 @@ namespace AppleShooterProto{
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
 				thisProcessManager
 			);
-			IArrowConstArg arg = new ArrowConstArg(
+			Arrow.IConstArg arg = new Arrow.ConstArg(
 				this,
 				processFactory,
 				thisIndex,
@@ -71,10 +70,6 @@ namespace AppleShooterProto{
 			}
 			public void BecomeChildToReserve(){
 				this.transform.SetParent(thisArrowReserve.GetTransform(), true);
-			}
-			public void ResetLocalTransform(){
-				this.transform.localPosition  = Vector3.zero;
-				this.transform.localRotation = Quaternion.identity;
 			}
 		
 		/* Debug */
@@ -141,8 +136,12 @@ namespace AppleShooterProto{
 								throw new System.InvalidOperationException(
 									"hitTrans seems not to have IShootingTargetAdaptor"
 								);
+							Vector3 hitPos = hit.point;
 							IShootingTarget target = targetAdaptor.GetShootingTarget();
-							thisArrow.Land(target);
+							thisArrow.Land(
+								target,
+								hitPos
+							);
 							target.Hit(thisArrow);
 						}
 					}

@@ -36,6 +36,7 @@ namespace AppleShooterProto{
 		void DespawnTargets();
 
 		int[] GetSpawnIndices();
+		ITestShootingTarget[] GetSpawnedShootingTargets();
 	}
 	public class WaypointCurve: IWaypointCurve{
 		public WaypointCurve(
@@ -195,6 +196,10 @@ namespace AppleShooterProto{
 		/*  */
 			public int[] GetSpawnIndices(){
 				return thisTargetSpawnManager.GetSpawnPointIndices();
+			}
+			public ITestShootingTarget[] GetSpawnedShootingTargets(){
+				ITestTargetSpawnManager typedManager = (ITestTargetSpawnManager)thisTargetSpawnManager;
+				return typedManager.GetSpawnedTestShootingTargets();
 			}
 		/* Const */
 			public interface IConstArg{

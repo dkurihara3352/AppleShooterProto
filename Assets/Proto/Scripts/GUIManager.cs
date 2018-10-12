@@ -55,10 +55,14 @@ namespace AppleShooterProto{
 		public ShootingManagerAdaptor shootingManagerAdaptor;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		public WaypointsManagerAdaptor waypointsManagerAdaptor;
+		public TestShootingTargetReserveAdaptor testShootingTargetReserveAdaptor;
+		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		void OnGUI(){
 			/* left */
 				DrawControl();
-				DrawArrowsState();
+				// DrawArrowsState();
+				// DrawSpawnedShootingTargets();
+				DrawLandedArrows();
 			/* right */
 				DrawCurrentState(sTR_1);
 				// DrawScrollMultiplier();
@@ -116,6 +120,120 @@ namespace AppleShooterProto{
 						result += ": " + arrow.GetIDInReserve();
 				}
 				return result;
+			}
+			void DrawSpawnedShootingTargets(){
+				if(thisSystemIsReady){
+					IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+					List<IWaypointCurve> allWaypointCurves = waypointsManager.GetAllWaypointCurves();
+					ITestShootingTargetReserve targetReserve = testShootingTargetReserveAdaptor.GetTestShootingTargetReserve();
+					int waypointCurveCount = allWaypointCurves.Count;
+					int rectsCount = waypointCurveCount + 1;
+					foreach(IWaypointCurve curve in allWaypointCurves){
+						Rect rect = GetSubRect(
+							buttomLeftRect,
+							allWaypointCurves.IndexOf(curve),
+							rectsCount
+						);
+						DrawSpawnedShootingTargetsForCurve(
+							curve,
+							rect
+						);
+					}
+					Rect lastRect = GetSubRect(
+						buttomLeftRect,
+						rectsCount -1,
+						rectsCount
+					);
+					DrawReservedShootingTargets(
+						lastRect
+					);
+				}
+			}
+			void DrawSpawnedShootingTargetsForCurve(
+				IWaypointCurve curve,
+				Rect rect
+			){
+				ITestShootingTarget[] spawnedTargets = curve.GetSpawnedShootingTargets();
+				string indicesString = "";
+				foreach(ITestShootingTarget target in spawnedTargets){
+					indicesString += 
+					target.GetIndex().ToString() + ", ";
+				}
+				GUI.Label(
+					rect,
+					"curve " + 
+					curve.GetIndex() + ": " +
+					indicesString
+				);
+			}
+			void DrawReservedShootingTargets(
+				Rect rect
+			){
+				ITestShootingTargetReserve reserve = testShootingTargetReserveAdaptor.GetTestShootingTargetReserve();
+				ITestShootingTarget[] targetsInReserve = reserve.GetTestTargetsInReserve();
+				string indicesString = "";
+				foreach(ITestShootingTarget target in targetsInReserve){
+					indicesString += target.GetIndex() + ", ";
+				}
+				GUI.Label(
+					rect,
+					"inReserve: " + indicesString
+				);
+			}
+			void DrawLandedArrows(){
+				if(thisSystemIsReady){
+					ILandedArrowReserve landedArrowReserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
+					ILandedArrow[] landedArrows = landedArrowReserve.GetLandedArrows();
+					int rectsCount = landedArrows.Length;
+					int index = 0;
+					foreach(ILandedArrow landedArrow in landedArrows){
+						Rect rect = GetSubRect(
+							buttomLeftRect,
+							index ++,
+							rectsCount
+						);
+						DrawLandedArrow(
+							landedArrow,
+							rect
+						);
+					}
+				}
+			}
+			void DrawLandedArrow(
+				ILandedArrow arrow,
+				Rect rect
+			){
+				IShootingTarget target = arrow.GetShootingTarget();
+				IWaypointCurve waypointCurve = GetWaypointCurveFromShootingTarget(target);
+
+				int curveID = -1;
+				if(waypointCurve != null)
+					curveID = waypointCurve.GetIndex();
+				int arrowID = arrow.GetIndex();
+
+				string curveString;
+				if(waypointCurve == null)
+					curveString = "reserved";
+				else
+					curveString = "wpCurve " + curveID.ToString();
+
+				GUI.Label(
+					rect,
+					"landedArrow " + arrowID.ToString() + ": " +
+					curveString
+				);
+			}
+			IWaypointCurve GetWaypointCurveFromShootingTarget(IShootingTarget target){
+				IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+				List<IWaypointCurve> waypointCurves = waypointsManager.GetAllWaypointCurves();
+				foreach(IWaypointCurve curve in waypointCurves){
+					IShootingTarget[] shootingTargets = curve.GetSpawnedShootingTargets();
+					foreach(IShootingTarget spawnedTarget in shootingTargets)
+						if(spawnedTarget == target)
+							return curve;
+				}
+				/* reserved */
+				return null;
 			}
 		/* right */
 			bool thisGroupSequenceIsReady = false;

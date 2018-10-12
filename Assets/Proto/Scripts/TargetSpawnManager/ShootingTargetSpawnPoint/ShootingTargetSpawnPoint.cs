@@ -7,6 +7,8 @@ namespace AppleShooterProto{
 		Vector3 GetPosition();
 		Quaternion GetRotation();
 		Transform GetTransform();
+		void SetTarget(IShootingTarget target);
+		IShootingTarget GetSpawnedTarget();
 	}
 	public class ShootingTargetSpawnPoint: IShootingTargetSpawnPoint {
 		public ShootingTargetSpawnPoint(
@@ -23,6 +25,13 @@ namespace AppleShooterProto{
 		}
 		public Transform GetTransform(){
 			return thisAdaptor.GetTransform();
+		}
+		IShootingTarget thisShootingTarget;
+		public void SetTarget(IShootingTarget target){
+			thisShootingTarget = target;
+		}
+		public IShootingTarget GetSpawnedTarget(){
+			return thisShootingTarget;
 		}
 		/*  */
 		public interface IConstArg{

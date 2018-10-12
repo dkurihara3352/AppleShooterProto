@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 			IShootingTargetSpawnPoint[] points
 		);
 		void SetTestShootingTargetReserve(ITestShootingTargetReserve reserve);
+		ITestShootingTarget[] GetSpawnedTestShootingTargets();
 	}
 	public class TestTargetSpawnManager: ITestTargetSpawnManager{
 		public TestTargetSpawnManager(IConstArg arg){
@@ -27,7 +28,7 @@ namespace AppleShooterProto{
 		public void SetTestShootingTargetReserve(ITestShootingTargetReserve reserve){
 			thisTargetReserve = reserve;
 		}
-		ITestShootingTarget[] thisSpawnedTargets;
+		// ITestShootingTarget[] thisSpawnedTargets;
 		/*  */
 		public void Spawn(){
 			SpawnStaticTargetsRandomely();
@@ -35,10 +36,10 @@ namespace AppleShooterProto{
 		void SpawnStaticTargetsRandomely(){
 
 			int[] spawnPointIndices = CalculateSpawnPointIndices();
-			thisSpawnedTargets = new ITestShootingTarget[thisSpawnCount];
-			int count = 0;
+			// thisSpawnedTargets = new ITestShootingTarget[thisSpawnCount];
+			// int count = 0;
 			foreach(int spawnPointIndex in spawnPointIndices){
-				thisSpawnedTargets[count ++] = SpawnStaticTestTargetAt(spawnPointIndex);
+				/* thisSpawnedTargets[count ++] =  */SpawnStaticTestTargetAt(spawnPointIndex);
 			}
 		}
 		int[] thisIndices;
@@ -58,6 +59,7 @@ namespace AppleShooterProto{
 		ITestShootingTarget SpawnStaticTestTargetAt(int spawnPointIndex){
 			IShootingTargetSpawnPoint spawnPoint = thisSpawnPoints[spawnPointIndex];
 			ITestShootingTarget target = thisTargetReserve.Unreserve();
+			spawnPoint.SetTarget(target);
 			MakeTargetChildOfSpawnPoint(
 				target,
 				spawnPoint
@@ -73,9 +75,33 @@ namespace AppleShooterProto{
 			target.SetParent(spawnPoint.GetTransform());
 		}
 		public void Despawn(){
-			foreach(ITestShootingTarget target in thisSpawnedTargets){
-				thisTargetReserve.Reserve(target);
+			DespawnLandedArrowsOnAllSpawnedShootingTargets();
+			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){
+				ITestShootingTarget spawnedTarget = point.GetSpawnedTarget() as ITestShootingTarget;
+				if(spawnedTarget != null){
+					point.SetTarget(null);
+					thisTargetReserve.Reserve(spawnedTarget);
+				}
 			}
+		}
+		void DespawnLandedArrowsOnAllSpawnedShootingTargets(){
+			ITestShootingTarget[] targetsToDespawn = GetSpawnedTestShootingTargets();
+			foreach(ITestShootingTarget target in targetsToDespawn){
+				Debug.Log(
+					"target " + target.GetIndex().ToString() +
+					" is reserved"
+				);
+				target.ReserveAllLandedArrow();
+			}
+		}
+		public ITestShootingTarget[] GetSpawnedTestShootingTargets(){
+			List<ITestShootingTarget> resultList = new List<ITestShootingTarget>();
+			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){
+				ITestShootingTarget spawnedTarget = point.GetSpawnedTarget() as ITestShootingTarget;
+				if(spawnedTarget != null)
+					resultList.Add(spawnedTarget);
+			}
+			return resultList.ToArray();
 		}
 		/*  */
 		public interface IConstArg{

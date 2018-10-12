@@ -29,6 +29,7 @@ namespace AppleShooterProto{
 		protected override void DestroyTarget(){
 			StartFadingAway();
 			thisTypedAdaptor.ToggleCollider(false);
+			ReserveAllLandedArrow();
 		}
 		void StartFadingAway(){
 			thisFadeProcess = thisProcessFactory.CreateFadeProcess(

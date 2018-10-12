@@ -8,8 +8,14 @@ namespace AppleShooterProto{
 		void SetPosition(Vector3 position);
 		void SetRotation(Quaternion rotation);
 		void SetParent(Transform parent);
+		Transform GetTransform();
 		void ResetTransform();
 		void ResetTarget();
+		void AddLandedArrow(ILandedArrow landedArrow);
+		void RemoveLandedArrow(ILandedArrow landedArrow);
+		void ReserveAllLandedArrow();
+		void SetIndex(int index);
+		int GetIndex();
 	}
 	public abstract class AbsShootingTarget : IShootingTarget {
 		public AbsShootingTarget(
@@ -61,10 +67,34 @@ namespace AppleShooterProto{
 			thisAdaptor.SetParent(parent);
 		}
 		public void ResetTransform(){
-			thisAdaptor.ResetTransform();
+			thisAdaptor.ResetLocalTransform();
 		}
 		public virtual void ResetTarget(){
 			thisHealth = thisOriginalHealth;
+		}
+		public Transform GetTransform(){
+			return thisAdaptor.GetTransform();
+		}
+		List<ILandedArrow> thisLandedArrows = new List<ILandedArrow>();
+		public void AddLandedArrow(ILandedArrow arrow){
+			thisLandedArrows.Add(arrow);
+		}
+		public void RemoveLandedArrow(ILandedArrow arrow){
+			if(thisLandedArrows.Contains(arrow))
+				thisLandedArrows.Remove(arrow);
+		}
+		public void ReserveAllLandedArrow(){
+			List<ILandedArrow> temp = new List<ILandedArrow>(thisLandedArrows);
+			foreach(ILandedArrow arrow in temp)
+				if(arrow != null)
+					arrow.Reserve();
+		}
+		int thisIndex;
+		public void SetIndex(int index){
+			thisIndex = index;
+		}
+		public int GetIndex(){
+			return thisIndex;
 		}
 		/*  */
 		public interface IAbsConstArg{

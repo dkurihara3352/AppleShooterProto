@@ -12,9 +12,11 @@ namespace AppleShooterProto{
 		Quaternion GetRotation();
 		void Rotate(Vector3 euler);
 		void Rotate(float angleOnAxis, int axis);
+		void SetLookRotation(Vector3 forward, Vector3 up);
+		void SetLookRotation(Vector3 forward);
 		Transform GetTransform();
 		void SetParent(Transform parent);
-		void ResetTransform();
+		void ResetLocalTransform();
 	}
 	public class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -64,13 +66,29 @@ namespace AppleShooterProto{
 					original.z
 				);
 		}
+		public void SetLookRotation(
+			Vector3 forward,
+			Vector3 up
+		){
+			if(forward != Vector3.zero)
+				this.transform.rotation = Quaternion.LookRotation(
+					forward,
+					up
+				);
+		}
+		public void SetLookRotation(Vector3 forward){
+			this.SetLookRotation(
+				forward,
+				this.transform.up
+			);
+		}
 		public Transform GetTransform(){
 			return this.transform;
 		}
 		public void SetParent(Transform parent){
 			this.transform.SetParent(parent, true);
 		}
-		public void ResetTransform(){
+		public void ResetLocalTransform(){
 			this.transform.localPosition = Vector3.zero;
 			this.transform.localRotation = Quaternion.identity;
 		}

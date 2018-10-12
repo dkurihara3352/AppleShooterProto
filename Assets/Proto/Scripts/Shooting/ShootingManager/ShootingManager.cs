@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		void SetTrajectory(ITrajectory trajectory);
 		void SetArrows(IArrow[] arrows);
 		IArrow[] GetAllArrows();
+		void SetLandedArrowReserve(ILandedArrowReserve reserve);
 
 		void TryNock();
 		void SetNockedArrow(IArrow arrow);
@@ -41,11 +42,17 @@ namespace AppleShooterProto{
 
 		int GetArrowReserveID(IArrow arrow);
 		int GetFlightID(IArrow arrow);
+
+		void SpawnLandedArrowOn(
+			IShootingTarget target,
+			Vector3 position,
+			Quaternion rotation
+		);
 	}
 	public class ShootingManager : IShootingManager {
 		/* SetUp */
 			public ShootingManager(
-				IShootingManagerConstArg arg
+				IConstArg arg
 			){
 				thisProcessFactory = arg.processFactory;
 				thisAdaptor = arg.adaptor;
@@ -67,6 +74,10 @@ namespace AppleShooterProto{
 			ILaunchPoint thisLaunchPoint;
 			public void SetLaunchPoint(ILaunchPoint launchPoint){
 				thisLaunchPoint = launchPoint;
+			}
+			ILandedArrowReserve thisLandedArrowReserve;
+			public void SetLandedArrowReserve(ILandedArrowReserve reserve){
+				thisLandedArrowReserve = reserve;
 			}
 		/* Nock */
 			IArrow thisNockedArrow;
@@ -281,36 +292,52 @@ namespace AppleShooterProto{
 			public Vector3 GetLauncherVelocity(){
 				return thisInputManager.GetLauncherVelocity();
 			}
+		/* Spawn Landed Arrow */
+			public void SpawnLandedArrowOn(
+				IShootingTarget target,
+				Vector3 position,
+				Quaternion rotation
+			){
+				ILandedArrow landedArrow = thisLandedArrowReserve.Unreserve();
+				// target.AddLandedArrow(landedArrow);
+				landedArrow.SetShootingTarget(target);
+				landedArrow.SetParent(target.GetTransform());
+				landedArrow.SetPosition(position);
+				landedArrow.SetRotation(rotation);
+				
+			}
+		/* Const */
+			public interface IConstArg{
+				IAppleShooterProcessFactory processFactory{get;}
+				IShootingManagerAdaptor adaptor{get;}
+				int drawProcessOrder{get;}
+				float fireRate{get;}
+			}
+			public class ConstArg: IConstArg{
+				public ConstArg(
+					IAppleShooterProcessFactory processFactory,
+					IShootingManagerAdaptor adaptor,
+					int drawProcessOrder,
+					float fireRate
+				){
+					thisProcessFactory = processFactory;
+					thisAdaptor = adaptor;
+					thisDrawProcessOrder = drawProcessOrder;
+					thisFireRate = fireRate;
+				}
+				readonly IAppleShooterProcessFactory thisProcessFactory;
+				public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+				readonly IShootingManagerAdaptor thisAdaptor;
+				public IShootingManagerAdaptor adaptor{get{return thisAdaptor;}}
+				readonly int thisDrawProcessOrder;
+				public int drawProcessOrder{get{return thisDrawProcessOrder;}}
+				readonly float thisFireRate;
+				public float fireRate{get{return thisFireRate;}}
+			}
+		/*  */
 	}
 
 
-	public interface IShootingManagerConstArg{
-		IAppleShooterProcessFactory processFactory{get;}
-		IShootingManagerAdaptor adaptor{get;}
-		int drawProcessOrder{get;}
-		float fireRate{get;}
-	}
-	public class ShootingManagerConstArg: IShootingManagerConstArg{
-		public ShootingManagerConstArg(
-			IAppleShooterProcessFactory processFactory,
-			IShootingManagerAdaptor adaptor,
-			int drawProcessOrder,
-			float fireRate
-		){
-			thisProcessFactory = processFactory;
-			thisAdaptor = adaptor;
-			thisDrawProcessOrder = drawProcessOrder;
-			thisFireRate = fireRate;
-		}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly IShootingManagerAdaptor thisAdaptor;
-		public IShootingManagerAdaptor adaptor{get{return thisAdaptor;}}
-		readonly int thisDrawProcessOrder;
-		public int drawProcessOrder{get{return thisDrawProcessOrder;}}
-		readonly float thisFireRate;
-		public float fireRate{get{return thisFireRate;}}
-	}
 
 	public interface IShot{
 		IArrow GetArrow();

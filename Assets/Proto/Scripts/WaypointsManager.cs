@@ -18,6 +18,8 @@ namespace AppleShooterProto{
 		IWaypointCurve GetCurrentCurve();
 		IWaypointCurve GetNextCurve(IWaypointCurve currentCurve);
 
+		List<IWaypointCurve> GetAllWaypointCurves();
+
 		/* Debug */
 		int[] GetReservedCurvesIDs();
 		int GetCurrentCurveIDInSequence();
@@ -55,6 +57,9 @@ namespace AppleShooterProto{
 		}
 		public int GetWaypointCurveIndex(IWaypointCurve curve){
 			return thisWaypointCurves.IndexOf(curve);
+		}
+		public List<IWaypointCurve> GetAllWaypointCurves(){
+			return thisWaypointCurves;
 		}
 
 		public void PlaceWaypointCurves(){

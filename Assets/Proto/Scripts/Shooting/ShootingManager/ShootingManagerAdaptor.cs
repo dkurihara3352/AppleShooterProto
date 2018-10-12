@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 		public float fireRate = 1f;
 		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(processManager);
-			IShootingManagerConstArg arg = new ShootingManagerConstArg(
+			ShootingManager.IConstArg arg = new ShootingManager.ConstArg(
 				processFactory,
 				this,
 				drawProcessOrder,
@@ -33,6 +33,7 @@ namespace AppleShooterProto{
 		public PlayerInputManagerAdaptor inputManagerAdaptor;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public TrajectoryAdaptor trajectoryAdaptor;
+		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		public float initialFlightSpeed;
 		public float GetInitialSpeed(){
 			return initialFlightSpeed;
@@ -58,6 +59,9 @@ namespace AppleShooterProto{
 
 			ITrajectory trajectory = trajectoryAdaptor.GetTrajectory();
 			thisShootingManager.SetTrajectory(trajectory);
+
+			ILandedArrowReserve landedArrowReserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
+			thisShootingManager.SetLandedArrowReserve(landedArrowReserve);
 
 			SetUpArrows();
 		}
