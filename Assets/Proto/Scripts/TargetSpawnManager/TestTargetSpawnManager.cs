@@ -28,7 +28,6 @@ namespace AppleShooterProto{
 		public void SetTestShootingTargetReserve(ITestShootingTargetReserve reserve){
 			thisTargetReserve = reserve;
 		}
-		// ITestShootingTarget[] thisSpawnedTargets;
 		/*  */
 		public void Spawn(){
 			SpawnStaticTargetsRandomely();
@@ -36,10 +35,8 @@ namespace AppleShooterProto{
 		void SpawnStaticTargetsRandomely(){
 
 			int[] spawnPointIndices = CalculateSpawnPointIndices();
-			// thisSpawnedTargets = new ITestShootingTarget[thisSpawnCount];
-			// int count = 0;
 			foreach(int spawnPointIndex in spawnPointIndices){
-				/* thisSpawnedTargets[count ++] =  */SpawnStaticTestTargetAt(spawnPointIndex);
+				SpawnStaticTestTargetAt(spawnPointIndex);
 			}
 		}
 		int[] thisIndices;
