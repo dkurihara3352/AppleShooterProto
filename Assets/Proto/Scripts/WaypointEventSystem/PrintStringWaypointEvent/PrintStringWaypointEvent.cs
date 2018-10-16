@@ -23,10 +23,10 @@ namespace AppleShooterProto{
 				thisString
 			);
 		}
-		public interface IConstArg: IAbsConstArg{
+		public new interface IConstArg: AbsWaypointEvent.IConstArg{
 			string stringToPrint{get;}
 		}
-		public struct ConstArg: IConstArg{
+		public new struct ConstArg: IConstArg{
 			public ConstArg(
 				string stringToPrint,
 				float eventPoint

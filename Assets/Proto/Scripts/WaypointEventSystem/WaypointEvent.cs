@@ -9,7 +9,7 @@ namespace AppleShooterProto{
 	}
 	public abstract class AbsWaypointEvent: IWaypointEvent{
 		public AbsWaypointEvent(
-			IAbsConstArg arg
+			IConstArg arg
 		){
 			thisEventPoint = arg.eventPoint;
 		}
@@ -18,8 +18,18 @@ namespace AppleShooterProto{
 			return thisEventPoint;
 		}
 		public abstract void Execute();
-		public interface IAbsConstArg{
+		/*  */
+		public interface IConstArg{
 			float eventPoint{get;}
+		}
+		public struct ConstArg: IConstArg{
+			public ConstArg(
+				float eventPoint
+			){
+				thisEventPoint = eventPoint;
+			}
+			readonly float thisEventPoint;
+			public float eventPoint{get{return thisEventPoint;}}
 		}
 	}
 }

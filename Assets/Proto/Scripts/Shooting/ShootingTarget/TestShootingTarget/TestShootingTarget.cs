@@ -24,7 +24,7 @@ namespace AppleShooterProto{
 		readonly ITestShootingTargetAdaptor thisTypedAdaptor;
 		readonly Color thisDefaultColor;
 		readonly ITestShootingTargetHitStateEngine thisHitStateEngine;
-		readonly IAppleShooterProcessFactory thisProcessFactory;
+		readonly protected IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisFadeTime;
 		protected override void DestroyTarget(){
 			StartFadingAway();

@@ -24,11 +24,11 @@ namespace AppleShooterProto{
 			thisCameraPivotSmoothLooker.SetLookAtTarget(thisTargetMBAdaptor);
 		}
 		/* Const */
-			public interface IConstArg: IAbsConstArg{
+			public new interface IConstArg: AbsWaypointEvent.IConstArg{
 				IMonoBehaviourAdaptor targetMBAdaptor{get;}
 				float smoothCoefficient{get;}
 			}
-			public struct ConstArg: IConstArg{
+			public new struct ConstArg: IConstArg{
 				public ConstArg(
 					float eventPoint,
 					IMonoBehaviourAdaptor targetMBAdaptor,

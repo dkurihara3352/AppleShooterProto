@@ -24,6 +24,10 @@ namespace AppleShooterProto{
 		}
 		public override void SetUp(){
 			SetColor(defaultColor);
+			SetUpTarget();
+			thisAnimator = transform.GetComponent<Animator>();
+		}
+		protected virtual void SetUpTarget(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
 				thisProcessManager
 			);
@@ -35,10 +39,8 @@ namespace AppleShooterProto{
 				fadeTime
 			);
 			thisShootingTarget = new TestShootingTarget(arg);
-			Debug.Log("now what");
-			thisAnimator = transform.GetComponent<Animator>();
 		}
-		IProcessManager thisProcessManager;
+		protected IProcessManager thisProcessManager;
 		public void SetProcessManager(IProcessManager processManager){
 			thisProcessManager = processManager;
 		}

@@ -17,6 +17,7 @@ namespace AppleShooterProto{
 		Transform GetTransform();
 		void SetParent(Transform parent);
 		void ResetLocalTransform();
+		Vector3 GetForwardDirection();
 	}
 	public class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -92,7 +93,9 @@ namespace AppleShooterProto{
 			this.transform.localPosition = Vector3.zero;
 			this.transform.localRotation = Quaternion.identity;
 		}
-		
+		public Vector3 GetForwardDirection(){
+			return this.transform.forward;
+		}
 		public virtual void SetUp(){}
 		public virtual void SetUpReference(){}
 	}

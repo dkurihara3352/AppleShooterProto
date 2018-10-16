@@ -57,6 +57,12 @@ namespace AppleShooterProto{
 			bool fadeIn,
 			float fadeTime
 		);
+		IFlyingTargetFlightProcess CreateFlyingTargetFlightProcess(
+			IFlyingTarget flyingTarget,
+			Vector3 initialVelocity,
+			float distanceThreshold,
+			float speed
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -204,6 +210,21 @@ namespace AppleShooterProto{
 				thisProcessManager
 			);
 			return new FadeProcess(arg);
+		}
+		public IFlyingTargetFlightProcess CreateFlyingTargetFlightProcess(
+			IFlyingTarget flyingTarget,
+			Vector3 initialVelocity,
+			float distanceThreshold,
+			float speed
+		){
+			FlyingTargetFlightProcess.IConstArg arg = new FlyingTargetFlightProcess.ConstArg(
+				flyingTarget,
+				initialVelocity,
+				distanceThreshold,
+				speed,
+				thisProcessManager
+			);
+			return new FlyingTargetFlightProcess(arg);
 		}
 	}
 }

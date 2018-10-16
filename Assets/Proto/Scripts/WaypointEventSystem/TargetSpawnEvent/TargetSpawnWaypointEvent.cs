@@ -17,20 +17,7 @@ namespace AppleShooterProto{
 			thisWaypointsManager = waypointsManager;
 		}
 		public override void Execute(){
-			// thisTargetSpawnManager.Spawn();
 			thisWaypointsManager.SpawnTargetsOnNextWaypointCurve();
-		}
-		/* Const */
-		public interface IConstArg: IAbsConstArg{
-		}
-		public struct ConstArg: IConstArg{
-			public ConstArg(
-				float eventPoint
-			){
-				thisEventPoint = eventPoint;
-			}
-			readonly float thisEventPoint;
-			public float eventPoint{get{return thisEventPoint;}}
 		}
 	}
 }

@@ -39,8 +39,10 @@ namespace AppleShooterProto{
 		bool thisIsReady = false;
 		public override void SetUpReference(){
 			ISmoothLooker looker = GetSmoothLooker();
-			looker.SetLookAtTarget(lookAtTarget);
-			LookAt(lookAtTarget.GetPosition());
+			if(lookAtTarget != null){
+				looker.SetLookAtTarget(lookAtTarget);
+				LookAt(lookAtTarget.GetPosition());
+			}
 		}
 	}
 }
