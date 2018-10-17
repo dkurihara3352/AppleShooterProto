@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface ITargetSpawnWaypointEvent: IWaypointEvent{
-		void SetWaypointsManager(IWaypointsManager waypointsManager);
+		void SetPCWaypointsManager(IPCWaypointsManager pcWaypointsManager);
 	}
 	public class TargetSpawnWaypointEvent : AbsWaypointEvent, ITargetSpawnWaypointEvent {
 		public TargetSpawnWaypointEvent(
@@ -12,12 +12,13 @@ namespace AppleShooterProto{
 		): base(arg){
 			
 		}
-		IWaypointsManager thisWaypointsManager;
-		public void SetWaypointsManager(IWaypointsManager waypointsManager){
-			thisWaypointsManager = waypointsManager;
+		IPCWaypointsManager thisPCWaypointsManager;
+		public void SetPCWaypointsManager(IPCWaypointsManager pcWaypointsManager){
+			thisPCWaypointsManager = pcWaypointsManager;
 		}
 		public override void Execute(){
-			thisWaypointsManager.SpawnTargetsOnNextWaypointCurve();
+			IPCWaypointCurve nextCurve = thisPCWaypointsManager.GetNextPCCurve();
+			nextCurve.SpawnTargets();
 		}
 	}
 }

@@ -71,6 +71,7 @@ namespace AppleShooterProto{
 		}
 		public virtual void ResetTarget(){
 			thisHealth = thisOriginalHealth;
+			ReserveAllLandedArrow();
 		}
 		public Transform GetTransform(){
 			return thisAdaptor.GetTransform();

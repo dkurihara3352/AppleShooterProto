@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTarget: IShootingTarget{
+	public interface IFlyingTarget: ITestShootingTarget{
 		void SetWaypoints(IFlyingTargetWaypoint[] waypoints);
 		void SetSmoothLooker(ISmoothLooker looker);
 		void StartFlight();

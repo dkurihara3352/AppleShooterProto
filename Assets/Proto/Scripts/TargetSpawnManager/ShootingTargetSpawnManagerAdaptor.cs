@@ -3,29 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ITestTargetSpawnManagerAdaptor: IMonoBehaviourAdaptor{
-		ITestTargetSpawnManager GetTestTargetSpawnManager();
+	public interface IShootingTargetSpawnManagerAdaptor: IMonoBehaviourAdaptor{
+		IShootingTargetSpawnManager GetShootingTargetSpawnManager();
 	}
-	public class TestTargetSpawnManagerAdaptor : MonoBehaviourAdaptor, ITestTargetSpawnManagerAdaptor{
-		ITestTargetSpawnManager thisSpawnManager;
-		public ITestTargetSpawnManager GetTestTargetSpawnManager(){
+	public class ShootingTargetSpawnManagerAdaptor : MonoBehaviourAdaptor, IShootingTargetSpawnManagerAdaptor{
+		IShootingTargetSpawnManager thisSpawnManager;
+		public IShootingTargetSpawnManager GetShootingTargetSpawnManager(){
 			return thisSpawnManager;
 		}
 		public int spawnCount;
 		public Transform spawnPointsParent;
 		public TestShootingTargetReserveAdaptor targetReserveAdaptor;
 		public override void SetUp(){
-			TestTargetSpawnManager.IConstArg arg = new TestTargetSpawnManager.ConstArg(
+			ShootingTargetSpawnManager.IConstArg arg = new ShootingTargetSpawnManager.ConstArg(
 				spawnCount,
 				this
 			);
-			thisSpawnManager = new TestTargetSpawnManager(arg);
+			thisSpawnManager = new ShootingTargetSpawnManager(arg);
 		}
 		public override void SetUpReference(){
 			IShootingTargetSpawnPoint[] spawnPoints = CollectSpawnPoints();
 			ITestShootingTargetReserve reserve = targetReserveAdaptor.GetTestShootingTargetReserve();
+			List<IFlyingTarget> flyingTargets = CollectFlyingTargets();
 			thisSpawnManager.SetShootingTargetSpawnPoints(spawnPoints);
 			thisSpawnManager.SetTestShootingTargetReserve(reserve);
+			thisSpawnManager.SetFlyingTargets(flyingTargets);
 		}
 		IShootingTargetSpawnPoint[] CollectSpawnPoints(){
 			List<IShootingTargetSpawnPoint> resultList = new List<IShootingTargetSpawnPoint>();
@@ -39,6 +41,17 @@ namespace AppleShooterProto{
 				}
 			}
 			return resultList.ToArray();
+		}
+		public List<FlyingTargetAdaptor> flyingTargetAdaptors = new List<FlyingTargetAdaptor>();
+		List<IFlyingTarget> CollectFlyingTargets(){
+			List<IFlyingTarget> result = new List<IFlyingTarget>();
+			if(flyingTargetAdaptors != null && flyingTargetAdaptors.Count > 0){
+				foreach(IFlyingTargetAdaptor adaptor in flyingTargetAdaptors){
+					if(adaptor != null)
+						result.Add((IFlyingTarget)adaptor.GetShootingTarget());
+				}
+			}
+			return result;
 		}
 	}
 }

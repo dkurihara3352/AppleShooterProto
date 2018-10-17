@@ -4,51 +4,48 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface ICurvePoint{
-		// Vector3 position{get;}
-		float GetNormalizedT();
 		Vector3 GetPosition();
 		Quaternion GetRotation();
-		Vector3 GetUpDirection();
-		Vector3 GetForwardDirection();
-		void SetPosition(Vector3 position);
-		void LookAt(Vector3 forward, Vector3 up);
+		float GetDelta();
+		float GetDistanceUpToPointOnSegment();
+		float GetDistanceUpToPointOnCurve();
+		void SetDistanceUpToPointOnCurve(float dist);
 	}
-	public class CurvePoint: ICurvePoint{
+	public struct CurvePoint: ICurvePoint{
 		public CurvePoint(
-			ICurvePointAdaptor adaptor,
-			float normalizedT
+			Vector3 position,
+			Quaternion rotation,
+			float delta,
+			float distanceUpToPointOnSegment
 		){
-			thisAdaptor = adaptor;
-			thisNormalizedT = normalizedT;
+			thisPosition = position;
+			thisRotation = rotation;
+			thisDelta = delta;
+			thisDistanceUpToPointOnSegment = distanceUpToPointOnSegment;
+			thisDistanceUpToPointOnCurve = thisDistanceUpToPointOnSegment;
 		}
-		readonly float thisNormalizedT;
-		public float GetNormalizedT(){
-			return thisNormalizedT;
-		}
-		readonly ICurvePointAdaptor thisAdaptor;
-		public ICurvePointAdaptor adaptor{get{return thisAdaptor;}}
-		public Vector3 position{
-			get{
-				return thisAdaptor.GetPosition();
-			}
-		}
+		readonly Vector3 thisPosition;
 		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
+			return thisPosition;
 		}
+		readonly Quaternion thisRotation;
 		public Quaternion GetRotation(){
-			return thisAdaptor.GetRotation();
+			return thisRotation;
 		}
-		public Vector3 GetUpDirection(){
-			return thisAdaptor.GetUpDirection();
+		readonly float thisDelta;
+		public float GetDelta(){
+			return thisDelta;
 		}
-		public Vector3 GetForwardDirection(){
-			return thisAdaptor.GetForwardDirection();
+		readonly float thisDistanceUpToPointOnSegment;
+		public float GetDistanceUpToPointOnSegment(){
+			return thisDistanceUpToPointOnSegment;
 		}
-		public void SetPosition(Vector3 position){
-			thisAdaptor.SetPosition(position);
+		float thisDistanceUpToPointOnCurve;
+		public float GetDistanceUpToPointOnCurve(){
+			return thisDistanceUpToPointOnCurve;
 		}
-		public void LookAt(Vector3 forward, Vector3 up){
-			thisAdaptor.LookAt(forward, up);
+		public void SetDistanceUpToPointOnCurve(float dist){
+			thisDistanceUpToPointOnCurve = dist;
 		}
 	}
 }

@@ -13,10 +13,10 @@ namespace AppleShooterProto{
 			);
 			thisEvent = new TargetSpawnWaypointEvent(arg);
 		}
-		public WaypointsManagerAdaptor waypointsManagerAdaptor;
+		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
 		public override void SetUpReference(){
-			IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
-			thisEvent.SetWaypointsManager(waypointsManager);
+			IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
+			thisEvent.SetPCWaypointsManager(pcWaypointsManager);
 		}
 		protected ITargetSpawnWaypointEvent thisEvent;
 		public IWaypointEvent GetWaypointEvent(){

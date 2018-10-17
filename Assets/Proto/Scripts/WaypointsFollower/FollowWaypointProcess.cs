@@ -76,17 +76,17 @@ namespace AppleShooterProto{
 		void MoveFollower(){
 			float totalDistanceCoveredInCurrentCurve = thisTotalElapsedTimeOnCurrentCurve * thisSpeed;
 			int ceilingIndex = thisCurrentCurve.GetIndexOfCeilingCurvePoint(totalDistanceCoveredInCurrentCurve);
-			float normalizedPositionOnSegment = thisCurrentCurve.GetNormalizedPositionOnSegment(
+			float normalizedPositionBetweenPoints = thisCurrentCurve.GetNormalizedPositionBetweenPoints(
 				ceilingIndex,
 				totalDistanceCoveredInCurrentCurve
 			);
-			Vector3 targetPosition = thisCurrentCurve.CalculateTargetPosition(
+			Vector3 targetPosition = thisCurrentCurve.CalculatePositionOnCurve(
 				ceilingIndex,
-				normalizedPositionOnSegment
+				normalizedPositionBetweenPoints
 			);
-			Quaternion targetRotation = thisCurrentCurve.CalculateTargetRotation(
+			Quaternion targetRotation = thisCurrentCurve.CalculateRotationOnCurve(
 				ceilingIndex,
-				normalizedPositionOnSegment
+				normalizedPositionBetweenPoints
 			);
 			thisFollower.SetPosition(targetPosition);
 			thisFollower.SetRotation(targetRotation);

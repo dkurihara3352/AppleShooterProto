@@ -5,9 +5,10 @@ using DKUtility.CurveUtility;
 
 namespace AppleShooterProto{
 	public interface ICurveSegment{
-		void CreateCurvePoints(int resolution);
-		void UpdateCurvePointsTransform();
-		List<ICurvePoint> GetCurvePoints();
+		void UpdateCurvePoints();
+		ICurvePoint[] GetCurvePoints();
+		void SetCurveResolution(int resolution);
+		float GetLength();
 	}
 	public class CurveSegment: ICurveSegment{
 		public CurveSegment(
@@ -39,35 +40,66 @@ namespace AppleShooterProto{
 			get{return headControlPoint.GetBackHandle();}
 		}
 		/* CurvePoints */
-		List<ICurvePoint> thisCurvePoints;
-		public void CreateCurvePoints(int resolution){
+		ICurvePoint[] thisCurvePoints;
+		int thisCurveResolution;
+		public void SetCurveResolution(int resolution){
+			thisCurveResolution = resolution;
+		}
+		public void ObsCreateCurvePoints(int resolution){
 			List<ICurvePoint> result = new List<ICurvePoint>(resolution);
 			for(int i = 0; i < resolution; i ++){
 				float normalizedT = i/ ((resolution -1) * 1f);
 				ICurvePoint curvePoint = CreateCurvePoint(normalizedT);
 				result.Add(curvePoint);
 			}
-			thisCurvePoints = result;
-			UpdateCurvePointsTransform();
+			thisCurvePoints = result.ToArray();
+			UpdateCurvePoints();
 		}
+		ICurvePoint[] CreateCurvePoints(){
+			sum = 0f;
+			int resolution = thisCurveResolution;
+			List<ICurvePoint> result = new List<ICurvePoint>(resolution);
+			for(int i = 0; i < resolution; i ++){
+				float normalizedT;
+				if(i == 0)
+					normalizedT = 0f;
+				else
+					normalizedT = i/ ((resolution -1) * 1f);
+				ICurvePoint curvePoint = CreateCurvePoint(normalizedT);
+				result.Add(curvePoint);
+			}
+			return result.ToArray();
+		}
+		Vector3 thisPrevPosition;
+		float sum = 0f;
 		ICurvePoint CreateCurvePoint(float normalizedT){
-			GameObject curvePointGO = new GameObject("curvePoint");
-			Transform parent = thisWaypointCurveAdaptor.GetCurvePointsParentTransform();
+			Vector3 thisPrev = thisPrevPosition;
+			Vector3 position = CalculatePointPosition(normalizedT);
+			thisPrevPosition = position;
 
-			curvePointGO.transform.SetParent(parent);
-			ICurvePointAdaptor curvePointAdaptor = (ICurvePointAdaptor)curvePointGO.AddComponent<CurvePointAdaptor>();
-			curvePointAdaptor.SetNormalizedT(normalizedT);
-			curvePointAdaptor.SetUp();
-			ICurvePoint curvePoint = curvePointAdaptor.GetCurvePoint();
-			return curvePoint;
+			Quaternion rotation = CalculatePointRotation(normalizedT);
+
+			float delta;
+			if(normalizedT == 0f)
+				delta = 0f;
+			else
+				delta = (position - thisPrev).magnitude;
+			sum += delta;
+
+			return new CurvePoint(
+				position,
+				rotation,
+				delta,
+				sum
+			);
 		}
-		public List<ICurvePoint> GetCurvePoints(){
+		public ICurvePoint[] GetCurvePoints(){
 			return thisCurvePoints;
 		}
 		float CalculateNormalizedT(int index){
 			float normalizedT;
 			if(index != 0)
-				normalizedT = index/ ((thisCurvePoints.Count - 1) * 1f);
+				normalizedT = index/ ((thisCurvePoints.Length - 1) * 1f);
 			else
 				normalizedT = 0f;
 			return normalizedT;
@@ -82,45 +114,19 @@ namespace AppleShooterProto{
 			);
 			return position;
 		}
-		Vector3 CalculateForwardDirection(int index){
-			if(index == thisCurvePoints.Count -1)
-				return thisCurvePoints[index -1].GetForwardDirection();
-			else{
-				ICurvePoint thisPoint = thisCurvePoints[index];
-				ICurvePoint nextPoint = thisCurvePoints[index + 1];
-				return nextPoint.GetPosition() - thisPoint.GetPosition();
-			}
-		}
-		Vector3 CalculateUpwardDirection(float normalizedT){
-			return Vector3.Slerp(
-				tailControlPoint.GetUpDirection(),
-				headControlPoint.GetUpDirection(),
+		Quaternion CalculatePointRotation(float normalizedT){
+			Quaternion rotation = Quaternion.Slerp(
+				tailControlPoint.GetRotation(),
+				headControlPoint.GetRotation(),
 				normalizedT
 			);
+			return rotation;
 		}
-		public void UpdateCurvePointsTransform(){
-			UpdateCurvePointsPosition();
-			UpdateCurvePointsRotation();
+		public void UpdateCurvePoints(){
+			thisCurvePoints = CreateCurvePoints();
 		}
-		void UpdateCurvePointsPosition(){
-			for(int i = 0; i < thisCurvePoints.Count; i ++){
-				ICurvePoint point = thisCurvePoints[i];
-				float normalizedT = point.GetNormalizedT();
-				Vector3 position = CalculatePointPosition(normalizedT);
-				point.SetPosition(position);
-			}
-		}
-		void UpdateCurvePointsRotation(){
-			for(int i = 0; i < thisCurvePoints.Count; i ++){
-				ICurvePoint point = thisCurvePoints[i];
-				float normalizedT = point.GetNormalizedT();
-				Vector3 forward = CalculateForwardDirection(i);
-				Vector3 up = CalculateUpwardDirection(normalizedT);
-				point.LookAt(
-					forward,
-					up
-				);
-			}
+		public float GetLength(){
+			return thisCurvePoints[thisCurvePoints.Length -1].GetDistanceUpToPointOnSegment();
 		}
 	}
 }

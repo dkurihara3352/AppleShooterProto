@@ -54,7 +54,7 @@ namespace AppleShooterProto{
 		public LaunchPointAdaptor launchPointAdaptor;
 		public ShootingManagerAdaptor shootingManagerAdaptor;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
-		public WaypointsManagerAdaptor waypointsManagerAdaptor;
+		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
 		public TestShootingTargetReserveAdaptor testShootingTargetReserveAdaptor;
 		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		void OnGUI(){
@@ -123,12 +123,12 @@ namespace AppleShooterProto{
 			}
 			void DrawSpawnedShootingTargets(){
 				if(thisSystemIsReady){
-					IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
-					List<IWaypointCurve> allWaypointCurves = waypointsManager.GetAllWaypointCurves();
+					IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
+					List<IPCWaypointCurve> allWaypointCurves = pcWaypointsManager.GetAllPCWaypointCurves();
 					ITestShootingTargetReserve targetReserve = testShootingTargetReserveAdaptor.GetTestShootingTargetReserve();
 					int waypointCurveCount = allWaypointCurves.Count;
 					int rectsCount = waypointCurveCount + 1;
-					foreach(IWaypointCurve curve in allWaypointCurves){
+					foreach(IPCWaypointCurve curve in allWaypointCurves){
 						Rect rect = GetSubRect(
 							buttomLeftRect,
 							allWaypointCurves.IndexOf(curve),
@@ -150,7 +150,7 @@ namespace AppleShooterProto{
 				}
 			}
 			void DrawSpawnedShootingTargetsForCurve(
-				IWaypointCurve curve,
+				IPCWaypointCurve curve,
 				Rect rect
 			){
 				ITestShootingTarget[] spawnedTargets = curve.GetSpawnedShootingTargets();
@@ -223,10 +223,10 @@ namespace AppleShooterProto{
 					curveString
 				);
 			}
-			IWaypointCurve GetWaypointCurveFromShootingTarget(IShootingTarget target){
-				IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
-				List<IWaypointCurve> waypointCurves = waypointsManager.GetAllWaypointCurves();
-				foreach(IWaypointCurve curve in waypointCurves){
+			IPCWaypointCurve GetWaypointCurveFromShootingTarget(IShootingTarget target){
+				IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
+				List<IPCWaypointCurve> waypointCurves = pcWaypointsManager.GetAllPCWaypointCurves();
+				foreach(IPCWaypointCurve curve in waypointCurves){
 					IShootingTarget[] shootingTargets = curve.GetSpawnedShootingTargets();
 					foreach(IShootingTarget spawnedTarget in shootingTargets)
 						if(spawnedTarget == target)
@@ -239,7 +239,7 @@ namespace AppleShooterProto{
 			bool thisGroupSequenceIsReady = false;
 			void DrawCurveSequence(Rect rect){
 				if(thisSystemIsReady){
-					IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+					IPCWaypointsManager waypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 					GUI.Label(
 						rect, 
 						"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString() + " ,\n" +
@@ -317,8 +317,8 @@ namespace AppleShooterProto{
 			}
 			void DrawSpawnIndices(Rect rect){
 				if(thisSystemIsReady){
-					IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
-					IWaypointCurve currentCurve = waypointsManager.GetCurrentCurve();
+					IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
+					IPCWaypointCurve currentCurve = pcWaypointsManager.GetCurrentPCCurve();
 					int[] indices = currentCurve.GetSpawnIndices();
 
 					string indicesString = "";

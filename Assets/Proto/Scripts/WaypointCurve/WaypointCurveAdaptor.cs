@@ -7,160 +7,197 @@ namespace AppleShooterProto{
 
 	public interface IWaypointCurveAdaptor: IMonoBehaviourAdaptor{
 		IWaypointCurve GetWaypointCurve();
-		Transform GetCurvePointsParentTransform();
+		// Transform GetCurvePointsParentTransform();
+		void UpdateCurvePoints();
+		ICurvePoint[] GetCurvePoints();
+		float GetTotalDistance();
 	}
 	[ExecuteInEditMode]
-	public class WaypointCurveAdaptor : MonoBehaviourAdaptor, IWaypointCurveAdaptor {
+	public abstract class AbsWaypointCurveAdaptor : MonoBehaviourAdaptor, IWaypointCurveAdaptor {
 		public Color lineColor = new Color(.2f, 1f, 1f, 1f);
 		public Color upDirColor = new Color(1f, .5f, 1f, 1f);
 		public float upDirLineLength = 1f;
-		public Transform curvePointsParent;
 		public Transform controlPointsParent;
-		public Transform GetCurvePointsParentTransform(){
-			return curvePointsParent;
-		}
 		#if UNITY_EDITOR
-		int cachedResolution = 0;
-		public void Start(){
-			UpdateControlPoints();
-		}
-		public void Update (){
-			/*  need to check if child has changed, and perform UpdateControlPoints if changed
-			*/
-			CheckAndUpdateControlPoints();
-			UpdateCurvePoints();
-		}
-		public bool drawGizmos = true;
-		void OnDrawGizmos(){
-			if(drawGizmos){
-				if(thisCurvePoints != null){
-					ICurvePoint prev = null;
-					foreach(CurvePoint curvePoint in thisCurvePoints){
-						if(thisCurvePoints.IndexOf(curvePoint) != 0){
-							Vector3 position = curvePoint.position;
-							Gizmos.color = lineColor;
-							Gizmos.DrawLine(position, prev.GetPosition());
-							Gizmos.color = upDirColor;
-							Gizmos.DrawLine(position, position + curvePoint.GetUpDirection() * upDirLineLength);
+			int cachedResolution = 0;
+			public void Start(){
+				UpdateControlPoints();
+			}
+			public void Update (){
+				/*  need to check if child has changed, and perform UpdateControlPoints if changed
+				*/
+				CheckAndUpdateControlPoints();
+				UpdateCurvePoints();
+			}
+			public bool drawGizmos = true;
+			void OnDrawGizmos(){
+				if(drawGizmos){
+					if(thisCurvePoints != null){
+						ICurvePoint prev = null;
+						int index = 0;
+						foreach(CurvePoint curvePoint in thisCurvePoints){
+							if(index != 0){
+								Vector3 position = curvePoint.GetPosition();
+								Gizmos.color = lineColor;
+								Gizmos.DrawLine(position, prev.GetPosition());
+								Gizmos.color = upDirColor;
+								Quaternion rotation = curvePoint.GetRotation();
+								Vector3 upDirection = rotation * Vector3.up;
+								Gizmos.DrawLine(position, position + upDirection * upDirLineLength);
+							}
+							index ++;
+							prev = curvePoint;
 						}
-						prev = curvePoint;
 					}
 				}
 			}
-		}
 		#endif
-		public int curveSegmentResolution = 10;
+		/* Curve, segment, controlPoints */
+			public int curveSegmentResolution = 10;
 
-		IWaypointCurve thisWaypointCurve;
-		public override void SetUp(){
-			WaypointCurve.IConstArg arg = new WaypointCurve.ConstArg(
-				this,
-				thisControlPoints,
-				thisCurvePoints
-			);
-			thisWaypointCurve = new WaypointCurve(arg);
-		}
-		public IWaypointCurve GetWaypointCurve(){
-			return thisWaypointCurve;
-		}
-		List<ICurveControlPoint> thisControlPoints;
-		List<ICurveSegment> thisCurveSegments;
+			protected IWaypointCurve thisWaypointCurve;
+			public IWaypointCurve GetWaypointCurve(){
+				return thisWaypointCurve;
+			}
+			protected ICurveControlPoint[] thisControlPoints;
+			List<ICurveSegment> thisCurveSegments;
 
-		void UpdateControlPoints(){
-			thisControlPoints = GetLatestControlPoints();
-			MakeSureHeadAndTailControlPointsAreSet();
-			UpdateCurveSegments();
-			CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
-		}
-		List<ICurveControlPoint> GetLatestControlPoints(){
-			List<ICurveControlPoint> result = new List<ICurveControlPoint>();
-			int controlPointCount = controlPointsParent.childCount;
-			for(int i = 0; i < controlPointCount; i ++){
-				Transform child = controlPointsParent.GetChild(i);
-				ICurveControlPoint controlPoint = (ICurveControlPoint)child.GetComponent(typeof(ICurveControlPoint));
-				if(controlPoint != null){
-					result.Add(controlPoint);
-				}
-			}
-			return result;
-		}
-		void MakeSureHeadAndTailControlPointsAreSet(){
-			if(!(thisControlPoints[0] is TailCurveControlPoint))
-				throw new System.InvalidOperationException(
-					"the first entry of controlPoints should be TailControlPoint"
-				);
-			if(!(thisControlPoints[thisControlPoints.Count - 1] is HeadCurveControlPoint))
-				throw new System.InvalidOperationException(
-					"the last entry of controlPoints should be HeadControlPoint"
-				);
-		}
-		void UpdateCurveSegments(){
-			List<ICurveSegment> result = new List<ICurveSegment>();
-			ICurveControlPoint prev = null;
-			foreach(ICurveControlPoint controlPoint in thisControlPoints){
-				if(prev != null){
-					ICurveSegment segment = new CurveSegment(
-						this,
-						prev,
-						controlPoint
-					);
-					result.Add(segment);
-				}
-				prev = controlPoint;
-			}
-			thisCurveSegments = result;
-		}
-		List<ICurvePoint> thisCurvePoints;
-		void UpdateCurvePoints(){
-			if(cachedResolution != curveSegmentResolution){
+			void UpdateControlPoints(){
+				thisControlPoints = GetLatestControlPoints();
+				MakeSureHeadAndTailControlPointsAreSet();
+				UpdateCurveSegments();
 				CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
-				cachedResolution = curveSegmentResolution;
-			}else{
-				UpdateCurvePointsTransformForEachCurveSegment();
 			}
-		}
-		void CreateNewCurvePointsForEachCurveSegment(int resolution){
-			List<ICurvePoint> result = new List<ICurvePoint>();
-			foreach(ICurveSegment segment in thisCurveSegments){
-				segment.CreateCurvePoints(resolution);
-				List<ICurvePoint> curvePointsForSegment = segment.GetCurvePoints();
-				result.AddRange(curvePointsForSegment);
+			ICurveControlPoint[] GetLatestControlPoints(){
+				List<ICurveControlPoint> result = new List<ICurveControlPoint>();
+				int controlPointCount = controlPointsParent.childCount;
+				for(int i = 0; i < controlPointCount; i ++){
+					Transform child = controlPointsParent.GetChild(i);
+					ICurveControlPoint controlPoint = (ICurveControlPoint)child.GetComponent(typeof(ICurveControlPoint));
+					if(controlPoint != null){
+						result.Add(controlPoint);
+					}
+				}
+				return result.ToArray();
 			}
-			thisCurvePoints = result;
-		}
-		void UpdateCurvePointsTransformForEachCurveSegment(){
-			foreach(ICurveSegment segment in thisCurveSegments){
-				segment.UpdateCurvePointsTransform();
+			void MakeSureHeadAndTailControlPointsAreSet(){
+				if(!(thisControlPoints[0] is TailCurveControlPoint))
+					throw new System.InvalidOperationException(
+						"the first entry of controlPoints should be TailControlPoint"
+					);
+				if(!(thisControlPoints[thisControlPoints.Length - 1] is HeadCurveControlPoint))
+					throw new System.InvalidOperationException(
+						"the last entry of controlPoints should be HeadControlPoint"
+					);
 			}
-		}
-		void CheckAndUpdateControlPoints(){
-			if(thisControlPoints == null)
-				UpdateControlPoints();
-			else{
-				List<ICurveControlPoint> controlPoints = GetLatestControlPoints();
-				if(!ControlPointsMatchesWithCache(controlPoints)){
+			void UpdateCurveSegments(){
+				List<ICurveSegment> result = new List<ICurveSegment>();
+				ICurveControlPoint prev = null;
+				foreach(ICurveControlPoint controlPoint in thisControlPoints){
+					if(prev != null){
+						ICurveSegment segment = new CurveSegment(
+							this,
+							prev,
+							controlPoint
+						);
+						result.Add(segment);
+					}
+					prev = controlPoint;
+				}
+				thisCurveSegments = result;
+			}
+			void CheckAndUpdateControlPoints(){
+				if(thisControlPoints == null)
 					UpdateControlPoints();
+				else{
+					ICurveControlPoint[] controlPoints = GetLatestControlPoints();
+					if(!ControlPointsMatchesWithCache(controlPoints)){
+						UpdateControlPoints();
+					}
 				}
 			}
-		}
-		bool ControlPointsMatchesWithCache(List<ICurveControlPoint> newControlPoints){
-			int cachedCount = thisControlPoints.Count;
-			if(cachedCount != newControlPoints.Count){
-				return false;
-			}else{
-				for(int i = 0 ; i < cachedCount; i ++){
-					if(thisControlPoints[i] != newControlPoints[i])
-						return false;
+			bool ControlPointsMatchesWithCache(ICurveControlPoint[] newControlPoints){
+				int cachedCount = thisControlPoints.Length;
+				if(cachedCount != newControlPoints.Length){
+					return false;
+				}else{
+					for(int i = 0 ; i < cachedCount; i ++){
+						if(thisControlPoints[i] != newControlPoints[i])
+							return false;
+					}
+					return true;
 				}
-				return true;
 			}
-		}
-		public TestTargetSpawnManagerAdaptor testTargetSpawnManagerAdaptor;
+			public float GetTotalDistance(){
+				float sum = 0f;
+				foreach(ICurveSegment segment in thisCurveSegments){
+					// ICurvePoint[] curvePoints = segment.GetCurvePoints();
+					// ICurvePoint lastCurvePoint = curvePoints[curvePoints.Length-1];
+					// sum += lastCurvePoint.GetDistanceUpToPointOnSegment();
+					sum += segment.GetLength();
+				}
+				return sum;
+			}
+		/* CurvePoints */
+			protected ICurvePoint[] thisCurvePoints;
+			public ICurvePoint[] GetCurvePoints(){
+				return thisCurvePoints;
+			}
+			void ObsUpdateCurvePoints(){
+				if(cachedResolution != curveSegmentResolution){
+					CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
+					cachedResolution = curveSegmentResolution;
+				}else{
+					UpdateCurvePointsTransformForEachCurveSegment();
+				}
+			}
+			public void UpdateCurvePoints(){
+				if(cachedResolution != curveSegmentResolution){
+					CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
+					cachedResolution = curveSegmentResolution;
+				}else{
+					UpdateCurvePointsTransformForEachCurveSegment();
+				}
+				SetTotalDistanceInCurveOnAllCurvePoints();
+				thisCurvePoints = CollectCurvePointsFromAllSegments();
+			}
+			ICurvePoint[] CollectCurvePointsFromAllSegments(){
+				List<ICurvePoint> result = new List<ICurvePoint>();
+				foreach(ICurveSegment segment in thisCurveSegments){
+					result.AddRange(segment.GetCurvePoints());
+				}
+				return result.ToArray();
+			}	
+			void CreateNewCurvePointsForEachCurveSegment(int resolution){
+				List<ICurvePoint> result = new List<ICurvePoint>();
+				foreach(ICurveSegment segment in thisCurveSegments){
+					segment.SetCurveResolution(resolution);
+					segment.UpdateCurvePoints();
+					ICurvePoint[] curvePointsForSegment = segment.GetCurvePoints();
+					result.AddRange(curvePointsForSegment);
+				}
+			}
+			void UpdateCurvePointsTransformForEachCurveSegment(){
+				foreach(ICurveSegment segment in thisCurveSegments){
+					segment.UpdateCurvePoints();
+				}
+			}
+			void SetTotalDistanceInCurveOnAllCurvePoints(){
+				float sumOfAllPrevSegmentsLength = 0f;
+				foreach(ICurveSegment segment in thisCurveSegments){
+					foreach(ICurvePoint curvePoint in segment.GetCurvePoints()){
+						float distanceUpToPointOnSegment = curvePoint.GetDistanceUpToPointOnSegment();
+						float distanceUpToPointOnCurve = distanceUpToPointOnSegment + sumOfAllPrevSegmentsLength;
+						curvePoint.SetDistanceUpToPointOnCurve(distanceUpToPointOnCurve);
+					}
+					float segmentLength = segment.GetLength();
+					sumOfAllPrevSegmentsLength += segmentLength;
+				}
+			}
+		/*  */
 		public override void SetUpReference(){
 			List<IWaypointEvent> waypointEvents = CollectWaypointEvents();
 			thisWaypointCurve.SetWaypointEvents(waypointEvents);
-			ITargetSpawnManager targetSpawnManager = testTargetSpawnManagerAdaptor.GetTestTargetSpawnManager();
-			thisWaypointCurve.SetTargetSpawnManager(targetSpawnManager);
 		}
 		List<IWaypointEvent> CollectWaypointEvents(){
 			List<IWaypointEvent> result = new List<IWaypointEvent>();

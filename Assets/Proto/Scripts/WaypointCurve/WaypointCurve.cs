@@ -6,212 +6,205 @@ using DKUtility.CurveUtility;
 namespace AppleShooterProto{
 	public interface IWaypointCurve{
 		IWaypointCurveAdaptor GetAdaptor();
-		int GetIndex();
-		void SetIndex(int i);
-		void SetPosition(Vector3 position);
-		void SetRotation(Quaternion rotation);
+
+		void CalculateCurve();
+
+
 		void Connect(IWaypointCurve prevCurve);
 		Vector3 GetConnectionPosition();
 		Quaternion GetConnectionRotation();
 		int GetIndexOfCeilingCurvePoint(float totalDistInCurve);
 		float GetTotalDistance();
-		float GetNormalizedPositionOnSegment(
+		float GetNormalizedPositionBetweenPoints(
 			int ceilingIndex,
 			float totalDistanceCoveredInCurve
 		);
-		Vector3 CalculateTargetPosition(
+		Vector3 CalculatePositionOnCurve(
 			int ceilingIndex,
-			float normalizedPositionOnSegment
+			float normalizedPositionBetweenPoints
 		);
-		Quaternion CalculateTargetRotation(
+		Quaternion CalculateRotationOnCurve(
 			int ceilingIndex,
-			float normalizedPositionOnSegment
+			float normalizedPositionBetweenPoints
 		);
+		void OnReserve();
+		void OnUnreserve();
+
+
+		int GetIndex();
+		void SetIndex(int i);
+		void SetPosition(Vector3 position);
+		void SetRotation(Quaternion rotation);
 		Vector3 GetPosition();
 		Quaternion GetRotation();
-		List<IWaypointEvent> GetWaypointEvents();
-		void SetWaypointEvents(List<IWaypointEvent> events);
-		void SetTargetSpawnManager(ITargetSpawnManager targetSpawnManager);
-		void SpawnTargets();
-		void DespawnTargets();
-
-		int[] GetSpawnIndices();
-		ITestShootingTarget[] GetSpawnedShootingTargets();
+		/* Events */
+			List<IWaypointEvent> GetWaypointEvents();
+			void SetWaypointEvents(List<IWaypointEvent> events);
+		/*  */
 	}
-	public class WaypointCurve: IWaypointCurve{
-		public WaypointCurve(
-			IConstArg arg
-		){
-			thisAdaptor = arg.adaptor;
-			thisCurvePoints = arg.curvePoints;
-			thisControlPoints = arg.controlPoints;
-			thisDeltaTable = CalculateDeltaTable();
-			thisDistanceTable = CalculateDistanceTable();
-			thisTotalDistance = CalculateTotalDistance();
-		}
-		readonly IWaypointCurveAdaptor thisAdaptor;
-		public IWaypointCurveAdaptor GetAdaptor(){
-			return thisAdaptor;
-		}
-		readonly List<ICurvePoint> thisCurvePoints;
-		readonly List<ICurveControlPoint> thisControlPoints;
-		ICurveControlPoint thisLastControlPoint{
-			get{return thisControlPoints[thisControlPoints.Count -1];}
-		}
-		readonly List<float> thisDeltaTable;
-		readonly List<float> thisDistanceTable;
-		List<float> CalculateDeltaTable(){
-			List<float> result = new List<float>();
-			Vector3 prevCurvePointPosition = new Vector3();
-			foreach(CurvePoint curvePoint in thisCurvePoints){
-				if(result.Count == 0){
-					result.Add(0f);
-				}else{
-					Vector3 delta = curvePoint.position - prevCurvePointPosition;
-					result.Add(delta.magnitude);
+	public abstract class AbsWaypointCurve: IWaypointCurve{
+		/* SetUp */
+			public AbsWaypointCurve(
+				IConstArg arg
+			){
+				thisAdaptor = arg.adaptor;
+				thisControlPoints = arg.controlPoints;
+				CalculateCurve();
+			}
+			readonly IWaypointCurveAdaptor thisAdaptor;
+			public IWaypointCurveAdaptor GetAdaptor(){
+				return thisAdaptor;
+			}
+			readonly ICurveControlPoint[] thisControlPoints;
+			ICurveControlPoint thisLastControlPoint{
+				get{return thisControlPoints[thisControlPoints.Length -1];}
+			}
+		/* Curve Calculation */
+			public void CalculateCurve(){
+				thisCurvePoints = CreateCurvePoints();
+				thisTotalDistance = CalculateTotalDistance();
+				PrintCurve();
+			}
+			void PrintCurve(){
+				DKUtility.DebugHelper.PrintInBlue(
+					"WaypointCurve: " + GetIndex().ToString() + ", " +
+					"curvePointCount: " + thisCurvePoints.Length.ToString() + ", " +
+					"totalDist: " + CalculateTotalDistance().ToString()
+				);
+				int index = 0;
+				foreach(ICurvePoint point in thisCurvePoints){
+					Debug.Log(
+						index.ToString() + ": " + 
+						"position: " + point.GetPosition().ToString() + ", " + 
+						"rotation: " + point.GetRotation().ToString() + ", " +
+						"delta: " + point.GetDelta().ToString() + ", " + 
+						"sum: " + point.GetDistanceUpToPointOnSegment().ToString()
+					);
 				}
-				prevCurvePointPosition = curvePoint.position;
 			}
-			return result;
-		}
-		List<float> CalculateDistanceTable(){
-			List<float> result = new List<float>();
-			float sum = 0f;
-			foreach(float delta in thisDeltaTable){
-				sum += delta;
-				result.Add(sum);
+			ICurvePoint[] thisCurvePoints;
+			ICurvePoint[] CreateCurvePoints(){
+				thisAdaptor.UpdateCurvePoints();
+				return thisAdaptor.GetCurvePoints();
 			}
-			return result;
-		}
-		public float GetTotalDistance(){
-			return thisTotalDistance;
-		}
-		readonly float thisTotalDistance;
-		
-		int thisIndex;
-		public int GetIndex(){
-			return thisIndex;
-		}
-		public void SetIndex(int i){
-			thisIndex = i;
-		}
+			float thisTotalDistance;
+			float CalculateTotalDistance(){
+				return thisAdaptor.GetTotalDistance();
+			}
+			public float GetTotalDistance(){
+				return thisTotalDistance;
+			}
+		/* Curve other */
+			public void Connect(IWaypointCurve prevCurve){
+				Vector3 position = prevCurve.GetConnectionPosition();
+				Quaternion rotation = prevCurve.GetConnectionRotation();
+				SetPosition(position);
+				SetRotation(rotation);
+				CalculateCurve();
+			}
+			public Vector3 GetConnectionPosition(){
+				return thisLastControlPoint.GetPosition();
+			}
+			public Quaternion GetConnectionRotation(){
+				return thisLastControlPoint.GetRotation();
+			}
+			public int GetIndexOfCeilingCurvePoint(float totalDistInCurve){
+				/*  totalDist must be less than thisTotalDistnce
+					(cannot be even equal to it)
+					must be checked before this
 
-		float CalculateTotalDistance(){
-			return thisDistanceTable[thisDistanceTable.Count - 1];
-		}
-		public void SetPosition(Vector3 position){
-			thisAdaptor.SetPosition(position);
-		}
-		public void SetRotation(Quaternion rotation){
-			thisAdaptor.SetRotation(rotation);
-		}
-		public void Connect(IWaypointCurve prevCurve){
-			Vector3 position = prevCurve.GetConnectionPosition();
-			Quaternion rotation = prevCurve.GetConnectionRotation();
-			SetPosition(position);
-			SetRotation(rotation);
-		}
-		public Vector3 GetConnectionPosition(){
-			return thisLastControlPoint.GetPosition();
-		}
-		public Quaternion GetConnectionRotation(){
-			return thisLastControlPoint.GetRotation();
-		}
-		public int GetIndexOfCeilingCurvePoint(float totalDistInCurve){
-			/*  totalDist must be less than thisTotalDistnce
-				(cannot be even equal to it)
-				must be checked before this
-
-				never returns 0
-			*/
-			for(int i = 0; i < thisDistanceTable.Count; i ++){
-				if(thisDistanceTable[i] > totalDistInCurve)
-					return i;
+					never returns 0
+				*/
+				for(int i = 0; i < thisCurvePoints.Length; i ++){
+					if(thisCurvePoints[i].GetDistanceUpToPointOnCurve() > totalDistInCurve){
+						return i;
+					}
+				}
+				return -1;
 			}
-			return -1;
-		}
-		public float GetNormalizedPositionOnSegment(
-			int ceilingIndex,
-			float totalDistanceCoveredInCurve
-		){
-			int floorIndex = ceilingIndex -1;
-			float distToFloor = thisDistanceTable[floorIndex];
-			float residualDist = totalDistanceCoveredInCurve - distToFloor;
-			float currentCurveSegmentLength = thisDeltaTable[ceilingIndex];
-			
-			return residualDist/ currentCurveSegmentLength;
-		}
-		public Vector3 CalculateTargetPosition(
-			int ceilingIndex,
-			float normalizedPositionOnSegment
-		){
-			ICurvePoint ceiling = thisCurvePoints[ceilingIndex];
-			ICurvePoint floor = thisCurvePoints[ceilingIndex -1];
-			return Vector3.Lerp(
-				floor.GetPosition(),
-				ceiling.GetPosition(),
-				normalizedPositionOnSegment
-			);
-		}
-		public Quaternion CalculateTargetRotation(
-			int ceilingIndex,
-			float normalizedPositionOnSegment
-		){
-			/*  ceilingIndex cannot be 0
-				returned value does not have to be normalized
-			*/
-			ICurvePoint ceiling = thisCurvePoints[ceilingIndex];
-			ICurvePoint floor = thisCurvePoints[ceilingIndex - 1];
-			return Quaternion.Slerp(
-				floor.GetRotation(),
-				ceiling.GetRotation(),
-				normalizedPositionOnSegment
-			);
-		}
-		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
-		}
-		public Quaternion GetRotation(){
-			return thisAdaptor.GetRotation();
-		}
-		/*  */
-		public List<IWaypointEvent> GetWaypointEvents(){
-			return thisWaypointEvents;
-		}
-		List<IWaypointEvent> thisWaypointEvents;
-		public void SetWaypointEvents(List<IWaypointEvent> events){
-			thisWaypointEvents = events;
-		}
-		/* target Spawn */
-			ITargetSpawnManager thisTargetSpawnManager;
-			public void SetTargetSpawnManager(ITargetSpawnManager manager){
-				thisTargetSpawnManager = manager;
+			public float GetNormalizedPositionBetweenPoints(
+				int ceilingIndex,
+				float totalDistanceCoveredInCurve
+			){
+				if(ceilingIndex == 0)
+					return 0f;
+				else{
+					int floorIndex = ceilingIndex -1;
+					float distToFloor = thisCurvePoints[floorIndex].GetDistanceUpToPointOnCurve();
+					float residualDist = totalDistanceCoveredInCurve - distToFloor;
+					float lengthBetweenPoints = thisCurvePoints[ceilingIndex].GetDelta();
+					
+					return residualDist/ lengthBetweenPoints;
+				}
 			}
-			public void SpawnTargets(){
-				thisTargetSpawnManager.Spawn();
+			public Vector3 CalculatePositionOnCurve(
+				int ceilingIndex,
+				float normalizedPositionBetweenPoints
+			){
+				ICurvePoint ceiling = thisCurvePoints[ceilingIndex];
+				ICurvePoint floor = thisCurvePoints[ceilingIndex -1];
+				return Vector3.Lerp(
+					floor.GetPosition(),
+					ceiling.GetPosition(),
+					normalizedPositionBetweenPoints
+				);
 			}
-			public void DespawnTargets(){
-				thisTargetSpawnManager.Despawn();
+			public Quaternion CalculateRotationOnCurve(
+				int ceilingIndex,
+				float normalizedPositionBetweenPoints
+			){
+				Quaternion ceilingRotation = thisCurvePoints[ceilingIndex].GetRotation();
+				Quaternion floorRotation =  thisCurvePoints[ceilingIndex -1].GetRotation();
+				return Quaternion.Slerp(
+					floorRotation,
+					ceilingRotation,
+					normalizedPositionBetweenPoints
+				);
 			}
-		/*  */
-			public int[] GetSpawnIndices(){
-				return thisTargetSpawnManager.GetSpawnPointIndices();
+		/* Misc */
+			public Vector3 GetPosition(){
+				return thisAdaptor.GetPosition();
 			}
-			public ITestShootingTarget[] GetSpawnedShootingTargets(){
-				ITestTargetSpawnManager typedManager = (ITestTargetSpawnManager)thisTargetSpawnManager;
-				return typedManager.GetSpawnedTestShootingTargets();
+			public Quaternion GetRotation(){
+				return thisAdaptor.GetRotation();
+			}
+			public void SetPosition(Vector3 position){
+				thisAdaptor.SetPosition(position);
+			}
+			public void SetRotation(Quaternion rotation){
+				thisAdaptor.SetRotation(rotation);
+			}
+			int thisIndex;
+			public int GetIndex(){
+				return thisIndex;
+			}
+			public void SetIndex(int i){
+				thisIndex = i;
+			}
+		/* Events */
+			public List<IWaypointEvent> GetWaypointEvents(){
+				return thisWaypointEvents;
+			}
+			List<IWaypointEvent> thisWaypointEvents;
+			public void SetWaypointEvents(List<IWaypointEvent> events){
+				thisWaypointEvents = events;
+			}
+		/* abs */
+			public abstract void OnReserve();
+			public virtual void OnUnreserve(){
+				// this.CalculateCurve();
 			}
 		/* Const */
 			public interface IConstArg{
 				IWaypointCurveAdaptor adaptor{get;}
-				List<ICurveControlPoint> controlPoints{get;}
-				List<ICurvePoint> curvePoints{get;}
+				ICurveControlPoint[] controlPoints{get;}
+				ICurvePoint[] curvePoints{get;}
 			}
 			public struct ConstArg: IConstArg{
 				public ConstArg(
 					IWaypointCurveAdaptor adaptor,
-					List<ICurveControlPoint> controlPoints,
-					List<ICurvePoint> curvePoints
+					ICurveControlPoint[] controlPoints,
+					ICurvePoint[] curvePoints
 				){
 					thisAdaptor = adaptor;
 					thisControlPoints = controlPoints;
@@ -219,10 +212,10 @@ namespace AppleShooterProto{
 				}
 				readonly IWaypointCurveAdaptor thisAdaptor;
 				public IWaypointCurveAdaptor adaptor{get{return thisAdaptor;}}
-				readonly List<ICurveControlPoint> thisControlPoints;
-				public List<ICurveControlPoint> controlPoints{get{return thisControlPoints;}}
-				readonly List<ICurvePoint> thisCurvePoints;
-				public List<ICurvePoint> curvePoints{get{return thisCurvePoints;}}
+				readonly ICurveControlPoint[] thisControlPoints;
+				public ICurveControlPoint[] controlPoints{get{return thisControlPoints;}}
+				readonly ICurvePoint[] thisCurvePoints;
+				public ICurvePoint[] curvePoints{get{return thisCurvePoints;}}
 			}
 		}
 	/*  */

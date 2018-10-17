@@ -4,21 +4,26 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface ITestTargetSpawnManager: ITargetSpawnManager{
+	public interface IShootingTargetSpawnManager{
 		void SetShootingTargetSpawnPoints(
 			IShootingTargetSpawnPoint[] points
 		);
 		void SetTestShootingTargetReserve(ITestShootingTargetReserve reserve);
+		void SetFlyingTargets(List<IFlyingTarget> flyingTargets);
+
+		void Spawn();
+		void Despawn();
+		int[] GetSpawnPointIndices();
 		ITestShootingTarget[] GetSpawnedTestShootingTargets();
 	}
-	public class TestTargetSpawnManager: ITestTargetSpawnManager{
-		public TestTargetSpawnManager(IConstArg arg){
+	public class ShootingTargetSpawnManager: IShootingTargetSpawnManager{
+		public ShootingTargetSpawnManager(IConstArg arg){
 			thisSpawnCount = arg.spawnCount;
 			thisAdaptor = arg.adaptor;
 
 		}
 		readonly int thisSpawnCount;
-		readonly ITestTargetSpawnManagerAdaptor thisAdaptor;
+		readonly IShootingTargetSpawnManagerAdaptor thisAdaptor;
 
 		IShootingTargetSpawnPoint[] thisSpawnPoints;
 		public void SetShootingTargetSpawnPoints(IShootingTargetSpawnPoint[] points){
@@ -36,7 +41,7 @@ namespace AppleShooterProto{
 
 			int[] spawnPointIndices = CalculateSpawnPointIndices();
 			foreach(int spawnPointIndex in spawnPointIndices){
-				SpawnStaticTestTargetAt(spawnPointIndex);
+				SpawnStaticTargetAt(spawnPointIndex);
 			}
 		}
 		int[] thisIndices;
@@ -53,7 +58,7 @@ namespace AppleShooterProto{
 		public int[] GetSpawnPointIndices(){
 			return thisIndices;
 		}
-		ITestShootingTarget SpawnStaticTestTargetAt(int spawnPointIndex){
+		ITestShootingTarget SpawnStaticTargetAt(int spawnPointIndex){
 			IShootingTargetSpawnPoint spawnPoint = thisSpawnPoints[spawnPointIndex];
 			ITestShootingTarget target = thisTargetReserve.Unreserve();
 			spawnPoint.SetTarget(target);
@@ -72,7 +77,8 @@ namespace AppleShooterProto{
 			target.SetParent(spawnPoint.GetTransform());
 		}
 		public void Despawn(){
-			DespawnLandedArrowsOnAllSpawnedShootingTargets();
+			// DespawnLandedArrowsOnAllSpawnedShootingTargets();
+			DespawnFlyingTargets();
 			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){
 				ITestShootingTarget spawnedTarget = point.GetSpawnedTarget() as ITestShootingTarget;
 				if(spawnedTarget != null){
@@ -81,15 +87,23 @@ namespace AppleShooterProto{
 				}
 			}
 		}
-		void DespawnLandedArrowsOnAllSpawnedShootingTargets(){
-			ITestShootingTarget[] targetsToDespawn = GetSpawnedTestShootingTargets();
-			foreach(ITestShootingTarget target in targetsToDespawn){
-				Debug.Log(
-					"target " + target.GetIndex().ToString() +
-					" is reserved"
-				);
-				target.ReserveAllLandedArrow();
-			}
+		// void DespawnLandedArrowsOnAllSpawnedShootingTargets(){
+		// 	ITestShootingTarget[] targetsToDespawn = GetSpawnedTestShootingTargets();
+		// 	foreach(ITestShootingTarget target in targetsToDespawn){
+		// 		Debug.Log(
+		// 			"target " + target.GetIndex().ToString() +
+		// 			" is reserved"
+		// 		);
+		// 		target.ReserveAllLandedArrow();
+		// 	}
+		// }
+		public void SetFlyingTargets(List<IFlyingTarget> flyingTargets){
+			thisFlyingTargets = flyingTargets;
+		}
+		List<IFlyingTarget> thisFlyingTargets;
+		void DespawnFlyingTargets(){
+			foreach(IFlyingTarget flyingTarget in thisFlyingTargets)
+				flyingTarget.ResetTarget();
 		}
 		public ITestShootingTarget[] GetSpawnedTestShootingTargets(){
 			List<ITestShootingTarget> resultList = new List<ITestShootingTarget>();
@@ -98,25 +112,28 @@ namespace AppleShooterProto{
 				if(spawnedTarget != null)
 					resultList.Add(spawnedTarget);
 			}
+			foreach(IFlyingTarget flyingTarget in thisFlyingTargets){
+				resultList.Add(flyingTarget);
+			}
 			return resultList.ToArray();
 		}
 		/*  */
 		public interface IConstArg{
 			int spawnCount{get;}
-			ITestTargetSpawnManagerAdaptor adaptor{get;}
+			IShootingTargetSpawnManagerAdaptor adaptor{get;}
 		}
 		public struct ConstArg: IConstArg{
 			public ConstArg(
 				int spawnCount,
-				ITestTargetSpawnManagerAdaptor adaptor
+				IShootingTargetSpawnManagerAdaptor adaptor
 			){
 				thisSpawnCount  = spawnCount;
 				thisAdaptor = adaptor;
 			}
 			readonly int thisSpawnCount;
 			public int spawnCount{get{return thisSpawnCount;}}
-			readonly ITestTargetSpawnManagerAdaptor thisAdaptor;
-			public ITestTargetSpawnManagerAdaptor adaptor{get{return thisAdaptor;}}
+			readonly IShootingTargetSpawnManagerAdaptor thisAdaptor;
+			public IShootingTargetSpawnManagerAdaptor adaptor{get{return thisAdaptor;}}
 		}
 	}
 }

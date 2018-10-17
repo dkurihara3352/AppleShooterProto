@@ -26,14 +26,13 @@ namespace AppleShooterProto{
 				);
 			}
 		}
-		IWaypointsManager thisWaypointsManager;
+		protected IWaypointsManager thisWaypointsManager;
 		public IWaypointsManager GetWaypointsManager(){
 			return thisWaypointsManager;
 		}
 		public Vector3 initialCurvePosition;
 		public Quaternion initialCurveRotation;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
-		public List<WaypointCurveAdaptor> waypointCurveAdaptors;
 		public Transform reserve;
 		public int curvesCountInSequence;
 		public int cycleStartIndex = 1;
@@ -42,18 +41,20 @@ namespace AppleShooterProto{
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 			thisWaypointsManager.SetWaypointsFollower(follower);
 			
-			List<IWaypointCurve> waypointCurves = GetWaypointCurves();
+			List<IWaypointCurve> waypointCurves = GetWaypointCurvesInChildren();
 			thisWaypointsManager.SetWaypointCurves(waypointCurves);
 		}
-		List<IWaypointCurve> GetWaypointCurves(){
+		List<IWaypointCurve> GetWaypointCurvesInChildren(){
 			List<IWaypointCurve> result = new List<IWaypointCurve>();
-			int index = 0;
-			foreach(IWaypointCurveAdaptor adaptor in waypointCurveAdaptors){
-				IWaypointCurve curve = adaptor.GetWaypointCurve();
-				curve.SetIndex(index);
-				result.Add(curve);
-				index ++;
+			int childCount = transform.childCount;
+			for(int i = 0; i < childCount; i++){
+				Transform child = transform.GetChild(i);
+				IWaypointCurveAdaptor curveAdaptor = (IWaypointCurveAdaptor)child.GetComponent(typeof(IWaypointCurveAdaptor));
+				if(curveAdaptor != null)
+					result.Add(curveAdaptor.GetWaypointCurve());
 			}
+			foreach(IWaypointCurve curve in result)
+				curve.SetIndex(result.IndexOf(curve));
 			return result;
 		}
 	}
