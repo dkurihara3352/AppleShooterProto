@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 		void SetWaypointsManager(IWaypointsManager wayointsManager);
 		float GetFollowSpeed();
 		void StartFollowing();
+		void StopFollowing();
 		void SetWaypointCurve(IWaypointCurve group);
 
 		IWaypointCurve GetCurrentWaypointCurve();
@@ -15,6 +16,11 @@ namespace AppleShooterProto{
 		void SetPosition(Vector3 position);
 		Vector3 GetPosition();
 		void SetRotation(Quaternion rotation);
+		Vector3 GetForwardDirection();
+		void LookAt(
+			Vector3 foward,
+			Vector3 up
+		);
 
 		int GetCurrentWaypointCurveIndex();
 		float GetNormalizedPositionInCurve();
@@ -52,6 +58,11 @@ namespace AppleShooterProto{
 			);
 			thisProcess.Run();
 		}
+		public void StopFollowing(){
+			if(thisProcess != null && thisProcess.IsRunning())
+				thisProcess.Stop();
+			thisProcess = null;
+		}
 		public void SetPosition(
 			Vector3 position
 		){
@@ -63,7 +74,18 @@ namespace AppleShooterProto{
 		public void SetRotation(Quaternion rotation){
 			thisAdaptor.SetRotation(rotation);
 		}
-
+		public Vector3 GetForwardDirection(){
+			return thisAdaptor.GetForwardDirection();
+		}
+		public void LookAt(
+			Vector3 forward,
+			Vector3 up
+		){
+			thisAdaptor.SetLookRotation(
+				forward,
+				up
+			);
+		}
 		/* curve access */
 		IWaypointCurve thisCurrentWaypointCurve;
 		public void SetWaypointCurve(IWaypointCurve curve){

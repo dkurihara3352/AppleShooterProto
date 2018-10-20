@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		ICurvePoint[] GetCurvePoints();
 		void SetCurveResolution(int resolution);
 		float GetLength();
+		Vector3 GetLastCurvePointPrevPosition();
 	}
 	public class CurveSegment: ICurveSegment{
 		public CurveSegment(
@@ -45,16 +46,6 @@ namespace AppleShooterProto{
 		public void SetCurveResolution(int resolution){
 			thisCurveResolution = resolution;
 		}
-		public void ObsCreateCurvePoints(int resolution){
-			List<ICurvePoint> result = new List<ICurvePoint>(resolution);
-			for(int i = 0; i < resolution; i ++){
-				float normalizedT = i/ ((resolution -1) * 1f);
-				ICurvePoint curvePoint = CreateCurvePoint(normalizedT);
-				result.Add(curvePoint);
-			}
-			thisCurvePoints = result.ToArray();
-			UpdateCurvePoints();
-		}
 		ICurvePoint[] CreateCurvePoints(){
 			sum = 0f;
 			int resolution = thisCurveResolution;
@@ -77,7 +68,7 @@ namespace AppleShooterProto{
 			Vector3 position = CalculatePointPosition(normalizedT);
 			thisPrevPosition = position;
 
-			Quaternion rotation = CalculatePointRotation(normalizedT);
+			Vector3 up = CalculateUpDirection(normalizedT);
 
 			float delta;
 			if(normalizedT == 0f)
@@ -88,7 +79,7 @@ namespace AppleShooterProto{
 
 			return new CurvePoint(
 				position,
-				rotation,
+				up,
 				delta,
 				sum
 			);
@@ -114,19 +105,24 @@ namespace AppleShooterProto{
 			);
 			return position;
 		}
-		Quaternion CalculatePointRotation(float normalizedT){
-			Quaternion rotation = Quaternion.Slerp(
-				tailControlPoint.GetRotation(),
-				headControlPoint.GetRotation(),
+		Vector3 CalculateUpDirection(float normalizedT){
+			Vector3 tailUp = tailControlPoint.GetUpDirection();
+			Vector3 headUp = headControlPoint.GetUpDirection();
+			return Vector3.Lerp(
+				tailUp,
+				headUp,
 				normalizedT
 			);
-			return rotation;
 		}
 		public void UpdateCurvePoints(){
 			thisCurvePoints = CreateCurvePoints();
 		}
 		public float GetLength(){
 			return thisCurvePoints[thisCurvePoints.Length -1].GetDistanceUpToPointOnSegment();
+		}
+		public Vector3 GetLastCurvePointPrevPosition(){
+			ICurvePoint lastCurvePoint = thisCurvePoints[thisCurvePoints.Length - 1];
+			return lastCurvePoint.GetPrevPointPosition();
 		}
 	}
 }

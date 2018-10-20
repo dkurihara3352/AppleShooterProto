@@ -245,8 +245,9 @@ namespace AppleShooterProto{
 						"current: " + gameManager.GetCurrentWaypointGroupIndex().ToString() + " ,\n" +
 						"sequence: " + GetSequenceIndexString() + ",\n" + 
 						"reserved: " + GetReservedCurvesIDString(waypointsManager.GetReservedCurvesIDs()) + ",\n" +
-						"idInSQ: " + waypointsManager.GetCurrentCurveIDInSequence().ToString() + ", \n" +
-						"eventCount: " + waypointsManager.GetWaypointCurvesInSequence()[waypointsManager.GetCurrentCurveIDInSequence()].GetWaypointEvents().Count.ToString()
+						"idInSQ: " + waypointsManager.GetCurrentCurveIDInSequence().ToString() + ", \n" /* +
+						"eventCount: " + waypointsManager.GetWaypointCurvesInSequence()[waypointsManager.GetCurrentCurveIDInSequence()].GetWaypointEvents().Count.ToString() */
+						
 					);
 				}
 			}

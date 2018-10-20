@@ -4,7 +4,9 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface ISmoothFollowTargetProcess: IProcess{}
+	public interface ISmoothFollowTargetProcess: IProcess{
+		void UpdateFollowTarget(IMonoBehaviourAdaptor newTarget);
+	}
 	public class SmoothFollowTargetProcess : AbsProcess, ISmoothFollowTargetProcess {
 		public SmoothFollowTargetProcess(
 			ISmoothFollowTargetProcessConstArg arg
@@ -49,6 +51,9 @@ namespace AppleShooterProto{
 		readonly int thisProcessOrder;
 		public override int GetProcessOrder(){
 			return thisProcessOrder;
+		}
+		public void UpdateFollowTarget(IMonoBehaviourAdaptor newTarget){
+			thisTarget = newTarget;
 		}
 	}
 

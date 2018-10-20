@@ -44,6 +44,10 @@ namespace AppleShooterProto{
 			List<IWaypointCurve> waypointCurves = GetWaypointCurvesInChildren();
 			thisWaypointsManager.SetWaypointCurves(waypointCurves);
 		}
+
+		public override void FinalizeSetUp(){
+			thisWaypointsManager.PlaceWaypointCurves();
+		}
 		List<IWaypointCurve> GetWaypointCurvesInChildren(){
 			List<IWaypointCurve> result = new List<IWaypointCurve>();
 			int childCount = transform.childCount;
@@ -53,8 +57,14 @@ namespace AppleShooterProto{
 				if(curveAdaptor != null)
 					result.Add(curveAdaptor.GetWaypointCurve());
 			}
-			foreach(IWaypointCurve curve in result)
-				curve.SetIndex(result.IndexOf(curve));
+			DKUtility.DebugHelper.PrintInRed(
+				"thisCurves: " + result.Count.ToString()
+			);
+			foreach(IWaypointCurve curve in result){
+				int index = result.IndexOf(curve);
+				curve.SetIndex(index);
+				DKUtility.DebugHelper.PrintInRed(index.ToString());
+			}
 			return result;
 		}
 	}

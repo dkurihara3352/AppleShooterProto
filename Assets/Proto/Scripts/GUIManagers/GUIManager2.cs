@@ -13,12 +13,17 @@ namespace AppleShooterProto{
 			sTL_1 = GetSubRect(
 				topLeft,
 				0,
-				2
+				3
 			);
 			sTL_2 = GetSubRect(
 				topLeft,
 				1,
-				2
+				3
+			);
+			sTL_3 = GetSubRect(
+				topLeft,
+				2,
+				3
 			);
 			topRight  = GetGUIRect(
 				normalizedSize: new Vector2(.2f, .5f),
@@ -43,6 +48,7 @@ namespace AppleShooterProto{
 		Rect topLeft;
 		Rect sTL_1;
 		Rect sTL_2;
+		Rect sTL_3;
 
 		Rect topRight;
 		Rect sTR_1;
@@ -50,6 +56,10 @@ namespace AppleShooterProto{
 		Rect sTR_3;
 		public MonoBehaviourAdaptorManager monoBehaviourAdaptorManager;
 		public FlyingTargetAdaptor flyingTargetAdaptor;
+		// public WaypointsFollowerAdaptor glidingTargetWPFollowerAdaptor;
+		public GlidingTargetAdaptor glidingTargetAdaptor;
+		public WaypointsManagerAdaptor waypointsManagerAdaptor;
+		/*  */
 		bool thisSystemIsReady = false;
 		public void OnGUI(){
 			DrawControl(sTL_1);
@@ -70,49 +80,75 @@ namespace AppleShooterProto{
 				"Run"
 			)){
 				StartFlyingTargetFlight();
+				// FinalizeWaypointCurves();
+				// StartGlidingTargetGlide();
+			}
+			if(GUI.Button(
+				sTL_3,
+				"Reset"
+			)){
+				ResetGlidingTarget();
 			}
 		}
-		void StartFlyingTargetFlight(){
-			IFlyingTarget flyingTarget = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
-			flyingTarget.StartFlight();
-			thisFlyingTargetIsReady = true;
-		}
-		bool thisFlyingTargetIsReady = false;
-		void DrawFlyingTarget(Rect rect){
-			if(thisFlyingTargetIsReady){
-				IFlyingTarget target = flyingTargetAdaptor.GetShootingTarget() as IFlyingTarget;
-				int[] waypointsInSeqIndices = target.GetWaypointsInSequenceIndices();
-				int[] waypointsNotInUseIndices = target.GetWaypointsNotInUseIndices();
-				int currentWaypointIndex = waypointsInSeqIndices[0];
-				float curDist = target.GetCurrentDist();
-				Rect sub0 = GetSubRect(rect, 0, 4);
-				Rect sub1 = GetSubRect(rect, 1, 4);
-				Rect sub2 = GetSubRect(rect, 2, 4);
-				Rect sub3 = GetSubRect(rect, 3, 4);
-				GUI.Label(
-					sub0,
-					"in seq: " + GetIndicesString(waypointsInSeqIndices)
-				);
-				GUI.Label(
-					sub1,
-					"not in use: " + GetIndicesString(waypointsNotInUseIndices)
-				);
-				GUI.Label(
-					sub2,
-					"current: " + currentWaypointIndex.ToString()
-				);
-				GUI.Label(
-					sub3,
-					"dist: " + curDist.ToString()
-				);
- 			}
-		}
-		string GetIndicesString(int[] indices){
-			string result = "";
-			foreach(int i in indices){
-				result += i.ToString() + ", ";
+		
+		/* Left */
+			void StartFlyingTargetFlight(){
+				IFlyingTarget flyingTarget = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
+				flyingTarget.StartFlight();
+				thisFlyingTargetIsReady = true;
 			}
-			return result;
-		}
+			bool thisFlyingTargetIsReady = false;
+			void StartGlidingTargetGlide(){
+				// IWaypointsFollower follower = glidingTargetWPFollowerAdaptor.GetWaypointsFollower();
+				// follower.StartFollowing();
+				IGlidingTarget target = (IGlidingTarget)glidingTargetAdaptor.GetShootingTarget();
+				target.StartGlide();
+			}
+			void ResetGlidingTarget(){
+				IGlidingTarget target = (IGlidingTarget)glidingTargetAdaptor.GetShootingTarget();
+				target.ResetTarget();
+			}
+			void FinalizeWaypointCurves(){
+				IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+				waypointsManager.PlaceWaypointCurves();
+			}
+		/* Right */
+			void DrawFlyingTarget(Rect rect){
+				if(thisFlyingTargetIsReady){
+					IFlyingTarget target = flyingTargetAdaptor.GetShootingTarget() as IFlyingTarget;
+					int[] waypointsInSeqIndices = target.GetWaypointsInSequenceIndices();
+					int[] waypointsNotInUseIndices = target.GetWaypointsNotInUseIndices();
+					int currentWaypointIndex = waypointsInSeqIndices[0];
+					float curDist = target.GetCurrentDist();
+					Rect sub0 = GetSubRect(rect, 0, 4);
+					Rect sub1 = GetSubRect(rect, 1, 4);
+					Rect sub2 = GetSubRect(rect, 2, 4);
+					Rect sub3 = GetSubRect(rect, 3, 4);
+					GUI.Label(
+						sub0,
+						"in seq: " + GetIndicesString(waypointsInSeqIndices)
+					);
+					GUI.Label(
+						sub1,
+						"not in use: " + GetIndicesString(waypointsNotInUseIndices)
+					);
+					GUI.Label(
+						sub2,
+						"current: " + currentWaypointIndex.ToString()
+					);
+					GUI.Label(
+						sub3,
+						"dist: " + curDist.ToString()
+					);
+				}
+			}
+			string GetIndicesString(int[] indices){
+				string result = "";
+				foreach(int i in indices){
+					result += i.ToString() + ", ";
+				}
+				return result;
+			}
+		/*  */
 	}
 }

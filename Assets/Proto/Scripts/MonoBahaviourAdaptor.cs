@@ -6,9 +6,12 @@ namespace AppleShooterProto{
 	public interface IMonoBehaviourAdaptor{
 		void SetUp();
 		void SetUpReference();
+		void FinalizeSetUp();
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
 		void SetRotation(Quaternion rotation);
+		void SetLocalPosition(Vector3 localPosition);
+		void SetLocalRotation(Quaternion localRotation);
 		Quaternion GetRotation();
 		void Rotate(Vector3 euler);
 		void Rotate(float angleOnAxis, int axis);
@@ -42,6 +45,12 @@ namespace AppleShooterProto{
 		}
 		public void SetRotation(Quaternion rotation){
 			this.transform.rotation = rotation;
+		}
+		public void SetLocalPosition(Vector3 localPosition){
+			this.transform.localPosition  =localPosition;
+		}
+		public void SetLocalRotation(Quaternion localRotation){
+			this.transform.localRotation = localRotation;
 		}
 		public Quaternion GetRotation(){
 			return this.transform.rotation;
@@ -98,5 +107,6 @@ namespace AppleShooterProto{
 		}
 		public virtual void SetUp(){}
 		public virtual void SetUpReference(){}
+		public virtual void FinalizeSetUp(){}
 	}
 }

@@ -26,7 +26,6 @@ namespace AppleShooterProto{
 			SetUpUISystem();
 			SetUpMBAdaptors();
 			FinalizeUISystemSetUp();
-			FinalizeWaypointSetUp();
 		}
 
 		void SetUpUISystem(){
@@ -36,6 +35,7 @@ namespace AppleShooterProto{
 		void SetUpMBAdaptors(){
 			SetUpAllMonoBehaviourAdaptors();
 			SetUpAdaptorReference();
+			FinalizeMBAdaptorSetUp();
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 		}
 		void SetUpAllMonoBehaviourAdaptors(){
@@ -44,16 +44,13 @@ namespace AppleShooterProto{
 		void SetUpAdaptorReference(){
 			mbAdaptorManager.SetUpAdaptorReference();
 		}
+		void FinalizeMBAdaptorSetUp(){
+			mbAdaptorManager.FinalizeSetUp();
+		}
 		void FinalizeUISystemSetUp(){
 			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
 			IPlayerInputManager inputManager = playerInputManagerAdaptor.GetInputManager();
 			scroller.SetPlayerInputManager(inputManager);
-		}
-		void FinalizeWaypointSetUp(){
-			thisPCWaypointsManager.PlaceWaypointCurves();
-			IWaypointCurve initialWaypointCurve = thisPCWaypointsManager.GetWaypointCurvesInSequence()[0];
-			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
-			follower.SetWaypointCurve(initialWaypointCurve);
 		}
 
 		public void RunSystem(){

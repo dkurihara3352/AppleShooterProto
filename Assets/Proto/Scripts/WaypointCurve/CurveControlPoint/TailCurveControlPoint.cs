@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface ICurveControlPoint{
+		void SetWaypointCurveAdaptor(IWaypointCurveAdaptor adaptor);
 		Transform GetForeHandle();
 		Transform GetBackHandle();
 		Vector3 GetPosition();
@@ -15,12 +16,31 @@ namespace AppleShooterProto{
 		protected float initialHandleLength = 3f;
 		public abstract Transform GetForeHandle();
 		public abstract Transform GetBackHandle();
-		#if UNITY_EDITOR
-		void Awake(){
-			InitializeHandles();
+		protected IWaypointCurveAdaptor thisWaypointCurveAdaptor;
+		public void SetWaypointCurveAdaptor(IWaypointCurveAdaptor adaptor){
+			thisWaypointCurveAdaptor = adaptor;
 		}
-		#endif
+
+		// #if UNITY_EDITOR
+		// #endif
+		//these shits doesn't work
+			void Awake(){
+				InitializeHandles();
+			}
+			public void OnDrawGizmos(){
+				DrawHandles();
+			}
+			public void Update(){
+				if(!UnityEditor.EditorApplication.isPlaying){
+					LockTransform();
+					if(thisWaypointCurveAdaptor != null)
+						thisWaypointCurveAdaptor.UpdateCurve();
+				}
+			}
+
 		protected abstract void InitializeHandles();
+		protected abstract void DrawHandles();
+		protected abstract void LockTransform();
 		protected void LockHandle(Transform handle){
 			float originalZ = handle.transform.localPosition.z;
 			handle.localPosition = new Vector3(0f, 0f, originalZ);
@@ -42,17 +62,14 @@ namespace AppleShooterProto{
 	}
 	public abstract class SingleHandleCurveControlPoint: AbsCurveControlPoint{
 		protected Transform handle;
-		public void OnDrawGizmos(){
+		protected override void DrawHandles(){
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawLine(
 				this.transform.position,
 				handle.position
 			);
 		}
-		public void Update(){
-			LockTransform();
-		}
-		protected virtual void LockTransform(){
+		protected override void LockTransform(){
 			LockHandle(handle);
 			LockRotation();
 		}
@@ -70,7 +87,6 @@ namespace AppleShooterProto{
 		}
 		protected override void InitializeHandles(){
 			handle = this.transform.GetChild(0);
-			// handle.localPosition = new Vector3(0f, 0f, initialHandleLength);
 		}
 		protected override void LockTransform(){
 			base.LockTransform();

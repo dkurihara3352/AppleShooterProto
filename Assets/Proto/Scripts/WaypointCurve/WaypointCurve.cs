@@ -23,10 +23,15 @@ namespace AppleShooterProto{
 			int ceilingIndex,
 			float normalizedPositionBetweenPoints
 		);
-		Quaternion CalculateRotationOnCurve(
+		Vector3 CalculateForwardDirectionOnCurve(
 			int ceilingIndex,
 			float normalizedPositionBetweenPoints
 		);
+		Vector3 CalculateUpDirectionOnCurve(
+			int ceilingIndex,
+			float normalizedPositionBetweenPoints
+		);
+		Vector3 GetLastCurvePointPrevPosition();
 		void OnReserve();
 		void OnUnreserve();
 
@@ -35,12 +40,15 @@ namespace AppleShooterProto{
 		void SetIndex(int i);
 		void SetPosition(Vector3 position);
 		void SetRotation(Quaternion rotation);
+		void SetLocalPosition(Vector3 position);
+		void SetLocalRotation(Quaternion rotation);
 		Vector3 GetPosition();
 		Quaternion GetRotation();
 		/* Events */
 			List<IWaypointEvent> GetWaypointEvents();
 			void SetWaypointEvents(List<IWaypointEvent> events);
 		/*  */
+			void PrintCurve();
 	}
 	public abstract class AbsWaypointCurve: IWaypointCurve{
 		/* SetUp */
@@ -57,15 +65,17 @@ namespace AppleShooterProto{
 			}
 			readonly ICurveControlPoint[] thisControlPoints;
 			ICurveControlPoint thisLastControlPoint{
-				get{return thisControlPoints[thisControlPoints.Length -1];}
+				get{
+					return thisControlPoints[thisControlPoints.Length -1];
+				}
 			}
 		/* Curve Calculation */
-			public void CalculateCurve(){
+			public virtual void CalculateCurve(){
 				thisCurvePoints = CreateCurvePoints();
 				thisTotalDistance = CalculateTotalDistance();
-				PrintCurve();
+				// PrintCurve();
 			}
-			void PrintCurve(){
+			public void PrintCurve(){
 				DKUtility.DebugHelper.PrintInBlue(
 					"WaypointCurve: " + GetIndex().ToString() + ", " +
 					"curvePointCount: " + thisCurvePoints.Length.ToString() + ", " +
@@ -76,15 +86,18 @@ namespace AppleShooterProto{
 					Debug.Log(
 						index.ToString() + ": " + 
 						"position: " + point.GetPosition().ToString() + ", " + 
-						"rotation: " + point.GetRotation().ToString() + ", " +
+						"up: " + point.GetUpDirection().ToString() + ", " +
 						"delta: " + point.GetDelta().ToString() + ", " + 
-						"sum: " + point.GetDistanceUpToPointOnSegment().ToString()
+						"sumInSeg: " + point.GetDistanceUpToPointOnSegment().ToString() + ", " +
+						"sumInCuv: " + point.GetDistanceUpToPointOnCurve().ToString() + ", " + 
+						"prevPos: " + point.GetPrevPointPosition().ToString()
 					);
+					index ++;
 				}
 			}
 			ICurvePoint[] thisCurvePoints;
 			ICurvePoint[] CreateCurvePoints(){
-				thisAdaptor.UpdateCurvePoints();
+				thisAdaptor.UpdateCurve();
 				return thisAdaptor.GetCurvePoints();
 			}
 			float thisTotalDistance;
@@ -101,6 +114,9 @@ namespace AppleShooterProto{
 				SetPosition(position);
 				SetRotation(rotation);
 				CalculateCurve();
+				SetPrevPointPosOnFirstCurvePointOnConnection(prevCurve);
+				// DKUtility.DebugHelper.PrintInBlue("below is valid");
+				// PrintCurve();
 			}
 			public Vector3 GetConnectionPosition(){
 				return thisLastControlPoint.GetPosition();
@@ -108,6 +124,13 @@ namespace AppleShooterProto{
 			public Quaternion GetConnectionRotation(){
 				return thisLastControlPoint.GetRotation();
 			}
+			void SetPrevPointPosOnFirstCurvePointOnConnection(
+				IWaypointCurve prevCurve
+			){
+				Vector3 prevCurveLastCurvePointPrevPosition =  prevCurve.GetLastCurvePointPrevPosition();
+				ICurvePoint firstPointOfThisCurve = thisCurvePoints[0];
+				firstPointOfThisCurve.SetPrevPointPosition(prevCurveLastCurvePointPrevPosition);
+ 			}
 			public int GetIndexOfCeilingCurvePoint(float totalDistInCurve){
 				/*  totalDist must be less than thisTotalDistnce
 					(cannot be even equal to it)
@@ -149,17 +172,37 @@ namespace AppleShooterProto{
 					normalizedPositionBetweenPoints
 				);
 			}
-			public Quaternion CalculateRotationOnCurve(
+			public Vector3 CalculateForwardDirectionOnCurve(
 				int ceilingIndex,
 				float normalizedPositionBetweenPoints
 			){
-				Quaternion ceilingRotation = thisCurvePoints[ceilingIndex].GetRotation();
-				Quaternion floorRotation =  thisCurvePoints[ceilingIndex -1].GetRotation();
-				return Quaternion.Slerp(
-					floorRotation,
-					ceilingRotation,
+				ICurvePoint ceiling = thisCurvePoints[ceilingIndex];
+				ICurvePoint floor = thisCurvePoints[ceilingIndex -1];
+
+				Vector3 ceilingForward = ceiling.GetPosition() - floor.GetPosition();
+				Vector3 floorForward = floor.GetPosition() - floor.GetPrevPointPosition();
+				
+				return Vector3.Lerp(
+					floorForward,
+					ceilingForward,
 					normalizedPositionBetweenPoints
 				);
+			}
+			public Vector3 CalculateUpDirectionOnCurve(
+				int ceilingIndex,
+				float normalizedPositionBetweenPoints
+			){
+				Vector3 ceilingUp = thisCurvePoints[ceilingIndex].GetUpDirection();
+				Vector3 floorUp = thisCurvePoints[ceilingIndex -1].GetUpDirection();
+				return Vector3.Lerp(
+					floorUp,
+					ceilingUp,
+					normalizedPositionBetweenPoints
+				);
+			}
+			public Vector3 GetLastCurvePointPrevPosition(){
+				ICurvePoint lastCurvePoint = thisCurvePoints[thisCurvePoints.Length -1];
+				return lastCurvePoint.GetPrevPointPosition();
 			}
 		/* Misc */
 			public Vector3 GetPosition(){
@@ -173,6 +216,12 @@ namespace AppleShooterProto{
 			}
 			public void SetRotation(Quaternion rotation){
 				thisAdaptor.SetRotation(rotation);
+			}
+			public void SetLocalPosition(Vector3 localPosition){
+				thisAdaptor.SetLocalPosition(localPosition);
+			}
+			public void SetLocalRotation(Quaternion localRotation){
+				thisAdaptor.SetLocalRotation(localRotation);
 			}
 			int thisIndex;
 			public int GetIndex(){

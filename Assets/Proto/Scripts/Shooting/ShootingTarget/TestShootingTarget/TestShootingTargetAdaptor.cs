@@ -21,6 +21,8 @@ namespace AppleShooterProto{
 			MeshRenderer meshRenderer = this.transform.GetComponent<MeshRenderer>();
 			thisMaterial = meshRenderer.material;
 			thisHitTriggerHash = Animator.StringToHash("Hit");
+			if(processManager != null)
+				SetProcessManager(processManager);
 		}
 		public override void SetUp(){
 			SetColor(defaultColor);
@@ -40,6 +42,7 @@ namespace AppleShooterProto{
 			);
 			thisShootingTarget = new TestShootingTarget(arg);
 		}
+		public ProcessManager processManager;
 		protected IProcessManager thisProcessManager;
 		public void SetProcessManager(IProcessManager processManager){
 			thisProcessManager = processManager;

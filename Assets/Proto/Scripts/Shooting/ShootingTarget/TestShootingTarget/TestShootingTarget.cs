@@ -71,12 +71,12 @@ namespace AppleShooterProto{
 			thisTypedAdaptor.ToggleCollider(true);
 		}
 		/* Const */
-			public interface IConstArg: IAbsConstArg{
+			public new interface IConstArg: AbsShootingTarget.IConstArg{
 				Color defaultColor{get;}
 				IAppleShooterProcessFactory processFactory{get;}
 				float fadeTime{get;}
 			}
-			public struct ConstArg: IConstArg{
+			public new struct ConstArg: IConstArg{
 				public ConstArg(
 					float health,
 					ITestShootingTargetAdaptor adaptor,

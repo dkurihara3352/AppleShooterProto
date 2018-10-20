@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 	}
 	public abstract class AbsShootingTarget : IShootingTarget {
 		public AbsShootingTarget(
-			IAbsConstArg arg
+			IConstArg arg
 		){
 			thisOriginalHealth = arg.health;
 			thisHealth = thisOriginalHealth;
@@ -98,9 +98,22 @@ namespace AppleShooterProto{
 			return thisIndex;
 		}
 		/*  */
-		public interface IAbsConstArg{
+		public interface IConstArg{
 			float health{get;}
 			IShootingTargetAdaptor adaptor{get;}
+		}
+		public struct ConstArg: IConstArg{
+			public ConstArg(
+				float health,
+				IShootingTargetAdaptor adaptor
+			){
+				thisHealth = health;
+				thisAdaptor = adaptor;
+			}
+			readonly float thisHealth;
+			public float health{get{return thisHealth;}}
+			readonly IShootingTargetAdaptor thisAdaptor;
+			public IShootingTargetAdaptor adaptor{get{return thisAdaptor;}}
 		}
 	}
 

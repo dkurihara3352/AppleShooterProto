@@ -12,10 +12,8 @@ namespace AppleShooterProto{
 		public Vector3 initialVelocity;
 		public float distanceThreshold;
 		public int waypointsCountInSequence;
-		public ProcessManager processManager;
 		protected override void Awake(){
 			base.Awake();
-			SetProcessManager(processManager);
 		}		
 		public float speed = 3f;
 		public Transform flyingTargetStandByTransform;
@@ -42,10 +40,10 @@ namespace AppleShooterProto{
 		public override void SetUpReference(){
 			IFlyingTargetWaypoint[] waypoints = CollectWaypoints();
 			thisFlyingTarget.SetWaypoints(waypoints);
+
 			ISmoothLookerAdaptor lookerAdaptor = this.GetComponent(typeof(ISmoothLookerAdaptor)) as ISmoothLookerAdaptor;
 			ISmoothLooker looker = lookerAdaptor.GetSmoothLooker();
 			thisFlyingTarget.SetSmoothLooker(looker);
-
 		}
 		public Transform waypointsParent;
 		IFlyingTargetWaypoint[] CollectWaypoints(){

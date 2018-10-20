@@ -25,9 +25,11 @@ namespace AppleShooterProto{
 			IShootingTargetSpawnPoint[] spawnPoints = CollectSpawnPoints();
 			ITestShootingTargetReserve reserve = targetReserveAdaptor.GetTestShootingTargetReserve();
 			List<IFlyingTarget> flyingTargets = CollectFlyingTargets();
+			IGlidingTarget[] glidingTargets = CollectGlidingTargets();
 			thisSpawnManager.SetShootingTargetSpawnPoints(spawnPoints);
 			thisSpawnManager.SetTestShootingTargetReserve(reserve);
 			thisSpawnManager.SetFlyingTargets(flyingTargets);
+			thisSpawnManager.SetGlidingTargets(glidingTargets);
 		}
 		IShootingTargetSpawnPoint[] CollectSpawnPoints(){
 			List<IShootingTargetSpawnPoint> resultList = new List<IShootingTargetSpawnPoint>();
@@ -52,6 +54,15 @@ namespace AppleShooterProto{
 				}
 			}
 			return result;
+		}
+		public List<GlidingTargetAdaptor> glidingTargetAdaptors =  new List<GlidingTargetAdaptor>();
+		IGlidingTarget[] CollectGlidingTargets(){
+			List<IGlidingTarget> result = new List<IGlidingTarget>();
+			foreach(GlidingTargetAdaptor adaptor in glidingTargetAdaptors){
+				if(adaptor != null)
+					result.Add((IGlidingTarget)adaptor.GetShootingTarget());
+			}
+			return result.ToArray();
 		}
 	}
 }

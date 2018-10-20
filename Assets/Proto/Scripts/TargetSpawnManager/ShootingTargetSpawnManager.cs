@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		);
 		void SetTestShootingTargetReserve(ITestShootingTargetReserve reserve);
 		void SetFlyingTargets(List<IFlyingTarget> flyingTargets);
+		void SetGlidingTargets(IGlidingTarget[] targets);
 
 		void Spawn();
 		void Despawn();
@@ -77,8 +78,8 @@ namespace AppleShooterProto{
 			target.SetParent(spawnPoint.GetTransform());
 		}
 		public void Despawn(){
-			// DespawnLandedArrowsOnAllSpawnedShootingTargets();
 			DespawnFlyingTargets();
+			DespawnGlidingTargets();
 			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){
 				ITestShootingTarget spawnedTarget = point.GetSpawnedTarget() as ITestShootingTarget;
 				if(spawnedTarget != null){
@@ -87,24 +88,25 @@ namespace AppleShooterProto{
 				}
 			}
 		}
-		// void DespawnLandedArrowsOnAllSpawnedShootingTargets(){
-		// 	ITestShootingTarget[] targetsToDespawn = GetSpawnedTestShootingTargets();
-		// 	foreach(ITestShootingTarget target in targetsToDespawn){
-		// 		Debug.Log(
-		// 			"target " + target.GetIndex().ToString() +
-		// 			" is reserved"
-		// 		);
-		// 		target.ReserveAllLandedArrow();
-		// 	}
-		// }
-		public void SetFlyingTargets(List<IFlyingTarget> flyingTargets){
-			thisFlyingTargets = flyingTargets;
-		}
-		List<IFlyingTarget> thisFlyingTargets;
-		void DespawnFlyingTargets(){
-			foreach(IFlyingTarget flyingTarget in thisFlyingTargets)
-				flyingTarget.ResetTarget();
-		}
+		/* FlyingTargets */
+			public void SetFlyingTargets(List<IFlyingTarget> flyingTargets){
+				thisFlyingTargets = flyingTargets;
+			}
+			List<IFlyingTarget> thisFlyingTargets;
+			void DespawnFlyingTargets(){
+				foreach(IFlyingTarget flyingTarget in thisFlyingTargets)
+					flyingTarget.ResetTarget();
+			}
+		/* GlidingTargets */
+			IGlidingTarget[] thisGlidingTargets;
+			public void SetGlidingTargets(IGlidingTarget[] targets){
+				thisGlidingTargets = targets;
+			}
+			void DespawnGlidingTargets(){
+				foreach(IGlidingTarget target in thisGlidingTargets)
+					target.ResetTarget();
+			}
+		/*  */
 		public ITestShootingTarget[] GetSpawnedTestShootingTargets(){
 			List<ITestShootingTarget> resultList = new List<ITestShootingTarget>();
 			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){

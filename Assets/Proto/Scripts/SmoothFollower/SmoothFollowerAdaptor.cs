@@ -5,6 +5,7 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface ISmoothFollowerAdaptor: IMonoBehaviourAdaptor{
+		ISmoothFollower GetSmoothFollower();
 	}
 	public class SmoothFollowerAdaptor : MonoBehaviourAdaptor, ISmoothFollowerAdaptor {
 		public MonoBehaviourAdaptor followTarget;

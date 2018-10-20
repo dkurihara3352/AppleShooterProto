@@ -31,6 +31,8 @@ namespace AppleShooterProto{
 		IMonoBehaviourAdaptor thisFollowTarget;
 		public void SetFollowTarget(IMonoBehaviourAdaptor target){
 			thisFollowTarget = target;
+			if(thisProcess != null && thisProcess.IsRunning())
+				thisProcess.UpdateFollowTarget(target);
 		}
 		ISmoothFollowTargetProcess thisProcess;
 		readonly  int thisProcessOrder;

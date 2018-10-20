@@ -22,11 +22,9 @@ namespace AppleShooterProto{
 			}
 			foreHandle = tempHandles[0];
 			backHandle = tempHandles[1];
-			// foreHandle.localPosition = new Vector3(0f, 0f, initialHandleLength);
-			// backHandle.localPosition = new Vector3(0f, 0f, -initialHandleLength);
 			handles = new Transform[]{foreHandle, backHandle};
 		}
-		public void OnDrawGizmos(){
+		protected override void DrawHandles(){
 			foreach(Transform handle in handles){
 				Gizmos.color = Color.yellow;
 				Gizmos.DrawLine(
@@ -35,7 +33,7 @@ namespace AppleShooterProto{
 				);
 			}
 		}
-		public void Update(){
+		protected override void LockTransform(){
 			LockHandles();
 		}
 		void LockHandles(){

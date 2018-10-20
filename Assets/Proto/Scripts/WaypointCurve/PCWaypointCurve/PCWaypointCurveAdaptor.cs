@@ -17,10 +17,21 @@ namespace AppleShooterProto{
 		IPCWaypointCurve thisTypedCurve{
 			get{return thisWaypointCurve as IPCWaypointCurve;}
 		}
+		public AbsWaypointCurveAdaptor[] subordinateCurveAdaptors;
 		public override void SetUpReference(){
 			base.SetUpReference();
 			IShootingTargetSpawnManager targetSpawnManager = testTargetSpawnManagerAdaptor.GetShootingTargetSpawnManager();
 			thisTypedCurve.SetTargetSpawnManager(targetSpawnManager);
-		}	
+			IWaypointCurve[] subordinateCurves = CollectSubordinateCurves();
+			thisTypedCurve.SetSubordinateCurves(subordinateCurves);
+		}
+		IWaypointCurve[] CollectSubordinateCurves(){
+			List<IWaypointCurve> resultList = new List<IWaypointCurve>();
+			foreach(AbsWaypointCurveAdaptor adaptor in subordinateCurveAdaptors){
+				if(adaptor != null)
+					resultList.Add(adaptor.GetWaypointCurve());
+			}
+			return resultList.ToArray();
+		}
 	}
 }

@@ -5,6 +5,7 @@ namespace AppleShooterProto{
 	public interface IMonoBehaviourAdaptorManager{
 		void SetUpAllMonoBehaviourAdaptors();
 		void SetUpAdaptorReference();
+		void FinalizeSetUp();
 		void AddAdaptor(IMonoBehaviourAdaptor adaptor);
 	}
 	public class MonoBehaviourAdaptorManager: MonoBehaviour, IMonoBehaviourAdaptorManager{
@@ -19,6 +20,10 @@ namespace AppleShooterProto{
 		public void SetUpAdaptorReference(){
 			foreach(IMonoBehaviourAdaptor adaptor in thisMonoBehaviourAdaptors)
 				adaptor.SetUpReference();
+		}
+		public void FinalizeSetUp(){
+			foreach(IMonoBehaviourAdaptor adaptor in thisMonoBehaviourAdaptors)
+				adaptor.FinalizeSetUp();
 		}
 	}
 }

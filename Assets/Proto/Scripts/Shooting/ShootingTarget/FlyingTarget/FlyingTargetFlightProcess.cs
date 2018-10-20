@@ -35,9 +35,9 @@ namespace AppleShooterProto{
 			if(posDif.sqrMagnitude <= thisDistanceThreshold * thisDistanceThreshold){
 				thisFlyingTarget.SetUpNextWaypoint();
 			}
-			
 			Vector3 lookDir = thisFlyingTarget.GetForwardDirection();
-			Vector3 deltaPos = lookDir * thisSpeed * deltaT;
+
+			Vector3 deltaPos = lookDir * thisSpeed * deltaT * posDif.magnitude * .1f;
 			Vector3 newPosition = curPos + deltaPos;
 			thisFlyingTarget.SetPosition(newPosition);
 

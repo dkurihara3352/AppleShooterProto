@@ -84,12 +84,19 @@ namespace AppleShooterProto{
 				ceilingIndex,
 				normalizedPositionBetweenPoints
 			);
-			Quaternion targetRotation = thisCurrentCurve.CalculateRotationOnCurve(
+			Vector3 targetForwardDirection = thisCurrentCurve.CalculateForwardDirectionOnCurve(
+				ceilingIndex,
+				normalizedPositionBetweenPoints
+			);
+			Vector3 targetUpDirection = thisCurrentCurve.CalculateUpDirectionOnCurve(
 				ceilingIndex,
 				normalizedPositionBetweenPoints
 			);
 			thisFollower.SetPosition(targetPosition);
-			thisFollower.SetRotation(targetRotation);
+			thisFollower.LookAt(
+				targetForwardDirection,
+				targetUpDirection
+			);
 			thisWaypointEventManager.CheckForWaypointEvent(GetNormalizedPositionOnCurve());
 		}
 		public float GetNormalizedPositionOnCurve(){

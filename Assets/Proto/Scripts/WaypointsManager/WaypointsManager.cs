@@ -64,7 +64,18 @@ namespace AppleShooterProto{
 			public void PlaceWaypointCurves(){
 				PlaceAllWaypointCurvesAtReserve();
 				thisCurveSequence = CreateSequenceOfWaypointCurves();
+				PrintSequence();
+				PrintReserved();
 				ConnectWaypointCurveSequence();
+				
+				thisFollower.SetWaypointCurve(thisCurveSequence[0]);
+			}
+			void PrintSequence(){
+				string result = "curves in sequence: ";
+				foreach(IWaypointCurve curve in thisCurveSequence){
+					result += curve.GetIndex().ToString();
+				}
+				DKUtility.DebugHelper.PrintInGreen(result);
 			}
 			void PlaceAllWaypointCurvesAtReserve(){
 				foreach(IWaypointCurve curve in thisWaypointCurves){
@@ -149,16 +160,16 @@ namespace AppleShooterProto{
 				IWaypointCurve prevWaypointCurve = null;
 				foreach(IWaypointCurve curve in thisCurveSequence){
 					if(prevWaypointCurve == null)
-						ConnectCurveToCurvesOrigin(curve);
+						ConnectCurveToInitialTransform(curve);
 					else
 						curve.Connect(prevWaypointCurve);
 					prevWaypointCurve = curve;
 				}
 			}
 
-			void ConnectCurveToCurvesOrigin(IWaypointCurve curve){
-				curve.SetPosition(thisInitialCurvePosition);
-				curve.SetRotation(thisInitialCurveRotation);
+			void ConnectCurveToInitialTransform(IWaypointCurve curve){
+				curve.SetLocalPosition(thisInitialCurvePosition);
+				curve.SetLocalRotation(thisInitialCurveRotation);
 				curve.CalculateCurve();
 			}
 
