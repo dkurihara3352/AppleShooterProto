@@ -9,7 +9,7 @@ namespace AppleShooterProto{
 		void SpawnTargets();
 		void DespawnTargets();
 		int[] GetSpawnIndices();
-		ITestShootingTarget[] GetSpawnedShootingTargets();
+		IShootingTarget[] GetSpawnedShootingTargets();
 		void SetSubordinateCurves(IWaypointCurve[] curves);
 	}
 	public class PCWaypointCurve: AbsWaypointCurve, IPCWaypointCurve{
@@ -31,8 +31,8 @@ namespace AppleShooterProto{
 			public int[] GetSpawnIndices(){
 				return thisTargetSpawnManager.GetSpawnPointIndices();
 			}
-			public ITestShootingTarget[] GetSpawnedShootingTargets(){
-				return thisTargetSpawnManager.GetSpawnedTestShootingTargets();
+			public IShootingTarget[] GetSpawnedShootingTargets(){
+				return thisTargetSpawnManager.GetSpawnedShootingTargets();
 			}
 		/* CurveUpdate */
 			public override void CalculateCurve(){

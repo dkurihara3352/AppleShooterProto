@@ -20,6 +20,11 @@ namespace AppleShooterProto{
 		void HoldDraw();
 		void StopDraw();
 
+		float GetDrawElapsedTime();
+		float GetDrawStrength();
+		float GetGlobalDrawStrength();
+		float GetArrowAttack();
+
 		void Release();
 		void ResetDraw();
 		void TryResetArrow();
@@ -58,6 +63,15 @@ namespace AppleShooterProto{
 				thisAdaptor = arg.adaptor;
 				thisDrawProcessOrder = arg.drawProcessOrder;
 				thisFireRate = arg.fireRate;
+
+				thisDrawStrengthCurve = arg.drawStrengthCurve;
+				thisGlobalMinDrawStrength = arg.globalMinDrawStrength;
+				thisGlobalMaxDrawStrength = arg.globalMaxDrawStrength;
+				
+				thisGlobalMinAttack = arg.globalMinArrowAttack;
+				thisArrowAttackMultiplier = arg.arrowAttackMultiplier;
+				thisGlobalMinFlightSpeed = arg.globalMinFlightSpeed;
+				thisFlightSpeedMultiplier = arg.flightSpeedMultiplier;
 			}
 			readonly IAppleShooterProcessFactory thisProcessFactory;
 			readonly IShootingManagerAdaptor thisAdaptor;
@@ -114,11 +128,60 @@ namespace AppleShooterProto{
 				if(thisDrawElapsedTime < thisMaxDrawTime){
 					thisDrawElapsedTime += deltaTime;
 					float normalizedDraw = GetNormalizedDraw();
-					thisInputManager.Zoom(normalizedDraw);
-					this.UpdateFlightSpeed();
+					thisDrawStrength = CalculateDrawStrength(normalizedDraw);
+
+					thisGlobalDrawStrength = CalculateGlobalDrawStrength(thisDrawStrength);
+					thisInputManager.Zoom(thisGlobalDrawStrength);
+					thisFlightSpeed = CalculateFlightSpeed();
+					thisArrowAttack = CalculateArrowAttack();
 				}
 				DrawTrajectory();
 			}
+			/* DrawStrength */
+				AnimationCurve thisDrawStrengthCurve;
+				float CalculateDrawStrength(float normalizedDraw){
+					return thisDrawStrengthCurve.Evaluate(normalizedDraw);
+				}
+				float thisDrawStrength;
+				public float GetDrawStrength(){
+					return thisDrawStrength;
+				}
+				float thisGlobalDrawStrength;
+				/*  draw strength relative to global min and max
+					0f equals minimum possible draw strength
+					1f to maximum
+				*/
+				public float GetGlobalDrawStrength(){
+					return thisGlobalDrawStrength;
+				}
+				float thisGlobalMinDrawStrength;
+				float thisGlobalMaxDrawStrength;
+				float CalculateGlobalDrawStrength(float drawStrength){
+					float numerator = drawStrength - thisGlobalMinDrawStrength;
+					float denominator = thisGlobalMaxDrawStrength - thisGlobalMinDrawStrength;
+					return numerator / denominator;
+				}
+			/* ArrowAttack */
+				float thisArrowAttack;
+				public float GetArrowAttack(){
+					return thisArrowAttack;
+				}
+				float thisGlobalMinAttack;
+				float thisArrowAttackMultiplier;
+				float CalculateArrowAttack(){
+					return thisGlobalMinAttack + (thisGlobalDrawStrength * thisArrowAttackMultiplier);
+				}
+			/* FlightSpeed */
+				float thisFlightSpeed;			
+				public float GetFlightSpeed(){
+					return thisFlightSpeed;
+				}
+				float thisGlobalMinFlightSpeed;
+				float thisFlightSpeedMultiplier;
+				float CalculateFlightSpeed(){
+					return thisGlobalMinFlightSpeed + (thisGlobalDrawStrength * thisFlightSpeedMultiplier);
+				}
+			/*  */
 			public void HoldDraw(){
 				thisDrawProcess.Hold();
 			}
@@ -132,6 +195,9 @@ namespace AppleShooterProto{
 				get{return thisInputManager.GetMaxZoom();}
 			}
 			float thisDrawElapsedTime = 0f;
+			public float GetDrawElapsedTime(){
+				return thisDrawElapsedTime;
+			}
 			float thisMaxDrawTime{
 				get{return thisAdaptor.GetMaxDrawTime();}
 			}
@@ -142,24 +208,6 @@ namespace AppleShooterProto{
 				return result;
 			}
 			IDrawProcess thisDrawProcess;
-			void UpdateFlightSpeed(){
-				thisFlightSpeed = CalcFlightSpeed(
-					GetNormalizedDraw()
-				);
-			}
-			float thisFlightSpeed;
-			public float GetFlightSpeed(){
-				return thisFlightSpeed;
-			}
-			float CalcFlightSpeed(
-				float normalizedDraw
-			){
-				return Mathf.Lerp(
-					initialSpeed,
-					maxFlightSpeed,
-					normalizedDraw
-				);
-			}
 		/* flight & trajectory */
 			public float initialSpeed{
 				get{return thisAdaptor.GetInitialSpeed();}
@@ -247,14 +295,17 @@ namespace AppleShooterProto{
 			public void Release(){
 				IArrow arrow = thisNockedArrow;
 				ClearNockedArrow();
+				arrow.SetAttack(thisArrowAttack);
 				arrow.TryFire();
 				ResetDraw();
 			}
 			public void ResetDraw(){
-				// HoldDraw();
 				StopDraw();
 				thisDrawElapsedTime = 0f;
-				UpdateFlightSpeed();
+				thisDrawStrength = CalculateDrawStrength(0f);
+				thisGlobalDrawStrength = CalculateGlobalDrawStrength(thisDrawStrength);
+				thisFlightSpeed = CalculateFlightSpeed();
+				thisArrowAttack = CalculateArrowAttack();
 				thisTrajectory.Clear();
 			}
 			public void TryResetArrow(){
@@ -299,7 +350,6 @@ namespace AppleShooterProto{
 				Quaternion rotation
 			){
 				ILandedArrow landedArrow = thisLandedArrowReserve.Unreserve();
-				// target.AddLandedArrow(landedArrow);
 				landedArrow.SetShootingTarget(target);
 				landedArrow.SetParent(target.GetTransform());
 				landedArrow.SetPosition(position);
@@ -312,18 +362,45 @@ namespace AppleShooterProto{
 				IShootingManagerAdaptor adaptor{get;}
 				int drawProcessOrder{get;}
 				float fireRate{get;}
+
+				AnimationCurve drawStrengthCurve{get;}
+				float globalMinDrawStrength{get;}
+				float globalMaxDrawStrength{get;}
+
+				float globalMinArrowAttack{get;}
+				float arrowAttackMultiplier{get;}
+				float globalMinFlightSpeed{get;}
+				float flightSpeedMultiplier{get;}
 			}
 			public class ConstArg: IConstArg{
 				public ConstArg(
 					IAppleShooterProcessFactory processFactory,
 					IShootingManagerAdaptor adaptor,
 					int drawProcessOrder,
-					float fireRate
+					float fireRate,
+
+					AnimationCurve drawStrengthCurve,
+					float globalMinDrawStrength,
+					float globalMaxDrawStrength,
+
+					float globalMinArrowAttack,
+					float arrowAttackMultiplier,
+					float globalMinFlightSpeed,
+					float flightSpeedMultiplier
 				){
 					thisProcessFactory = processFactory;
 					thisAdaptor = adaptor;
 					thisDrawProcessOrder = drawProcessOrder;
 					thisFireRate = fireRate;
+
+					thisDrawStrengthCurve = drawStrengthCurve;
+					thisGlobalMinDrawStrength = globalMinDrawStrength;
+					thisGlobalMaxDrawStrength = globalMaxDrawStrength;
+					
+					thisGlobalMinArrowAttack = globalMinArrowAttack;
+					thisArrowAttackMultiplier = arrowAttackMultiplier;
+					thisGlobalMinFlightSpeed = globalMinFlightSpeed;
+					thisFlightSpeedMultiplier = flightSpeedMultiplier;
 				}
 				readonly IAppleShooterProcessFactory thisProcessFactory;
 				public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
@@ -333,6 +410,23 @@ namespace AppleShooterProto{
 				public int drawProcessOrder{get{return thisDrawProcessOrder;}}
 				readonly float thisFireRate;
 				public float fireRate{get{return thisFireRate;}}
+
+				readonly AnimationCurve thisDrawStrengthCurve;
+				public AnimationCurve drawStrengthCurve{get{return thisDrawStrengthCurve;}}
+				readonly float thisGlobalMinDrawStrength;
+				public float globalMinDrawStrength{get{return thisGlobalMinDrawStrength;}}
+				readonly float thisGlobalMaxDrawStrength;
+				public float globalMaxDrawStrength{get{return thisGlobalMaxDrawStrength;}}
+
+				readonly float thisGlobalMinArrowAttack;
+				public float globalMinArrowAttack{get{return thisGlobalMinArrowAttack;}}
+				readonly float thisArrowAttackMultiplier;
+				public float arrowAttackMultiplier{get{return thisArrowAttackMultiplier;}}
+
+				readonly float thisGlobalMinFlightSpeed;
+				public float globalMinFlightSpeed{get{return thisGlobalMinFlightSpeed;}}
+				readonly float thisFlightSpeedMultiplier;
+				public float flightSpeedMultiplier{get{return thisFlightSpeedMultiplier;}}
 			}
 		/*  */
 	}

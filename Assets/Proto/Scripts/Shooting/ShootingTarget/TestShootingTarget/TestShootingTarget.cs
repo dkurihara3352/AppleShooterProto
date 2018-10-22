@@ -26,10 +26,15 @@ namespace AppleShooterProto{
 		readonly ITestShootingTargetHitStateEngine thisHitStateEngine;
 		readonly protected IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisFadeTime;
-		protected override void DestroyTarget(){
-			StartFadingAway();
+		public override void ActivateImple(){
+			base.ActivateImple();
+			thisTypedAdaptor.SetColor(thisDefaultColor);
+			SetAlpha(1f);
+			thisTypedAdaptor.ToggleCollider(true);
+		}
+		public override void DeactivateImple(){
+			base.DeactivateImple();
 			thisTypedAdaptor.ToggleCollider(false);
-			ReserveAllLandedArrow();
 		}
 		void StartFadingAway(){
 			thisFadeProcess = thisProcessFactory.CreateFadeProcess(
@@ -53,7 +58,11 @@ namespace AppleShooterProto{
 			thisTypedAdaptor.SetColor(newColor);
 		}
 		protected override void IndicateHit(float delta){
-			thisHitStateEngine.Hit(delta);
+			float hitMagnitude = CalculateHitMagnitude(delta);
+			thisHitStateEngine.Hit(hitMagnitude);
+		}
+		float CalculateHitMagnitude(float delta){
+			return delta/thisOriginalHealth;
 		}
 		public float GetAlpha(){
 			return thisTypedAdaptor.GetAlpha();
@@ -63,12 +72,6 @@ namespace AppleShooterProto{
 		}
 		public void CheckAndStartNewHitAnimation(float magnitude){
 			thisTypedAdaptor.CheckAndStartNewHitAnimation(magnitude);
-		}
-		public override void ResetTarget(){
-			base.ResetTarget();
-			thisTypedAdaptor.SetColor(thisDefaultColor);
-			SetAlpha(1f);
-			thisTypedAdaptor.ToggleCollider(true);
 		}
 		/* Const */
 			public new interface IConstArg: AbsShootingTarget.IConstArg{

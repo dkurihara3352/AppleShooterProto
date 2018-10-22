@@ -5,28 +5,33 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IGlidingTarget: IShootingTarget{
 		void SetWaypointsFollower(IWaypointsFollower follower);
-		void StartGlide();
 	}
 	public class GlidingTarget: TestShootingTarget, IGlidingTarget{
 		public GlidingTarget(
 			TestShootingTarget.IConstArg arg
 		): base(arg){}
-		
-		public override void ResetTarget(){
-			base.ResetTarget();
-			thisWaypointsFollower.StopFollowing();
-			ResetTransformToReserve();
+		public override void DeactivateImple(){
+			base.DeactivateImple();
+			ResetGlide();
 		}
-		void ResetTransformToReserve(){
-			ResetTransform();
+		public override void ActivateImple(){
+			base.ActivateImple();
+			StartGlide();
 		}
 		IWaypointsFollower thisWaypointsFollower;
 		public void SetWaypointsFollower(IWaypointsFollower follower){
 			thisWaypointsFollower = follower;
 		}
-		public void StartGlide(){
-			ResetTarget();
+		void StartGlide(){
+			ResetGlide();
 			thisWaypointsFollower.StartFollowing();
+		}
+		void StopGlide(){
+			thisWaypointsFollower.StopFollowing();
+		}
+		void ResetGlide(){
+			StopGlide();
+			ResetTransformAtReserve();
 		}
 		protected override void DestroyTarget(){
 			base.DestroyTarget();

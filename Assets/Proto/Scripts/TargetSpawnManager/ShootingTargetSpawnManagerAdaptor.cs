@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 		}
 		public int spawnCount;
 		public Transform spawnPointsParent;
-		public TestShootingTargetReserveAdaptor targetReserveAdaptor;
+		public StaticShootingTargetReserveAdaptor targetReserveAdaptor;
 		public override void SetUp(){
 			ShootingTargetSpawnManager.IConstArg arg = new ShootingTargetSpawnManager.ConstArg(
 				spawnCount,
@@ -23,7 +23,7 @@ namespace AppleShooterProto{
 		}
 		public override void SetUpReference(){
 			IShootingTargetSpawnPoint[] spawnPoints = CollectSpawnPoints();
-			ITestShootingTargetReserve reserve = targetReserveAdaptor.GetTestShootingTargetReserve();
+			IStaticShootingTargetReserve reserve = targetReserveAdaptor.GetStaticShootingTargetReserve();
 			List<IFlyingTarget> flyingTargets = CollectFlyingTargets();
 			IGlidingTarget[] glidingTargets = CollectGlidingTargets();
 			thisSpawnManager.SetShootingTargetSpawnPoints(spawnPoints);

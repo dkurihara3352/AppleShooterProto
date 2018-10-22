@@ -6,16 +6,22 @@ namespace AppleShooterProto{
 	public interface IShootingTarget{
 		void Hit(IArrow arrow);
 		void SetPosition(Vector3 position);
+		Vector3 GetPosition();
 		void SetRotation(Quaternion rotation);
 		void SetParent(Transform parent);
 		Transform GetTransform();
-		void ResetTransform();
-		void ResetTarget();
 		void AddLandedArrow(ILandedArrow landedArrow);
 		void RemoveLandedArrow(ILandedArrow landedArrow);
 		void ReserveAllLandedArrow();
 		void SetIndex(int index);
 		int GetIndex();
+
+		bool IsActivated();
+		void Activate();
+		void Deactivate();
+		void ActivateImple();
+		void DeactivateImple();
+
 	}
 	public abstract class AbsShootingTarget : IShootingTarget {
 		public AbsShootingTarget(
@@ -24,18 +30,40 @@ namespace AppleShooterProto{
 			thisOriginalHealth = arg.health;
 			thisHealth = thisOriginalHealth;
 			thisAdaptor = arg.adaptor;
+			thisActivationStateEngine = new ShootingTargetActivationStateEngine(this);
 		}
 		protected float thisOriginalHealth;
 		protected float thisHealth;
 		protected readonly IShootingTargetAdaptor thisAdaptor;
-		public void Hit(IArrow arrow){
+		/* Activation */
+			IShootingTargetActivationStateEngine thisActivationStateEngine;
+			public bool IsActivated(){
+				return thisActivationStateEngine.IsActivated();
+			}
+			public void Activate(){
+				thisActivationStateEngine.Activate();
+			}
+			public virtual void ActivateImple(){
+				thisHealth = thisOriginalHealth;
+			}
+			public void Deactivate(){
+				thisActivationStateEngine.Deactivate();
+			}
+			public virtual void DeactivateImple(){
+				ReserveAllLandedArrow();
+				ResetTransformAtReserve();
+			}
+		/*  */
+		public void Hit(
+			IArrow arrow
+		){
 			float attack = arrow.GetAttack();
 			thisHealth -= attack;
 			if(thisHealth <= 0f){
 				Debug.Log(
 					"destroyed"
 				);
-				this.DestroyTarget();
+				DestroyTarget();
 			}
 			else{
 				Debug.Log(
@@ -49,7 +77,10 @@ namespace AppleShooterProto{
 				IndicateHit(attack);
 			}
 		}
-		protected abstract void DestroyTarget();
+		protected virtual void DestroyTarget(){
+			Deactivate();
+		}
+
 		protected abstract void IndicateHealth(
 			float health,
 			float delta
@@ -60,18 +91,18 @@ namespace AppleShooterProto{
 		public void SetPosition(Vector3 position){
 			thisAdaptor.SetPosition(position);
 		}
+		public Vector3 GetPosition(){
+			return thisAdaptor.GetPosition();
+		}
 		public void SetRotation(Quaternion rotation){
 			thisAdaptor.SetRotation(rotation);
 		}
 		public void SetParent(Transform parent){
 			thisAdaptor.SetParent(parent);
 		}
-		public void ResetTransform(){
-			thisAdaptor.ResetLocalTransform();
-		}
-		public virtual void ResetTarget(){
-			thisHealth = thisOriginalHealth;
-			ReserveAllLandedArrow();
+		Transform thisReserveTransform;
+		protected virtual void ResetTransformAtReserve(){
+			thisAdaptor.ResetTransformAtReserve();
 		}
 		public Transform GetTransform(){
 			return thisAdaptor.GetTransform();
@@ -91,7 +122,7 @@ namespace AppleShooterProto{
 					arrow.Reserve();
 		}
 		int thisIndex;
-		public void SetIndex(int index){
+		public virtual void SetIndex(int index){
 			thisIndex = index;
 		}
 		public int GetIndex(){

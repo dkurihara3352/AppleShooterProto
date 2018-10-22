@@ -9,7 +9,7 @@ namespace AppleShooterProto{
 		void SetArrowReserve(IMonoBehaviourAdaptor arrowReserve);
 		void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor);
 		void SetCollisionDetectionIntervalFrameCount(int count);
-		void SetAttack(float attack);
+		// void SetAttack(float attack);
 
 		IArrow GetArrow();
 		void BecomeChildToLaunchPoint();
@@ -39,10 +39,10 @@ namespace AppleShooterProto{
 			public void SetCollisionDetectionIntervalFrameCount(int count){
 				checkPerEveryThisFrames = count;
 			}
-			public void SetAttack(float attack){
-				thisAttack = attack;
-			}
-			float thisAttack;
+			// public void SetAttack(float attack){
+			// 	thisAttack = attack;
+			// }
+			// float thisAttack;
 		/*  */
 		protected override void Awake(){
 			return;
@@ -54,8 +54,9 @@ namespace AppleShooterProto{
 			Arrow.IConstArg arg = new Arrow.ConstArg(
 				this,
 				processFactory,
-				thisIndex,
-				thisAttack
+				thisIndex
+				// ,
+				// thisAttack
 			);
 			thisArrow = new Arrow(arg);
 			thisIsReadyForGizmo = true;
@@ -128,7 +129,8 @@ namespace AppleShooterProto{
 							Transform hitTrans = hit.transform;
 							Debug.Log(
 								"hit detected: " + " "+
-								"hit transform: " + hitTrans.name.ToString()
+								"hit transform: " + hitTrans.name.ToString() + ", " +
+								"hit attack: " + thisArrow.GetAttack().ToString()
 							);
 							hitPosition = hit.point;
 							IShootingTargetAdaptor targetAdaptor = hitTrans.GetComponent(typeof(IShootingTargetAdaptor)) as IShootingTargetAdaptor;
@@ -138,11 +140,11 @@ namespace AppleShooterProto{
 								);
 							Vector3 hitPos = hit.point;
 							IShootingTarget target = targetAdaptor.GetShootingTarget();
+							target.Hit(thisArrow);
 							thisArrow.Land(
 								target,
 								hitPos
 							);
-							target.Hit(thisArrow);
 						}
 					}
 				}

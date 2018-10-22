@@ -6,8 +6,6 @@ namespace AppleShooterProto{
 	public interface IFlyingTarget: ITestShootingTarget{
 		void SetWaypoints(IFlyingTargetWaypoint[] waypoints);
 		void SetSmoothLooker(ISmoothLooker looker);
-		void StartFlight();
-		void StopFlight();
 		void SetUpWaypoints();
 		IFlyingTargetWaypoint GetCurrentWaypoint();
 		void SetUpNextWaypoint();
@@ -17,7 +15,6 @@ namespace AppleShooterProto{
 		int[] GetWaypointsNotInUseIndices();
 		float GetCurrentDist();
 		Vector3 GetForwardDirection();
-		void ResetTransformAtStandBy();
 	}
 	public class FlyingTarget : TestShootingTarget, IFlyingTarget {
 
@@ -28,11 +25,10 @@ namespace AppleShooterProto{
 			thisDistThreshold = arg.distThreshold;
 			thisWaypointsCountInSequence = arg.waypointsCountInSequence;
 			thisSpeed = arg.speed;
-			ResetTransformAtStandBy();
 		}
-		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
-		}
+		// public Vector3 GetPosition(){
+		// 	return thisAdaptor.GetPosition();
+		// }
 		IFlyingTargetFlightProcess thisFlightProcess;
 		readonly Vector3 thisInitialVelocity;
 		readonly float thisDistThreshold;
@@ -40,9 +36,20 @@ namespace AppleShooterProto{
 		public void SetSmoothLooker(ISmoothLooker looker){
 			thisSmoothLooker = looker;
 		}
+
+		public override void ActivateImple(){
+			base.ActivateImple();
+			StartFlight();
+		}
+		public override void DeactivateImple(){
+			base.DeactivateImple();
+			ResetFlight();
+		}
+
+
 		readonly float thisSpeed;
-		public void StartFlight(){
-			this.ResetTarget();
+		void StartFlight(){
+			this.ResetFlight();
 			thisFlightProcess = thisProcessFactory.CreateFlyingTargetFlightProcess(
 				this,
 				thisInitialVelocity,
@@ -53,11 +60,15 @@ namespace AppleShooterProto{
 			thisSmoothLooker.SetLookAtTarget(GetCurrentWaypoint().GetAdaptor());
 			thisSmoothLooker.StartSmoothLook();
 		}
+		void ResetFlight(){
+			StopFlight();
+			ResetTransformAtReserve();
+		}
 		protected override void DestroyTarget(){
 			base.DestroyTarget();
 			StopFlight();
 		}
-		public void StopFlight(){
+		void StopFlight(){
 			if(thisFlightProcess != null){
 				thisFlightProcess.Stop();
 				thisFlightProcess = null;
@@ -141,14 +152,6 @@ namespace AppleShooterProto{
 		}
 		IFlyingTargetAdaptor thisTypedAdaptor{
 			get{return (IFlyingTargetAdaptor)thisAdaptor;}
-		}
-		public void ResetTransformAtStandBy(){
-			thisTypedAdaptor.ResetTransformAtStandBy();
-		}
-		public override void ResetTarget(){
-			base.ResetTarget();
-			StopFlight();
-			ResetTransformAtStandBy();
 		}
 		/*  */
 		public new interface IConstArg: TestShootingTarget.IConstArg{

@@ -20,7 +20,7 @@ namespace AppleShooterProto{
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public SmoothLookerAdaptor recticleSmoothLookerAdaptor;
 		public PlayerCameraAdaptor playerCameraAdaptor;
-		public TestShootingTargetReserveAdaptor testShootingTargetReserveAdaptor;
+		public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
 
 		public void SetUp(){
 			SetUpUISystem();
@@ -82,7 +82,7 @@ namespace AppleShooterProto{
 		}
 
 		public void GetTargetsReadyAtReserve(){
-			ITestShootingTargetReserve reserve = testShootingTargetReserveAdaptor.GetTestShootingTargetReserve();
+			IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
 			reserve.GetTargetsReadyInReserve();
 		}
 		public void StartWaypointsFollower(){

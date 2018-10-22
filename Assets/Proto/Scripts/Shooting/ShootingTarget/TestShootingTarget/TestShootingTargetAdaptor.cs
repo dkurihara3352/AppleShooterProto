@@ -6,6 +6,7 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface ITestShootingTargetAdaptor: IShootingTargetAdaptor{
 		void SetProcessManager(IProcessManager processManager);
+		void SetReserveTransform(Transform reserveTransform);
 		void ToggleCollider(bool on);
 		void SetColor(Color color);
 		void StartHitAnimation(float magnitude);
@@ -13,6 +14,7 @@ namespace AppleShooterProto{
 		float GetAlpha();
 		void SetAlpha(float a);
 		void CheckAndStartNewHitAnimation(float magnitude);
+		// void SetIndexOnTextMesh(int index);
 	}
 	[RequireComponent(typeof(Collider))]
 	public class TestShootingTargetAdaptor : ShootingTargetAdaptor, ITestShootingTargetAdaptor {
@@ -21,8 +23,10 @@ namespace AppleShooterProto{
 			MeshRenderer meshRenderer = this.transform.GetComponent<MeshRenderer>();
 			thisMaterial = meshRenderer.material;
 			thisHitTriggerHash = Animator.StringToHash("Hit");
+			thisHitMagnitudeHash = Animator.StringToHash("HitMagnitude");
 			if(processManager != null)
 				SetProcessManager(processManager);
+			// thisTextMesh = CollectTextMesh();
 		}
 		public override void SetUp(){
 			SetColor(defaultColor);
@@ -47,6 +51,9 @@ namespace AppleShooterProto{
 		public void SetProcessManager(IProcessManager processManager){
 			thisProcessManager = processManager;
 		}
+		public void SetReserveTransform(Transform reserveTransform){
+			this.reserveTransform = reserveTransform;
+		}
 		public float health;
 		public Color defaultColor;
 		public float fadeTime;
@@ -66,6 +73,7 @@ namespace AppleShooterProto{
 		}
 		Animator thisAnimator;
 		int thisHitTriggerHash;
+		int thisHitMagnitudeHash;
 		public void StartHitAnimation(float magnitude){
 			thisAnimator.SetTrigger(thisHitTriggerHash);
 		}
@@ -88,7 +96,12 @@ namespace AppleShooterProto{
 			SetColor(newColor);
 		}
 		public void CheckAndStartNewHitAnimation(float magnitude){
+			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
 			thisAnimator.SetTrigger(thisHitTriggerHash);
 		}
+		// public void SetIndexOnTextMesh(int index){
+		// 	if(thisTextMesh != null)
+		// 		thisTextMesh.text = index.ToString();
+		// }
 	}
 }

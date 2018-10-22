@@ -17,7 +17,7 @@ namespace AppleShooterProto{
 			thisFlyingTarget = target;
 		}
 		public override void Execute(){
-			thisFlyingTarget.StartFlight();
+			thisFlyingTarget.Activate();
 		}
 	}
 }

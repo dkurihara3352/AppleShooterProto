@@ -79,7 +79,7 @@ namespace AppleShooterProto{
 				sTL_2,
 				"Run"
 			)){
-				StartFlyingTargetFlight();
+				ActivateFlyingTarget();
 				// FinalizeWaypointCurves();
 				// StartGlidingTargetGlide();
 			}
@@ -87,26 +87,26 @@ namespace AppleShooterProto{
 				sTL_3,
 				"Reset"
 			)){
-				ResetGlidingTarget();
+				DeactivateGlidingTarget();
 			}
 		}
 		
 		/* Left */
-			void StartFlyingTargetFlight(){
+			void ActivateFlyingTarget(){
 				IFlyingTarget flyingTarget = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
-				flyingTarget.StartFlight();
+				flyingTarget.Activate();
 				thisFlyingTargetIsReady = true;
 			}
 			bool thisFlyingTargetIsReady = false;
-			void StartGlidingTargetGlide(){
+			void ActivateGlidingTarget(){
 				// IWaypointsFollower follower = glidingTargetWPFollowerAdaptor.GetWaypointsFollower();
 				// follower.StartFollowing();
 				IGlidingTarget target = (IGlidingTarget)glidingTargetAdaptor.GetShootingTarget();
-				target.StartGlide();
+				target.Activate();
 			}
-			void ResetGlidingTarget(){
+			void DeactivateGlidingTarget(){
 				IGlidingTarget target = (IGlidingTarget)glidingTargetAdaptor.GetShootingTarget();
-				target.ResetTarget();
+				target.Deactivate();
 			}
 			void FinalizeWaypointCurves(){
 				IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();

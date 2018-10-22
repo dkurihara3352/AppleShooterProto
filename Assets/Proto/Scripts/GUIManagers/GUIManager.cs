@@ -55,22 +55,23 @@ namespace AppleShooterProto{
 		public ShootingManagerAdaptor shootingManagerAdaptor;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
-		public TestShootingTargetReserveAdaptor testShootingTargetReserveAdaptor;
+		public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
 		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		void OnGUI(){
 			/* left */
 				DrawControl();
-				// DrawArrowsState();
+				DrawArrowsState();
 				// DrawSpawnedShootingTargets();
-				DrawLandedArrows();
+				// DrawLandedArrows();
 			/* right */
-				DrawCurrentState(sTR_1);
+				// DrawCurrentState(sTR_1);
 				// DrawScrollMultiplier();
 				// DrawLaunchAngle();
 				// DrawFlightSpeed();
-				DrawWaypointsFollower(sTR_2);
-				DrawCurveSequence(sTR_3);
-				DrawSpawnIndices(sTR_4);
+				DrawWaypointsFollower(sTR_1);
+				DrawCurveSequence(sTR_2);
+				// DrawSpawnIndices(sTR_4);
+				DrawShootingMetrics(sTR_3);
 		}
 		/* left */
 			void DrawControl(){
@@ -125,7 +126,7 @@ namespace AppleShooterProto{
 				if(thisSystemIsReady){
 					IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 					List<IPCWaypointCurve> allWaypointCurves = pcWaypointsManager.GetAllPCWaypointCurves();
-					ITestShootingTargetReserve targetReserve = testShootingTargetReserveAdaptor.GetTestShootingTargetReserve();
+					IStaticShootingTargetReserve targetReserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
 					int waypointCurveCount = allWaypointCurves.Count;
 					int rectsCount = waypointCurveCount + 1;
 					foreach(IPCWaypointCurve curve in allWaypointCurves){
@@ -153,9 +154,9 @@ namespace AppleShooterProto{
 				IPCWaypointCurve curve,
 				Rect rect
 			){
-				ITestShootingTarget[] spawnedTargets = curve.GetSpawnedShootingTargets();
+				IShootingTarget[] spawnedTargets = curve.GetSpawnedShootingTargets();
 				string indicesString = "";
-				foreach(ITestShootingTarget target in spawnedTargets){
+				foreach(IShootingTarget target in spawnedTargets){
 					indicesString += 
 					target.GetIndex().ToString() + ", ";
 				}
@@ -169,7 +170,7 @@ namespace AppleShooterProto{
 			void DrawReservedShootingTargets(
 				Rect rect
 			){
-				ITestShootingTargetReserve reserve = testShootingTargetReserveAdaptor.GetTestShootingTargetReserve();
+				IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
 				ITestShootingTarget[] targetsInReserve = reserve.GetTestTargetsInReserve();
 				string indicesString = "";
 				foreach(ITestShootingTarget target in targetsInReserve){
@@ -333,6 +334,24 @@ namespace AppleShooterProto{
 				}
 
 				
+			}
+			void DrawShootingMetrics(Rect rect){
+				if(thisSystemIsReady){
+					IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
+					float drawTime = shootingManager.GetDrawElapsedTime();
+					float drawStrength = shootingManager.GetDrawStrength();
+					float globalDrawStrength = shootingManager.GetGlobalDrawStrength();
+					float arrowAttack = shootingManager.GetArrowAttack();
+					float flightSpeed = shootingManager.GetFlightSpeed();
+					GUI.Label(
+						rect,
+						"drawTime: " + drawTime.ToString() + "\n" +
+						"drawStrength: " + drawStrength.ToString() + "\n" +
+						"globalDS: " + globalDrawStrength.ToString() + "\n" +
+						"arrowAttack: " + arrowAttack.ToString() + "\n" +
+						"flightSpeed: " + flightSpeed.ToString() + "\n"
+					);
+				}
 			}
 		/*  */
 	}

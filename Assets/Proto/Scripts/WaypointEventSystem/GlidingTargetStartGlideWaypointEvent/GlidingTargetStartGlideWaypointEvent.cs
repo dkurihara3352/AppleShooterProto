@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 			thisGlidingTarget = target;
 		}
 		public override void Execute(){
-			thisGlidingTarget.StartGlide();
+			thisGlidingTarget.Activate();
 		}
 	}
 }

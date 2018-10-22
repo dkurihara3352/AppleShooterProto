@@ -36,6 +36,7 @@ namespace AppleShooterProto{
 		int GetFlightID();
 
 		float GetAttack();
+		void SetAttack(float attack);
 	}
 	public class Arrow : IArrow {
 		/* Setup */
@@ -52,7 +53,7 @@ namespace AppleShooterProto{
 				thisStateEngine = new ArrowStateEngine(
 					stateEngineConstArg
 				);
-				thisAttack = arg.attack;
+				// thisAttack = arg.attack;
 			}
 			readonly IArrowAdaptor thisAdaptor;
 			readonly IAppleShooterProcessFactory thisProcessFactory;
@@ -94,6 +95,7 @@ namespace AppleShooterProto{
 				MoveToReservePosition();
 				thisAdaptor.SetRotation(Quaternion.identity);
 				CheckAndStopFlightProcess();
+				SetAttack(0f);
 			}
 			void CheckAndStopFlightProcess(){
 				if(thisFlightProcess != null && thisFlightProcess.IsRunning()){
@@ -137,11 +139,12 @@ namespace AppleShooterProto{
 				IShootingTarget target,
 				Vector3 hitPosition
 			){
-				thisShootingManager.SpawnLandedArrowOn(
-					target,
-					hitPosition,
-					thisAdaptor.GetRotation()
-				);
+				if(target.IsActivated())
+					thisShootingManager.SpawnLandedArrowOn(
+						target,
+						hitPosition,
+						thisAdaptor.GetRotation()
+					);
 				TryResetArrow();
 			}
 			public void BecomeChildToReserve(){
@@ -187,24 +190,27 @@ namespace AppleShooterProto{
 			public float GetAttack(){
 				return thisAttack;
 			}
+			public void SetAttack(float attack){
+				thisAttack = attack;
+			}
 		/* Const */
 			public interface IConstArg{
 				IArrowAdaptor adaptor{get;}
 				IAppleShooterProcessFactory processFactory{get;}
 				int index{get;}
-				float attack{get;}
+				// float attack{get;}
 			}
 			public struct ConstArg: IConstArg{
 				public ConstArg(
 					IArrowAdaptor adaptor,
 					IAppleShooterProcessFactory processFactory,
-					int index,
-					float attack
+					int index
+					// ,float attack
 				){
 					thisAdaptor = adaptor;
 					thisProcessFactory = processFactory;
 					thisIndex = index;
-					thisAttack = attack;
+					// thisAttack = attack;
 				}
 				readonly IArrowAdaptor thisAdaptor;
 				public IArrowAdaptor adaptor{get{return thisAdaptor;}}
@@ -212,8 +218,8 @@ namespace AppleShooterProto{
 				public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
 				readonly int thisIndex;
 				public int index{get{return thisIndex;}}
-				readonly float thisAttack;
-				public float attack{get{return thisAttack;}}
+				// readonly float thisAttack;
+				// public float attack{get{return thisAttack;}}
 			}
 		/*  */
 	}

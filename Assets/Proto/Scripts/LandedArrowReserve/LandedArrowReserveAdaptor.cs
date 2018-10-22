@@ -23,6 +23,7 @@ namespace AppleShooterProto{
 		}
 		public int totalLandedArrowsCount;
 		public GameObject landedArrowPrefab;
+		public Camera guiCamera;
 		ILandedArrow[] CreateLandedArrows(){
 			List<ILandedArrow> resultList = new List<ILandedArrow>();
 			for(int i = 0; i < totalLandedArrowsCount; i ++){

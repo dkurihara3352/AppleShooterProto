@@ -8,14 +8,14 @@ namespace AppleShooterProto{
 		void SetShootingTargetSpawnPoints(
 			IShootingTargetSpawnPoint[] points
 		);
-		void SetTestShootingTargetReserve(ITestShootingTargetReserve reserve);
+		void SetTestShootingTargetReserve(IStaticShootingTargetReserve reserve);
 		void SetFlyingTargets(List<IFlyingTarget> flyingTargets);
 		void SetGlidingTargets(IGlidingTarget[] targets);
 
 		void Spawn();
 		void Despawn();
 		int[] GetSpawnPointIndices();
-		ITestShootingTarget[] GetSpawnedTestShootingTargets();
+		IShootingTarget[] GetSpawnedShootingTargets();
 	}
 	public class ShootingTargetSpawnManager: IShootingTargetSpawnManager{
 		public ShootingTargetSpawnManager(IConstArg arg){
@@ -30,8 +30,8 @@ namespace AppleShooterProto{
 		public void SetShootingTargetSpawnPoints(IShootingTargetSpawnPoint[] points){
 			thisSpawnPoints = points;
 		}
-		ITestShootingTargetReserve thisTargetReserve;
-		public void SetTestShootingTargetReserve(ITestShootingTargetReserve reserve){
+		IStaticShootingTargetReserve thisTargetReserve;
+		public void SetTestShootingTargetReserve(IStaticShootingTargetReserve reserve){
 			thisTargetReserve = reserve;
 		}
 		/*  */
@@ -59,9 +59,9 @@ namespace AppleShooterProto{
 		public int[] GetSpawnPointIndices(){
 			return thisIndices;
 		}
-		ITestShootingTarget SpawnStaticTargetAt(int spawnPointIndex){
+		IStaticShootingTarget SpawnStaticTargetAt(int spawnPointIndex){
 			IShootingTargetSpawnPoint spawnPoint = thisSpawnPoints[spawnPointIndex];
-			ITestShootingTarget target = thisTargetReserve.Unreserve();
+			IStaticShootingTarget target = thisTargetReserve.Unreserve();
 			spawnPoint.SetTarget(target);
 			MakeTargetChildOfSpawnPoint(
 				target,
@@ -72,16 +72,16 @@ namespace AppleShooterProto{
 			return target;
 		}
 		void MakeTargetChildOfSpawnPoint(
-			ITestShootingTarget target,
+			IStaticShootingTarget target,
 			IShootingTargetSpawnPoint spawnPoint
 		){
 			target.SetParent(spawnPoint.GetTransform());
 		}
 		public void Despawn(){
-			DespawnFlyingTargets();
-			DespawnGlidingTargets();
+			DeactivateFlyingTargets();
+			DeactiveteGlidingTargets();
 			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){
-				ITestShootingTarget spawnedTarget = point.GetSpawnedTarget() as ITestShootingTarget;
+				IStaticShootingTarget spawnedTarget = point.GetSpawnedTarget() as IStaticShootingTarget;
 				if(spawnedTarget != null){
 					point.SetTarget(null);
 					thisTargetReserve.Reserve(spawnedTarget);
@@ -93,29 +93,32 @@ namespace AppleShooterProto{
 				thisFlyingTargets = flyingTargets;
 			}
 			List<IFlyingTarget> thisFlyingTargets;
-			void DespawnFlyingTargets(){
+			void DeactivateFlyingTargets(){
 				foreach(IFlyingTarget flyingTarget in thisFlyingTargets)
-					flyingTarget.ResetTarget();
+					flyingTarget.Deactivate();
 			}
 		/* GlidingTargets */
 			IGlidingTarget[] thisGlidingTargets;
 			public void SetGlidingTargets(IGlidingTarget[] targets){
 				thisGlidingTargets = targets;
 			}
-			void DespawnGlidingTargets(){
+			void DeactiveteGlidingTargets(){
 				foreach(IGlidingTarget target in thisGlidingTargets)
-					target.ResetTarget();
+					target.Deactivate();
 			}
 		/*  */
-		public ITestShootingTarget[] GetSpawnedTestShootingTargets(){
-			List<ITestShootingTarget> resultList = new List<ITestShootingTarget>();
+		public IShootingTarget[] GetSpawnedShootingTargets(){
+			List<IShootingTarget> resultList = new List<IShootingTarget>();
 			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){
-				ITestShootingTarget spawnedTarget = point.GetSpawnedTarget() as ITestShootingTarget;
+				IStaticShootingTarget spawnedTarget = point.GetSpawnedTarget() as IStaticShootingTarget;
 				if(spawnedTarget != null)
 					resultList.Add(spawnedTarget);
 			}
 			foreach(IFlyingTarget flyingTarget in thisFlyingTargets){
 				resultList.Add(flyingTarget);
+			}
+			foreach(IGlidingTarget glidingTarget in thisGlidingTargets){
+				resultList.Add(glidingTarget);
 			}
 			return resultList.ToArray();
 		}

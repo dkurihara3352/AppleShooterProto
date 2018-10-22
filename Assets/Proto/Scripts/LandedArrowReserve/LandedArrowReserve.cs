@@ -20,7 +20,17 @@ namespace AppleShooterProto{
 
 		public void Reserve(ILandedArrow arrow){
 			arrow.SetParent(thisAdaptor.GetTransform());
+			PutArrowInArray(arrow);
+			// arrow.ResetLocalTransform();
+		}
+		float arrowSpace = 1f;
+		void PutArrowInArray(ILandedArrow arrow){
 			arrow.ResetLocalTransform();
+			int index = arrow.GetIndex();
+			float posX = index * arrowSpace;
+			Vector3 offset = new Vector3(posX, 0f, 0f);
+			Vector3 newWorPos = arrow.GetPosition() + offset;
+			arrow.SetPosition(newWorPos);
 		}
 		ILandedArrow[] thisLandedArrows;
 		public ILandedArrow[] GetLandedArrows(){

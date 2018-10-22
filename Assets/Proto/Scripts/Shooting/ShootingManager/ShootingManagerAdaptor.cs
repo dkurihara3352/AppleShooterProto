@@ -17,13 +17,32 @@ namespace AppleShooterProto{
 		public ProcessManager processManager;
 		public int drawProcessOrder;
 		public float fireRate = 1f;
+
+		public AnimationCurve drawStrengthCurve;
+		public float globalMinDrawStrength;
+		public float globalMaxDrawStrength;
+
+		public float globalMinArrowAttack;
+		public float arrowAttackMultiplier;
+		public float globalMinFlightSpeed;
+		public float flightSpeedMultiplier;
+
 		public override void SetUp(){
 			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(processManager);
 			ShootingManager.IConstArg arg = new ShootingManager.ConstArg(
 				processFactory,
 				this,
 				drawProcessOrder,
-				fireRate
+				fireRate,
+
+				drawStrengthCurve,
+				globalMinDrawStrength,
+				globalMaxDrawStrength,
+
+				globalMinArrowAttack,
+				arrowAttackMultiplier,
+				globalMinFlightSpeed,
+				flightSpeedMultiplier
 			);
 			thisShootingManager = new ShootingManager(arg);
 		}
@@ -85,7 +104,7 @@ namespace AppleShooterProto{
 				arrowAdaptor.SetArrowReserve(arrowReserve);
 				arrowAdaptor.SetIndex(i);
 				arrowAdaptor.SetCollisionDetectionIntervalFrameCount(collisionDetectionIntervalFrameCount);
-				arrowAdaptor.SetAttack(arrowAttack);
+				// arrowAdaptor.SetAttack(arrowAttack);
 				arrowAdaptor.SetUp();
 				IArrow arrow = arrowAdaptor.GetArrow();
 				arrows[i] = arrow;

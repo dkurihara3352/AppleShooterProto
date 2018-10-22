@@ -6,6 +6,7 @@ namespace AppleShooterProto{
 		void Reserve();
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
 		void SetPosition(Vector3 position);
+		Vector3 GetPosition();
 		void SetRotation(Quaternion rotation);
 		void SetParent(Transform parent);
 		void ResetLocalTransform();
@@ -31,6 +32,9 @@ namespace AppleShooterProto{
 		}
 		public void SetPosition(Vector3 position){
 			thisAdaptor.SetPosition(position);
+		}
+		public Vector3 GetPosition(){
+			return thisAdaptor.GetPosition();
 		}
 		public void SetRotation(Quaternion rotation){
 			thisAdaptor.SetRotation(rotation);
@@ -58,6 +62,7 @@ namespace AppleShooterProto{
 		int thisIndex;
 		public void SetIndex(int index){
 			thisIndex = index;
+			thisAdaptor.SetIndexOnTextMesh(index);
 		}
 		public int GetIndex(){
 			return thisIndex;
