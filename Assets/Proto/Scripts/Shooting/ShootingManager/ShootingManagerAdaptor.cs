@@ -83,9 +83,13 @@ namespace AppleShooterProto{
 			thisShootingManager.SetLandedArrowReserve(landedArrowReserve);
 
 			SetUpArrows();
+			// IArrow[] arrows = CollectArrows();
+			// thisShootingManager.SetArrows(arrows);
+			// IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
+			// thisShootingManager.SetArrowReserve(arrowReserve);
 		}
 		public int arrowCount = 20;
-		public MonoBehaviourAdaptor arrowReserve;
+		public Transform arrowReserveTrans;
 		public GameObject arrowPrefab;
 		public int collisionDetectionIntervalFrameCount = 3;
 		public float arrowAttack = 100f;
@@ -93,7 +97,7 @@ namespace AppleShooterProto{
 			IArrow[] arrows = new IArrow[arrowCount];
 			IArrowAdaptor[] arrowAdaptors = new IArrowAdaptor[arrowCount];
 			for(int i = 0; i < arrowCount; i++){
-				GameObject arrowGO = Instantiate(arrowPrefab, Vector3.zero, Quaternion.identity, arrowReserve.GetTransform());
+				GameObject arrowGO = Instantiate(arrowPrefab, Vector3.zero, Quaternion.identity, arrowReserveTrans);
 				IArrowAdaptor arrowAdaptor = arrowGO.GetComponent(typeof(IArrowAdaptor)) as IArrowAdaptor;
 				if(arrowAdaptor == null)
 					throw new System.InvalidOperationException(
@@ -101,10 +105,9 @@ namespace AppleShooterProto{
 					);
 				arrowAdaptor.SetProcessManager(processManager);
 				arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);
-				arrowAdaptor.SetArrowReserve(arrowReserve);
+				arrowAdaptor.SetArrowReserveTransform(arrowReserveTrans);
 				arrowAdaptor.SetIndex(i);
 				arrowAdaptor.SetCollisionDetectionIntervalFrameCount(collisionDetectionIntervalFrameCount);
-				// arrowAdaptor.SetAttack(arrowAttack);
 				arrowAdaptor.SetUp();
 				IArrow arrow = arrowAdaptor.GetArrow();
 				arrows[i] = arrow;
@@ -117,6 +120,9 @@ namespace AppleShooterProto{
 			
 			IShootingManager shootingManager = GetShootingManager();
 			shootingManager.SetArrows(arrows);
+
+			foreach(IArrow arrow in arrows)
+				arrow.ResetArrow();
 		}
 	}
 }

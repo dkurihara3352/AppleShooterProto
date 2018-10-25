@@ -14,6 +14,8 @@ namespace AppleShooterProto{
 		IShootingTarget GetShootingTarget();
 		int GetIndex();
 		void SetIndex(int index);
+
+		void SetArrowTwang(IArrowTwang twang);
 	}
 	public class LandedArrow: ILandedArrow{
 		public LandedArrow(
@@ -29,6 +31,7 @@ namespace AppleShooterProto{
 		public void Reserve(){
 			thisReserve.Reserve(this);
 			SetShootingTarget(null);
+			thisArrowTwang.StopTwang();
 		}
 		public void SetPosition(Vector3 position){
 			thisAdaptor.SetPosition(position);
@@ -55,6 +58,7 @@ namespace AppleShooterProto{
 			thisTarget = target;
 			if(target != null)
 				target.AddLandedArrow(this);
+			thisArrowTwang.Twang();
 		}
 		public IShootingTarget GetShootingTarget(){
 			return thisTarget;
@@ -67,6 +71,10 @@ namespace AppleShooterProto{
 		public int GetIndex(){
 			return thisIndex;
 		}
+		public void SetArrowTwang(IArrowTwang twang){
+			thisArrowTwang = twang;
+		}
+		IArrowTwang thisArrowTwang;
 		/* Const */
 			public interface IConstArg{
 				ILandedArrowAdaptor adaptor{get;}

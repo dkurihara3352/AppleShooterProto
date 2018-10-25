@@ -63,6 +63,13 @@ namespace AppleShooterProto{
 			float distanceThreshold,
 			float speed
 		);
+		IArrowTwangProcess CreateArrowTwangProcess(
+			IArrowTwangAdaptor adaptor,
+			float twangTime
+		);
+		IMarkerUIMarkProcess CreateMarkerUIMarkProcess(
+			IMarkerUI markerUI
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -225,6 +232,26 @@ namespace AppleShooterProto{
 				thisProcessManager
 			);
 			return new FlyingTargetFlightProcess(arg);
+		}
+		public IArrowTwangProcess CreateArrowTwangProcess(
+			IArrowTwangAdaptor adaptor,
+			float twangTime
+		){
+			ArrowTwangProcess.IConstArg arg = new ArrowTwangProcess.ConstArg(
+				thisProcessManager,
+				twangTime,
+				adaptor
+			);
+			return new ArrowTwangProcess(arg);
+		}
+		public IMarkerUIMarkProcess CreateMarkerUIMarkProcess(
+			IMarkerUI markerUI
+		){
+			MarkerUIMarkProcess.IConstArg arg = new MarkerUIMarkProcess.ConstArg(
+				markerUI,
+				thisProcessManager
+			);
+			return new MarkerUIMarkProcess(arg);
 		}
 	}
 }

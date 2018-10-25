@@ -93,7 +93,7 @@ namespace AppleShooterProto{
 				thisShootingManager.RemoveArrowFromFlight(this);
 				thisShootingManager.CheckAndClearNockedArrow(this);
 				MoveToReservePosition();
-				thisAdaptor.SetRotation(Quaternion.identity);
+				// thisAdaptor.SetRotation(Quaternion.identity);
 				CheckAndStopFlightProcess();
 				SetAttack(0f);
 			}
@@ -103,9 +103,16 @@ namespace AppleShooterProto{
 					thisFlightProcess = null;
 				}
 			}
+			float arrowSpaceInArray = 1f;
 			void MoveToReservePosition(){
 				thisAdaptor.BecomeChildToReserve();
 				thisAdaptor.ResetLocalTransform();
+
+				int index = GetIndex();
+				float posX = index * arrowSpaceInArray;
+				Vector3 offset = new Vector3 (posX, 0f, 0f);
+				Vector3 newWorPos = this.GetPosition() + offset;
+				SetPosition(newWorPos);
 			}
 			public void TryRegisterShot(){
 				if(thisShootingManager.AcceptsNewShot())

@@ -50,6 +50,9 @@ namespace DKUtility{
 		protected float thisElapsedTime;
 		protected float thisExpireTime;
 		protected float thisRateOfChange;
+		protected float thisNormalizedTime{
+			get{return thisElapsedTime / thisExpireTime;}
+		}
 		sealed public override void UpdateProcess(float deltaT){
 			thisElapsedTime += deltaT;
 			if(thisProcessConstraint != ProcessConstraint.none){

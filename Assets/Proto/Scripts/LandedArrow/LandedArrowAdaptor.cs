@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 		ILandedArrow GetLandedArrow();
 		void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor landedArrowReserveAdaptor);
 		void SetIndexOnTextMesh(int index);
+		void SetArrowTwangAdaptor(IArrowTwangAdaptor adaptor);
 	}
 	public class LandedArrowAdaptor : MonoBehaviourAdaptor, ILandedArrowAdaptor {
 
@@ -34,6 +35,9 @@ namespace AppleShooterProto{
 		public override void SetUpReference(){
 			ILandedArrowReserve reserve = thisReserveAdaptor.GetLandedArrowReserve();
 			thisLandedArrow.SetLandedArrowReserve(reserve);
+
+			IArrowTwang twang = thisTwangAdaptor.GetArrowTwang();
+			thisLandedArrow.SetArrowTwang(twang);
 		}
 
 		TextMesh thisTextMesh;
@@ -49,6 +53,10 @@ namespace AppleShooterProto{
 		}
 		public void SetIndexOnTextMesh(int index){
 			thisTextMesh.text = index.ToString();
+		}
+		IArrowTwangAdaptor thisTwangAdaptor;
+		public void SetArrowTwangAdaptor(IArrowTwangAdaptor twangAdaptor){
+			thisTwangAdaptor = twangAdaptor;
 		}
 	}
 }

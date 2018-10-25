@@ -6,7 +6,7 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface IArrowAdaptor: IMonoBehaviourAdaptor{
 		void SetProcessManager(IProcessManager processManager);
-		void SetArrowReserve(IMonoBehaviourAdaptor arrowReserve);
+		void SetArrowReserveTransform(Transform arrowReserveTrans);
 		void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor);
 		void SetCollisionDetectionIntervalFrameCount(int count);
 		// void SetAttack(float attack);
@@ -32,17 +32,13 @@ namespace AppleShooterProto{
 			public void SetProcessManager(IProcessManager processManager){
 				thisProcessManager = processManager;
 			}
-			IMonoBehaviourAdaptor thisArrowReserve;
-			public void SetArrowReserve(IMonoBehaviourAdaptor reserve){
-				thisArrowReserve = reserve;
+			Transform thisArrowReserveTrans;
+			public void SetArrowReserveTransform(Transform reserveTrans){
+				thisArrowReserveTrans = reserveTrans;
 			}
 			public void SetCollisionDetectionIntervalFrameCount(int count){
 				checkPerEveryThisFrames = count;
 			}
-			// public void SetAttack(float attack){
-			// 	thisAttack = attack;
-			// }
-			// float thisAttack;
 		/*  */
 		protected override void Awake(){
 			return;
@@ -70,7 +66,7 @@ namespace AppleShooterProto{
 				this.transform.SetParent(thisLaunchPointAdaptor.GetTransform(), true);
 			}
 			public void BecomeChildToReserve(){
-				this.transform.SetParent(thisArrowReserve.GetTransform(), true);
+				this.transform.SetParent(thisArrowReserveTrans, true);
 			}
 		
 		/* Debug */

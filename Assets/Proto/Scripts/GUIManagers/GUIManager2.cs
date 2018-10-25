@@ -7,24 +7,14 @@ namespace AppleShooterProto{
 
 		public void Awake(){
 			topLeft = GetGUIRect(
-				normalizedSize: new Vector2(.2f, .25f),
+				normalizedSize: new Vector2(.2f, .4f),
 				normalizedPosition: new Vector2(0f, 0f)
 			);
-			sTL_1 = GetSubRect(
-				topLeft,
-				0,
-				3
-			);
-			sTL_2 = GetSubRect(
-				topLeft,
-				1,
-				3
-			);
-			sTL_3 = GetSubRect(
-				topLeft,
-				2,
-				3
-			);
+			sTL_1 = GetSubRect( topLeft, 0, 5);
+			sTL_2 = GetSubRect( topLeft, 1, 5);
+			sTL_3 = GetSubRect( topLeft, 2, 5);
+			sTL_4 = GetSubRect( topLeft, 3, 5);
+			sTL_5 = GetSubRect( topLeft, 4, 5);
 			topRight  = GetGUIRect(
 				normalizedSize: new Vector2(.2f, .5f),
 				normalizedPosition: new Vector2(1f, 0f)
@@ -49,6 +39,8 @@ namespace AppleShooterProto{
 		Rect sTL_1;
 		Rect sTL_2;
 		Rect sTL_3;
+		Rect sTL_4;
+		Rect sTL_5;
 
 		Rect topRight;
 		Rect sTR_1;
@@ -59,6 +51,7 @@ namespace AppleShooterProto{
 		// public WaypointsFollowerAdaptor glidingTargetWPFollowerAdaptor;
 		public GlidingTargetAdaptor glidingTargetAdaptor;
 		public WaypointsManagerAdaptor waypointsManagerAdaptor;
+		public MarkerUIAdaptor markerUIAdaptor;
 		/*  */
 		bool thisSystemIsReady = false;
 		public void OnGUI(){
@@ -73,6 +66,7 @@ namespace AppleShooterProto{
 			)){
 				monoBehaviourAdaptorManager.SetUpAllMonoBehaviourAdaptors();
 				monoBehaviourAdaptorManager.SetUpAdaptorReference();
+				monoBehaviourAdaptorManager.FinalizeSetUp();
 				thisSystemIsReady = true;
 			}
 			if(GUI.Button(
@@ -88,6 +82,20 @@ namespace AppleShooterProto{
 				"Reset"
 			)){
 				DeactivateGlidingTarget();
+			}
+			if(
+				(GUI.Button(
+					sTL_4,
+					"ActivateMarkerUI"
+				))
+			){
+				ActivateMarkerUI();
+			}
+			if(GUI.Button(
+				sTL_5,
+				"DeactivateMarkerUI"
+			)){
+				DeactivateMarkerUI();
 			}
 		}
 		
@@ -111,6 +119,14 @@ namespace AppleShooterProto{
 			void FinalizeWaypointCurves(){
 				IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
 				waypointsManager.PlaceWaypointCurves();
+			}
+			void ActivateMarkerUI(){
+				IMarkerUI markerUI  = markerUIAdaptor.GetSceneUI() as IMarkerUI;
+				markerUI.Activate();
+			}
+			void DeactivateMarkerUI(){
+				IMarkerUI markerUI  = markerUIAdaptor.GetSceneUI() as IMarkerUI;
+				markerUI.Deactivate();
 			}
 		/* Right */
 			void DrawFlyingTarget(Rect rect){
