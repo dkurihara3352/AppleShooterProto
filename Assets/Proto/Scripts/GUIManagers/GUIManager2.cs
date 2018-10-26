@@ -7,7 +7,7 @@ namespace AppleShooterProto{
 
 		public void Awake(){
 			topLeft = GetGUIRect(
-				normalizedSize: new Vector2(.2f, .4f),
+				normalizedSize: new Vector2(.2f, .5f),
 				normalizedPosition: new Vector2(0f, 0f)
 			);
 			sTL_1 = GetSubRect( topLeft, 0, topLeftRectCount);
@@ -16,6 +16,8 @@ namespace AppleShooterProto{
 			sTL_4 = GetSubRect( topLeft, 3, topLeftRectCount);
 			sTL_5 = GetSubRect( topLeft, 4, topLeftRectCount);
 			sTL_6 = GetSubRect( topLeft, 5, topLeftRectCount);
+			sTL_7 = GetSubRect( topLeft, 6, topLeftRectCount);
+			sTL_8 = GetSubRect( topLeft, 7, topLeftRectCount);
 			topRight  = GetGUIRect(
 				normalizedSize: new Vector2(.2f, .5f),
 				normalizedPosition: new Vector2(1f, 0f)
@@ -37,13 +39,15 @@ namespace AppleShooterProto{
 			);
 		}
 		Rect topLeft;
-		int topLeftRectCount = 6;
+		int topLeftRectCount = 8;
 		Rect sTL_1;
 		Rect sTL_2;
 		Rect sTL_3;
 		Rect sTL_4;
 		Rect sTL_5;
 		Rect sTL_6;
+		Rect sTL_7;
+		Rect sTL_8;
 
 		Rect topRight;
 		Rect sTR_1;
@@ -56,6 +60,7 @@ namespace AppleShooterProto{
 		public WaypointsManagerAdaptor waypointsManagerAdaptor;
 		public MarkerUIAdaptor markerUIAdaptor;
 		public PopUIAdaptor popUIAdaptor;
+		public PopUIReserveAdaptor popUIReserveAdaptor;
 		/*  */
 		bool thisSystemIsReady = false;
 		public void OnGUI(){
@@ -107,6 +112,16 @@ namespace AppleShooterProto{
 			)){
 				ActivatePopUI();
 			}
+			if(GUI.Button(
+				sTL_7,
+				"ReactivatePopUI"
+			))
+				ReactivatePopUI();
+			if(GUI.Button(
+				sTL_8,
+				"ActivateInstatiablePopUI"
+			))
+				ActivateInstatiablePopUI();
 		}
 		
 		/* Left */
@@ -139,9 +154,25 @@ namespace AppleShooterProto{
 				markerUI.Deactivate();
 			}
 			void ActivatePopUI(){
-				IPopUI popUI = popUIAdaptor.GetSceneUI() as IPopUI;
+				IPopUI popUI = popUIAdaptor.GetPopUI();
 				popUI.Activate();
 			}
+			void ReactivatePopUI(){
+				IPopUI popUI = popUIAdaptor.GetPopUI();
+				popUI.Deactivate();
+				popUI.Activate();
+			}
+			void ActivateInstatiablePopUI(){
+				IPopUIReserve reserve = popUIReserveAdaptor.GetPopUIReserve();
+				IFlyingTarget target = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
+				Transform targetTrans = target.GetTransform();
+
+				IPopUI popUIToActivate = reserve.GetNextPopUI();
+				popUIToActivate.Deactivate();
+				popUIToActivate.SetTargetTransform(targetTrans);
+				popUIToActivate.Activate();
+			}
+
 		/* Right */
 			void DrawFlyingTarget(Rect rect){
 				if(thisFlyingTargetIsReady){

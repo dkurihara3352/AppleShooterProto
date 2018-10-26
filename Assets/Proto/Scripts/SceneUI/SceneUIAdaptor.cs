@@ -8,13 +8,18 @@ namespace AppleShooterProto{
 		void SetUIScale(Vector2 scale);
 		void SetUIPosition(Vector2 position);
 		ISceneUI GetSceneUI();
+		void SetTargetTransform(Transform targetTrans);
 		Vector3 GetTargetWorldPosition();
 		void ResetAtReserve();
 		void BecomeChildToCanvas();
+		Vector2 GetRectSize();
 	}
 	[RequireComponent(typeof(RectTransform))]
 	public abstract class AbsSceneUIAdaptor : MonoBehaviourAdaptor, ISceneUIAdaptor {
-		RectTransform thisRectTransform;
+		protected RectTransform thisRectTransform;
+		protected RectTransform CollectRectTransform(){
+			return this.transform.GetComponent<RectTransform>();
+		}
 		public Camera uiCamera;
 		public Vector2 minUISize;
 		public Vector2 maxUISize;
@@ -25,7 +30,7 @@ namespace AppleShooterProto{
 			return thisSceneUI;
 		}
 		public override void SetUp(){
-			thisRectTransform = this.transform.GetComponent<RectTransform>();
+			thisRectTransform = CollectRectTransform();
 			thisCanvas  = CollectCanvas();
 			thisSceneUI = CreateSceneUI();
 		}
@@ -43,22 +48,28 @@ namespace AppleShooterProto{
 			thisRectTransform.position = position;
 		}
 		public Transform targetTransform;
+		public void SetTargetTransform(Transform targetTrans){
+			targetTransform = targetTrans;
+		}
 		public Vector3 GetTargetWorldPosition(){
 			return targetTransform.position;
 		}
 		public RectTransform reserveRectTransform;
-		public void ResetAtReserve(){
+		public virtual void ResetAtReserve(){
 			SetParent(reserveRectTransform);
 			ResetLocalTransform();
 			OnResetAtReserve();
 		}
 		protected abstract void OnResetAtReserve();
-		Canvas thisCanvas;
+		protected Canvas thisCanvas;
 		Canvas CollectCanvas(){
 			return this.transform.GetComponentInParent<Canvas>();
 		}
 		public void BecomeChildToCanvas(){
 			SetParent(thisCanvas.transform);
+		}
+		public Vector2 GetRectSize(){
+			return thisRectTransform.sizeDelta;
 		}
 	}
 }

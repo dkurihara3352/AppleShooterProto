@@ -19,7 +19,9 @@ namespace AppleShooterProto{
 		}
 		protected override void DeactivateImple(){
 			thisTypedAdaptor.StopMark();
+			thisTypedAdaptor.StopGlide();
 			thisTypedAdaptor.ResetAtReserve();
+
 		}
 	}
 }

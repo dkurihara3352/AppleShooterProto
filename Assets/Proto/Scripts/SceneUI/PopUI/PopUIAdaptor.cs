@@ -6,10 +6,12 @@ using UnityEngine.UI;
 
 namespace AppleShooterProto{
 	public interface IPopUIAdaptor: ISceneUIAdaptor{
+		IPopUI GetPopUI();
 		void Pop();
 		void SetUIAlpha(float alpha);
 		void DeactivateUI();
 		void StopMark();
+		void StopGlide();
 		Graphic GetChildGraphic();
 		Color GetChildGraphicOriginalColor();
 		Vector2 GetChildGraphicOriginalLocalPosition();
@@ -42,7 +44,7 @@ namespace AppleShooterProto{
 			GlideRandom	
 		}
 		public PopMode popMode;
-		IPopUIGlideProcess thisProcess;
+		IPopUIGlideProcess thisGlideProcess;
 		public void Pop(){
 			thisSceneUI.UpdateUI();
 			StartMark();
@@ -68,7 +70,7 @@ namespace AppleShooterProto{
 		}
 		void StartGlide(){
 			StopGlide();
-			thisProcess = processFactory.CreatePopUIGlideProcess(
+			thisGlideProcess = processFactory.CreatePopUIGlideProcess(
 				this,
 				popMode,
 				glideTime,
@@ -77,12 +79,12 @@ namespace AppleShooterProto{
 				alphaCurve,
 				scaleCurve
 			);
-			thisProcess.Run();
+			thisGlideProcess.Run();
 		}
-		void StopGlide(){
-			if(thisProcess != null && thisProcess.IsRunning())
-				thisProcess.Stop();
-			thisProcess = null;
+		public void StopGlide(){
+			if(thisGlideProcess != null && thisGlideProcess.IsRunning())
+				thisGlideProcess.Stop();
+			thisGlideProcess = null;
 		}
 		Graphic thisGraphic;
 		Color thisChildGraphicOriginalColor;
@@ -120,6 +122,14 @@ namespace AppleShooterProto{
 		}
 		public Color GetChildGraphicOriginalColor(){
 			return thisChildGraphicOriginalColor;
+		}
+		protected IPopUI thisPopUI{
+			get{
+				return (IPopUI)thisSceneUI;
+			}
+		}
+		public IPopUI GetPopUI(){
+			return thisPopUI;
 		}
 	}
 }

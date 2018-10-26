@@ -11,6 +11,9 @@ namespace AppleShooterProto{
 		void UpdateUI();
 		void Activate();
 		void Deactivate();
+
+		Vector2 GetRectSize();
+		void SetTargetTransform(Transform targetTrans);
 	}
 	public abstract class AbsSceneUI : ISceneUI {
 		public AbsSceneUI(
@@ -101,6 +104,12 @@ namespace AppleShooterProto{
 				thisActivationIsInitialized = true;
 		}
 		protected abstract void DeactivateImple();
+		public Vector2 GetRectSize(){
+			return thisAdaptor.GetRectSize();
+		}
+		public void SetTargetTransform(Transform targetTrans){
+			thisAdaptor.SetTargetTransform(targetTrans);
+		}
 		/* ConstArg */
 			public interface IConstArg{
 				Camera uiCamera{get;}
