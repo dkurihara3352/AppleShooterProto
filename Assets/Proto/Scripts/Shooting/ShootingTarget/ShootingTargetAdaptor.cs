@@ -21,4 +21,13 @@ namespace AppleShooterProto{
 			ResetLocalTransform();
 		}
 	}
+	public interface IInstatiableShootingTargetAdaptor: ITestShootingTargetAdaptor, IInstatiableMonoBehaviourAdaptor{}
+	public abstract class InstatiableShootingTargetAdaptor: TestShootingTargetAdaptor, IInstatiableShootingTargetAdaptor{
+		protected override sealed void Awake(){
+			return;
+		}
+		public void SetMonoBehaviourAdaptorManager(IMonoBehaviourAdaptorManager manager){
+			thisMonoBehaviourAdaptorManager =  manager;
+		}
+	}
 }

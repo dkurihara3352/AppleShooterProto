@@ -5,10 +5,6 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IGlidingTargetAdaptor: ITestShootingTargetAdaptor{}
 	public class GlidingTargetAdaptor: TestShootingTargetAdaptor, IGlidingTargetAdaptor{
-		protected override void Awake(){
-			base.Awake();
-			MakeSureParentHasWaypointsManagerAdaptor();
-		}
 		void MakeSureParentHasWaypointsManagerAdaptor(){
 			Transform parent = this.transform.parent;
 			if(parent == null)
@@ -21,10 +17,11 @@ namespace AppleShooterProto{
 					"GlidingTargetAdaptor must be child of its WaypointsManagerAdaptor"
 				);
 		}
+		public override void SetUp(){
+			base.SetUp();
+			MakeSureParentHasWaypointsManagerAdaptor();
+		}
 		protected override void SetUpTarget(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				thisProcessManager
-			);
 			TestShootingTarget.IConstArg arg = new TestShootingTarget.ConstArg(
 				health,
 				this,
@@ -34,10 +31,6 @@ namespace AppleShooterProto{
 			);
 			thisShootingTarget = new GlidingTarget(arg);
 		}
-		// public override void SetUp(){
-		// 	base.SetUp();
-		// 	SetGlidingTargetWithWaypointsFollower();
-		// }
 		public override void SetUpReference(){
 			base.SetUpReference();
 			SetGlidingTargetWithWaypointsFollower();

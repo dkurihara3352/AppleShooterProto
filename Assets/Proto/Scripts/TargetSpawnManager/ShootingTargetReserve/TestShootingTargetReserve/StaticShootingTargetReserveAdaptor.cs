@@ -22,7 +22,6 @@ namespace AppleShooterProto{
 			return thisReserve;
 		}
 		public GameObject staticShootingTargetPrefab;
-		public ProcessManager processManager;
 		public IStaticShootingTarget CreateStaticShootingTarget(){
 			GameObject targetGO = GameObject.Instantiate(
 				staticShootingTargetPrefab,
@@ -30,7 +29,9 @@ namespace AppleShooterProto{
 				Quaternion.identity
 			);
 			IStaticShootingTargetAdaptor targetAdaptor = targetGO.GetComponent(typeof(IStaticShootingTargetAdaptor)) as IStaticShootingTargetAdaptor;
-			targetAdaptor.SetProcessManager(processManager);
+			targetAdaptor.SetMonoBehaviourAdaptorManager(
+				thisMonoBehaviourAdaptorManager
+			);
 			targetAdaptor.SetReserveTransform(this.transform);
 			targetAdaptor.SetTargetReserve(thisReserve);
 			

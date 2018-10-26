@@ -10,7 +10,6 @@ namespace AppleShooterProto{
 		void SetReady();
 	}
 	public class SmoothLookerAdaptor: MonoBehaviourAdaptor, ISmoothLookerAdaptor{
-		public ProcessManager processManager;
 		public ISmoothLooker GetSmoothLooker(){
 			return thisSmoothLooker;
 		}
@@ -19,9 +18,6 @@ namespace AppleShooterProto{
 		public MonoBehaviourAdaptor lookAtTarget;
 		public int processOrder = 100;
 		public override void SetUp(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				processManager
-			);
 			ISmoothLookerConstArg arg = new SmoothLookerConstArg(
 				this,
 				processFactory,

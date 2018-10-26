@@ -7,11 +7,9 @@ namespace AppleShooterProto{
 	public interface IMarkerUIAdaptor: ISceneUIAdaptor{
 		void StartMark();
 		void StopMark();
-		void ResetAtReserve();
 		void UpdateSceneUI();
 		void TriggerActivationOnAnimator();
 		void TriggerDeactivationOnAnimator();
-		void BecomeChildToCanvas();
 	}
 	[RequireComponent(typeof(Animator))]
 	public class MarkerUIAdaptor : AbsSceneUIAdaptor, IMarkerUIAdaptor {
@@ -27,13 +25,8 @@ namespace AppleShooterProto{
 			);
 			return new MarkerUI(arg);
 		}
-		public ProcessManager processManager;
 		public override void SetUp(){
 			base.SetUp();
-			thisProcessFactory = new AppleShooterProcessFactory(
-				processManager
-			);
-			thisCanvas = CollectCanvasFromParent();
 			thisActivationHash = Animator.StringToHash(
 				"Activate"
 			);
@@ -42,15 +35,13 @@ namespace AppleShooterProto{
 			);
 			thisAnimator = CollectAnimator();
 		}
-		public override void FinalizeSetUp(){
-			thisSceneUI.Deactivate();
-		}
-
-		IAppleShooterProcessFactory thisProcessFactory;
+		// public override void FinalizeSetUp(){
+		// 	thisSceneUI.Deactivate();
+		// }
 		IMarkerUIMarkProcess thisProcess;
 		public void StartMark(){
 			StopMark();
-			thisProcess = thisProcessFactory.CreateMarkerUIMarkProcess(
+			thisProcess = processFactory.CreateMarkerUIMarkProcess(
 				(IMarkerUI)thisSceneUI
 			);
 			thisProcess.Run();
@@ -62,12 +53,12 @@ namespace AppleShooterProto{
 		}
 
 		public RectTransform thisReserveRectTransform;
-		public void ResetAtReserve(){
-			this.transform.SetParent(thisReserveRectTransform);
-			this.transform.localPosition = Vector3.zero;
-			OnResetAtReserve();
-		}
-		void OnResetAtReserve(){
+		// public void ResetAtReserve(){
+		// 	this.transform.SetParent(thisReserveRectTransform);
+		// 	this.transform.localPosition = Vector3.zero;
+		// 	OnResetAtReserve();
+		// }
+		protected override void OnResetAtReserve(){
 			StopMark();
 		}
 		public void UpdateSceneUI(){
@@ -90,12 +81,12 @@ namespace AppleShooterProto{
 				thisDeactivationHash
 			);
 		}
-		Canvas thisCanvas;
-		Canvas CollectCanvasFromParent(){
-			return this.GetComponentInParent<Canvas>() as Canvas;
-		}
-		public void BecomeChildToCanvas(){
-			this.transform.SetParent(thisCanvas.transform);
-		}
+		// Canvas thisCanvas;
+		// Canvas CollectCanvasFromParent(){
+		// 	return this.GetComponentInParent<Canvas>() as Canvas;
+		// }
+		// public void BecomeChildToCanvas(){
+		// 	this.transform.SetParent(thisCanvas.transform);
+		// }
 	}
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IArrowTwangAdaptor: IMonoBehaviourAdaptor{
-		void SetProcessManager(IProcessManager processManager);
+	public interface IArrowTwangAdaptor: IInstatiableMonoBehaviourAdaptor{
+	
 		IArrowTwang GetArrowTwang();
 		void Twang();
 		void StopTwang();
@@ -14,25 +14,15 @@ namespace AppleShooterProto{
 		void  SetTwangMagnitude(float twangMagnitude);
 		float GetTwangMagnitude(float normalizedTime);
 	}
-	public class ArrowTwangAdaptor: MonoBehaviourAdaptor, IArrowTwangAdaptor{
-		protected override void Awake(){
+	public class ArrowTwangAdaptor: InstatiableMonoBehaviourAdaptor, IArrowTwangAdaptor{
+		public override void SetUp(){
+			ArrowTwang.IConstArg arg = new ArrowTwang.ConstArg(this);
+			thisTwang = new ArrowTwang(arg);
+
 			animator = CollectAnimator();
 			twangHash = Animator.StringToHash("Twang");
 			stopHash = Animator.StringToHash("Stop");
 			magnitudeHash = Animator.StringToHash("Magnitude");
-			return;
-		}
-
-		IProcessManager thisProcessManager;
-		public void SetProcessManager(IProcessManager processManager){
-			thisProcessManager = processManager;
-		}
-		IAppleShooterProcessFactory thisProcessFactory;
-
-		public override void SetUp(){
-			thisProcessFactory = new AppleShooterProcessFactory(thisProcessManager);
-			ArrowTwang.IConstArg arg = new ArrowTwang.ConstArg(this);
-			thisTwang = new ArrowTwang(arg);
 		}
 		IArrowTwang thisTwang;
 		public IArrowTwang GetArrowTwang(){
@@ -43,7 +33,7 @@ namespace AppleShooterProto{
 		public float twangTime;
 		public void Twang(){
 			StopTwang();
-			thisProcess =  thisProcessFactory.CreateArrowTwangProcess(
+			thisProcess =  processFactory.CreateArrowTwangProcess(
 				this,
 				twangTime
 			);

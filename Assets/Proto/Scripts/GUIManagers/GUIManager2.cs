@@ -10,11 +10,12 @@ namespace AppleShooterProto{
 				normalizedSize: new Vector2(.2f, .4f),
 				normalizedPosition: new Vector2(0f, 0f)
 			);
-			sTL_1 = GetSubRect( topLeft, 0, 5);
-			sTL_2 = GetSubRect( topLeft, 1, 5);
-			sTL_3 = GetSubRect( topLeft, 2, 5);
-			sTL_4 = GetSubRect( topLeft, 3, 5);
-			sTL_5 = GetSubRect( topLeft, 4, 5);
+			sTL_1 = GetSubRect( topLeft, 0, topLeftRectCount);
+			sTL_2 = GetSubRect( topLeft, 1, topLeftRectCount);
+			sTL_3 = GetSubRect( topLeft, 2, topLeftRectCount);
+			sTL_4 = GetSubRect( topLeft, 3, topLeftRectCount);
+			sTL_5 = GetSubRect( topLeft, 4, topLeftRectCount);
+			sTL_6 = GetSubRect( topLeft, 5, topLeftRectCount);
 			topRight  = GetGUIRect(
 				normalizedSize: new Vector2(.2f, .5f),
 				normalizedPosition: new Vector2(1f, 0f)
@@ -36,11 +37,13 @@ namespace AppleShooterProto{
 			);
 		}
 		Rect topLeft;
+		int topLeftRectCount = 6;
 		Rect sTL_1;
 		Rect sTL_2;
 		Rect sTL_3;
 		Rect sTL_4;
 		Rect sTL_5;
+		Rect sTL_6;
 
 		Rect topRight;
 		Rect sTR_1;
@@ -52,6 +55,7 @@ namespace AppleShooterProto{
 		public GlidingTargetAdaptor glidingTargetAdaptor;
 		public WaypointsManagerAdaptor waypointsManagerAdaptor;
 		public MarkerUIAdaptor markerUIAdaptor;
+		public PopUIAdaptor popUIAdaptor;
 		/*  */
 		bool thisSystemIsReady = false;
 		public void OnGUI(){
@@ -97,6 +101,12 @@ namespace AppleShooterProto{
 			)){
 				DeactivateMarkerUI();
 			}
+			if(GUI.Button(
+				sTL_6,
+				"ActivatePopUI"
+			)){
+				ActivatePopUI();
+			}
 		}
 		
 		/* Left */
@@ -127,6 +137,10 @@ namespace AppleShooterProto{
 			void DeactivateMarkerUI(){
 				IMarkerUI markerUI  = markerUIAdaptor.GetSceneUI() as IMarkerUI;
 				markerUI.Deactivate();
+			}
+			void ActivatePopUI(){
+				IPopUI popUI = popUIAdaptor.GetSceneUI() as IPopUI;
+				popUI.Activate();
 			}
 		/* Right */
 			void DrawFlyingTarget(Rect rect){

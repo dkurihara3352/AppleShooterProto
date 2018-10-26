@@ -68,7 +68,16 @@ namespace AppleShooterProto{
 			float twangTime
 		);
 		IMarkerUIMarkProcess CreateMarkerUIMarkProcess(
-			IMarkerUI markerUI
+			ISceneUI ui
+		);
+		IPopUIGlideProcess CreatePopUIGlideProcess(
+			IPopUIAdaptor adaptor,
+			PopUIAdaptor.PopMode popMode,
+			float glideTime,
+			float glideDistance,
+			AnimationCurve normalizedDistanceCurve,
+			AnimationCurve alhpaCurve,
+			AnimationCurve scaleCurve
 		);
 	}
 
@@ -245,13 +254,34 @@ namespace AppleShooterProto{
 			return new ArrowTwangProcess(arg);
 		}
 		public IMarkerUIMarkProcess CreateMarkerUIMarkProcess(
-			IMarkerUI markerUI
+			ISceneUI sceneUI
 		){
 			MarkerUIMarkProcess.IConstArg arg = new MarkerUIMarkProcess.ConstArg(
-				markerUI,
+				sceneUI,
 				thisProcessManager
 			);
 			return new MarkerUIMarkProcess(arg);
+		}
+		public IPopUIGlideProcess CreatePopUIGlideProcess(
+			IPopUIAdaptor adaptor,
+			PopUIAdaptor.PopMode popMode,
+			float glideTime,
+			float glideDistance,
+			AnimationCurve normalizedDistanceCurve,
+			AnimationCurve alhpaCurve,
+			AnimationCurve scaleCurve
+		){
+			PopUIGlideProcess.IConstArg arg = new PopUIGlideProcess.ConstArg(
+				adaptor,
+				popMode,
+				glideDistance,
+				normalizedDistanceCurve,
+				alhpaCurve,
+				scaleCurve,
+				thisProcessManager,
+				glideTime
+			);
+			return new PopUIGlideProcess(arg);
 		}
 	}
 }

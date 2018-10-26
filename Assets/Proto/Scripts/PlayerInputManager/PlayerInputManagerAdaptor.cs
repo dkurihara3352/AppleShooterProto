@@ -16,9 +16,7 @@ namespace AppleShooterProto{
 		public float GetMaxZoom(){
 			return maxZoom;
 		}
-		public DKUtility.ProcessManager processManager;
 		public override void SetUp(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(processManager);
 			IPlayerInputManagerConstArg arg = new PlayerInputManagerConstArg(
 				defaultFOV,
 				drawDeltaThreshold,

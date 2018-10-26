@@ -12,15 +12,9 @@ namespace AppleShooterProto{
 		public Vector3 initialVelocity;
 		public float distanceThreshold;
 		public int waypointsCountInSequence;
-		protected override void Awake(){
-			base.Awake();
-		}		
 		public float speed = 3f;
 		public Transform flyingTargetStandByTransform;
 		protected override void SetUpTarget(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				thisProcessManager
-			);
 			FlyingTarget.IConstArg arg = new FlyingTarget.ConstArg(
 				health,
 				this,

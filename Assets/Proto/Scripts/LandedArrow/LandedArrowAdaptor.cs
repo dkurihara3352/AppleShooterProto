@@ -3,21 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILandedArrowAdaptor: IMonoBehaviourAdaptor{
+	public interface ILandedArrowAdaptor: IInstatiableMonoBehaviourAdaptor{
 		ILandedArrow GetLandedArrow();
 		void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor landedArrowReserveAdaptor);
 		void SetIndexOnTextMesh(int index);
 		void SetArrowTwangAdaptor(IArrowTwangAdaptor adaptor);
 	}
-	public class LandedArrowAdaptor : MonoBehaviourAdaptor, ILandedArrowAdaptor {
-
-		protected override void Awake(){
-			/*  it's vital to override this method to MASK base method
-				(don't wanna call addMBAdaptor and modify collection)
-			*/
-			thisTextMesh = CollectTextMesh();
-			return;
-		}
+	public class LandedArrowAdaptor : InstatiableMonoBehaviourAdaptor, ILandedArrowAdaptor {
 		ILandedArrow thisLandedArrow;
 		public ILandedArrow GetLandedArrow(){
 			return thisLandedArrow;
@@ -27,6 +19,8 @@ namespace AppleShooterProto{
 				this
 			);
 			thisLandedArrow = new LandedArrow(arg);
+
+			thisTextMesh = CollectTextMesh();
 		}
 		ILandedArrowReserveAdaptor thisReserveAdaptor;
 		public void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor adaptor){

@@ -9,7 +9,6 @@ namespace AppleShooterProto{
 		void SetUpWaypoints();
 		IFlyingTargetWaypoint GetCurrentWaypoint();
 		void SetUpNextWaypoint();
-		Vector3 GetPosition();
 
 		int[] GetWaypointsInSequenceIndices();
 		int[] GetWaypointsNotInUseIndices();
@@ -26,9 +25,6 @@ namespace AppleShooterProto{
 			thisWaypointsCountInSequence = arg.waypointsCountInSequence;
 			thisSpeed = arg.speed;
 		}
-		// public Vector3 GetPosition(){
-		// 	return thisAdaptor.GetPosition();
-		// }
 		IFlyingTargetFlightProcess thisFlightProcess;
 		readonly Vector3 thisInitialVelocity;
 		readonly float thisDistThreshold;

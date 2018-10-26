@@ -9,36 +9,35 @@ namespace AppleShooterProto{
 		public MarkerUIMarkProcess(
 			IConstArg arg
 		): base(arg){
-			thisMarkerUI = arg.markerUI;
+			thisSceneUI = arg.sceneUI;
 		}
-		IMarkerUI thisMarkerUI;
+		ISceneUI thisSceneUI;
 		protected override void RunImple(){
 		}
 		protected override void UpdateProcessImple(float deltaT){
-			thisMarkerUI.UpdateUI();
+			thisSceneUI.UpdateUI();
 		}
 		protected override void StopImple(){
 		}
 		/* constArg */
 			public interface IConstArg: IProcessConstArg{
-				IMarkerUI markerUI{get;}
+				ISceneUI sceneUI{get;}
 			}
 			public class ConstArg: ProcessConstArg, IConstArg{
 				public ConstArg(
-					IMarkerUI markerUI,
+					ISceneUI sceneUI,
 					IProcessManager processManager
 				): base(
 					processManager
 				){
-					thisMarkerUI  = markerUI ;
+					thisSceneUI  = sceneUI ;
 				}
-				readonly IMarkerUI thisMarkerUI;
-				public IMarkerUI markerUI{
+				readonly ISceneUI thisSceneUI;
+				public ISceneUI sceneUI{
 					get{
-						return thisMarkerUI;
+						return thisSceneUI;
 					}
 				}
-
 			}
 		/*  */
 	}

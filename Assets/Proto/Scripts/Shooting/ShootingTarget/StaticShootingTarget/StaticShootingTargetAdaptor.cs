@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IStaticShootingTargetAdaptor: ITestShootingTargetAdaptor{
+	public interface IStaticShootingTargetAdaptor: IInstatiableShootingTargetAdaptor{
 		void SetTargetReserve(IStaticShootingTargetReserve reserve);
 		void SetIndexOnTextMesh(int index);
 	}
-	public class StaticShootingTargetAdaptor: TestShootingTargetAdaptor, IStaticShootingTargetAdaptor{
-		protected override void Awake(){
-			base.Awake();
+	public class StaticShootingTargetAdaptor: InstatiableShootingTargetAdaptor, IStaticShootingTargetAdaptor{
+		public override void SetUp(){
+			base.SetUp();
 			thisTextMesh = CollectTextMesh();
 		}
 		protected override void SetUpTarget(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				thisProcessManager
-			);
 			StaticShootingTarget.IConstArg arg = new StaticShootingTarget.ConstArg(
 				health,
 				this,

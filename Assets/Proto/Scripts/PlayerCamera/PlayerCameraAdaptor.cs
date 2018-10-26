@@ -38,12 +38,8 @@ namespace AppleShooterProto{
 			return result;
 		}
 		public Camera mainCamera;
-		public ProcessManager processManager; 
 		public float smoothCoefficient = 5f;
 		public override void SetUp(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				processManager
-			);
 			IPlayerCameraConstArg arg = new PlayerCameraConstArg(
 				maxPanAngle,
 				lookAtPivot,

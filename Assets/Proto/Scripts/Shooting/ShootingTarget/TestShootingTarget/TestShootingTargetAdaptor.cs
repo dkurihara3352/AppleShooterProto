@@ -5,7 +5,6 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface ITestShootingTargetAdaptor: IShootingTargetAdaptor{
-		void SetProcessManager(IProcessManager processManager);
 		void SetReserveTransform(Transform reserveTransform);
 		void ToggleCollider(bool on);
 		void SetColor(Color color);
@@ -14,29 +13,20 @@ namespace AppleShooterProto{
 		float GetAlpha();
 		void SetAlpha(float a);
 		void CheckAndStartNewHitAnimation(float magnitude);
-		// void SetIndexOnTextMesh(int index);
 	}
 	[RequireComponent(typeof(Collider))]
 	public class TestShootingTargetAdaptor : ShootingTargetAdaptor, ITestShootingTargetAdaptor {
-		protected override void Awake(){
-			base.Awake();
-			MeshRenderer meshRenderer = this.transform.GetComponent<MeshRenderer>();
-			thisMaterial = meshRenderer.material;
-			thisHitTriggerHash = Animator.StringToHash("Hit");
-			thisHitMagnitudeHash = Animator.StringToHash("HitMagnitude");
-			if(processManager != null)
-				SetProcessManager(processManager);
-			// thisTextMesh = CollectTextMesh();
-		}
 		public override void SetUp(){
-			SetColor(defaultColor);
 			SetUpTarget();
 			thisAnimator = transform.GetComponent<Animator>();
+
+			MeshRenderer meshRenderer = this.transform.GetComponent<MeshRenderer>();
+			thisMaterial = meshRenderer.material;
+			SetColor(defaultColor);
+			thisHitTriggerHash = Animator.StringToHash("Hit");
+			thisHitMagnitudeHash = Animator.StringToHash("HitMagnitude");
 		}
 		protected virtual void SetUpTarget(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				thisProcessManager
-			);
 			TestShootingTarget.IConstArg arg = new TestShootingTarget.ConstArg(
 				health,
 				this,
@@ -46,11 +36,7 @@ namespace AppleShooterProto{
 			);
 			thisShootingTarget = new TestShootingTarget(arg);
 		}
-		public ProcessManager processManager;
-		protected IProcessManager thisProcessManager;
-		public void SetProcessManager(IProcessManager processManager){
-			thisProcessManager = processManager;
-		}
+
 		public void SetReserveTransform(Transform reserveTransform){
 			this.reserveTransform = reserveTransform;
 		}
@@ -91,17 +77,11 @@ namespace AppleShooterProto{
 				curColor.b,
 				alpha
 			);
-			// Color newColor = GetColor();
-			// newColor.a = alpha;
 			SetColor(newColor);
 		}
 		public void CheckAndStartNewHitAnimation(float magnitude){
 			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
 			thisAnimator.SetTrigger(thisHitTriggerHash);
 		}
-		// public void SetIndexOnTextMesh(int index){
-		// 	if(thisTextMesh != null)
-		// 		thisTextMesh.text = index.ToString();
-		// }
 	}
 }

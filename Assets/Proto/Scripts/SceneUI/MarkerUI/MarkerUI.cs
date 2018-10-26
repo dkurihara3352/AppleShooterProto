@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IMarkerUI: ISceneUI{
-		void StartMark();
-		void StopMark();
+		// void StartMark();
+		// void StopMark();
 	}
 	public class MarkerUI : AbsSceneUI, IMarkerUI {
 
@@ -17,13 +17,10 @@ namespace AppleShooterProto{
 				return (IMarkerUIAdaptor)thisAdaptor;
 			}
 		}
-		public override void Deactivate(){
-			base.Deactivate();
-			// thisTypedAdaptor.ResetAtReserve();
+		protected override void DeactivateImple(){
 			thisTypedAdaptor.TriggerDeactivationOnAnimator();
 		}
-		public override void Activate(){
-			base.Activate();
+		protected override void ActivateImple(){
 			thisTypedAdaptor.BecomeChildToCanvas();
 			StartMark();
 			thisTypedAdaptor.TriggerActivationOnAnimator();

@@ -25,7 +25,6 @@ namespace AppleShooterProto{
 		public int totalLandedArrowsCount;
 		public GameObject landedArrowPrefab;
 		public Camera guiCamera;
-		public ProcessManager processManager;
 		ILandedArrow[] CreateLandedArrows(){
 			List<ILandedArrow> resultList = new List<ILandedArrow>();
 			for(int i = 0; i < totalLandedArrowsCount; i ++){
@@ -45,7 +44,10 @@ namespace AppleShooterProto{
 					throw new System.InvalidOperationException(
 						"arrow twang adaptor is missing"
 					);
-				arrowTwangAdaptor.SetProcessManager(processManager);
+				arrowTwangAdaptor.SetMonoBehaviourAdaptorManager(
+					thisMonoBehaviourAdaptorManager
+				);
+				// arrowTwangAdaptor.SetProcessManager(processManager);
 				arrowAdaptor.SetArrowTwangAdaptor(
 					arrowTwangAdaptor
 				);

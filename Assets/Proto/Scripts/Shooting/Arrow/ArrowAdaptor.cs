@@ -4,12 +4,10 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IArrowAdaptor: IMonoBehaviourAdaptor{
-		void SetProcessManager(IProcessManager processManager);
+	public interface IArrowAdaptor: IInstatiableMonoBehaviourAdaptor{
 		void SetArrowReserveTransform(Transform arrowReserveTrans);
 		void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor);
 		void SetCollisionDetectionIntervalFrameCount(int count);
-		// void SetAttack(float attack);
 
 		IArrow GetArrow();
 		void BecomeChildToLaunchPoint();
@@ -21,16 +19,12 @@ namespace AppleShooterProto{
 		void SetIndex(int index);
 		string GetParentName();
 	}
-	public class ArrowAdaptor : MonoBehaviourAdaptor, IArrowAdaptor {
+	public class ArrowAdaptor : InstatiableMonoBehaviourAdaptor, IArrowAdaptor {
 		
 		/* Ref */
 			ILaunchPointAdaptor thisLaunchPointAdaptor;
 			public void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor){
 				thisLaunchPointAdaptor = launchPointAdaptor;
-			}
-			IProcessManager thisProcessManager;
-			public void SetProcessManager(IProcessManager processManager){
-				thisProcessManager = processManager;
 			}
 			Transform thisArrowReserveTrans;
 			public void SetArrowReserveTransform(Transform reserveTrans){
@@ -40,19 +34,11 @@ namespace AppleShooterProto{
 				checkPerEveryThisFrames = count;
 			}
 		/*  */
-		protected override void Awake(){
-			return;
-		}
 		public override void SetUp(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				thisProcessManager
-			);
 			Arrow.IConstArg arg = new Arrow.ConstArg(
 				this,
 				processFactory,
 				thisIndex
-				// ,
-				// thisAttack
 			);
 			thisArrow = new Arrow(arg);
 			thisIsReadyForGizmo = true;

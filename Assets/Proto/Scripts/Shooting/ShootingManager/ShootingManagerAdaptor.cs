@@ -14,7 +14,6 @@ namespace AppleShooterProto{
 	public class ShootingManagerAdaptor : MonoBehaviourAdaptor, IShootingManagerAdaptor{
 
 		IShootingManager thisShootingManager;
-		public ProcessManager processManager;
 		public int drawProcessOrder;
 		public float fireRate = 1f;
 
@@ -28,7 +27,6 @@ namespace AppleShooterProto{
 		public float flightSpeedMultiplier;
 
 		public override void SetUp(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(processManager);
 			ShootingManager.IConstArg arg = new ShootingManager.ConstArg(
 				processFactory,
 				this,
@@ -83,10 +81,6 @@ namespace AppleShooterProto{
 			thisShootingManager.SetLandedArrowReserve(landedArrowReserve);
 
 			SetUpArrows();
-			// IArrow[] arrows = CollectArrows();
-			// thisShootingManager.SetArrows(arrows);
-			// IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
-			// thisShootingManager.SetArrowReserve(arrowReserve);
 		}
 		public int arrowCount = 20;
 		public Transform arrowReserveTrans;
@@ -103,7 +97,9 @@ namespace AppleShooterProto{
 					throw new System.InvalidOperationException(
 						"eh?"
 					);
-				arrowAdaptor.SetProcessManager(processManager);
+				arrowAdaptor.SetMonoBehaviourAdaptorManager(
+					thisMonoBehaviourAdaptorManager
+				);
 				arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);
 				arrowAdaptor.SetArrowReserveTransform(arrowReserveTrans);
 				arrowAdaptor.SetIndex(i);

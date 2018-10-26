@@ -9,13 +9,9 @@ namespace AppleShooterProto{
 	}
 	public class SmoothFollowerAdaptor : MonoBehaviourAdaptor, ISmoothFollowerAdaptor {
 		public MonoBehaviourAdaptor followTarget;
-		public ProcessManager processManager;
 		public float smoothCoefficient;
 		public int processOrder = 100;
 		public override void SetUp(){
-			IAppleShooterProcessFactory processFactory = new AppleShooterProcessFactory(
-				processManager
-			);
 			ISmoothFollowerConstArg arg = new SmoothFollowerConstArg(
 				this,
 				processFactory,

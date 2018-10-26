@@ -13,26 +13,12 @@ namespace AppleShooterProto{
 		public void DrawTrajectory(
 			Vector3[] trajectoryPoints
 		){
-			// if(!draw)
-			// 	draw = true;
 			thisTrajectoryPoints = trajectoryPoints;
 			lineRenderer.numPositions = thisTrajectoryPoints.Length;
 			lineRenderer.SetPositions(thisTrajectoryPoints);
 		}
-		// void StopDraw(){
-		// 	draw = false;
-		// }
-		
-		// bool draw = false;
 		Vector3[] thisTrajectoryPoints;
 		
-		// public void OnDrawGizmos(){
-		// 	Gizmos.color = Color.green;
-		// 	if(draw){
-		// 		foreach(Vector3 position in thisTrajectoryPoints)
-		// 			Gizmos.DrawWireSphere(position, .1f);
-		// 	}
-		// }
 		public void Clear(){
 			thisTrajectoryPoints = null;
 			lineRenderer.numPositions = 0;

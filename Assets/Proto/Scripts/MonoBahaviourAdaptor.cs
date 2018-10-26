@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DKUtility;
 
 namespace AppleShooterProto{
 	public interface IMonoBehaviourAdaptor{
@@ -24,11 +25,11 @@ namespace AppleShooterProto{
 	}
 	public class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
-			thisMBAdaptorManager = FindAndSetMonoBehaviourAdaptor();
-			thisMBAdaptorManager.AddAdaptor(this);
+			thisMonoBehaviourAdaptorManager = FindAndSetMonoBehaviourAdaptor();
+			thisMonoBehaviourAdaptorManager.AddAdaptor(this);
 
 		}
-		IMonoBehaviourAdaptorManager thisMBAdaptorManager;
+		protected IMonoBehaviourAdaptorManager thisMonoBehaviourAdaptorManager;
 		public IMonoBehaviourAdaptorManager FindAndSetMonoBehaviourAdaptor(){
 			IMonoBehaviourAdaptorManager result = (IMonoBehaviourAdaptorManager)GameObject.Find("MonoBehaviourAdaptorManagerGO").GetComponent(typeof(IMonoBehaviourAdaptorManager));
 			if(result == null)
@@ -36,6 +37,14 @@ namespace AppleShooterProto{
 					"MonoBehaviourManager is not found"
 				);
 			return result;
+		}
+		protected IProcessManager processManager{
+			get{
+				return thisMonoBehaviourAdaptorManager.GetProcessManager();
+			}
+		}
+		protected IAppleShooterProcessFactory processFactory{
+			get{return thisMonoBehaviourAdaptorManager.GetProcessFactory();}
 		}
 		public Vector3 GetPosition(){
 			return this.transform.position;

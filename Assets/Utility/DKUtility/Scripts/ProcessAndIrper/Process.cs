@@ -20,7 +20,8 @@ namespace DKUtility{
 		}
 		readonly protected IProcessManager thisProcessManager;
 		public virtual void UpdateProcess(float deltaT){
-			UpdateProcessImple(deltaT);
+			if(!thisIsStoppedThisFrame)
+				UpdateProcessImple(deltaT);
 		}
 		protected virtual void UpdateProcessImple(float deltaT){}
 		public virtual void Run(){
@@ -29,7 +30,9 @@ namespace DKUtility{
 			UpdateProcess(0f);
 		}
 		protected virtual void RunImple(){}
+		bool thisIsStoppedThisFrame = false;
 		public void Stop(){
+			thisIsStoppedThisFrame = true;
 			thisProcessManager.RemoveRunningProcess(this);
 			StopImple();
 		}
