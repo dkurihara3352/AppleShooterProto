@@ -61,6 +61,7 @@ namespace AppleShooterProto{
 		public MarkerUIAdaptor markerUIAdaptor;
 		public PopUIAdaptor popUIAdaptor;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
+		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 		/*  */
 		bool thisSystemIsReady = false;
 		public void OnGUI(){
@@ -86,42 +87,30 @@ namespace AppleShooterProto{
 				// FinalizeWaypointCurves();
 				// StartGlidingTargetGlide();
 			}
-			if(GUI.Button(
-				sTL_3,
-				"Reset"
-			)){
-				DeactivateGlidingTarget();
-			}
 			if(
 				(GUI.Button(
-					sTL_4,
+					sTL_3,
 					"ActivateMarkerUI"
 				))
 			){
 				ActivateMarkerUI();
 			}
 			if(GUI.Button(
-				sTL_5,
+				sTL_4,
 				"DeactivateMarkerUI"
 			)){
 				DeactivateMarkerUI();
 			}
 			if(GUI.Button(
-				sTL_6,
-				"ActivatePopUI"
-			)){
-				ActivatePopUI();
-			}
-			if(GUI.Button(
-				sTL_7,
-				"ReactivatePopUI"
-			))
-				ReactivatePopUI();
-			if(GUI.Button(
-				sTL_8,
+				sTL_5,
 				"ActivateInstatiablePopUI"
 			))
 				ActivateInstatiablePopUI();
+			if(GUI.Button(
+				sTL_6,
+				"ActivateDestroyedTargetAtFlyingTarget"
+			))
+				ActivateDestroyedTargetAtFlyingTarget();
 		}
 		
 		/* Left */
@@ -162,6 +151,7 @@ namespace AppleShooterProto{
 				popUI.Deactivate();
 				popUI.Activate();
 			}
+			int count = 0;
 			void ActivateInstatiablePopUI(){
 				IPopUIReserve reserve = popUIReserveAdaptor.GetPopUIReserve();
 				IFlyingTarget target = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
@@ -171,6 +161,13 @@ namespace AppleShooterProto{
 				popUIToActivate.Deactivate();
 				popUIToActivate.SetTargetTransform(targetTrans);
 				popUIToActivate.Activate();
+				popUIToActivate.SetText(count.ToString());
+				count ++;
+			}
+			void ActivateDestroyedTargetAtFlyingTarget(){
+				IDestroyedTargetReserve reserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
+				IFlyingTarget target = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
+				reserve.ActivateDestoryedTargetAt(target);
 			}
 
 		/* Right */

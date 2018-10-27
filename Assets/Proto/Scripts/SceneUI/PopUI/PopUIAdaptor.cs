@@ -15,6 +15,7 @@ namespace AppleShooterProto{
 		Graphic GetChildGraphic();
 		Color GetChildGraphicOriginalColor();
 		Vector2 GetChildGraphicOriginalLocalPosition();
+		void SetText(string text);
 	}
 	
 	public class PopUIAdaptor: AbsSceneUIAdaptor, IPopUIAdaptor{
@@ -130,6 +131,10 @@ namespace AppleShooterProto{
 		}
 		public IPopUI GetPopUI(){
 			return thisPopUI;
+		}
+		public void SetText(string text){
+			if(thisGraphic is Text)
+				((Text)thisGraphic).text = text;
 		}
 	}
 }

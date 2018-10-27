@@ -43,9 +43,6 @@ namespace AppleShooterProto{
 		public float health;
 		public Color defaultColor;
 		public float fadeTime;
-		public override void SetUpReference(){
-
-		}
 		public void ToggleCollider( bool on){
 			Collider collider = this.transform.GetComponent<Collider>();
 			collider.enabled = on;

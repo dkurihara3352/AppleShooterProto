@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IPopUI: ISceneUI{}
+	public interface IPopUI: ISceneUI{
+		void SetText(string text);
+	}
 	public class PopUI: AbsSceneUI, IPopUI{
 		public PopUI(
 			AbsSceneUI.IConstArg arg
@@ -22,6 +24,9 @@ namespace AppleShooterProto{
 			thisTypedAdaptor.StopGlide();
 			thisTypedAdaptor.ResetAtReserve();
 
+		}
+		public void SetText(string text){
+			thisTypedAdaptor.SetText(text);
 		}
 	}
 }

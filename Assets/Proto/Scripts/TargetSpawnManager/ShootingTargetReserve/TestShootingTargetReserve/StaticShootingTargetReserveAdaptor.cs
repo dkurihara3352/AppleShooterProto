@@ -22,6 +22,8 @@ namespace AppleShooterProto{
 			return thisReserve;
 		}
 		public GameObject staticShootingTargetPrefab;
+		public PopUIReserveAdaptor popUIReserveAdaptor;
+		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 		public IStaticShootingTarget CreateStaticShootingTarget(){
 			GameObject targetGO = GameObject.Instantiate(
 				staticShootingTargetPrefab,
@@ -34,6 +36,10 @@ namespace AppleShooterProto{
 			);
 			targetAdaptor.SetReserveTransform(this.transform);
 			targetAdaptor.SetTargetReserve(thisReserve);
+
+			IPopUIReserve popUIReserve = popUIReserveAdaptor.GetPopUIReserve();
+
+			targetAdaptor.SetPopUIReserve(popUIReserve);
 			
 			targetAdaptor.SetUp();
 			targetAdaptor.SetUpReference();
@@ -42,6 +48,11 @@ namespace AppleShooterProto{
 				throw new System.InvalidOperationException(
 					"target not available??"
 				);
+
+			IDestroyedTargetReserve destroyedTargetReserve =  destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
+			target.SetDestroyedTargetReserve(destroyedTargetReserve);
+
+
 			return target;
 		}
 	}

@@ -60,9 +60,15 @@ namespace AppleShooterProto{
 		protected override void IndicateHit(float delta){
 			float hitMagnitude = CalculateHitMagnitude(delta);
 			thisHitStateEngine.Hit(hitMagnitude);
+			int deltaInt = Mathf.RoundToInt(delta);
+			thisAdaptor.PopText(deltaInt.ToString());
 		}
 		float CalculateHitMagnitude(float delta){
 			return delta/thisOriginalHealth;
+		}
+		protected override void DestroyTarget(){
+			base.DestroyTarget();
+			// thisAdaptor.PopText("destroyed");
 		}
 		public float GetAlpha(){
 			return thisTypedAdaptor.GetAlpha();

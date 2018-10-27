@@ -6,6 +6,7 @@ namespace AppleShooterProto{
 	public interface IStaticShootingTargetAdaptor: IInstatiableShootingTargetAdaptor{
 		void SetTargetReserve(IStaticShootingTargetReserve reserve);
 		void SetIndexOnTextMesh(int index);
+		void SetPopUIReserve(IPopUIReserve reserve);
 	}
 	public class StaticShootingTargetAdaptor: InstatiableShootingTargetAdaptor, IStaticShootingTargetAdaptor{
 		public override void SetUp(){
@@ -39,6 +40,9 @@ namespace AppleShooterProto{
 					return (TextMesh)comp;
 			}
 			return null;
+		}
+		public void SetPopUIReserve(IPopUIReserve reserve){
+			thisPopUIReserve = reserve;
 		}
 	}	
 }

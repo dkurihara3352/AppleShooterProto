@@ -32,6 +32,7 @@ namespace AppleShooterProto{
 			get{return (IFlyingTarget)thisShootingTarget;}
 		}
 		public override void SetUpReference(){
+			base.SetUpReference();
 			IFlyingTargetWaypoint[] waypoints = CollectWaypoints();
 			thisFlyingTarget.SetWaypoints(waypoints);
 

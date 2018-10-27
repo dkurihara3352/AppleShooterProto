@@ -79,6 +79,10 @@ namespace AppleShooterProto{
 			AnimationCurve alhpaCurve,
 			AnimationCurve scaleCurve
 		);
+		IDestroyedTargetParticleProcess CreateDestroyedTargetParticleProcess(
+			IDestroyedTargetAdaptor adaptor,
+			float particleSystemDuration
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -282,6 +286,17 @@ namespace AppleShooterProto{
 				glideTime
 			);
 			return new PopUIGlideProcess(arg);
+		}
+		public IDestroyedTargetParticleProcess CreateDestroyedTargetParticleProcess(
+			IDestroyedTargetAdaptor adaptor,
+			float particleDuration
+		){
+			DestroyedTargetParticleProcess.IConstArg arg = new DestroyedTargetParticleProcess.ConstArg(
+				adaptor,
+				thisProcessManager,
+				particleDuration
+			);
+			return new DestroyedTargetParticleProcess(arg);
 		}
 	}
 }

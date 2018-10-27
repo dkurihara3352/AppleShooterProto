@@ -110,6 +110,7 @@ namespace AppleShooterProto{
 		public void SetTargetTransform(Transform targetTrans){
 			thisAdaptor.SetTargetTransform(targetTrans);
 		}
+	
 		/* ConstArg */
 			public interface IConstArg{
 				Camera uiCamera{get;}

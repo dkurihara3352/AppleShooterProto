@@ -6,6 +6,10 @@ namespace AppleShooterProto{
 	public interface IPopUIReserve{
 		void SetPopUIs(IPopUI[] uis);
 		RectTransform GetReserveRectTransform();
+		void PopText(
+			IMonoBehaviourAdaptor targetAdaptor,
+			string text
+		);
 		IPopUI GetNextPopUI();
 		Vector2 GetReservedLocalPosition(int index);
 	}
@@ -26,7 +30,7 @@ namespace AppleShooterProto{
 		public IPopUI GetNextPopUI(){
 			IPopUI uiAtIndex = thisPopUIs[nextIndex];
 			nextIndex ++;
-			if(nextIndex >= thisPopUIs.Length - 1)
+			if(nextIndex >= thisPopUIs.Length)
 				nextIndex = 0;
 			return uiAtIndex;
 		}
@@ -53,6 +57,17 @@ namespace AppleShooterProto{
 		}
 		public RectTransform GetReserveRectTransform(){
 			return thisAdaptor.GetRectTransform();
+		}
+		public void PopText(
+			IMonoBehaviourAdaptor targetAdaptor,
+			string text
+		){
+			IPopUI popUI = GetNextPopUI();
+			Transform targetTransform = targetAdaptor.GetTransform();
+			popUI.SetTargetTransform(targetTransform);
+			popUI.SetText(text);
+
+			popUI.Activate();
 		}
 		/* Const */
 			public interface IConstArg{

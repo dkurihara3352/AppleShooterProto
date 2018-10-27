@@ -27,6 +27,7 @@ namespace AppleShooterProto{
 				return (IStaticShootingTargetAdaptor)thisAdaptor;
 			}
 		}
+		
 		/* const */
 			public new interface IConstArg: TestShootingTarget.IConstArg{
 				IStaticShootingTargetReserve reserve{get;}

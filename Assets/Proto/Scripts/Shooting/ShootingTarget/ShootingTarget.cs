@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 		void SetPosition(Vector3 position);
 		Vector3 GetPosition();
 		void SetRotation(Quaternion rotation);
+		Quaternion GetRotation();
 		void SetParent(Transform parent);
 		Transform GetTransform();
 		void AddLandedArrow(ILandedArrow landedArrow);
@@ -21,6 +22,8 @@ namespace AppleShooterProto{
 		void Deactivate();
 		void ActivateImple();
 		void DeactivateImple();
+
+		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
 
 	}
 	public abstract class AbsShootingTarget : IShootingTarget {
@@ -77,7 +80,12 @@ namespace AppleShooterProto{
 				IndicateHit(attack);
 			}
 		}
+		IDestroyedTargetReserve thisDestroyedTargetReserve;
+		public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
+			thisDestroyedTargetReserve = reserve;
+		}
 		protected virtual void DestroyTarget(){
+			thisDestroyedTargetReserve.ActivateDestoryedTargetAt(this);
 			Deactivate();
 		}
 
@@ -96,6 +104,9 @@ namespace AppleShooterProto{
 		}
 		public void SetRotation(Quaternion rotation){
 			thisAdaptor.SetRotation(rotation);
+		}
+		public Quaternion GetRotation(){
+			return thisAdaptor.GetRotation();
 		}
 		public void SetParent(Transform parent){
 			thisAdaptor.SetParent(parent);
