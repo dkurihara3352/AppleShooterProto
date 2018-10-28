@@ -7,10 +7,6 @@ namespace AppleShooterProto{
 		public StaticShootingTarget(
 			IConstArg arg
 		): base(arg){
-			Debug.Log(
-				"arg.reserve is null: " + 
-				(arg.reserve == null).ToString()
-			);
 			thisReserve = arg.reserve;
 		}
 		readonly IStaticShootingTargetReserve thisReserve;

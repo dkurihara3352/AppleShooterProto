@@ -243,18 +243,13 @@ namespace AppleShooterProto{
 				if(component is IWaypointEventAdaptor)
 					adaptors.Add((IWaypointEventAdaptor)component);
 			}
-			Debug.Log(
-				this.transform.name + "'s components count: " + components.Length.ToString()
-			);
+
 			if(adaptors != null){
 				foreach(IWaypointEventAdaptor adaptor in adaptors)
 					result.Add(adaptor.GetWaypointEvent());
 				IWaypointEventComparer comparer = new WaypointEventComparer();
 				result.Sort(comparer);
 			}
-			Debug.Log(
-				this.transform.name +  "'s eventCount: " + result.Count.ToString()
-			);
 			return result;
 		}
 	}

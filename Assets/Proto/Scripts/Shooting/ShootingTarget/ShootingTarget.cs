@@ -63,16 +63,9 @@ namespace AppleShooterProto{
 			float attack = arrow.GetAttack();
 			thisHealth -= attack;
 			if(thisHealth <= 0f){
-				Debug.Log(
-					"destroyed"
-				);
 				DestroyTarget();
 			}
 			else{
-				Debug.Log(
-					"hit " + ", " +
-					"health is " + thisHealth.ToString()
-				);
 				IndicateHealth(
 					thisHealth,
 					attack

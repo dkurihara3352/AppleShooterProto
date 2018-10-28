@@ -241,7 +241,6 @@ namespace AppleShooterProto{
 		/* abs */
 			public abstract void OnReserve();
 			public virtual void OnUnreserve(){
-				// this.CalculateCurve();
 			}
 		/* Const */
 			public interface IConstArg{

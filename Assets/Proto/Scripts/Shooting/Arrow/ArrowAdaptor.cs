@@ -109,11 +109,6 @@ namespace AppleShooterProto{
 						thisPrevPosition = position;
 						if(hasHit){
 							Transform hitTrans = hit.transform;
-							Debug.Log(
-								"hit detected: " + " "+
-								"hit transform: " + hitTrans.name.ToString() + ", " +
-								"hit attack: " + thisArrow.GetAttack().ToString()
-							);
 							hitPosition = hit.point;
 							IShootingTargetAdaptor targetAdaptor = hitTrans.GetComponent(typeof(IShootingTargetAdaptor)) as IShootingTargetAdaptor;
 							if(targetAdaptor == null)

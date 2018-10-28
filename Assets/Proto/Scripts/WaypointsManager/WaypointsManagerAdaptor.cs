@@ -57,13 +57,9 @@ namespace AppleShooterProto{
 				if(curveAdaptor != null)
 					result.Add(curveAdaptor.GetWaypointCurve());
 			}
-			DKUtility.DebugHelper.PrintInRed(
-				"thisCurves: " + result.Count.ToString()
-			);
 			foreach(IWaypointCurve curve in result){
 				int index = result.IndexOf(curve);
 				curve.SetIndex(index);
-				DKUtility.DebugHelper.PrintInRed(index.ToString());
 			}
 			return result;
 		}
