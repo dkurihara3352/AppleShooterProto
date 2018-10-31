@@ -122,34 +122,34 @@ namespace AppleShooterProto{
 				}
 				return result;
 			}
-			void DrawSpawnedShootingTargets(){
-				if(thisSystemIsReady){
-					IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
-					List<IPCWaypointCurve> allWaypointCurves = pcWaypointsManager.GetAllPCWaypointCurves();
-					IStaticShootingTargetReserve targetReserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
-					int waypointCurveCount = allWaypointCurves.Count;
-					int rectsCount = waypointCurveCount + 1;
-					foreach(IPCWaypointCurve curve in allWaypointCurves){
-						Rect rect = GetSubRect(
-							buttomLeftRect,
-							allWaypointCurves.IndexOf(curve),
-							rectsCount
-						);
-						DrawSpawnedShootingTargetsForCurve(
-							curve,
-							rect
-						);
-					}
-					Rect lastRect = GetSubRect(
-						buttomLeftRect,
-						rectsCount -1,
-						rectsCount
-					);
-					DrawReservedShootingTargets(
-						lastRect
-					);
-				}
-			}
+			// void DrawSpawnedShootingTargets(){
+			// 	if(thisSystemIsReady){
+			// 		IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
+			// 		List<IPCWaypointCurve> allWaypointCurves = pcWaypointsManager.GetAllPCWaypointCurves();
+			// 		IStaticShootingTargetReserve targetReserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
+			// 		int waypointCurveCount = allWaypointCurves.Count;
+			// 		int rectsCount = waypointCurveCount + 1;
+			// 		foreach(IPCWaypointCurve curve in allWaypointCurves){
+			// 			Rect rect = GetSubRect(
+			// 				buttomLeftRect,
+			// 				allWaypointCurves.IndexOf(curve),
+			// 				rectsCount
+			// 			);
+			// 			DrawSpawnedShootingTargetsForCurve(
+			// 				curve,
+			// 				rect
+			// 			);
+			// 		}
+			// 		Rect lastRect = GetSubRect(
+			// 			buttomLeftRect,
+			// 			rectsCount -1,
+			// 			rectsCount
+			// 		);
+			// 		DrawReservedShootingTargets(
+			// 			lastRect
+			// 		);
+			// 	}
+			// }
 			void DrawSpawnedShootingTargetsForCurve(
 				IPCWaypointCurve curve,
 				Rect rect
@@ -167,39 +167,39 @@ namespace AppleShooterProto{
 					indicesString
 				);
 			}
-			void DrawReservedShootingTargets(
-				Rect rect
-			){
-				IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
-				ITestShootingTarget[] targetsInReserve = reserve.GetTestTargetsInReserve();
-				string indicesString = "";
-				foreach(ITestShootingTarget target in targetsInReserve){
-					indicesString += target.GetIndex() + ", ";
-				}
-				GUI.Label(
-					rect,
-					"inReserve: " + indicesString
-				);
-			}
-			void DrawLandedArrows(){
-				if(thisSystemIsReady){
-					ILandedArrowReserve landedArrowReserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
-					ILandedArrow[] landedArrows = landedArrowReserve.GetLandedArrows();
-					int rectsCount = landedArrows.Length;
-					int index = 0;
-					foreach(ILandedArrow landedArrow in landedArrows){
-						Rect rect = GetSubRect(
-							buttomLeftRect,
-							index ++,
-							rectsCount
-						);
-						DrawLandedArrow(
-							landedArrow,
-							rect
-						);
-					}
-				}
-			}
+			// void DrawReservedShootingTargets(
+			// 	Rect rect
+			// ){
+			// 	IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
+			// 	ITestShootingTarget[] targetsInReserve = reserve.GetTestTargetsInReserve();
+			// 	string indicesString = "";
+			// 	foreach(ITestShootingTarget target in targetsInReserve){
+			// 		indicesString += target.GetIndex() + ", ";
+			// 	}
+			// 	GUI.Label(
+			// 		rect,
+			// 		"inReserve: " + indicesString
+			// 	);
+			// }
+			// void DrawLandedArrows(){
+			// 	if(thisSystemIsReady){
+			// 		ILandedArrowReserve landedArrowReserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
+			// 		ILandedArrow[] landedArrows = landedArrowReserve.GetLandedArrows();
+			// 		int rectsCount = landedArrows.Length;
+			// 		int index = 0;
+			// 		foreach(ILandedArrow landedArrow in landedArrows){
+			// 			Rect rect = GetSubRect(
+			// 				buttomLeftRect,
+			// 				index ++,
+			// 				rectsCount
+			// 			);
+			// 			DrawLandedArrow(
+			// 				landedArrow,
+			// 				rect
+			// 			);
+			// 		}
+			// 	}
+			// }
 			void DrawLandedArrow(
 				ILandedArrow arrow,
 				Rect rect

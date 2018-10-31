@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILandedArrowAdaptor: IInstatiableMonoBehaviourAdaptor{
+	public interface ILandedArrowAdaptor: IMonoBehaviourAdaptor{
 		ILandedArrow GetLandedArrow();
 		void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor landedArrowReserveAdaptor);
 		void SetIndexOnTextMesh(int index);
 		void SetArrowTwangAdaptor(IArrowTwangAdaptor adaptor);
 	}
-	public class LandedArrowAdaptor : InstatiableMonoBehaviourAdaptor, ILandedArrowAdaptor {
+	public class LandedArrowAdaptor : MonoBehaviourAdaptor, ILandedArrowAdaptor {
 		ILandedArrow thisLandedArrow;
 		public ILandedArrow GetLandedArrow(){
 			return thisLandedArrow;
@@ -32,6 +32,9 @@ namespace AppleShooterProto{
 
 			IArrowTwang twang = thisTwangAdaptor.GetArrowTwang();
 			thisLandedArrow.SetArrowTwang(twang);
+		}
+		public override void FinalizeSetUp(){
+			thisLandedArrow.Deactivate();
 		}
 
 		TextMesh thisTextMesh;

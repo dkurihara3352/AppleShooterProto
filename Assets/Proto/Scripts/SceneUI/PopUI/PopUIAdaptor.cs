@@ -6,27 +6,39 @@ using UnityEngine.UI;
 
 namespace AppleShooterProto{
 	public interface IPopUIAdaptor: ISceneUIAdaptor{
+		void SetPopUIReserve(IPopUIReserve reserve);
 		IPopUI GetPopUI();
-		void Pop();
+
 		void SetUIAlpha(float alpha);
-		void DeactivateUI();
-		void StopMark();
-		void StopGlide();
-		Graphic GetChildGraphic();
-		Color GetChildGraphicOriginalColor();
-		Vector2 GetChildGraphicOriginalLocalPosition();
+
+		void SetChildGraphicColor(Color color);
+		void SetChildGraphicScale(Vector3 scale);
+		void SetChildGraphicLocalPosition(Vector3 position);
+
 		void SetText(string text);
+
+		void SetIndex(int index);
 	}
 	
 	public class PopUIAdaptor: AbsSceneUIAdaptor, IPopUIAdaptor{
 		protected override ISceneUI CreateSceneUI(){
-			AbsSceneUI.IConstArg arg = new AbsSceneUI.ConstArg(
-				uiCamera,
+			PopUI.IConstArg arg = new PopUI.ConstArg(
 				this,
+				thisCamera,
 				minUISize,
 				maxUISize,
 				nearUIDistance,
-				farUIDistance
+				farUIDistance,
+				thisIndex,
+
+				popMode,
+				glideTime,
+				glideDistance,
+				normalizedDistanceCurve,
+				alphaCurve,
+				scaleCurve,
+				thisChildGraphicOriginalLocalPosition,
+				thisChildGraphicOriginalColor
 			);
 			return new PopUI(arg);
 		}
@@ -38,6 +50,13 @@ namespace AppleShooterProto{
 			thisChildGraphicOriginalLocalPosition = thisGraphic.transform.localPosition;
 
 		}
+		IPopUIReserve thisPopUIReserve;
+		public override void SetUpReference(){
+			thisPopUI.SetPopUIReserve(thisPopUIReserve);
+		}
+		public void SetPopUIReserve(IPopUIReserve popUIReserve){
+			thisPopUIReserve = popUIReserve;
+		}
 		public enum PopMode
 		{
 			PopStatic,
@@ -46,47 +65,12 @@ namespace AppleShooterProto{
 		}
 		public PopMode popMode;
 		IPopUIGlideProcess thisGlideProcess;
-		public void Pop(){
-			thisSceneUI.UpdateUI();
-			StartMark();
-			StartGlide();
-		}
 		public float glideTime = .5f;
 		public float glideDistance;
 		public AnimationCurve normalizedDistanceCurve;
 		public AnimationCurve alphaCurve;
 		public AnimationCurve scaleCurve;
-		IMarkerUIMarkProcess thisMarkProcess;
-		void StartMark(){
-			StopMark();
-			thisMarkProcess = processFactory.CreateMarkerUIMarkProcess(
-				thisSceneUI
-			);
-			thisMarkProcess.Run();
-		}
-		public void StopMark(){
-			if(thisMarkProcess != null && thisMarkProcess.IsRunning())
-				thisMarkProcess.Stop();
-			thisMarkProcess = null;
-		}
-		void StartGlide(){
-			StopGlide();
-			thisGlideProcess = processFactory.CreatePopUIGlideProcess(
-				this,
-				popMode,
-				glideTime,
-				glideDistance,
-				normalizedDistanceCurve,
-				alphaCurve,
-				scaleCurve
-			);
-			thisGlideProcess.Run();
-		}
-		public void StopGlide(){
-			if(thisGlideProcess != null && thisGlideProcess.IsRunning())
-				thisGlideProcess.Stop();
-			thisGlideProcess = null;
-		}
+
 		Graphic thisGraphic;
 		Color thisChildGraphicOriginalColor;
 		Vector2 thisChildGraphicOriginalLocalPosition;
@@ -96,8 +80,14 @@ namespace AppleShooterProto{
 		Graphic CollectGraphic(){
 			return this.transform.GetComponentInChildren<Graphic>();
 		}
-		public Graphic GetChildGraphic(){
-			return thisGraphic;
+		public void SetChildGraphicColor(Color color){
+			thisGraphic.color = color;
+		}
+		public void SetChildGraphicScale(Vector3 scale){
+			thisGraphic.transform.localScale = scale;
+		}
+		public void SetChildGraphicLocalPosition(Vector3 position){
+			thisGraphic.transform.localPosition = position;
 		}
 		Color thisOriginalColor;
 		public void SetUIAlpha(float alpha){
@@ -115,12 +105,6 @@ namespace AppleShooterProto{
 			);
 			thisGraphic.color = newColor;
 		}	
-		protected override void OnResetAtReserve(){
-			return;
-		}
-		public void DeactivateUI(){
-			thisSceneUI.Deactivate();
-		}
 		public Color GetChildGraphicOriginalColor(){
 			return thisChildGraphicOriginalColor;
 		}
@@ -135,6 +119,10 @@ namespace AppleShooterProto{
 		public void SetText(string text){
 			if(thisGraphic is Text)
 				((Text)thisGraphic).text = text;
+		}
+		int thisIndex;
+		public void SetIndex(int index){
+			thisIndex = index;
 		}
 	}
 }

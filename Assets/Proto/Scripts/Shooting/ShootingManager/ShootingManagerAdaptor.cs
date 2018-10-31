@@ -28,7 +28,6 @@ namespace AppleShooterProto{
 
 		public override void SetUp(){
 			ShootingManager.IConstArg arg = new ShootingManager.ConstArg(
-				processFactory,
 				this,
 				drawProcessOrder,
 				fireRate,

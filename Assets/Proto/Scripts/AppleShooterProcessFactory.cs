@@ -52,11 +52,6 @@ namespace AppleShooterProto{
 			Vector3 launcherDeltaPosition,
 			Vector3 launchPosition
 		);
-		IFadeProcess CreateFadeProcess(
-			IFadable fadable,
-			bool fadeIn,
-			float fadeTime
-		);
 		IFlyingTargetFlightProcess CreateFlyingTargetFlightProcess(
 			IFlyingTarget flyingTarget,
 			Vector3 initialVelocity,
@@ -71,13 +66,15 @@ namespace AppleShooterProto{
 			ISceneUI ui
 		);
 		IPopUIGlideProcess CreatePopUIGlideProcess(
-			IPopUIAdaptor adaptor,
+			IPopUI popUI,
 			PopUIAdaptor.PopMode popMode,
 			float glideTime,
 			float glideDistance,
 			AnimationCurve normalizedDistanceCurve,
 			AnimationCurve alhpaCurve,
-			AnimationCurve scaleCurve
+			AnimationCurve scaleCurve,
+			Vector2 graphicOriginalLocalPosition,
+			Color graphicOriginalColor
 		);
 		IDestroyedTargetParticleProcess CreateDestroyedTargetParticleProcess(
 			IDestroyedTargetAdaptor adaptor,
@@ -217,20 +214,6 @@ namespace AppleShooterProto{
 			);
 			return new ArrowFlightProcess(arg);
 		}
-		public IFadeProcess CreateFadeProcess(
-			IFadable fadable,
-			bool fadeIn,
-			float fadeTime
-		){
-			FadeProcess.IConstArg arg = new FadeProcess.ConstArg(
-				fadable,
-				fadeIn,
-				fadeTime,
-
-				thisProcessManager
-			);
-			return new FadeProcess(arg);
-		}
 		public IFlyingTargetFlightProcess CreateFlyingTargetFlightProcess(
 			IFlyingTarget flyingTarget,
 			Vector3 initialVelocity,
@@ -267,21 +250,26 @@ namespace AppleShooterProto{
 			return new MarkerUIMarkProcess(arg);
 		}
 		public IPopUIGlideProcess CreatePopUIGlideProcess(
-			IPopUIAdaptor adaptor,
+			IPopUI popUI,
 			PopUIAdaptor.PopMode popMode,
 			float glideTime,
 			float glideDistance,
 			AnimationCurve normalizedDistanceCurve,
 			AnimationCurve alhpaCurve,
-			AnimationCurve scaleCurve
+			AnimationCurve scaleCurve,
+			Vector2 graphicOriginalLocalPosition,
+			Color graphicOriginalColor
 		){
 			PopUIGlideProcess.IConstArg arg = new PopUIGlideProcess.ConstArg(
-				adaptor,
+				popUI,
 				popMode,
 				glideDistance,
 				normalizedDistanceCurve,
 				alhpaCurve,
 				scaleCurve,
+				graphicOriginalLocalPosition,
+				graphicOriginalColor,
+
 				thisProcessManager,
 				glideTime
 			);

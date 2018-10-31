@@ -2,17 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace AppleShooterProto{
-	public interface IStaticShootingTarget: ITestShootingTarget{}
-	public class StaticShootingTarget: TestShootingTarget, IStaticShootingTarget{
+	public interface IStaticShootingTarget: IShootingTarget{
+		void SetStaticShootingTargetReserve(
+			IStaticShootingTargetReserve reserve
+		);
+		void ActivateAt(IShootingTargetSpawnPoint point);
+	}
+	public class StaticShootingTarget: AbsShootingTarget, IStaticShootingTarget{
 		public StaticShootingTarget(
 			IConstArg arg
 		): base(arg){
-			thisReserve = arg.reserve;
 		}
-		readonly IStaticShootingTargetReserve thisReserve;
-		protected override void ResetTransformAtReserve(){
-			base.ResetTransformAtReserve();
-			thisReserve.PutTargetInArray(this);
+		public void SetStaticShootingTargetReserve(
+			IStaticShootingTargetReserve reserve
+		){
+			thisStaticShootingTargetReserve = reserve;
+		}
+		IStaticShootingTargetReserve thisStaticShootingTargetReserve;
+		protected override void ReserveSelf(){
+			thisStaticShootingTargetReserve.Reserve(this);
 		}
 		public override void SetIndex(int index){
 			base.SetIndex(index);
@@ -23,55 +31,36 @@ namespace AppleShooterProto{
 				return (IStaticShootingTargetAdaptor)thisAdaptor;
 			}
 		}
+		IShootingTargetSpawnPoint thisSpawnPoint;
+		public void ActivateAt(IShootingTargetSpawnPoint point){
+			thisSpawnPoint = point;
+			point.SetTarget(this);
+			SetParent(point);
+			ResetLocalTransform();
+			Activate();
+		}
+		public override void DeactivateImple(){
+			thisSpawnPoint.SetTarget(null);
+			thisSpawnPoint = null;
+			base.DeactivateImple();
+		}
 		
 		/* const */
-			public new interface IConstArg: TestShootingTarget.IConstArg{
-				IStaticShootingTargetReserve reserve{get;}
+			public new interface IConstArg: AbsShootingTarget.IConstArg{
 			}
-			public new struct ConstArg: IConstArg{
+			public new class ConstArg: AbsShootingTarget.ConstArg, IConstArg{
 				public ConstArg(
+					int index,
 					float health,
-					ITestShootingTargetAdaptor adaptor,
 					Color defaultColor,
-					IAppleShooterProcessFactory processFactory,
-					float fadeTime,
-
-					IStaticShootingTargetReserve reserve
+					IStaticShootingTargetAdaptor adaptor
+				): base(
+					index,
+					health,
+					defaultColor,
+					adaptor
 				){
-					thisHealth = health;
-					thisAdaptor = adaptor;
-					thisDefaultColor = defaultColor;
-					thisProcessFactory =  processFactory;
-					thisFadeTime = fadeTime;
-
-					thisReserve = reserve;
 				}
-					readonly float thisHealth;
-					public float health{get{return thisHealth;}}
-					readonly ITestShootingTargetAdaptor thisAdaptor;
-					public IShootingTargetAdaptor adaptor{get{return thisAdaptor;}}
-					readonly Color thisDefaultColor;
-					public Color defaultColor{get{return thisDefaultColor;}}
-					readonly IAppleShooterProcessFactory thisProcessFactory;
-					public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-					readonly float thisFadeTime;
-					public float fadeTime{get{return thisFadeTime;}}
-
-					readonly IStaticShootingTargetReserve thisReserve;
-					public IStaticShootingTargetReserve reserve{get{return thisReserve;}}
 			}
-	}
-}
-
-public class StaticShootingTarget : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

@@ -5,14 +5,17 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IGlidingTarget: IShootingTarget{
 		void SetWaypointsFollower(IWaypointsFollower follower);
+		void SetGlidingTargetReserve(IGlidingTargetReserve reserve);
+		void SetWaypointCurveToFollow(IWaypointCurve curve);
 	}
-	public class GlidingTarget: TestShootingTarget, IGlidingTarget{
+	public class GlidingTarget: AbsShootingTarget, IGlidingTarget{
 		public GlidingTarget(
-			TestShootingTarget.IConstArg arg
+			AbsShootingTarget.IConstArg arg
 		): base(arg){}
+
 		public override void DeactivateImple(){
 			base.DeactivateImple();
-			ResetGlide();
+			StopGlide();
 		}
 		public override void ActivateImple(){
 			base.ActivateImple();
@@ -23,21 +26,23 @@ namespace AppleShooterProto{
 			thisWaypointsFollower = follower;
 		}
 		void StartGlide(){
-			ResetGlide();
+			StopGlide();
 			thisWaypointsFollower.StartFollowing();
 		}
 		void StopGlide(){
 			thisWaypointsFollower.StopFollowing();
 		}
-		void ResetGlide(){
-			StopGlide();
-			ResetTransformAtReserve();
-		}
-		protected override void DestroyTarget(){
-			base.DestroyTarget();
-			thisWaypointsFollower.StopFollowing();
-		}
 		
+		IGlidingTargetReserve thisGlidingTargetReserve;
+		public void SetGlidingTargetReserve(IGlidingTargetReserve reserve){
+			thisGlidingTargetReserve = reserve;
+		}
+		protected override void ReserveSelf(){
+			thisGlidingTargetReserve.Reserve(this);
+		}
+		public void SetWaypointCurveToFollow(IWaypointCurve curve){
+			thisWaypointsFollower.SetWaypointCurve(curve);
+		}
 	}
 }
 

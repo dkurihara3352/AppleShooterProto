@@ -3,27 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IStaticShootingTargetAdaptor: IInstatiableShootingTargetAdaptor{
+	public interface IStaticShootingTargetAdaptor: IShootingTargetAdaptor{
+		IStaticShootingTarget GetStaticShootingTarget();
 		void SetTargetReserve(IStaticShootingTargetReserve reserve);
 		void SetIndexOnTextMesh(int index);
-		void SetPopUIReserve(IPopUIReserve reserve);
 	}
-	public class StaticShootingTargetAdaptor: InstatiableShootingTargetAdaptor, IStaticShootingTargetAdaptor{
+	public class StaticShootingTargetAdaptor: AbsShootingTargetAdaptor, IStaticShootingTargetAdaptor{
 		public override void SetUp(){
 			base.SetUp();
 			thisTextMesh = CollectTextMesh();
 		}
-		protected override void SetUpTarget(){
+		protected override IShootingTarget CreateShootingTarget(){
 			StaticShootingTarget.IConstArg arg = new StaticShootingTarget.ConstArg(
-				health,
-				this,
-				defaultColor,
-				processFactory,
-				fadeTime,
-
-				reserve
+				thisIndex,
+				thisHealth,
+				thisDefaultColor,
+				this
 			);
-			thisShootingTarget = new StaticShootingTarget(arg);
+			return new StaticShootingTarget(arg);
+
+		}
+		IStaticShootingTarget thisStaticShootingTarget{
+			get{
+				return(IStaticShootingTarget)thisShootingTarget;
+			}
+		}
+		public IStaticShootingTarget GetStaticShootingTarget(){
+			return thisStaticShootingTarget;
 		}
 		public IStaticShootingTargetReserve reserve;
 		public void SetTargetReserve(IStaticShootingTargetReserve reserve){
@@ -40,9 +46,6 @@ namespace AppleShooterProto{
 					return (TextMesh)comp;
 			}
 			return null;
-		}
-		public void SetPopUIReserve(IPopUIReserve reserve){
-			thisPopUIReserve = reserve;
 		}
 	}	
 }

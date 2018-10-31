@@ -4,60 +4,58 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IFlyingTargetAdaptor: ITestShootingTargetAdaptor{
-		void ResetTransformAtStandBy();
+	public interface IFlyingTargetAdaptor: IShootingTargetAdaptor{
+		IFlyingTarget GetFlyingTarget();
+		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);
 	}
 
-	public class FlyingTargetAdaptor : TestShootingTargetAdaptor, IFlyingTargetAdaptor {
+	public class FlyingTargetAdaptor : AbsShootingTargetAdaptor, IFlyingTargetAdaptor {
 		public Vector3 initialVelocity;
 		public float distanceThreshold;
 		public int waypointsCountInSequence;
 		public float speed = 3f;
-		public Transform flyingTargetStandByTransform;
-		protected override void SetUpTarget(){
+		protected override IShootingTarget CreateShootingTarget(){
 			FlyingTarget.IConstArg arg = new FlyingTarget.ConstArg(
-				health,
+				thisIndex,
+				thisHealth,
+				thisDefaultColor,
 				this,
-				defaultColor,
-				processFactory,
-				fadeTime,
 				initialVelocity,
 				distanceThreshold,
 				waypointsCountInSequence,
 				speed
 			);
-			thisShootingTarget = new FlyingTarget(arg);
+			return new FlyingTarget(arg);
 		}
 		IFlyingTarget thisFlyingTarget{
 			get{return (IFlyingTarget)thisShootingTarget;}
 		}
+		public IFlyingTarget GetFlyingTarget(){
+			return thisFlyingTarget;
+		}
+		ISmoothLookerAdaptor thisSmoothLookerAdaptor;
+		ISmoothLookerAdaptor CollectSmoothLookerAdaptor(){
+			return (ISmoothLookerAdaptor)this.transform.GetComponent(typeof(ISmoothLookerAdaptor));
+		}
+		IFlyingTargetReserve thisFlyingTargetReserve;
+		public void SetFlyingTargetReserve(IFlyingTargetReserve reserve){
+			thisFlyingTargetReserve = reserve;
+		}
+		public override void SetUp(){
+			base.SetUp();
+			thisSmoothLookerAdaptor = CollectSmoothLookerAdaptor();
+			thisSmoothLookerAdaptor.SetMonoBehaviourAdaptorManager(thisMonoBehaviourAdaptorManager);
+			thisSmoothLookerAdaptor.SetUp();
+		}
 		public override void SetUpReference(){
 			base.SetUpReference();
-			IFlyingTargetWaypoint[] waypoints = CollectWaypoints();
-			thisFlyingTarget.SetWaypoints(waypoints);
-
-			ISmoothLookerAdaptor lookerAdaptor = this.GetComponent(typeof(ISmoothLookerAdaptor)) as ISmoothLookerAdaptor;
-			ISmoothLooker looker = lookerAdaptor.GetSmoothLooker();
+			ISmoothLooker looker = thisSmoothLookerAdaptor.GetSmoothLooker();
 			thisFlyingTarget.SetSmoothLooker(looker);
+
+			thisFlyingTarget.SetFlyingTargetReserve(thisFlyingTargetReserve);
+			thisSmoothLookerAdaptor.SetUpReference();
 		}
-		public Transform waypointsParent;
-		IFlyingTargetWaypoint[] CollectWaypoints(){
-			int childCount = waypointsParent.childCount;
-			List<IFlyingTargetWaypoint> resultList = new List<IFlyingTargetWaypoint>();
-			for(int i = 0 ; i< childCount; i ++){
-				Transform child = waypointsParent.GetChild(i);
-				IFlyingTargetWaypointAdaptor adaptor = (IFlyingTargetWaypointAdaptor)child.GetComponent(typeof(IFlyingTargetWaypointAdaptor));
-				IFlyingTargetWaypoint waypoint = adaptor.GetWaypoint();
-				resultList.Add(waypoint);
-			}
-			return resultList.ToArray();
-		}
-		public void ResetTransformAtStandBy(){
-			Vector3 standByPosition = flyingTargetStandByTransform.position;
-			Quaternion standByRotation = flyingTargetStandByTransform.rotation;
-			SetPosition(standByPosition);
-			SetRotation(standByRotation);
-		}
+
 		public void OnDrawGizmos(){
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(

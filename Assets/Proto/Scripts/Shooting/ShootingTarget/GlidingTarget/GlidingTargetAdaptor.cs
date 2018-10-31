@@ -3,46 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IGlidingTargetAdaptor: ITestShootingTargetAdaptor{}
-	public class GlidingTargetAdaptor: TestShootingTargetAdaptor, IGlidingTargetAdaptor{
-		void MakeSureParentHasWaypointsManagerAdaptor(){
-			Transform parent = this.transform.parent;
-			if(parent == null)
-				throw new System.InvalidOperationException(
-					"parent is missing on GlidingTargetAdaptor"
-				);
-			IWaypointsManagerAdaptor waypointsManagerAdaptor = (IWaypointsManagerAdaptor)parent.GetComponent(typeof(IWaypointsManagerAdaptor));
-			if(waypointsManagerAdaptor == null)
-				throw new System.InvalidOperationException(
-					"GlidingTargetAdaptor must be child of its WaypointsManagerAdaptor"
-				);
-		}
+	public interface IGlidingTargetAdaptor: IShootingTargetAdaptor{
+		void SetGlidingTargetReserve(IGlidingTargetReserve reserve);
+		IGlidingTarget GetGlidingTarget();
+	}
+	public class GlidingTargetAdaptor: AbsShootingTargetAdaptor, IGlidingTargetAdaptor{
 		public override void SetUp(){
 			base.SetUp();
-			MakeSureParentHasWaypointsManagerAdaptor();
+			thisWaypointsFollowerAdaptor = CollectWaypointsFollowerAdaptor();
 		}
-		protected override void SetUpTarget(){
-			TestShootingTarget.IConstArg arg = new TestShootingTarget.ConstArg(
-				health,
-				this,
-				defaultColor,
-				processFactory,
-				fadeTime
+		protected override IShootingTarget CreateShootingTarget(){
+			AbsShootingTarget.IConstArg arg = new AbsShootingTarget.ConstArg(
+				thisIndex,
+				thisHealth,
+				thisDefaultColor,
+				this
 			);
-			thisShootingTarget = new GlidingTarget(arg);
+			return new GlidingTarget(arg);
 		}
-		public override void SetUpReference(){
-			base.SetUpReference();
-			SetGlidingTargetWithWaypointsFollower();
+		IGlidingTarget thisGlidingTarget{
+			get{
+				return (IGlidingTarget)thisShootingTarget;
+			}
 		}
-		void SetGlidingTargetWithWaypointsFollower(){
+		public IGlidingTarget GetGlidingTarget(){
+			return thisGlidingTarget;
+		}
+		IWaypointsFollowerAdaptor thisWaypointsFollowerAdaptor;
+		IWaypointsFollowerAdaptor CollectWaypointsFollowerAdaptor(){
 			IWaypointsFollowerAdaptor adaptor = (IWaypointsFollowerAdaptor)this.transform.GetComponent(typeof(IWaypointsFollowerAdaptor));
 			if(adaptor == null)
 				throw new System.InvalidOperationException(
 					"IWaypointsFollowerAdaptor is missing on GlidingTargetAdaptor"
 				);
-			IWaypointsFollower follower = adaptor.GetWaypointsFollower();
-			((IGlidingTarget)thisShootingTarget).SetWaypointsFollower(follower);
+			return adaptor;
+		}
+		IGlidingTargetReserve thisGlidingTargetReserve;
+		public void SetGlidingTargetReserve(
+			IGlidingTargetReserve reserve
+		){
+			thisGlidingTargetReserve = reserve;
+		}
+		public override void SetUpReference(){
+			base.SetUpReference();
+
+			IWaypointsFollower follower = thisWaypointsFollowerAdaptor.GetWaypointsFollower();
+			thisGlidingTarget.SetWaypointsFollower(follower);
+			
+			thisGlidingTarget.SetGlidingTargetReserve(
+				thisGlidingTargetReserve
+			);
 		}
 	}
 }

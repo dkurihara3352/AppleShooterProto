@@ -5,26 +5,28 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface IMarkerUIAdaptor: ISceneUIAdaptor{
-		void StartMark();
-		void StopMark();
-		void UpdateSceneUI();
+		IMarkerUI GetMarkerUI();
+		void SetMarkerUIReserve(IMarkerUIReserve reserve);
 		void TriggerActivationOnAnimator();
 		void TriggerDeactivationOnAnimator();
+		void SetIndex(int index);
 	}
 	[RequireComponent(typeof(Animator))]
 	public class MarkerUIAdaptor : AbsSceneUIAdaptor, IMarkerUIAdaptor {
 
 		protected override ISceneUI CreateSceneUI(){
 			AbsSceneUI.IConstArg arg = new AbsSceneUI.ConstArg(
-				uiCamera,
 				this,
+				thisCamera,
 				minUISize,
 				maxUISize,
 				nearUIDistance,
-				farUIDistance
+				farUIDistance,
+				thisIndex
 			);
 			return new MarkerUI(arg);
 		}
+
 		public override void SetUp(){
 			base.SetUp();
 			thisActivationHash = Animator.StringToHash(
@@ -35,36 +37,25 @@ namespace AppleShooterProto{
 			);
 			thisAnimator = CollectAnimator();
 		}
-		// public override void FinalizeSetUp(){
-		// 	thisSceneUI.Deactivate();
-		// }
-		IMarkerUIMarkProcess thisProcess;
-		public void StartMark(){
-			StopMark();
-			thisProcess = processFactory.CreateMarkerUIMarkProcess(
-				(IMarkerUI)thisSceneUI
-			);
-			thisProcess.Run();
+		IMarkerUI thisMarkerUI{
+			get{
+				return (IMarkerUI)thisSceneUI;
+			}
 		}
-		public void StopMark(){
-			if(thisProcess != null && thisProcess.IsRunning())
-				thisProcess.Stop();
-			thisProcess = null;
+		public IMarkerUI GetMarkerUI(){
+			return thisMarkerUI;
+		}
+		public override void SetUpReference(){
+			thisMarkerUI.SetMarkerUIReserve(thisReserve);
+		}
+		IMarkerUIReserve thisReserve;
+		public void SetMarkerUIReserve(IMarkerUIReserve reserve){
+			thisReserve = reserve;
+		}
+		public override void FinalizeSetUp(){
+			thisSceneUI.Deactivate();
 		}
 
-		public RectTransform thisReserveRectTransform;
-		// public void ResetAtReserve(){
-		// 	this.transform.SetParent(thisReserveRectTransform);
-		// 	this.transform.localPosition = Vector3.zero;
-		// 	OnResetAtReserve();
-		// }
-		protected override void OnResetAtReserve(){
-			StopMark();
-		}
-		public void UpdateSceneUI(){
-			thisSceneUI.SetUIWorldPosition(targetTransform.position);
-			thisSceneUI.UpdateUI();
-		}
 		int thisActivationHash;
 		int thisDeactivationHash;
 		Animator thisAnimator;
@@ -81,12 +72,9 @@ namespace AppleShooterProto{
 				thisDeactivationHash
 			);
 		}
-		// Canvas thisCanvas;
-		// Canvas CollectCanvasFromParent(){
-		// 	return this.GetComponentInParent<Canvas>() as Canvas;
-		// }
-		// public void BecomeChildToCanvas(){
-		// 	this.transform.SetParent(thisCanvas.transform);
-		// }
+		int thisIndex;
+		public void SetIndex(int index){
+			thisIndex = index;
+		}
 	}
 }

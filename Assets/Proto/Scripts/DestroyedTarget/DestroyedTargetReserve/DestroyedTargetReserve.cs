@@ -3,26 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IDestroyedTargetReserve{
-		void Reserve(IDestroyedTargetAdaptor targetAdaptor);
+	public interface IDestroyedTargetReserve: ISceneObjectReserve<IDestroyedTarget>{
 		void ActivateDestoryedTargetAt(IShootingTarget target);
-		void SetDestroyedTargets(IDestroyedTarget[] targets);
 	}
-	public class DestroyedTargetReserve: IDestroyedTargetReserve{
+	public class DestroyedTargetReserve: AbsSceneObjectReserve<IDestroyedTarget>, IDestroyedTargetReserve{
 		public DestroyedTargetReserve(
 			IConstArg arg
+		): base(
+			arg
 		){
-			thisAdaptor = arg.adaptor;
 		}
-		public void Reserve(IDestroyedTargetAdaptor adaptor){
-			adaptor.SetParent(thisAdaptor.GetTransform());
-			adaptor.ResetLocalTransform();
+		public override void Reserve(IDestroyedTarget destroyedTarget){
+			destroyedTarget.SetParent(this);
+			destroyedTarget.ResetLocalTransform();
 			Vector3 reservedPosition = CalculateReservedPosition(
-				adaptor.GetIndex()
+				destroyedTarget.GetIndex()
 			);
-			adaptor.SetLocalPosition(reservedPosition);
+			destroyedTarget.SetLocalPosition(reservedPosition);
 		}
-		IDestroyedTargetReserveAdaptor thisAdaptor;
+		IDestroyedTargetReserveAdaptor thisTypedAdaptor{
+			get{
+				return (IDestroyedTargetReserveAdaptor)thisAdaptor;
+			}
+		}
 
 		float spaceInReserve = 1f;
 		Vector3 CalculateReservedPosition(int index){
@@ -32,33 +35,19 @@ namespace AppleShooterProto{
 			);
 		}
 		public void ActivateDestoryedTargetAt(IShootingTarget target){
-			IDestroyedTarget nextTarget = GetNextDestroyedTarget();
+			IDestroyedTarget nextTarget = GetNext();
 			nextTarget.ActivateAt(target);
 		}
-		int nextIndex = 0;
-		IDestroyedTarget[] thisTargets;
-		public void SetDestroyedTargets(IDestroyedTarget[] targets){
-			thisTargets = targets;
-		}
-		IDestroyedTarget GetNextDestroyedTarget(){
-			IDestroyedTarget nextTarget = thisTargets[nextIndex];
-			nextIndex ++;
-			if(nextIndex >= thisTargets.Length)
-				nextIndex = 0;
-			return nextTarget;
-		}
 		/* ConstArg */
-			public interface IConstArg{
-				IDestroyedTargetReserveAdaptor adaptor{get;}
+			public new interface IConstArg: AbsSceneObject.IConstArg{
 			}
-			public struct ConstArg: IConstArg{
+			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IDestroyedTargetReserveAdaptor adaptor
+				): base(
+					adaptor
 				){
-					thisAdaptor = adaptor;
 				}
-				readonly IDestroyedTargetReserveAdaptor thisAdaptor;
-				public IDestroyedTargetReserveAdaptor adaptor{get{return thisAdaptor;}}
 			}
 		/*  */
 	}

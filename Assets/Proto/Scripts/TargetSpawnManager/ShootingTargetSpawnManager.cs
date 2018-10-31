@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnManager{
+	public interface IShootingTargetSpawnManager: ISceneObject{
 		void SetShootingTargetSpawnPoints(
 			IShootingTargetSpawnPoint[] points
 		);
@@ -17,14 +17,15 @@ namespace AppleShooterProto{
 		int[] GetSpawnPointIndices();
 		IShootingTarget[] GetSpawnedShootingTargets();
 	}
-	public class ShootingTargetSpawnManager: IShootingTargetSpawnManager{
-		public ShootingTargetSpawnManager(IConstArg arg){
+	public class ShootingTargetSpawnManager: AbsSceneObject, IShootingTargetSpawnManager{
+		public ShootingTargetSpawnManager(
+			IConstArg arg
+		): base(
+			arg
+		){
 			thisSpawnCount = arg.spawnCount;
-			thisAdaptor = arg.adaptor;
-
 		}
 		readonly int thisSpawnCount;
-		readonly IShootingTargetSpawnManagerAdaptor thisAdaptor;
 
 		IShootingTargetSpawnPoint[] thisSpawnPoints;
 		public void SetShootingTargetSpawnPoints(IShootingTargetSpawnPoint[] points){
@@ -59,23 +60,10 @@ namespace AppleShooterProto{
 		public int[] GetSpawnPointIndices(){
 			return thisIndices;
 		}
-		IStaticShootingTarget SpawnStaticTargetAt(int spawnPointIndex){
+		void SpawnStaticTargetAt(int spawnPointIndex){
 			IShootingTargetSpawnPoint spawnPoint = thisSpawnPoints[spawnPointIndex];
-			IStaticShootingTarget target = thisTargetReserve.Unreserve();
-			spawnPoint.SetTarget(target);
-			MakeTargetChildOfSpawnPoint(
-				target,
-				spawnPoint
-			);
-			target.SetPosition(spawnPoint.GetPosition());
-			target.SetRotation(spawnPoint.GetRotation());
-			return target;
-		}
-		void MakeTargetChildOfSpawnPoint(
-			IStaticShootingTarget target,
-			IShootingTargetSpawnPoint spawnPoint
-		){
-			target.SetParent(spawnPoint.GetTransform());
+			thisTargetReserve.ActivateStaticShootingTargetAt(spawnPoint);
+
 		}
 		public void Despawn(){
 			DeactivateFlyingTargets();
@@ -123,22 +111,20 @@ namespace AppleShooterProto{
 			return resultList.ToArray();
 		}
 		/*  */
-		public interface IConstArg{
+		public new interface IConstArg: AbsSceneObject.IConstArg{
 			int spawnCount{get;}
-			IShootingTargetSpawnManagerAdaptor adaptor{get;}
 		}
-		public struct ConstArg: IConstArg{
+		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				int spawnCount,
 				IShootingTargetSpawnManagerAdaptor adaptor
+			): base(
+				adaptor
 			){
 				thisSpawnCount  = spawnCount;
-				thisAdaptor = adaptor;
 			}
 			readonly int thisSpawnCount;
 			public int spawnCount{get{return thisSpawnCount;}}
-			readonly IShootingTargetSpawnManagerAdaptor thisAdaptor;
-			public IShootingTargetSpawnManagerAdaptor adaptor{get{return thisAdaptor;}}
 		}
 	}
 }

@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 			thisInitialVelocity = arg.initialVelocity;
 			thisDistanceThreshold = arg.distanceThreshold;
 			thisCurrentVelocity = thisInitialVelocity;
-			thisSpeed = arg.speed;
+			thisMaxSpeed = arg.speed;
 		}
 		readonly IFlyingTarget thisFlyingTarget;
 		readonly Vector3 thisInitialVelocity;
@@ -25,8 +25,8 @@ namespace AppleShooterProto{
 			thisPrevPos = thisFlyingTarget.GetPosition();
 		}
 		Vector3 thisPrevPos;
-		readonly float thisSpeed = 10f;
-		
+		readonly float thisMaxSpeed = 10f;
+		float thisCurrentSpeed = 0f;
 		protected override void UpdateProcessImple(float deltaT){
 			Vector3 curPos = thisFlyingTarget.GetPosition();
 			IFlyingTargetWaypoint currentWaypoint = thisFlyingTarget.GetCurrentWaypoint();
@@ -37,10 +37,28 @@ namespace AppleShooterProto{
 			}
 			Vector3 lookDir = thisFlyingTarget.GetForwardDirection();
 
-			Vector3 deltaPos = lookDir * thisSpeed * deltaT * posDif.magnitude * .1f;
-			Vector3 newPosition = curPos + deltaPos;
-			thisFlyingTarget.SetPosition(newPosition);
+			float targetSpeed = CalculateTargetSpeed(posDif, lookDir);
+			float actualSpeedDelta = (targetSpeed - thisCurrentSpeed) * deltaT;
+			float actualSpeed = thisCurrentSpeed + actualSpeedDelta;
+			// float speed = CalculateTargetSpeed(posDif, lookDir);
 
+			Vector3 deltaPos = lookDir * actualSpeed * deltaT /* * posDif.magnitude * .1f */;
+			Vector3 newPosition = curPos + deltaPos;
+
+			thisFlyingTarget.SetPosition(newPosition);
+			thisCurrentSpeed = actualSpeed;
+		}
+		float CalculateTargetSpeed(
+			Vector3 posDif,
+			Vector3 lookDir
+		){
+			float dot = Vector3.Dot(
+				posDif.normalized, lookDir
+			);
+			// if(dot < 0f)
+			// 	dot = 0f;
+			dot = (dot + 1f) /2f;
+			return thisMaxSpeed * dot;
 		}
 		/*  */
 		public interface IConstArg: IProcessConstArg{

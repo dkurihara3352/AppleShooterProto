@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IArrowAdaptor: IInstatiableMonoBehaviourAdaptor{
+	public interface IArrowAdaptor: IMonoBehaviourAdaptor{
 		void SetArrowReserveTransform(Transform arrowReserveTrans);
 		void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor);
 		void SetCollisionDetectionIntervalFrameCount(int count);
@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 		void SetIndex(int index);
 		string GetParentName();
 	}
-	public class ArrowAdaptor : InstatiableMonoBehaviourAdaptor, IArrowAdaptor {
+	public class ArrowAdaptor : MonoBehaviourAdaptor, IArrowAdaptor {
 		
 		/* Ref */
 			ILaunchPointAdaptor thisLaunchPointAdaptor;

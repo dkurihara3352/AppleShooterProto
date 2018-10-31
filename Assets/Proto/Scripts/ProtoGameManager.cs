@@ -56,7 +56,7 @@ namespace AppleShooterProto{
 		public void RunSystem(){
 
 			ActivateUISystem();
-			GetTargetsReadyAtReserve();
+			// GetTargetsReadyAtReserve();
 			SpawnTargetsOnFirstWaypointCurve();
 
 			StartWaypointsFollower();//		100
@@ -81,10 +81,10 @@ namespace AppleShooterProto{
 			firstWaypointCurve.SpawnTargets();
 		}
 
-		public void GetTargetsReadyAtReserve(){
-			IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
-			reserve.GetTargetsReadyInReserve();
-		}
+		// public void GetTargetsReadyAtReserve(){
+		// 	IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
+		// 	reserve.GetTargetsReadyInReserve();
+		// }
 		public void StartWaypointsFollower(){
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 			follower.StartFollowing();

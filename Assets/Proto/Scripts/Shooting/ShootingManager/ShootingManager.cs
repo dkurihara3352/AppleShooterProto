@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingManager{
+	public interface IShootingManager: ISceneObject{
 		void SetInputManager(IPlayerInputManager inputManager);
 		void SetLaunchPoint(ILaunchPoint launchPoint);
 		void SetTrajectory(ITrajectory trajectory);
@@ -54,13 +54,13 @@ namespace AppleShooterProto{
 			Quaternion rotation
 		);
 	}
-	public class ShootingManager : IShootingManager {
+	public class ShootingManager : AbsSceneObject, IShootingManager {
 		/* SetUp */
 			public ShootingManager(
 				IConstArg arg
+			): base(
+				arg
 			){
-				thisProcessFactory = arg.processFactory;
-				thisAdaptor = arg.adaptor;
 				thisDrawProcessOrder = arg.drawProcessOrder;
 				thisFireRate = arg.fireRate;
 
@@ -73,8 +73,11 @@ namespace AppleShooterProto{
 				thisGlobalMinFlightSpeed = arg.globalMinFlightSpeed;
 				thisFlightSpeedMultiplier = arg.flightSpeedMultiplier;
 			}
-			readonly IAppleShooterProcessFactory thisProcessFactory;
-			readonly IShootingManagerAdaptor thisAdaptor;
+			IShootingManagerAdaptor thisTypedAdaptor{
+				get{
+					return (IShootingManagerAdaptor)thisAdaptor;
+				}
+			}
 			readonly int thisDrawProcessOrder;
 			readonly float thisFireRate;
 			IPlayerInputManager thisInputManager;
@@ -199,7 +202,7 @@ namespace AppleShooterProto{
 				return thisDrawElapsedTime;
 			}
 			float thisMaxDrawTime{
-				get{return thisAdaptor.GetMaxDrawTime();}
+				get{return thisTypedAdaptor.GetMaxDrawTime();}
 			}
 			float GetNormalizedDraw(){
 				float result = thisDrawElapsedTime/ thisMaxDrawTime;
@@ -210,13 +213,13 @@ namespace AppleShooterProto{
 			IDrawProcess thisDrawProcess;
 		/* flight & trajectory */
 			public float initialSpeed{
-				get{return thisAdaptor.GetInitialSpeed();}
+				get{return thisTypedAdaptor.GetInitialSpeed();}
 			}
 			public float maxFlightSpeed{
-				get{return thisAdaptor.GetMaxFlightSpeed();}
+				get{return thisTypedAdaptor.GetMaxFlightSpeed();}
 			}
 			public float gravity{
-				get{return thisAdaptor.GetGravity();}
+				get{return thisTypedAdaptor.GetGravity();}
 			}
 			public float GetFlightGravity(){
 				return gravity;
@@ -349,17 +352,15 @@ namespace AppleShooterProto{
 				Vector3 position,
 				Quaternion rotation
 			){
-				ILandedArrow landedArrow = thisLandedArrowReserve.Unreserve();
-				landedArrow.SetShootingTarget(target);
-				landedArrow.SetParent(target.GetTransform());
-				landedArrow.SetPosition(position);
-				landedArrow.SetRotation(rotation);
+				thisLandedArrowReserve.ActivateLandedArrowAt(
+					target,
+					position,
+					rotation
+				);
 				
 			}
 		/* Const */
-			public interface IConstArg{
-				IAppleShooterProcessFactory processFactory{get;}
-				IShootingManagerAdaptor adaptor{get;}
+			public new interface IConstArg: AbsSceneObject.IConstArg{
 				int drawProcessOrder{get;}
 				float fireRate{get;}
 
@@ -372,10 +373,10 @@ namespace AppleShooterProto{
 				float globalMinFlightSpeed{get;}
 				float flightSpeedMultiplier{get;}
 			}
-			public class ConstArg: IConstArg{
+			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
-					IAppleShooterProcessFactory processFactory,
 					IShootingManagerAdaptor adaptor,
+
 					int drawProcessOrder,
 					float fireRate,
 
@@ -387,9 +388,10 @@ namespace AppleShooterProto{
 					float arrowAttackMultiplier,
 					float globalMinFlightSpeed,
 					float flightSpeedMultiplier
+				): base(
+					adaptor
 				){
-					thisProcessFactory = processFactory;
-					thisAdaptor = adaptor;
+
 					thisDrawProcessOrder = drawProcessOrder;
 					thisFireRate = fireRate;
 
@@ -402,10 +404,6 @@ namespace AppleShooterProto{
 					thisGlobalMinFlightSpeed = globalMinFlightSpeed;
 					thisFlightSpeedMultiplier = flightSpeedMultiplier;
 				}
-				readonly IAppleShooterProcessFactory thisProcessFactory;
-				public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-				readonly IShootingManagerAdaptor thisAdaptor;
-				public IShootingManagerAdaptor adaptor{get{return thisAdaptor;}}
 				readonly int thisDrawProcessOrder;
 				public int drawProcessOrder{get{return thisDrawProcessOrder;}}
 				readonly float thisFireRate;

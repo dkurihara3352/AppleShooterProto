@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTarget: ITestShootingTarget{
+	public interface IFlyingTarget: IShootingTarget{
 		void SetWaypoints(IFlyingTargetWaypoint[] waypoints);
 		void SetSmoothLooker(ISmoothLooker looker);
+		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);
 		void SetUpWaypoints();
 		IFlyingTargetWaypoint GetCurrentWaypoint();
 		void SetUpNextWaypoint();
@@ -15,7 +16,7 @@ namespace AppleShooterProto{
 		float GetCurrentDist();
 		Vector3 GetForwardDirection();
 	}
-	public class FlyingTarget : TestShootingTarget, IFlyingTarget {
+	public class FlyingTarget : AbsShootingTarget, IFlyingTarget {
 
 		public FlyingTarget(
 			IConstArg arg
@@ -39,13 +40,19 @@ namespace AppleShooterProto{
 		}
 		public override void DeactivateImple(){
 			base.DeactivateImple();
-			ResetFlight();
+			StopFlight();
 		}
-
+		IFlyingTargetReserve thisFlyingTargetReserve;
+		public void SetFlyingTargetReserve(IFlyingTargetReserve reserve){
+			thisFlyingTargetReserve = reserve;
+		}
+		protected override void ReserveSelf(){
+			thisFlyingTargetReserve.Reserve(this);
+		}
 
 		readonly float thisSpeed;
 		void StartFlight(){
-			this.ResetFlight();
+			StopFlight();
 			thisFlightProcess = thisProcessFactory.CreateFlyingTargetFlightProcess(
 				this,
 				thisInitialVelocity,
@@ -56,19 +63,12 @@ namespace AppleShooterProto{
 			thisSmoothLooker.SetLookAtTarget(GetCurrentWaypoint().GetAdaptor());
 			thisSmoothLooker.StartSmoothLook();
 		}
-		void ResetFlight(){
-			StopFlight();
-			ResetTransformAtReserve();
-		}
-		protected override void DestroyTarget(){
-			base.DestroyTarget();
-			StopFlight();
-		}
 		void StopFlight(){
 			if(thisFlightProcess != null){
 				thisFlightProcess.Stop();
 				thisFlightProcess = null;
 			}
+			thisSmoothLooker.StopSmoothLook();
 		}
 		IFlyingTargetWaypoint[] thisAllWaypoints;
 		public void SetWaypoints(IFlyingTargetWaypoint[] waypoints){
@@ -150,44 +150,34 @@ namespace AppleShooterProto{
 			get{return (IFlyingTargetAdaptor)thisAdaptor;}
 		}
 		/*  */
-		public new interface IConstArg: TestShootingTarget.IConstArg{
+		public new interface IConstArg: AbsShootingTarget.IConstArg{
 			Vector3 initialVelocity{get;}
 			float distThreshold{get;}
 			int waypointsCountInSequence{get;}
 			float speed{get;}
 		}
-		public new struct ConstArg: IConstArg{
+		public new class ConstArg: AbsShootingTarget.ConstArg, IConstArg{
 			public ConstArg(
+				int index,
 				float health,
-				IFlyingTargetAdaptor adaptor,
 				Color defaultColor,
-				IAppleShooterProcessFactory processFactory,
-				float fadeTime,
+				IFlyingTargetAdaptor adaptor,
+
 				Vector3 initialVelocity,
 				float distThreshold,
 				int waypointsCountInSequence,
 				float speed
+			): base(
+				index,
+				health,
+				defaultColor,
+				adaptor
 			){	
-				thisHealth = health;
-				thisAdaptor  = adaptor;
-				thisDefaultColor = defaultColor;
-				thisProcessFactory = processFactory;
-				thisFadeTime = fadeTime;
 				thisInitialVelocity = initialVelocity;
 				thisDistThreshold = distThreshold;
 				thisWaypointsCountInSequence = waypointsCountInSequence;
 				thisSpeed = speed;
 			}
-			readonly float thisHealth;
-			public float health{get{return thisHealth;}}
-			readonly IFlyingTargetAdaptor thisAdaptor;
-			public IShootingTargetAdaptor adaptor{get{return thisAdaptor;}}
-			readonly Color thisDefaultColor;
-			public Color defaultColor{get{return thisDefaultColor;}}
-			readonly IAppleShooterProcessFactory thisProcessFactory;
-			public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-			readonly float thisFadeTime;
-			public float fadeTime{get{return thisFadeTime;}}
 			readonly Vector3 thisInitialVelocity;
 			public Vector3 initialVelocity{get{return thisInitialVelocity;}}
 			readonly float thisDistThreshold;

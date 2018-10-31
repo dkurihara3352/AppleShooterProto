@@ -3,61 +3,63 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILandedArrowReserve{
-		void Reserve(ILandedArrow arrow);
-		ILandedArrow Unreserve();
-		void SetLandedArrows(ILandedArrow[] arrows);
-
-		ILandedArrow[] GetLandedArrows();
+	public interface ILandedArrowReserve: ISceneObjectReserve<ILandedArrow>{
+		void ActivateLandedArrowAt(
+			IShootingTarget target,
+			Vector3 position,
+			Quaternion rotation
+		);
 	}
-	public class LandedArrowReserve : ILandedArrowReserve {
+	public class LandedArrowReserve : AbsSceneObjectReserve<ILandedArrow>, ILandedArrowReserve {
 		public LandedArrowReserve(
 			IConstArg arg
+		): base(
+			arg
 		){
-			thisAdaptor = arg.adaptor;
 		}
-		ILandedArrowReserveAdaptor thisAdaptor;
-
-		public void Reserve(ILandedArrow arrow){
-			arrow.SetParent(thisAdaptor.GetTransform());
-			PutArrowInArray(arrow);
-			// arrow.ResetLocalTransform();
+		ILandedArrowReserveAdaptor thisTypedAdaptor{
+			get{
+				return (ILandedArrowReserveAdaptor)thisAdaptor;
+			}
+		}
+		public override void Reserve(ILandedArrow arrow){
+			arrow.SetParent(arrow);
+			arrow.ResetLocalTransform();
+			Vector3 reservedLocalPosition = GetReservedLocalPosition(arrow.GetIndex());
+			arrow.SetLocalPosition(reservedLocalPosition);
 		}
 		float arrowSpace = 1f;
-		void PutArrowInArray(ILandedArrow arrow){
-			arrow.ResetLocalTransform();
-			int index = arrow.GetIndex();
+		Vector3 GetReservedLocalPosition(int index){
 			float posX = index * arrowSpace;
-			Vector3 offset = new Vector3(posX, 0f, 0f);
-			Vector3 newWorPos = arrow.GetPosition() + offset;
-			arrow.SetPosition(newWorPos);
+			return new Vector3(
+				posX,
+				0f,
+				0f
+			);
 		}
-		ILandedArrow[] thisLandedArrows;
-		public ILandedArrow[] GetLandedArrows(){
-			return thisLandedArrows;
+
+		public void ActivateLandedArrowAt(
+			IShootingTarget target,
+			Vector3 position,
+			Quaternion rotation
+		){
+			ILandedArrow nextLandedArrow = GetNext();
+			nextLandedArrow.Deactivate();
+			nextLandedArrow.ActivateAt(
+				target,
+				position,
+				rotation
+			);
 		}
-		int nextAvailableLandedArrowIndex = 0;
-		public void SetLandedArrows(ILandedArrow[] arrows){
-			thisLandedArrows = arrows;
-		}
-		public ILandedArrow Unreserve(){
-			ILandedArrow result = thisLandedArrows[nextAvailableLandedArrowIndex ++];
-			if(nextAvailableLandedArrowIndex >= thisLandedArrows.Length - 1)
-				nextAvailableLandedArrowIndex = 0;
-			return result;
-		}
+
 		/* Const */
-			public interface IConstArg{
-				ILandedArrowReserveAdaptor adaptor{get;}
+			public new interface IConstArg: AbsSceneObject.IConstArg{
 			}	
-			public struct ConstArg: IConstArg{
+			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					ILandedArrowReserveAdaptor adaptor
-				){
-					thisAdaptor = adaptor;
+				): base(adaptor){
 				}
-				readonly ILandedArrowReserveAdaptor thisAdaptor;
-				public ILandedArrowReserveAdaptor adaptor{get{return thisAdaptor;}}
 			}
 		/*  */
 	}

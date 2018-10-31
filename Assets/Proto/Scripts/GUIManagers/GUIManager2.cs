@@ -54,19 +54,12 @@ namespace AppleShooterProto{
 		Rect sTR_2;
 		Rect sTR_3;
 		public MonoBehaviourAdaptorManager monoBehaviourAdaptorManager;
-		public FlyingTargetAdaptor flyingTargetAdaptor;
-		// public WaypointsFollowerAdaptor glidingTargetWPFollowerAdaptor;
-		public GlidingTargetAdaptor glidingTargetAdaptor;
-		public WaypointsManagerAdaptor waypointsManagerAdaptor;
-		public MarkerUIAdaptor markerUIAdaptor;
-		public PopUIAdaptor popUIAdaptor;
-		public PopUIReserveAdaptor popUIReserveAdaptor;
-		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
+		public FlyingTargetReserveAdaptor flyingTargetReserveAdaptor;
+		public FlyingTargetWaypointManagerAdaptor flyingTargetWaypointManagerAdaptor;
 		/*  */
 		bool thisSystemIsReady = false;
 		public void OnGUI(){
 			DrawControl(sTL_1);
-			DrawFlyingTarget(sTR_1);
 		}
 
 		void DrawControl(Rect rect){
@@ -84,122 +77,21 @@ namespace AppleShooterProto{
 				"Run"
 			)){
 				ActivateFlyingTarget();
-				// FinalizeWaypointCurves();
-				// StartGlidingTargetGlide();
 			}
-			if(
-				(GUI.Button(
-					sTL_3,
-					"ActivateMarkerUI"
-				))
-			){
-				ActivateMarkerUI();
-			}
-			if(GUI.Button(
-				sTL_4,
-				"DeactivateMarkerUI"
-			)){
-				DeactivateMarkerUI();
-			}
-			if(GUI.Button(
-				sTL_5,
-				"ActivateInstatiablePopUI"
-			))
-				ActivateInstatiablePopUI();
-			if(GUI.Button(
-				sTL_6,
-				"ActivateDestroyedTargetAtFlyingTarget"
-			))
-				ActivateDestroyedTargetAtFlyingTarget();
 		}
 		
 		/* Left */
 			void ActivateFlyingTarget(){
-				IFlyingTarget flyingTarget = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
-				flyingTarget.Activate();
+				IFlyingTargetReserve reserve = flyingTargetReserveAdaptor.GetFlyingTargetReserve();
+				IFlyingTargetWaypointManager manager = flyingTargetWaypointManagerAdaptor.GetFlyingTargetWaypointManager();
+				IFlyingTargetWaypoint[] waypoints = manager.GetWaypoints();
+
+				reserve.ActivateFlyingTargetAt(waypoints);
 				thisFlyingTargetIsReady = true;
 			}
 			bool thisFlyingTargetIsReady = false;
-			void ActivateGlidingTarget(){
-				// IWaypointsFollower follower = glidingTargetWPFollowerAdaptor.GetWaypointsFollower();
-				// follower.StartFollowing();
-				IGlidingTarget target = (IGlidingTarget)glidingTargetAdaptor.GetShootingTarget();
-				target.Activate();
-			}
-			void DeactivateGlidingTarget(){
-				IGlidingTarget target = (IGlidingTarget)glidingTargetAdaptor.GetShootingTarget();
-				target.Deactivate();
-			}
-			void FinalizeWaypointCurves(){
-				IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
-				waypointsManager.PlaceWaypointCurves();
-			}
-			void ActivateMarkerUI(){
-				IMarkerUI markerUI  = markerUIAdaptor.GetSceneUI() as IMarkerUI;
-				markerUI.Activate();
-			}
-			void DeactivateMarkerUI(){
-				IMarkerUI markerUI  = markerUIAdaptor.GetSceneUI() as IMarkerUI;
-				markerUI.Deactivate();
-			}
-			void ActivatePopUI(){
-				IPopUI popUI = popUIAdaptor.GetPopUI();
-				popUI.Activate();
-			}
-			void ReactivatePopUI(){
-				IPopUI popUI = popUIAdaptor.GetPopUI();
-				popUI.Deactivate();
-				popUI.Activate();
-			}
-			int count = 0;
-			void ActivateInstatiablePopUI(){
-				IPopUIReserve reserve = popUIReserveAdaptor.GetPopUIReserve();
-				IFlyingTarget target = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
-				Transform targetTrans = target.GetTransform();
-
-				IPopUI popUIToActivate = reserve.GetNextPopUI();
-				popUIToActivate.Deactivate();
-				popUIToActivate.SetTargetTransform(targetTrans);
-				popUIToActivate.Activate();
-				popUIToActivate.SetText(count.ToString());
-				count ++;
-			}
-			void ActivateDestroyedTargetAtFlyingTarget(){
-				IDestroyedTargetReserve reserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
-				IFlyingTarget target = (IFlyingTarget)flyingTargetAdaptor.GetShootingTarget();
-				reserve.ActivateDestoryedTargetAt(target);
-			}
 
 		/* Right */
-			void DrawFlyingTarget(Rect rect){
-				if(thisFlyingTargetIsReady){
-					IFlyingTarget target = flyingTargetAdaptor.GetShootingTarget() as IFlyingTarget;
-					int[] waypointsInSeqIndices = target.GetWaypointsInSequenceIndices();
-					int[] waypointsNotInUseIndices = target.GetWaypointsNotInUseIndices();
-					int currentWaypointIndex = waypointsInSeqIndices[0];
-					float curDist = target.GetCurrentDist();
-					Rect sub0 = GetSubRect(rect, 0, 4);
-					Rect sub1 = GetSubRect(rect, 1, 4);
-					Rect sub2 = GetSubRect(rect, 2, 4);
-					Rect sub3 = GetSubRect(rect, 3, 4);
-					GUI.Label(
-						sub0,
-						"in seq: " + GetIndicesString(waypointsInSeqIndices)
-					);
-					GUI.Label(
-						sub1,
-						"not in use: " + GetIndicesString(waypointsNotInUseIndices)
-					);
-					GUI.Label(
-						sub2,
-						"current: " + currentWaypointIndex.ToString()
-					);
-					GUI.Label(
-						sub3,
-						"dist: " + curDist.ToString()
-					);
-				}
-			}
 			string GetIndicesString(int[] indices){
 				string result = "";
 				foreach(int i in indices){

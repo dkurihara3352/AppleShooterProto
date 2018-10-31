@@ -20,15 +20,17 @@ namespace AppleShooterProto{
 		}
 		public override void SetUpReference(){
 			IDestroyedTarget[] destroyedTargets = CreateDestroyedTargets();
-			thisReserve.SetDestroyedTargets(destroyedTargets);
+			thisReserve.SetSceneObjects(destroyedTargets);
 		}
 		public int destroyedTargetsCount;
 		public GameObject destroyedTargetPrefab;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public IDestroyedTargetAdaptor[] thisDestroyedTargetAdaptors;
 		IDestroyedTarget[] CreateDestroyedTargets(){
+
 			List<IDestroyedTarget> resultList = new List<IDestroyedTarget>();
 			IPopUIReserve popUIReserve =  popUIReserveAdaptor.GetPopUIReserve();
+
 			List<IDestroyedTargetAdaptor> adaptorsList = new List<IDestroyedTargetAdaptor>();
 			for(int i = 0; i < destroyedTargetsCount; i ++){
 				GameObject destroyedTargetGO = GameObject.Instantiate(
@@ -47,8 +49,10 @@ namespace AppleShooterProto{
 
 				IDestroyedTarget target = adaptor.GetDestroyedTarget();
 				resultList.Add(target);
-			}	
+			}
+
 			thisDestroyedTargetAdaptors = adaptorsList.ToArray();
+
 			return resultList.ToArray();
 		}
 		public override void FinalizeSetUp(){

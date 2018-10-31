@@ -20,13 +20,17 @@ namespace AppleShooterProto{
 		}
 		public override void SetUpReference(){
 			ILandedArrow[] landedArrows = CreateLandedArrows();
-			thisReserve.SetLandedArrows(landedArrows);
+			thisReserve.SetSceneObjects(landedArrows);
 		}
 		public int totalLandedArrowsCount;
 		public GameObject landedArrowPrefab;
 		public Camera guiCamera;
+		ILandedArrowAdaptor[] thisLandedArrowAdaptors;
+		IArrowTwangAdaptor[] thisArrowTwangAdaptors;
 		ILandedArrow[] CreateLandedArrows(){
 			List<ILandedArrow> resultList = new List<ILandedArrow>();
+			List<ILandedArrowAdaptor> landedArrowAdaptors = new List<ILandedArrowAdaptor>();
+			List<IArrowTwangAdaptor> arrowTwangAdaptors = new List<IArrowTwangAdaptor>();
 			for(int i = 0; i < totalLandedArrowsCount; i ++){
 				GameObject landedArrowGO = GameObject.Instantiate(
 					landedArrowPrefab,
@@ -39,7 +43,7 @@ namespace AppleShooterProto{
 						"landedArrowAdaptor missing"
 					);
 				arrowAdaptor.SetLandedArrowReserveAdaptor(this);
-				IArrowTwangAdaptor arrowTwangAdaptor = /* (IArrowTwangAdaptor)landedArrowGO.GetComponent(typeof(IArrowTwangAdaptor)) */GetArrowTwangAdaptorFromChild(landedArrowGO);
+				IArrowTwangAdaptor arrowTwangAdaptor = GetArrowTwangAdaptorFromChild(landedArrowGO);
 				if(arrowTwangAdaptor == null)
 					throw new System.InvalidOperationException(
 						"arrow twang adaptor is missing"
@@ -47,25 +51,26 @@ namespace AppleShooterProto{
 				arrowTwangAdaptor.SetMonoBehaviourAdaptorManager(
 					thisMonoBehaviourAdaptorManager
 				);
-				// arrowTwangAdaptor.SetProcessManager(processManager);
 				arrowAdaptor.SetArrowTwangAdaptor(
 					arrowTwangAdaptor
 				);
-
 
 				arrowAdaptor.SetUp();
 				arrowTwangAdaptor.SetUp();
 				arrowAdaptor.SetUpReference();
 				arrowTwangAdaptor.SetUpReference();
-				arrowAdaptor.FinalizeSetUp();
-				arrowTwangAdaptor.FinalizeSetUp();
 
 				ILandedArrow landedArrow = arrowAdaptor.GetLandedArrow();
 				landedArrow.SetIndex(i);
-				landedArrow.Reserve();
 
 				resultList.Add(landedArrow);
+				landedArrowAdaptors.Add(arrowAdaptor);
+				arrowTwangAdaptors.Add(arrowTwangAdaptor);
 			}
+
+			thisLandedArrowAdaptors = landedArrowAdaptors.ToArray();
+			thisArrowTwangAdaptors = arrowTwangAdaptors.ToArray();
+
 			return resultList.ToArray();
 		}
 		IArrowTwangAdaptor GetArrowTwangAdaptorFromChild(GameObject landedArrowGO){
@@ -77,6 +82,12 @@ namespace AppleShooterProto{
 			throw new System.InvalidOperationException(
 				"arrowTwangAdaptor is not found among child components"
 			);
+		}
+		public override void FinalizeSetUp(){
+			foreach(ILandedArrowAdaptor landedArrowAdaptor in thisLandedArrowAdaptors)
+				landedArrowAdaptor.FinalizeSetUp();
+			foreach(IArrowTwangAdaptor arrowTwangAdaptor in thisArrowTwangAdaptors)
+				arrowTwangAdaptor.FinalizeSetUp();
 		}
 	}
 }

@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface ISceneUIAdaptor: IMonoBehaviourAdaptor{
+		void SetCamera(Camera camera);
 		void SetUISize(Vector2 size);
 		void SetUIScale(Vector2 scale);
 		void SetUIPosition(Vector2 position);
 		ISceneUI GetSceneUI();
 		void SetTargetTransform(Transform targetTrans);
 		Vector3 GetTargetWorldPosition();
-		void ResetAtReserve();
 		void BecomeChildToCanvas();
 		Vector2 GetRectSize();
 	}
@@ -20,7 +20,10 @@ namespace AppleShooterProto{
 		protected RectTransform CollectRectTransform(){
 			return this.transform.GetComponent<RectTransform>();
 		}
-		public Camera uiCamera;
+		protected Camera thisCamera;
+		public void SetCamera(Camera camera){
+			thisCamera = camera;
+		}
 		public Vector2 minUISize;
 		public Vector2 maxUISize;
 		public float nearUIDistance;
@@ -54,13 +57,6 @@ namespace AppleShooterProto{
 		public Vector3 GetTargetWorldPosition(){
 			return targetTransform.position;
 		}
-		public RectTransform reserveRectTransform;
-		public virtual void ResetAtReserve(){
-			SetParent(reserveRectTransform);
-			ResetLocalTransform();
-			OnResetAtReserve();
-		}
-		protected abstract void OnResetAtReserve();
 		protected Canvas thisCanvas;
 		Canvas CollectCanvas(){
 			return this.transform.GetComponentInParent<Canvas>();

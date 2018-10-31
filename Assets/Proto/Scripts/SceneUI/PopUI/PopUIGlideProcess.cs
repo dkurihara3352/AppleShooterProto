@@ -12,27 +12,24 @@ namespace AppleShooterProto{
 		): base(
 			arg
 		){
-			thisAdaptor = arg.adaptor;
+			thisPopUI = arg.popUI;
 			thisPopMode = arg.popMode;
 			thisGlideDistance = arg.glideDistance;
 			thisNormalizedDistanceCurve = arg.normalizedDistanceCurve;
 			thisAlphaCurve = arg.alphaCurve;
 			thisScaleCurve = arg.scaleCurve;
-			
-			thisChildGraphic = thisAdaptor.GetChildGraphic();
 
-			thisInitialPosition = thisAdaptor.GetChildGraphicOriginalLocalPosition();
-			thisChildGraphicOriginalColor = thisAdaptor.GetChildGraphicOriginalColor();
+			thisInitialPosition = arg.graphicOriginalLocalPosition;
+			thisChildGraphicOriginalColor = arg.graphicOriginalColor;
 			thisChildGraphicOriginalAlpha = thisChildGraphicOriginalColor.a;
 		}
-		readonly  IPopUIAdaptor thisAdaptor;
+		readonly IPopUI thisPopUI;
 		readonly PopUIAdaptor.PopMode thisPopMode;
 		readonly float thisGlideDistance;
 		readonly AnimationCurve thisNormalizedDistanceCurve;
 		readonly AnimationCurve thisAlphaCurve;
 		readonly AnimationCurve thisScaleCurve;
 		readonly Vector2 thisInitialPosition;
-		readonly Graphic thisChildGraphic;
 		readonly Color thisChildGraphicOriginalColor;
 		readonly float thisChildGraphicOriginalAlpha;
 		Vector2 thisGlideDirection;
@@ -56,7 +53,8 @@ namespace AppleShooterProto{
 			Vector2 displacement = normalizedDistance * thisGlideDirection * thisGlideDistance;
 
 			Vector2 newPosition = thisInitialPosition + displacement;
-			thisChildGraphic.transform.localPosition = newPosition;
+
+			thisPopUI.SetChildGraphicLocalPosition(newPosition);
 		}
 		Vector2 CalcRandomDirection(){
 			float normalizedAngle = Random.Range(0f, 1f);
@@ -68,7 +66,6 @@ namespace AppleShooterProto{
 		}
 		void UpdateUIAlpha(){
 			float newAlpha =  thisAlphaCurve.Evaluate(thisNormalizedTime);
-			// thisAdaptor.SetUIAlpha(newAlpha);
 			SetAlphaOnChildUIGraphic(newAlpha);
 		}
 		void SetAlphaOnChildUIGraphic(float alpha){
@@ -83,7 +80,7 @@ namespace AppleShooterProto{
 				thisChildGraphicOriginalColor.b,
 				newAlpha
 			);
-			thisChildGraphic.color = newColor;
+			thisPopUI.SetChildGraphicColor(newColor);
 		}
 		void UpdateUIScale(){
 			float newScale = thisScaleCurve.Evaluate(thisNormalizedTime);
@@ -91,29 +88,32 @@ namespace AppleShooterProto{
 		}
 		void SetScaleOnChildUIGraphic(float newScale){
 			Vector3 newScaleV3 = Vector3.one * newScale;
-			thisChildGraphic.transform.localScale = newScaleV3;
+			thisPopUI.SetChildGraphicLocalScale(newScaleV3);
 		}
 		protected override void StopImple(){
-			thisAdaptor.DeactivateUI();
-			// thisAdaptor.TriggerDeactivateOnAnimator();
+			thisPopUI.Deactivate();
 		}
 		/* Const */
 			public interface IConstArg: IConstrainedProcessConstArg{
-				IPopUIAdaptor adaptor{get;}
+				IPopUI popUI{get;}
 				PopUIAdaptor.PopMode popMode{get;}
 				float glideDistance{get;}
 				AnimationCurve normalizedDistanceCurve{get;}
 				AnimationCurve alphaCurve{get;}
 				AnimationCurve scaleCurve{get;}
+				Vector2 graphicOriginalLocalPosition{get;}
+				Color graphicOriginalColor{get;}
 			}
 			public class ConstArg: ConstrainedProcessConstArg, IConstArg{
 				public ConstArg(
-					IPopUIAdaptor adaptor,
+					IPopUI popUI,
 					PopUIAdaptor.PopMode popMode,
 					float glideDistance,
 					AnimationCurve normalizedDistanceCurve,
 					AnimationCurve alhpaCurve,
 					AnimationCurve scaleCurve,
+					Vector2 graphicOriginalLocalPosition,
+					Color graphicOrignalColor,
 
 					IProcessManager processManager,
 					float glideTime
@@ -123,17 +123,19 @@ namespace AppleShooterProto{
 					ProcessConstraint.ExpireTime,
 					glideTime
 				){
-					thisAdaptor = adaptor;
+					thisPopUI = popUI;
 					thisPopMode = popMode;
 					thisGlideDistance = glideDistance;
 					thisNormalizedDistanceCurve = normalizedDistanceCurve;
 					thisAlphaCurve = alhpaCurve;
 					thisScaleCurve = scaleCurve;
+					thisGraphicOrignalLocalPosition = graphicOriginalLocalPosition;
+					thisGraphicOriginalColor = graphicOriginalColor;
 				}
-				readonly IPopUIAdaptor thisAdaptor;
-				public IPopUIAdaptor adaptor{
+				readonly IPopUI thisPopUI;
+				public IPopUI popUI{
 					get{
-						return thisAdaptor;
+						return thisPopUI;
 					}
 				}
 				readonly PopUIAdaptor.PopMode thisPopMode;
@@ -162,6 +164,11 @@ namespace AppleShooterProto{
 				}
 				readonly AnimationCurve thisScaleCurve;
 				public AnimationCurve scaleCurve{get{return thisScaleCurve;}}
+
+				readonly Vector2 thisGraphicOrignalLocalPosition;
+				public Vector2 graphicOriginalLocalPosition{get{return thisGraphicOrignalLocalPosition;}}
+				readonly Color thisGraphicOriginalColor;
+				public Color graphicOriginalColor{get{return thisGraphicOriginalColor;}}
 			}
 		/*  */
 	}

@@ -3,28 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPoint{
-		Vector3 GetPosition();
-		Quaternion GetRotation();
-		Transform GetTransform();
+	public interface IShootingTargetSpawnPoint: ISceneObject{
 		void SetTarget(IShootingTarget target);
 		IShootingTarget GetSpawnedTarget();
 	}
-	public class ShootingTargetSpawnPoint: IShootingTargetSpawnPoint {
+	public class ShootingTargetSpawnPoint: AbsSceneObject, IShootingTargetSpawnPoint {
 		public ShootingTargetSpawnPoint(
 			IConstArg arg
+		): base(
+			arg
 		){
-			thisAdaptor = arg.adaptor;
-		}
-		readonly IShootingTargetSpawnPointAdaptor thisAdaptor;
-		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
-		}
-		public Quaternion GetRotation(){
-			return thisAdaptor.GetRotation();
-		}
-		public Transform GetTransform(){
-			return thisAdaptor.GetTransform();
 		}
 		IShootingTarget thisShootingTarget;
 		public void SetTarget(IShootingTarget target){
@@ -34,17 +22,15 @@ namespace AppleShooterProto{
 			return thisShootingTarget;
 		}
 		/*  */
-		public interface IConstArg{
-			IShootingTargetSpawnPointAdaptor adaptor{get;}
+		public new interface IConstArg: AbsSceneObject.IConstArg{
 		}
-		public struct ConstArg: IConstArg{
+		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IShootingTargetSpawnPointAdaptor adaptor
+			): base(
+				adaptor
 			){
-				thisAdaptor = adaptor;
 			}
-			readonly IShootingTargetSpawnPointAdaptor thisAdaptor;
-			public IShootingTargetSpawnPointAdaptor adaptor{get{return thisAdaptor;}}
 		}
 	}
 }

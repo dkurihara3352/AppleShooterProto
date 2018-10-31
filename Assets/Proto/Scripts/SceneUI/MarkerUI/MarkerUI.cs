@@ -4,32 +4,58 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IMarkerUI: ISceneUI{
-		// void StartMark();
-		// void StopMark();
+		void SetMarkerUIReserve(IMarkerUIReserve reserve);
+		void OnResetAtReserve();
+		void UpdateMarkerUI();
 	}
 	public class MarkerUI : AbsSceneUI, IMarkerUI {
 
 		public MarkerUI(
 			IConstArg arg
-		): base(arg){}
+		): base(arg){
+		}
 		IMarkerUIAdaptor thisTypedAdaptor{
 			get{
 				return (IMarkerUIAdaptor)thisAdaptor;
 			}
 		}
-		protected override void DeactivateImple(){
+		public override void DeactivateImple(){
+			base.DeactivateImple();
 			thisTypedAdaptor.TriggerDeactivationOnAnimator();
 		}
-		protected override void ActivateImple(){
+		public override void ActivateImple(){
+			base.ActivateImple();
 			thisTypedAdaptor.BecomeChildToCanvas();
 			StartMark();
 			thisTypedAdaptor.TriggerActivationOnAnimator();
 		}
-		public void StartMark(){
-			thisTypedAdaptor.StartMark();
+		IMarkerUIMarkProcess thisProcess;
+		void StartMark(){
+			StopMark();
+			thisProcess = thisProcessFactory.CreateMarkerUIMarkProcess(
+				this
+			);
+			thisProcess.Run();
 		}
-		public void StopMark(){
-			thisTypedAdaptor.StopMark();
+		void StopMark(){
+			if(thisProcess != null && thisProcess.IsRunning())
+				thisProcess.Stop();
+			thisProcess = null;
+		}
+		public void OnResetAtReserve(){
+			StopMark();
+		}
+		public void UpdateMarkerUI(){
+			Vector3 targetPosition = thisTypedAdaptor.GetTargetWorldPosition();
+			SetUIWorldPosition(targetPosition);
+			UpdateUI();
+		}
+		IMarkerUIReserve thisReserve;
+		public void SetMarkerUIReserve(IMarkerUIReserve reserve){
+			thisReserve = reserve;
+		}
+		protected override void Reserve(){
+			thisReserve.Reserve(this);
 		}
 	}
 }

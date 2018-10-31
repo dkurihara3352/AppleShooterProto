@@ -51,8 +51,9 @@ namespace AppleShooterProto{
 			thisAdaptor.SetReady();
 		}
 		public void StopSmoothLook(){
-			if(thisProcess.IsRunning())
+			if(thisProcess != null && thisProcess.IsRunning())
 				thisProcess.Stop();
+			thisProcess = null;
 		}
 		public Vector3 GetPosition(){
 			return thisAdaptor.GetPosition();

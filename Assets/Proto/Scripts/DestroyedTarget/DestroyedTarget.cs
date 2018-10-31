@@ -3,17 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IDestroyedTarget{
+	public interface IDestroyedTarget: ISceneObject{
 		void ActivateAt(IShootingTarget shootingTarget);
 		void Deactivate();
+		void SetPopUIReserve(IPopUIReserve reserve);
+		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
+		int GetIndex();
 	}
-	public class DestroyedTarget : IDestroyedTarget {
+	public class DestroyedTarget : AbsSceneObject, IDestroyedTarget {
 		public DestroyedTarget(
 			IConstArg arg
+		): base(
+			arg
 		){
-			thisAdaptor = arg.adaptor;
+			thisIndex = arg.index;
 		}
-		readonly IDestroyedTargetAdaptor thisAdaptor;
+		int thisIndex;
+		public int GetIndex(){
+			return thisIndex;
+		}
+		IDestroyedTargetAdaptor thisTypedAdaptor{
+			get{
+				return (IDestroyedTargetAdaptor)thisAdaptor;
+			}
+		}
+		IPopUIReserve thisPopUIReserve;
+		public void SetPopUIReserve(IPopUIReserve reserve){
+			thisPopUIReserve = reserve;
+		}
 
 		public void ActivateAt(IShootingTarget target){
 			Deactivate();
@@ -25,20 +42,17 @@ namespace AppleShooterProto{
 		}
 		bool thisIsInitialized = false;
 		bool thisIsActivated = false;
-		void SetPosition(Vector3 position){
-			thisAdaptor.SetPosition(position);
-		}
-		void SetRotation(Quaternion rotation){
-			thisAdaptor.SetRotation(rotation);
-		}
 		void Activate(){
 			if(thisIsActivated)
 				return;
 			ActivateImle();
 		}
 		void ActivateImle(){
-			thisAdaptor.StartDestruction();
-			thisAdaptor.PopText("Destroyed");
+			thisTypedAdaptor.StartDestruction();
+			thisPopUIReserve.PopText(
+				this,
+				"Destroyed"
+			);
 		}
 		public void Deactivate(){
 			if(thisIsInitialized && !thisIsActivated)
@@ -48,23 +62,30 @@ namespace AppleShooterProto{
 				thisIsInitialized = true;
 			thisIsActivated = false;
 		}
+		IDestroyedTargetReserve thisDestroyedTargetReserve;
+		public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
+			thisDestroyedTargetReserve = reserve;
+		}
 		void DeactivateImple(){
-			thisAdaptor.StopDestruction();
-			thisAdaptor.ResetAtReserve();
+			thisTypedAdaptor.StopDestruction();
+			thisDestroyedTargetReserve.Reserve(this);
 		}
 
 		/* Const */
-			public interface IConstArg{
-				IDestroyedTargetAdaptor adaptor{get;}
+			public new interface IConstArg: AbsSceneObject.IConstArg{
+				int index{get;}
 			}
-			public struct ConstArg: IConstArg{
+			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
+					int index,
 					IDestroyedTargetAdaptor adaptor
+				): base(
+					adaptor
 				){
-					thisAdaptor = adaptor;
+					thisIndex = index;
 				}
-				readonly IDestroyedTargetAdaptor thisAdaptor;
-				public IDestroyedTargetAdaptor adaptor{get{return thisAdaptor;}}
+				readonly int thisIndex;
+				public int index{get{return thisIndex;}}
 			}
 		/*  */
 	}

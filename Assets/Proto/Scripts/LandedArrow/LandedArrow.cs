@@ -2,63 +2,72 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace AppleShooterProto{
-	public interface ILandedArrow{
-		void Reserve();
+	public interface ILandedArrow: ISceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
-		void SetPosition(Vector3 position);
-		Vector3 GetPosition();
-		void SetRotation(Quaternion rotation);
-		void SetParent(Transform parent);
-		void ResetLocalTransform();
-		void SetShootingTarget(IShootingTarget target);
+		void ActivateAt(
+			IShootingTarget target,
+			Vector3 position,
+			Quaternion rotation
+		);
+
 		IShootingTarget GetShootingTarget();
 		int GetIndex();
 		void SetIndex(int index);
 
 		void SetArrowTwang(IArrowTwang twang);
 	}
-	public class LandedArrow: ILandedArrow{
+	public class LandedArrow: AbsSceneObject, ILandedArrow{
 		public LandedArrow(
 			IConstArg arg
+		): base(
+			arg
 		){
-			thisAdaptor = arg.adaptor;
+
 		}
-		readonly ILandedArrowAdaptor thisAdaptor;
 		ILandedArrowReserve thisReserve;
+		ILandedArrowAdaptor thisTypedAdaptor{
+			get{
+				return (ILandedArrowAdaptor)thisAdaptor;
+			}
+		}
 		public void SetLandedArrowReserve(ILandedArrowReserve reserve){
 			thisReserve = reserve;
 		}
-		public void Reserve(){
-			thisReserve.Reserve(this);
-			SetShootingTarget(null);
-			thisArrowTwang.StopTwang();
+		public void ActivateAt(
+			IShootingTarget target,
+			Vector3 position,
+			Quaternion rotation
+		){
+			
+			SetShootingTarget(
+				target,
+				position,
+				rotation
+			);
+			Activate();
 		}
-		public void SetPosition(Vector3 position){
-			thisAdaptor.SetPosition(position);
-		}
-		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
-		}
-		public void SetRotation(Quaternion rotation){
-			thisAdaptor.SetRotation(rotation);
-		}
-		public void SetParent(Transform parent){
-			thisAdaptor.SetParent(parent);
-		}
-		public void ResetLocalTransform(){
-			thisAdaptor.ResetLocalTransform();
-		}
-
 		IShootingTarget thisTarget;
-		public void SetShootingTarget(IShootingTarget target){
-			if(thisTarget != null)
-				if(thisTarget != target){
-					thisTarget.RemoveLandedArrow(this);
-				}
+		void SetShootingTarget(
+			IShootingTarget target,
+			Vector3 position,
+			Quaternion rotation
+		){
+			RemoveSelfFromCurrentTarget();
 			thisTarget = target;
-			if(target != null)
-				target.AddLandedArrow(this);
-			thisArrowTwang.Twang();
+			AddSelfToCurrentTarget();
+
+			SetParent(target);
+			ResetLocalTransform();
+			SetPosition(position);
+			SetRotation(rotation);
+		}
+		void RemoveSelfFromCurrentTarget(){
+			if(thisTarget != null)
+				thisTarget.RemoveLandedArrow(this);
+		}
+		void AddSelfToCurrentTarget(){
+			if(thisTarget != null)
+				thisTarget.AddLandedArrow(this);
 		}
 		public IShootingTarget GetShootingTarget(){
 			return thisTarget;
@@ -66,7 +75,7 @@ namespace AppleShooterProto{
 		int thisIndex;
 		public void SetIndex(int index){
 			thisIndex = index;
-			thisAdaptor.SetIndexOnTextMesh(index);
+			thisTypedAdaptor.SetIndexOnTextMesh(index);
 		}
 		public int GetIndex(){
 			return thisIndex;
@@ -75,18 +84,35 @@ namespace AppleShooterProto{
 			thisArrowTwang = twang;
 		}
 		IArrowTwang thisArrowTwang;
-		/* Const */
-			public interface IConstArg{
-				ILandedArrowAdaptor adaptor{get;}
+		/* ActivationState */
+			IActivationStateEngine thisActivationStateEngine;
+			public void Activate(){
+				thisActivationStateEngine.Activate();
 			}
-			public struct ConstArg: IConstArg{
+			public void Deactivate(){
+				thisActivationStateEngine.Deactivate();
+			}
+			public bool IsActivated(){
+				return thisActivationStateEngine.IsActivated();
+			}
+			public void ActivateImple(){
+				thisArrowTwang.Twang();
+			}
+			public void DeactivateImple(){
+				thisArrowTwang.StopTwang();
+				RemoveSelfFromCurrentTarget();
+				thisReserve.Reserve(this);
+			}
+		/* Const */
+			public new interface IConstArg: AbsSceneObject.IConstArg{
+			}
+			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					ILandedArrowAdaptor adaptor
+				): base(
+					adaptor
 				){
-					thisAdaptor = adaptor;
 				}
-				readonly ILandedArrowAdaptor thisAdaptor;
-				public ILandedArrowAdaptor adaptor{get{return thisAdaptor;}}
 			}
 		/*  */
 	}

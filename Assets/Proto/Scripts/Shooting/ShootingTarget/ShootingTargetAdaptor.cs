@@ -5,47 +5,85 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IShootingTargetAdaptor: IMonoBehaviourAdaptor{
 		IShootingTarget GetShootingTarget();
-		void ResetTransformAtReserve();
-		void PopText(string text);
+		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
+		void SetPopUIReserve(IPopUIReserve reserve);
+		void SetIndex(int index);
+		void SetHealth(float health);
+		void ToggleCollider(bool on);
+		void SetColor(Color color);
+		void PlayHitAnimation(float magnitude);
 	}
-	public abstract class ShootingTargetAdaptor: MonoBehaviourAdaptor, IShootingTargetAdaptor{
+	[RequireComponent(typeof(Collider), typeof(MeshRenderer), typeof(Animator))]
+	public abstract class AbsShootingTargetAdaptor: MonoBehaviourAdaptor, IShootingTargetAdaptor{
+		public override void SetUp(){
+			MeshRenderer meshRenderer = this.transform.GetComponent<MeshRenderer>();
+			thisMaterial = meshRenderer.material;
+			thisDefaultColor = thisMaterial.color;
+			
+			thisShootingTarget = CreateShootingTarget();
+
+			thisCollider = transform.GetComponent<Collider>();
+
+			thisAnimator = transform.GetComponent<Animator>();
+
+			thisHitTriggerHash = Animator.StringToHash("Hit");
+			thisHitMagnitudeHash = Animator.StringToHash("HitMagnitude");
+		}
+
+		protected IShootingTarget thisShootingTarget;
+		protected abstract IShootingTarget CreateShootingTarget();
+		public IShootingTarget GetShootingTarget(){
+			return thisShootingTarget;
+		}
+
 		public override void SetUpReference(){
-			if(popUIReserveAdaptor != null)
-				thisPopUIReserve = popUIReserveAdaptor.GetPopUIReserve();
-			if(destroyedTargetReserveAdaptor != null){
-				IDestroyedTargetReserve reserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
-				thisShootingTarget.SetDestroyedTargetReserve(reserve);
-			}
+
+			thisShootingTarget.SetDestroyedTargetReserve(thisDestroyedTargetReserve);
+			thisShootingTarget.SetPopUIReserve(thisPopUIReserve);
 		}
 		public override void FinalizeSetUp(){
 			thisShootingTarget.Deactivate();
 		}
-		public IShootingTarget GetShootingTarget(){
-			return thisShootingTarget;
+
+
+		IPopUIReserve thisPopUIReserve;
+		public void SetPopUIReserve(IPopUIReserve reserve){
+			thisPopUIReserve = reserve;
 		}
-		protected IShootingTarget thisShootingTarget;
-		public Transform reserveTransform;
-		public void ResetTransformAtReserve(){
-			SetParent(reserveTransform);
-			ResetLocalTransform();
+		IDestroyedTargetReserve thisDestroyedTargetReserve;
+		public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
+			thisDestroyedTargetReserve = reserve;
 		}
-		public PopUIReserveAdaptor popUIReserveAdaptor;
-		public IPopUIReserve thisPopUIReserve;
-		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
-		public void PopText(string text){
-			IPopUI popUI = thisPopUIReserve.GetNextPopUI();
-			popUI.SetTargetTransform(this.GetTransform());
-			popUI.SetText(text);
-			popUI.Activate();
+		protected int thisIndex;
+		public void SetIndex(int index){
+			thisIndex = index;
 		}
-	}
-	public interface IInstatiableShootingTargetAdaptor: ITestShootingTargetAdaptor, IInstatiableMonoBehaviourAdaptor{}
-	public abstract class InstatiableShootingTargetAdaptor: TestShootingTargetAdaptor, IInstatiableShootingTargetAdaptor{
-		protected override sealed void Awake(){
-			return;
+		protected float thisHealth;
+		public void SetHealth(float health){
+			thisHealth = health;
 		}
-		public void SetMonoBehaviourAdaptorManager(IMonoBehaviourAdaptorManager manager){
-			thisMonoBehaviourAdaptorManager =  manager;
+		/* Collider */
+		Collider thisCollider;
+		public void ToggleCollider( bool on){
+			thisCollider.enabled = on;
+		}
+		/* Color */
+		Material thisMaterial;
+		protected Color thisDefaultColor;
+		public void SetColor(Color color){
+			thisMaterial.color = color;
+		}
+		Color GetColor(){
+			return thisMaterial.color;
+		}
+
+		/* Animator */
+		Animator thisAnimator;
+		int thisHitTriggerHash;
+		int thisHitMagnitudeHash;
+		public void PlayHitAnimation(float magnitude){
+			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
+			thisAnimator.SetTrigger(thisHitTriggerHash);
 		}
 	}
 }
