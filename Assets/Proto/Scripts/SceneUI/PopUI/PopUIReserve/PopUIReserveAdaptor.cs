@@ -11,32 +11,30 @@ namespace AppleShooterProto{
 	public class PopUIReserveAdaptor : MonoBehaviourAdaptor, IPopUIReserveAdaptor {
 
 		public override void SetUp(){
-			PopUIReserve.IConstArg arg = new PopUIReserve.ConstArg(
-				this
-			);
-			thisReserve = new PopUIReserve(arg);
+			thisReserve = CreatePopUIReserve();
+			thisPopUIAdaptors = CreatePopUIAdaptors();
 		}
 		IPopUIReserve thisReserve;
 		public IPopUIReserve GetPopUIReserve(){
 			return thisReserve;
 		}
+		IPopUIReserve CreatePopUIReserve(){
+			PopUIReserve.IConstArg arg = new PopUIReserve.ConstArg(
+				this
+			);
+			return new PopUIReserve(arg);
+
+		}
 		public override void SetUpReference(){
 			IPopUI[] popUIs = CreatePopUIs();
 			thisReserve.SetSceneObjects(popUIs);
-		}
-		public override void FinalizeSetUp(){
-			foreach(IPopUIAdaptor adaptor in thisPopUIAdaptors){
-				adaptor.FinalizeSetUp();
-			}
 		}
 		public int popUICount;
 		public GameObject popUIPrefab;
 		public Camera uiCamera;
 		IPopUIAdaptor[] thisPopUIAdaptors;
-	
-		IPopUI[] CreatePopUIs(){
-			List<IPopUI> resultList = new List<IPopUI>();
-			List<IPopUIAdaptor> popUIAdaptorList = new List<IPopUIAdaptor>();
+		IPopUIAdaptor[] CreatePopUIAdaptors(){
+			List<IPopUIAdaptor> resultList = new List<IPopUIAdaptor>();
 			for(int i = 0; i < popUICount; i++){
 				GameObject popUIGO = GameObject.Instantiate(
 					popUIPrefab
@@ -47,19 +45,20 @@ namespace AppleShooterProto{
 						"popUIAdaptor not set to prefab"
 					);
 				popUIAdaptor.SetIndex(i);
-				popUIAdaptor.SetMonoBehaviourAdaptorManager(thisMonoBehaviourAdaptorManager);
 				popUIAdaptor.SetPopUIReserve(thisReserve);
 				popUIAdaptor.SetCamera(uiCamera);
 
 				popUIAdaptor.SetUp();
-				popUIAdaptor.SetUpReference();
 
-				IPopUI popUI = popUIAdaptor.GetPopUI();
-				resultList.Add(popUI);
-
-				popUIAdaptorList.Add(popUIAdaptor);
+				resultList.Add(popUIAdaptor);
 			}
-			thisPopUIAdaptors = popUIAdaptorList.ToArray();
+			return resultList.ToArray();
+		}
+	
+		IPopUI[] CreatePopUIs(){
+			List<IPopUI> resultList = new List<IPopUI>();
+			foreach(IPopUIAdaptor adaptor in thisPopUIAdaptors)
+				resultList.Add(adaptor.GetPopUI());
 			return resultList.ToArray();
 		}
 	}

@@ -57,6 +57,7 @@ namespace AppleShooterProto{
 		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
 		public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
 		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
+		public ArrowReserveAdaptor arrowReserveAdaptor;
 		void OnGUI(){
 			/* left */
 				DrawControl();
@@ -93,8 +94,10 @@ namespace AppleShooterProto{
 			}
 			void DrawArrowsState(){
 				if(thisSystemIsReady){
-					IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
-					IArrow[] arrows = shootingManager.GetAllArrows();
+					// IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
+					// IArrow[] arrows = shootingManager.GetAllArrows();
+					IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
+					IArrow[] arrows = arrowReserve.GetArrows();
 					foreach(IArrow arrow in arrows){
 						Rect guiSubRect = GetSubRect(
 							buttomLeftRect, 
@@ -112,13 +115,14 @@ namespace AppleShooterProto{
 				}
 			}
 			string GetArrowStateString(IArrow arrow){
-				IArrowState state = arrow.GetCurrentState();
+				ArrowStateEngine.IState state = arrow.GetCurrentState();
 				string result = state.GetName();
-				if(!(state is IArrowNockedState)){
-					if(state is IArrowShotState)
-						result += ": " + arrow.GetFlightID();
+				IArrowReserve reserve = arrowReserveAdaptor.GetArrowReserve();
+				if(!(state is ArrowStateEngine.NockedState)){
+					if(state is ArrowStateEngine.FlightState)
+						result += ": " + reserve.GetIndexInFlight(arrow);
 					else
-						result += ": " + arrow.GetIDInReserve();
+						result += ": " + reserve.GetIndexInReserve(arrow);
 				}
 				return result;
 			}
@@ -300,7 +304,7 @@ namespace AppleShooterProto{
 					GUI.Label(
 						sTR_3,
 						"LaunchDirection: " + 
-						launchPointAdaptor.GetWorldForwardDirection().ToString()
+						launchPointAdaptor.GetForwardDirection().ToString()
 					);
 				}
 			}

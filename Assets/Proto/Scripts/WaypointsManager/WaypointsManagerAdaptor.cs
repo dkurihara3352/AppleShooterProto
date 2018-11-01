@@ -38,8 +38,10 @@ namespace AppleShooterProto{
 		public int cycleStartIndex = 1;
 		public override void SetUpReference(){
 
-			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
-			thisWaypointsManager.SetWaypointsFollower(follower);
+			if(waypointsFollowerAdaptor != null){
+				IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
+				thisWaypointsManager.SetWaypointsFollower(follower);
+			}
 			
 			List<IWaypointCurve> waypointCurves = GetWaypointCurvesInChildren();
 			thisWaypointsManager.SetWaypointCurves(waypointCurves);

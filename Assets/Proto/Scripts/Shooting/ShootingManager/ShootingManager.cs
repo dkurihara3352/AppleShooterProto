@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IShootingManager: ISceneObject{
+
 		void SetInputManager(IPlayerInputManager inputManager);
 		void SetLaunchPoint(ILaunchPoint launchPoint);
 		void SetTrajectory(ITrajectory trajectory);
-		void SetArrows(IArrow[] arrows);
-		IArrow[] GetAllArrows();
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
+		void SetArrowReserve(IArrowReserve reserve);
 
-		void TryNock();
+		void NockArrow();
 		void SetNockedArrow(IArrow arrow);
 		void CheckAndClearNockedArrow(IArrow arrow);
 
 		void StartDraw();
-		void Draw(float deltaTime);
+		void DrawImple(float deltaTime);
 		void HoldDraw();
 		void StopDraw();
 
@@ -26,33 +26,27 @@ namespace AppleShooterProto{
 		float GetArrowAttack();
 
 		void Release();
-		void ResetDraw();
-		void TryResetArrow();
 		
 		bool AcceptsNewShot();
 		void RegisterShot(IArrow arrow);
+
 		IShot GetShotInBuffer();
 		void ClearShotBuffer();
 		void ClearShootingProcess();
 
-		void AddArrowToReserve(IArrow arrow);
-		void RemoveArrowFromReserve(IArrow arrow);
-		void AddArrowToFlight(IArrow arrow);
-		void RemoveArrowFromFlight(IArrow arrow);
 
 		float GetFlightSpeed();
 		Vector3 GetFlightDirection();
 		float GetFlightGravity();
 		Vector3 GetLauncherVelocity();
 
-		int GetArrowReserveID(IArrow arrow);
-		int GetFlightID(IArrow arrow);
-
 		void SpawnLandedArrowOn(
 			IShootingTarget target,
 			Vector3 position,
 			Quaternion rotation
 		);
+
+		void DeactivateArrow();
 	}
 	public class ShootingManager : AbsSceneObject, IShootingManager {
 		/* SetUp */
@@ -98,25 +92,16 @@ namespace AppleShooterProto{
 			}
 		/* Nock */
 			IArrow thisNockedArrow;
-			public void TryNock(){
-				if(thisNockedArrow == null){
-					IArrow arrowToNock;
-					if(thisArrowsInReserve.Count > 0)
-						arrowToNock = thisArrowsInReserve[0];
-					else
-						arrowToNock = thisArrowsInFlight[0];
-					arrowToNock.TryNock();
-				}
+			public void NockArrow(){
+				IArrow nextArrow = thisArrowReserve.GetNextArrow();
+				nextArrow.Nock();
 			}
-			public void SetNockedArrow(IArrow arrow){
+			public virtual void SetNockedArrow(IArrow arrow){
 				thisNockedArrow = arrow;
 			}
-			public void CheckAndClearNockedArrow(IArrow arrow){
+			public virtual void CheckAndClearNockedArrow(IArrow arrow){
 				if(thisNockedArrow == arrow)
-					ClearNockedArrow();
-			}
-			void ClearNockedArrow(){
-				thisNockedArrow  = null;
+					thisNockedArrow = null;
 			}
 		/* Draw */
 			public void StartDraw(){
@@ -127,7 +112,7 @@ namespace AppleShooterProto{
 				);
 				thisDrawProcess.Run();
 			}
-			public void Draw(float deltaTime){
+			public void DrawImple(float deltaTime){
 				if(thisDrawElapsedTime < thisMaxDrawTime){
 					thisDrawElapsedTime += deltaTime;
 					float normalizedDraw = GetNormalizedDraw();
@@ -176,7 +161,7 @@ namespace AppleShooterProto{
 				}
 			/* FlightSpeed */
 				float thisFlightSpeed;			
-				public float GetFlightSpeed(){
+				public virtual float GetFlightSpeed(){
 					return thisFlightSpeed;
 				}
 				float thisGlobalMinFlightSpeed;
@@ -193,6 +178,16 @@ namespace AppleShooterProto{
 					thisDrawProcess.Stop();
 				}
 				thisDrawProcess = null;
+				ClearDrawFields();
+			}
+			void ClearDrawFields(){
+				// StopDraw();
+				thisDrawElapsedTime = 0f;
+				thisDrawStrength = CalculateDrawStrength(0f);
+				thisGlobalDrawStrength = CalculateGlobalDrawStrength(thisDrawStrength);
+				thisFlightSpeed = CalculateFlightSpeed();
+				thisArrowAttack = CalculateArrowAttack();
+				thisTrajectory.Clear();
 			}
 			float maxZoom{
 				get{return thisInputManager.GetMaxZoom();}
@@ -221,13 +216,13 @@ namespace AppleShooterProto{
 			public float gravity{
 				get{return thisTypedAdaptor.GetGravity();}
 			}
-			public float GetFlightGravity(){
+			public virtual float GetFlightGravity(){
 				return gravity;
 			}
 			Vector3 flightDirection{
-				get{return thisLaunchPoint.GetWorldDirection();}
+				get{return thisLaunchPoint.GetForwardDirection();}
 			}
-			public Vector3 GetFlightDirection(){
+			public virtual Vector3 GetFlightDirection(){
 				return flightDirection;
 			}
 			void DrawTrajectory(){
@@ -235,88 +230,33 @@ namespace AppleShooterProto{
 					flightDirection,
 					thisFlightSpeed,
 					gravity,
-					thisLaunchPoint.GetWorldPosition()
+					thisLaunchPoint.GetPosition()
 				);
 			}
 		/* Arrow */
-			List<IArrow> thisArrowsInReserve;
-			int arrowsCount;
-			public int GetArrowReserveID(IArrow arrow){
-				int id = 0;
-				foreach(IArrow arrowInReserve in thisArrowsInReserve){
-					if(arrowInReserve == arrow)
-						return id;
-					id++;
-				}
-				return -1;
+			IArrowReserve thisArrowReserve;
+			public void SetArrowReserve(IArrowReserve reserve){
+				thisArrowReserve = reserve;
 			}
-			public void SetArrows(IArrow[] arrows){
-				List<IArrow> arrowsList = new List<IArrow>();
-				foreach(IArrow arrow in arrows){
-					arrowsList.Add(arrow);
-					arrow.SetShootingManager(this);
-				}
-				thisArrowsInReserve = arrowsList;
-				arrowsCount = arrows.Length;
+			IArrow[] GetArrowsInFlight(){
+				List<IArrow> resultList = new List<IArrow>();
+				IArrow[] arrows = thisArrowReserve.GetArrows();
+				foreach(IArrow arrow in arrows)
+					if(arrow.IsInFlight())
+						resultList.Add(arrow);
+				return resultList.ToArray();
 			}
-			public IArrow[] GetAllArrows(){
-				List<IArrow> list = new List<IArrow>();
-				if(thisNockedArrow != null)
-					list.Add(thisNockedArrow);
-				foreach(IArrow arrow in thisArrowsInReserve)
-					list.Add(arrow);
-				foreach(IArrow arrow in thisArrowsInFlight)
-					list.Add(arrow);
-				
-				return list.ToArray();
-			}
-			public void AddArrowToReserve(IArrow arrow){
-				if(!thisArrowsInReserve.Contains(arrow))
-					thisArrowsInReserve.Add(arrow);
-			}
-			public void RemoveArrowFromReserve(IArrow arrow){
-				if(thisArrowsInReserve.Contains(arrow))
-					thisArrowsInReserve.Remove(arrow);
-			}
-			List<IArrow> thisArrowsInFlight = new List<IArrow>();
-			public void AddArrowToFlight(IArrow arrow){
-				if(!thisArrowsInFlight.Contains(arrow))
-					thisArrowsInFlight.Add(arrow);
-			}
-			public void RemoveArrowFromFlight(IArrow arrow){
-				if(thisArrowsInFlight.Contains(arrow))
-					thisArrowsInFlight.Remove(arrow);
-			}
-			public int GetFlightID(IArrow arrow){
-				if(thisArrowsInFlight.Contains(arrow))
-					return thisArrowsInFlight.IndexOf(arrow);
-				throw new System.InvalidOperationException(
-					"given arrow is not in flight list"
-				);
-			}
-		/*  */
+		/* Release */
 			public void Release(){
 				IArrow arrow = thisNockedArrow;
-				ClearNockedArrow();
+				thisNockedArrow = null;
 				arrow.SetAttack(thisArrowAttack);
-				arrow.TryFire();
-				ResetDraw();
-			}
-			public void ResetDraw(){
+				arrow.Release();
 				StopDraw();
-				thisDrawElapsedTime = 0f;
-				thisDrawStrength = CalculateDrawStrength(0f);
-				thisGlobalDrawStrength = CalculateGlobalDrawStrength(thisDrawStrength);
-				thisFlightSpeed = CalculateFlightSpeed();
-				thisArrowAttack = CalculateArrowAttack();
-				thisTrajectory.Clear();
-			}
-			public void TryResetArrow(){
-				if(thisNockedArrow != null)
-					thisNockedArrow.TryResetArrow();
+				// ResetDraw();
 			}
 		/* shooting Process */
-			public bool AcceptsNewShot(){
+			public virtual bool AcceptsNewShot(){
 				return thisShotInBuffer == null;
 			}
 			IShootingProcess thisShootingProcess;
@@ -324,7 +264,7 @@ namespace AppleShooterProto{
 			public IShot GetShotInBuffer(){
 				return thisShotInBuffer;
 			}
-			public void RegisterShot(IArrow arrow){
+			public virtual void RegisterShot(IArrow arrow){
 				if(thisShotInBuffer == null){
 
 					thisShotInBuffer = new Shot(arrow);
@@ -343,11 +283,11 @@ namespace AppleShooterProto{
 			public void ClearShootingProcess(){
 				thisShootingProcess = null;
 			}
-			public Vector3 GetLauncherVelocity(){
+			public virtual Vector3 GetLauncherVelocity(){
 				return thisInputManager.GetLauncherVelocity();
 			}
 		/* Spawn Landed Arrow */
-			public void SpawnLandedArrowOn(
+			public virtual void SpawnLandedArrowOn(
 				IShootingTarget target,
 				Vector3 position,
 				Quaternion rotation
@@ -357,7 +297,10 @@ namespace AppleShooterProto{
 					position,
 					rotation
 				);
-				
+			}
+		/*  */
+			public void DeactivateArrow(){
+				thisNockedArrow.Deactivate();
 			}
 		/* Const */
 			public new interface IConstArg: AbsSceneObject.IConstArg{

@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 		}
 		public override void SetUp(){
 			thisReserve = CreateReserve();
+			thisMarkerUIAdaptors = CreateMarkerUIAdaptors();
 		}
 		IMarkerUIReserve CreateReserve(){
 			MarkerUIReserve.IConstArg arg = new MarkerUIReserve.ConstArg(
@@ -26,41 +27,31 @@ namespace AppleShooterProto{
 		public override void SetUpReference(){
 			IMarkerUI[] markerUIs = CreateMarkerUIs();
 			thisReserve.SetSceneObjects(markerUIs);
-			thisMarkerUIAdaptors = GetMarkerUIAdaptors(markerUIs);
 		}
-		IMarkerUI[] CreateMarkerUIs(){
-			List<IMarkerUI> resultList = new List<IMarkerUI>();
+		IMarkerUIAdaptor[] thisMarkerUIAdaptors;
+		IMarkerUIAdaptor[] CreateMarkerUIAdaptors(){
+			List<IMarkerUIAdaptor> resultList = new List<IMarkerUIAdaptor>();
 			for(int i = 0; i < markerUIsCount; i++){
 				GameObject markerUIGO = GameObject.Instantiate(
 					markerUIPrefab
 				);
 				IMarkerUIAdaptor markerUIAdaptor = (IMarkerUIAdaptor)markerUIGO.GetComponent(typeof(IMarkerUIAdaptor));
 				markerUIAdaptor.SetIndex(i);
-				markerUIAdaptor.SetMonoBehaviourAdaptorManager(
-					thisMonoBehaviourAdaptorManager
-				);
 				markerUIAdaptor.SetMarkerUIReserve(thisReserve);
 				markerUIAdaptor.SetCamera(uiCamera);
 
 				markerUIAdaptor.SetUp();
-				markerUIAdaptor.SetUpReference();
 
-				IMarkerUI markerUI = markerUIAdaptor.GetMarkerUI();
-				resultList.Add(markerUI);
+				resultList.Add(markerUIAdaptor);
 			}
 			return resultList.ToArray();
 		}
-		IMarkerUIAdaptor[] GetMarkerUIAdaptors(IMarkerUI[] markerUIs){
-			List<IMarkerUIAdaptor> resultList = new List<IMarkerUIAdaptor>();
-			foreach(IMarkerUI markerUI in markerUIs)
-				resultList.Add((IMarkerUIAdaptor)markerUI.GetAdaptor());
+		IMarkerUI[] CreateMarkerUIs(){
+			List<IMarkerUI> resultList = new List<IMarkerUI>();
+			foreach(IMarkerUIAdaptor adaptor in thisMarkerUIAdaptors)
+				resultList.Add(adaptor.GetMarkerUI());
 			return resultList.ToArray();
 		}
-		IMarkerUIAdaptor[] thisMarkerUIAdaptors;
-		public override void FinalizeSetUp(){
-			foreach(IMarkerUIAdaptor adaptor in thisMarkerUIAdaptors)
-				adaptor.FinalizeSetUp();
-		}
-
 	}
+
 }

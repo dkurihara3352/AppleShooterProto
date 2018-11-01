@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		IFlyingTargetReserve thisReserve;
 		public override void SetUp(){
 			thisReserve = CreateFlyingTargetReserve();
+			thisFlyingTargetAdaptors = CreateFlyingTargetAdaptors();
 		}
 		IFlyingTargetReserve CreateFlyingTargetReserve(){
 			FlyingTargetReserve.IConstArg arg = new FlyingTargetReserve.ConstArg(
@@ -23,16 +24,14 @@ namespace AppleShooterProto{
 		public override void SetUpReference(){
 			IFlyingTarget[] targets = CreateFlyingTargets();
 			thisReserve.SetSceneObjects(targets);
-
-			thisFlyingTargetAdaptors = GetFlyingTargetAdaptors(targets);
 		}
 		public int targetsCount;
 		public GameObject flyingTargetPrefab;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public DestroyedTargetReserveAdaptor destoryedTargetReserveAdaptor;
-		IFlyingTarget[] CreateFlyingTargets(){
-
-			List<IFlyingTarget> resultList = new List<IFlyingTarget>();
+		IFlyingTargetAdaptor[] thisFlyingTargetAdaptors;
+		IFlyingTargetAdaptor[] CreateFlyingTargetAdaptors(){
+			List<IFlyingTargetAdaptor> resultList = new List<IFlyingTargetAdaptor>();
 
 			IPopUIReserve popUIReserve = popUIReserveAdaptor.GetPopUIReserve();
 			IDestroyedTargetReserve destroyedTargetReserve = destoryedTargetReserveAdaptor.GetDestroyedTargetReserve();
@@ -42,35 +41,25 @@ namespace AppleShooterProto{
 					flyingTargetPrefab
 				);
 				IFlyingTargetAdaptor targetAdaptor = (IFlyingTargetAdaptor)targetGO.GetComponent(typeof(IFlyingTargetAdaptor));
-				targetAdaptor.SetMonoBehaviourAdaptorManager(
-					thisMonoBehaviourAdaptorManager
-				);
+
 				targetAdaptor.SetFlyingTargetReserve(thisReserve);
 				targetAdaptor.SetIndex(i);
 				targetAdaptor.SetPopUIReserve(popUIReserve);
 				targetAdaptor.SetDestroyedTargetReserve(destroyedTargetReserve);
 				
 				targetAdaptor.SetUp();
-				
-				targetAdaptor.SetUpReference();
 
-				IFlyingTarget target = targetAdaptor.GetFlyingTarget();
-				resultList.Add(target);
+				resultList.Add(targetAdaptor);
 			}
 			return resultList.ToArray();
+
 		}
-		IFlyingTargetAdaptor[] thisFlyingTargetAdaptors;
-		public IFlyingTargetAdaptor[] GetFlyingTargetAdaptors(IFlyingTarget[] targets){
-			List<IFlyingTargetAdaptor> resultList = new List<IFlyingTargetAdaptor>();
-			foreach(IFlyingTarget target in targets)
-				resultList.Add((IFlyingTargetAdaptor)target.GetAdaptor());
+		IFlyingTarget[] CreateFlyingTargets(){
+			List<IFlyingTarget> resultList = new List<IFlyingTarget>();
+			foreach(IFlyingTargetAdaptor adaptor in thisFlyingTargetAdaptors)
+				resultList.Add(adaptor.GetFlyingTarget());
 			return resultList.ToArray();
 		}
-		public override void FinalizeSetUp(){
-			foreach(IFlyingTargetAdaptor adaptor in thisFlyingTargetAdaptors)
-				adaptor.FinalizeSetUp();
-		}
-
 	}
 }
 

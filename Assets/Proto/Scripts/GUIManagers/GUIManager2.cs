@@ -76,8 +76,14 @@ namespace AppleShooterProto{
 				sTL_2,
 				"Run"
 			)){
-				ActivateFlyingTarget();
+				// ActivateFlyingTarget();
+				ActivateNextGlidingTargetAtWaypointsManager();
 			}
+			// if(GUI.Button(
+			// 	sTL_3,
+			// 	"ActivateArrow"
+			// ))
+			// 	ActivateArrow();
 		}
 		
 		/* Left */
@@ -90,6 +96,21 @@ namespace AppleShooterProto{
 				thisFlyingTargetIsReady = true;
 			}
 			bool thisFlyingTargetIsReady = false;
+
+			public ArrowReserveAdaptor arrowReserveAdaptor;
+			void ActivateArrow(){
+				IArrowReserve reserve = arrowReserveAdaptor.GetArrowReserve();
+				IArrow arrow = reserve.GetNextArrow();
+				arrow.Nock();
+			}
+			public WaypointsManagerAdaptor waypointsManagerAdaptor;
+			public GlidingTargetReserveAdaptor glidingTargetReserveAdaptor;
+			void ActivateNextGlidingTargetAtWaypointsManager(){
+				IWaypointsManager manager = waypointsManagerAdaptor.GetWaypointsManager();
+				IGlidingTargetReserve reserve = glidingTargetReserveAdaptor.GetGlidingTargetReserve();
+				
+				reserve.ActivateGlidingTargetAt(manager);
+			}
 
 		/* Right */
 			string GetIndicesString(int[] indices){

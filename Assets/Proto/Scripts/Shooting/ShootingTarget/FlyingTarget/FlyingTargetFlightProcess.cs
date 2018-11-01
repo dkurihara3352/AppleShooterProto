@@ -12,21 +12,24 @@ namespace AppleShooterProto{
 		): base(arg){
 			thisFlyingTarget = arg.flyingTarget;
 			thisInitialVelocity = arg.initialVelocity;
-			thisDistanceThreshold = arg.distanceThreshold;
+			thisOriginalDistanceThreshold = arg.distanceThreshold;
 			thisCurrentVelocity = thisInitialVelocity;
 			thisMaxSpeed = arg.speed;
 		}
 		readonly IFlyingTarget thisFlyingTarget;
 		readonly Vector3 thisInitialVelocity;
+		float thisOriginalDistanceThreshold;
 		float thisDistanceThreshold;
 		Vector3 thisCurrentVelocity;
 		protected override void RunImple(){
 			thisFlyingTarget.SetUpWaypoints();
 			thisPrevPos = thisFlyingTarget.GetPosition();
+			thisDistanceThreshold = thisOriginalDistanceThreshold;
 		}
 		Vector3 thisPrevPos;
 		readonly float thisMaxSpeed = 10f;
 		float thisCurrentSpeed = 0f;
+
 		protected override void UpdateProcessImple(float deltaT){
 			Vector3 curPos = thisFlyingTarget.GetPosition();
 			IFlyingTargetWaypoint currentWaypoint = thisFlyingTarget.GetCurrentWaypoint();
@@ -34,6 +37,7 @@ namespace AppleShooterProto{
 			Vector3 posDif = currentWaypoint.GetPosition() - curPos;
 			if(posDif.sqrMagnitude <= thisDistanceThreshold * thisDistanceThreshold){
 				thisFlyingTarget.SetUpNextWaypoint();
+				thisDistanceThreshold = thisOriginalDistanceThreshold;
 			}
 			Vector3 lookDir = thisFlyingTarget.GetForwardDirection();
 
@@ -47,7 +51,11 @@ namespace AppleShooterProto{
 
 			thisFlyingTarget.SetPosition(newPosition);
 			thisCurrentSpeed = actualSpeed;
+			thisDistanceThreshold += deltaT * distanceThreshDelta;
+
+			thisFlyingTarget.SetDistanceThresholdForGizmo(thisDistanceThreshold);
 		}
+		float distanceThreshDelta = .3f;
 		float CalculateTargetSpeed(
 			Vector3 posDif,
 			Vector3 lookDir

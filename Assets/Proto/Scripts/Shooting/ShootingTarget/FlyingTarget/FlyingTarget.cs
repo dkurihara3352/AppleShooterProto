@@ -15,6 +15,8 @@ namespace AppleShooterProto{
 		int[] GetWaypointsNotInUseIndices();
 		float GetCurrentDist();
 		Vector3 GetForwardDirection();
+
+		void SetDistanceThresholdForGizmo(float thresh);
 	}
 	public class FlyingTarget : AbsShootingTarget, IFlyingTarget {
 
@@ -148,6 +150,9 @@ namespace AppleShooterProto{
 		}
 		IFlyingTargetAdaptor thisTypedAdaptor{
 			get{return (IFlyingTargetAdaptor)thisAdaptor;}
+		}
+		public void SetDistanceThresholdForGizmo(float thresh){
+			thisTypedAdaptor.SetDistanceThresholdForGizmo(thresh);
 		}
 		/*  */
 		public new interface IConstArg: AbsShootingTarget.IConstArg{

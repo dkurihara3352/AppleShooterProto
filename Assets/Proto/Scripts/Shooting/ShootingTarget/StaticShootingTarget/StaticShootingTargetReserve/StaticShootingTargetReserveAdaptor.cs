@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 	public class StaticShootingTargetReserveAdaptor : MonoBehaviourAdaptor, IStaticShootingTargetReserveAdaptor {
 		public override void SetUp(){
 			thisReserve = CreateStaticShootingTargetReserve();
+			thisStaticShootingTargetAdaptors = CreateStaticShootingTargetAdaptors();
 		}
 		IStaticShootingTargetReserve thisReserve;
 		IStaticShootingTargetReserve CreateStaticShootingTargetReserve(){
@@ -29,13 +30,13 @@ namespace AppleShooterProto{
 		public GameObject staticShootingTargetPrefab;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
-		IStaticShootingTargetAdaptor[] thisTargetAdaptors;
-		public IStaticShootingTarget[] CreateStaticShootingTargets(){
+		IStaticShootingTargetAdaptor[] thisStaticShootingTargetAdaptors;
+		public IStaticShootingTargetAdaptor[] CreateStaticShootingTargetAdaptors(){
 
 			IPopUIReserve popUIReserve = popUIReserveAdaptor.GetPopUIReserve();
 			IDestroyedTargetReserve destroyedTargetReserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
-			List<IStaticShootingTarget> resultList = new List<IStaticShootingTarget>();
-			List<IStaticShootingTargetAdaptor> targetAdaptorsList = new List<IStaticShootingTargetAdaptor>();
+
+			List<IStaticShootingTargetAdaptor> resultList = new List<IStaticShootingTargetAdaptor>();
 
 			for(int i = 0; i < totalTargetsCount; i ++){
 				GameObject targetGO = GameObject.Instantiate(
@@ -44,29 +45,23 @@ namespace AppleShooterProto{
 					Quaternion.identity
 				);
 				IStaticShootingTargetAdaptor targetAdaptor = targetGO.GetComponent(typeof(IStaticShootingTargetAdaptor)) as IStaticShootingTargetAdaptor;
-				targetAdaptorsList.Add(targetAdaptor);
-				targetAdaptor.SetMonoBehaviourAdaptorManager(
-					thisMonoBehaviourAdaptorManager
-				);
+
 				targetAdaptor.SetIndex(i);
-				targetAdaptor.SetTargetReserve(thisReserve);
+				targetAdaptor.SetStaticShootingTargetReserveAdaptor(this);
 				targetAdaptor.SetPopUIReserve(popUIReserve);
 				targetAdaptor.SetDestroyedTargetReserve(destroyedTargetReserve);
 
 				targetAdaptor.SetUp();
-				targetAdaptor.SetUpReference();
-				
-				IStaticShootingTarget target = targetAdaptor.GetStaticShootingTarget();
-				
-				resultList.Add(target);
+
+				resultList.Add(targetAdaptor);
 			}
-			thisTargetAdaptors = targetAdaptorsList.ToArray();
 			return resultList.ToArray();
 		}
-		public override void FinalizeSetUp(){
-			foreach(IStaticShootingTargetAdaptor targetAdaptor in thisTargetAdaptors){
-				targetAdaptor.FinalizeSetUp();
-			}
+		IStaticShootingTarget[] CreateStaticShootingTargets(){
+			List<IStaticShootingTarget> resultList = new List<IStaticShootingTarget>();
+			foreach(IStaticShootingTargetAdaptor adaptor in thisStaticShootingTargetAdaptors)
+				resultList.Add(adaptor.GetStaticShootingTarget());
+			return resultList.ToArray();
 		}
 	}
 }

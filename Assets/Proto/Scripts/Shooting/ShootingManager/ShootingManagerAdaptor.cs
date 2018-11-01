@@ -13,7 +13,6 @@ namespace AppleShooterProto{
 	}
 	public class ShootingManagerAdaptor : MonoBehaviourAdaptor, IShootingManagerAdaptor{
 
-		IShootingManager thisShootingManager;
 		public int drawProcessOrder;
 		public float fireRate = 1f;
 
@@ -27,6 +26,13 @@ namespace AppleShooterProto{
 		public float flightSpeedMultiplier;
 
 		public override void SetUp(){
+			thisShootingManager = CreateShootingManager();
+		}
+		IShootingManager thisShootingManager;
+		public IShootingManager GetShootingManager(){
+			return thisShootingManager;
+		}
+		protected virtual IShootingManager CreateShootingManager(){
 			ShootingManager.IConstArg arg = new ShootingManager.ConstArg(
 				this,
 				drawProcessOrder,
@@ -41,15 +47,13 @@ namespace AppleShooterProto{
 				globalMinFlightSpeed,
 				flightSpeedMultiplier
 			);
-			thisShootingManager = new ShootingManager(arg);
-		}
-		public IShootingManager GetShootingManager(){
-			return thisShootingManager;
+			return new ShootingManager(arg);
 		}
 		public PlayerInputManagerAdaptor inputManagerAdaptor;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public TrajectoryAdaptor trajectoryAdaptor;
 		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
+		public ArrowReserveAdaptor arrowReserveAdaptor;
 		public float initialFlightSpeed;
 		public float GetInitialSpeed(){
 			return initialFlightSpeed;
@@ -79,45 +83,8 @@ namespace AppleShooterProto{
 			ILandedArrowReserve landedArrowReserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
 			thisShootingManager.SetLandedArrowReserve(landedArrowReserve);
 
-			SetUpArrows();
-		}
-		public int arrowCount = 20;
-		public Transform arrowReserveTrans;
-		public GameObject arrowPrefab;
-		public int collisionDetectionIntervalFrameCount = 3;
-		public float arrowAttack = 100f;
-		void SetUpArrows(){
-			IArrow[] arrows = new IArrow[arrowCount];
-			IArrowAdaptor[] arrowAdaptors = new IArrowAdaptor[arrowCount];
-			for(int i = 0; i < arrowCount; i++){
-				GameObject arrowGO = Instantiate(arrowPrefab, Vector3.zero, Quaternion.identity, arrowReserveTrans);
-				IArrowAdaptor arrowAdaptor = arrowGO.GetComponent(typeof(IArrowAdaptor)) as IArrowAdaptor;
-				if(arrowAdaptor == null)
-					throw new System.InvalidOperationException(
-						"eh?"
-					);
-				arrowAdaptor.SetMonoBehaviourAdaptorManager(
-					thisMonoBehaviourAdaptorManager
-				);
-				arrowAdaptor.SetLaunchPointAdaptor(launchPointAdaptor);
-				arrowAdaptor.SetArrowReserveTransform(arrowReserveTrans);
-				arrowAdaptor.SetIndex(i);
-				arrowAdaptor.SetCollisionDetectionIntervalFrameCount(collisionDetectionIntervalFrameCount);
-				arrowAdaptor.SetUp();
-				IArrow arrow = arrowAdaptor.GetArrow();
-				arrows[i] = arrow;
-				arrowAdaptors[i] = arrowAdaptor;
-
-				ILaunchPoint launchPoint = launchPointAdaptor.GetLaunchPoint();
-
-				arrow.SetLaunchPoint(launchPoint);
-			}
-			
-			IShootingManager shootingManager = GetShootingManager();
-			shootingManager.SetArrows(arrows);
-
-			foreach(IArrow arrow in arrows)
-				arrow.ResetArrow();
+			IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
+			thisShootingManager.SetArrowReserve(arrowReserve);
 		}
 	}
 }

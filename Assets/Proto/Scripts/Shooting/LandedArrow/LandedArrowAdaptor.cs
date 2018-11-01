@@ -6,8 +6,7 @@ namespace AppleShooterProto{
 	public interface ILandedArrowAdaptor: IMonoBehaviourAdaptor{
 		ILandedArrow GetLandedArrow();
 		void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor landedArrowReserveAdaptor);
-		void SetIndexOnTextMesh(int index);
-		void SetArrowTwangAdaptor(IArrowTwangAdaptor adaptor);
+		void SetIndex(int index);
 	}
 	public class LandedArrowAdaptor : MonoBehaviourAdaptor, ILandedArrowAdaptor {
 		ILandedArrow thisLandedArrow;
@@ -16,15 +15,30 @@ namespace AppleShooterProto{
 		}
 		public override void SetUp(){
 			LandedArrow.IConstArg arg = new LandedArrow.ConstArg(
-				this
+				this,
+				thisIndex
 			);
 			thisLandedArrow = new LandedArrow(arg);
 
 			thisTextMesh = CollectTextMesh();
+			SetIndexOnTextMesh(thisIndex);
+			thisTwangAdaptor = CollectArrowTwangAdaptor();
+			thisTwangAdaptor.SetUp();
 		}
 		ILandedArrowReserveAdaptor thisReserveAdaptor;
 		public void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor adaptor){
 			thisReserveAdaptor = adaptor;
+		}
+		IArrowTwangAdaptor thisTwangAdaptor;
+		IArrowTwangAdaptor CollectArrowTwangAdaptor(){
+			Component[] components = transform.GetComponentsInChildren(typeof(Component));
+			foreach(Component component in components){
+				if(component is IArrowTwangAdaptor)
+					return (IArrowTwangAdaptor)component;
+			}
+			throw new System.InvalidOperationException(
+				"arrowTwangAdaptor is not found among child components"
+			);
 		}
 		public override void SetUpReference(){
 			ILandedArrowReserve reserve = thisReserveAdaptor.GetLandedArrowReserve();
@@ -48,12 +62,13 @@ namespace AppleShooterProto{
 				"textMesh is not set right"
 			);
 		}
-		public void SetIndexOnTextMesh(int index){
-			thisTextMesh.text = index.ToString();
+		int thisIndex;
+		public void SetIndex(int index){
+			thisIndex = index;
+			// SetIndexOnTextMesh(index);
 		}
-		IArrowTwangAdaptor thisTwangAdaptor;
-		public void SetArrowTwangAdaptor(IArrowTwangAdaptor twangAdaptor){
-			thisTwangAdaptor = twangAdaptor;
+		void SetIndexOnTextMesh(int index){
+			thisTextMesh.text = index.ToString();
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace AppleShooterProto{
 		}
 		public override void SetIndex(int index){
 			base.SetIndex(index);
-			thisTypedAdaptor.SetIndexOnTextMesh(index);
+			// thisTypedAdaptor.SetIndexOnTextMesh(index);
 		}
 		IStaticShootingTargetAdaptor thisTypedAdaptor{
 			get{
@@ -40,7 +40,8 @@ namespace AppleShooterProto{
 			Activate();
 		}
 		public override void DeactivateImple(){
-			thisSpawnPoint.SetTarget(null);
+			if(thisSpawnPoint != null)
+				thisSpawnPoint.SetTarget(null);
 			thisSpawnPoint = null;
 			base.DeactivateImple();
 		}

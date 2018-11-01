@@ -11,6 +11,7 @@ namespace AppleShooterProto{
 		public override void SetUp(){
 			base.SetUp();
 			thisWaypointsFollowerAdaptor = CollectWaypointsFollowerAdaptor();
+			thisWaypointsFollowerAdaptor.SetUp();
 		}
 		protected override IShootingTarget CreateShootingTarget(){
 			AbsShootingTarget.IConstArg arg = new AbsShootingTarget.ConstArg(

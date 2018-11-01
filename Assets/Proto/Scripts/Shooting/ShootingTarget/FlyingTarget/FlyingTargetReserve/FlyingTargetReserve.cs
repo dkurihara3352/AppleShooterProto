@@ -26,7 +26,7 @@ namespace AppleShooterProto{
 
 			target.SetWaypoints(null);
 		}
-		float thisReservedSpace = 1f;
+		float thisReservedSpace = 4f;
 		Vector3 GetReservedLocalPosition(int index){
 			float posX = index * thisReservedSpace;
 			return new Vector3(

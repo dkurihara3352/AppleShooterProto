@@ -16,12 +16,13 @@ namespace AppleShooterProto{
 			float normalizedCameraPosition,
 			int axis
 		);
-		void TryNock();
+		void Nock();
 		void StartDraw();
 		void HoldDraw();
 		void StopDraw();
 		void Release();
-		void TryResetArrow();
+		// void TryResetArrow();
+		void DeactivateArrow();
 
 		IPlayerInputState GetCurrentState();
 		float GetMaxZoom();
@@ -95,7 +96,9 @@ namespace AppleShooterProto{
 					when zooming in/ drawing, the target value itself is interpolated, so the FOV smooth follows a moving target
 				*/
 				Zoom(0f);
-				thisShootingManager.ResetDraw();
+				// thisShootingManager.ResetDraw();
+				thisShootingManager.StopDraw();
+				// thisSho
 			}
 			public void ResetCameraPan(){
 				thisInputScroller.SnapToCenter();
@@ -115,8 +118,8 @@ namespace AppleShooterProto{
 			public void SetShootingManager(IShootingManager shootingManager){
 				thisShootingManager = shootingManager;
 			}
-			public void TryNock(){
-				thisShootingManager.TryNock();
+			public void Nock(){
+				thisShootingManager.NockArrow();
 			}
 			public void StartDraw(){
 				thisShootingManager.StartDraw();
@@ -130,8 +133,8 @@ namespace AppleShooterProto{
 			public void Release(){
 				thisShootingManager.Release();
 			}
-			public void TryResetArrow(){
-				thisShootingManager.TryResetArrow();
+			public void DeactivateArrow(){
+				thisShootingManager.DeactivateArrow();
 			}
 		/*  */
 			ISmoothFollower thisCameraPivotSmoothFollower;

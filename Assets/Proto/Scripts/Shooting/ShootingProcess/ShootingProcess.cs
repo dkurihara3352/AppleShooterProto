@@ -29,7 +29,6 @@ namespace AppleShooterProto{
 			}
 		}
 		void ExecuteShot(){
-
 			IShot shotInBuffer = thisShootingManager.GetShotInBuffer();
 			if(shotInBuffer != null){
 				IArrow arrow = shotInBuffer.GetArrow();

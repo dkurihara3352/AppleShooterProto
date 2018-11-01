@@ -23,7 +23,7 @@ namespace AppleShooterProto{
 			}
 		}
 		public override void Reserve(ILandedArrow arrow){
-			arrow.SetParent(arrow);
+			arrow.SetParent(this);
 			arrow.ResetLocalTransform();
 			Vector3 reservedLocalPosition = GetReservedLocalPosition(arrow.GetIndex());
 			arrow.SetLocalPosition(reservedLocalPosition);

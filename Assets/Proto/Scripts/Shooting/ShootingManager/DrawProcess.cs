@@ -22,7 +22,7 @@ namespace AppleShooterProto{
 			float drawDeltaTime = deltaT;
 			if(isHeld)
 				drawDeltaTime = 0f;
-			thisShootingManager.Draw(drawDeltaTime);
+			thisShootingManager.DrawImple(drawDeltaTime);
 		}
 		readonly int thisProcessOrder;
 		public override int GetProcessOrder(){

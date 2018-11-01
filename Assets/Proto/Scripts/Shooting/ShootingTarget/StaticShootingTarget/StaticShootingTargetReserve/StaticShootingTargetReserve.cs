@@ -18,7 +18,7 @@ namespace AppleShooterProto{
 			Vector3 reservedPosition = GetReservedLocalPosition(target.GetIndex());
 			target.SetLocalPosition(reservedPosition);
 		}
-		float reservedSpace = 1f;
+		float reservedSpace = 4f;
 		Vector3 GetReservedLocalPosition(int index){
 			float posX = index * reservedSpace;
 			return new Vector3(

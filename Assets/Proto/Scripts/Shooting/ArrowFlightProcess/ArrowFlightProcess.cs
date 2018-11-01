@@ -47,7 +47,7 @@ namespace AppleShooterProto{
 			thisArrow.SetLookRotation(movingDirection);
 		}
 		protected override void ExpireImple(){
-			thisArrow.TryResetArrow();
+			thisArrow.Deactivate();
 		}
 		protected override void StopImple(){
 			thisArrow.StopColllisionCheck();

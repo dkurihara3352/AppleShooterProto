@@ -3,36 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILaunchPoint{
-		Vector3 GetWorldDirection();
-		Vector3 GetWorldPosition();
+	public interface ILaunchPoint: ISceneObject{
+		Vector3 GetForwardDirection();
 	}
-	public class LaunchPoint : ILaunchPoint {
-
-		public LaunchPoint(ILaunchPointConstArg arg){
-			thisAdaptor = arg.adaptor;
+	public class LaunchPoint : AbsSceneObject, ILaunchPoint {
+		public LaunchPoint(
+			IConstArg arg
+		): base(arg){
 		}
-		readonly ILaunchPointAdaptor thisAdaptor;
-		public Vector3 GetWorldDirection(){
-			return thisAdaptor.GetWorldForwardDirection();
+		public Vector3 GetForwardDirection(){
+			return thisAdaptor.GetForwardDirection();
 		}
-		public Vector3 GetWorldPosition(){
-			return thisAdaptor.GetWorldPosition();
+		public new interface IConstArg: AbsSceneObject.IConstArg{
 		}
-	}
-
-
-
-	public interface ILaunchPointConstArg{
-		ILaunchPointAdaptor adaptor{get;}
-	}
-	public struct LaunchPointConstArg: ILaunchPointConstArg{
-		public LaunchPointConstArg(
-			ILaunchPointAdaptor adaptor
-		){
-			thisAdaptor = adaptor;
+		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public ConstArg(
+				ILaunchPointAdaptor adaptor
+			): base(
+				adaptor
+			){
+			}
 		}
-		readonly ILaunchPointAdaptor thisAdaptor;
-		public ILaunchPointAdaptor adaptor{get{return thisAdaptor;}}
 	}
 }

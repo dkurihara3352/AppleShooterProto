@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 		}
 		public override void SetUp(){
 			thisReserve = CreateGlidingTargetReserve();
+			thisGlidingTargetAdaptors = CreateGlidingTargetAdaptors();
 		}
 		IGlidingTargetReserve CreateGlidingTargetReserve(){
 			GlidingTargetReserve.IConstArg arg = new GlidingTargetReserve.ConstArg(
@@ -23,27 +24,18 @@ namespace AppleShooterProto{
 		public override void SetUpReference(){
 			IGlidingTarget[] glidingTargets = CreateGlidingTargets();
 			thisReserve.SetSceneObjects(glidingTargets);
-			thisTargetAdaptors = GetAdaptors(glidingTargets);
 		}
-		IGlidingTargetAdaptor[] thisTargetAdaptors;
-		IGlidingTargetAdaptor[] GetAdaptors(IGlidingTarget[] targets){
-			List<IGlidingTargetAdaptor> resultList = new List<IGlidingTargetAdaptor>();
-			foreach(IGlidingTarget target in targets)
-				resultList.Add((IGlidingTargetAdaptor)target.GetAdaptor());
-			return resultList.ToArray();
-		}
-		public override void FinalizeSetUp(){
-			foreach(IGlidingTargetAdaptor adaptor in thisTargetAdaptors)
-				adaptor.FinalizeSetUp();
-		}
+		IGlidingTargetAdaptor[] thisGlidingTargetAdaptors;
 
 		public int targetCounts;
 		public GameObject glidingTargetPrefab;
-		public IPopUIReserveAdaptor popUIReserveAdaptor;
-		public IDestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
+		public PopUIReserveAdaptor popUIReserveAdaptor;
+		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 
-		IGlidingTarget[] CreateGlidingTargets(){
-			List<IGlidingTarget> resultList = new List<IGlidingTarget>();
+		IGlidingTargetAdaptor[] CreateGlidingTargetAdaptors(){
+
+			List<IGlidingTargetAdaptor> resultList = new List<IGlidingTargetAdaptor>();
+
 			IPopUIReserve popUIReserve = popUIReserveAdaptor.GetPopUIReserve();
 			IDestroyedTargetReserve destroyedTargetReserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
 
@@ -54,19 +46,21 @@ namespace AppleShooterProto{
 				IGlidingTargetAdaptor targetAdaptor = (IGlidingTargetAdaptor)targetGO.GetComponent(typeof(IGlidingTargetAdaptor));
 
 				targetAdaptor.SetIndex(i);
-				targetAdaptor.SetMonoBehaviourAdaptorManager(
-					thisMonoBehaviourAdaptorManager
-				);
 				targetAdaptor.SetGlidingTargetReserve(thisReserve);
 				targetAdaptor.SetPopUIReserve(popUIReserve);
 				targetAdaptor.SetDestroyedTargetReserve(destroyedTargetReserve);
 
 				targetAdaptor.SetUp();
-				targetAdaptor.SetUpReference();
 
-				IGlidingTarget target = targetAdaptor.GetGlidingTarget();
+				resultList.Add(targetAdaptor);
+			}
+			return resultList.ToArray();
+		}
 
-				resultList.Add(target);
+		IGlidingTarget[] CreateGlidingTargets(){
+			List<IGlidingTarget> resultList = new List<IGlidingTarget>();
+			foreach(IGlidingTargetAdaptor adaptor in thisGlidingTargetAdaptors){
+				resultList.Add(adaptor.GetGlidingTarget());
 			}
 			return resultList.ToArray();
 		}

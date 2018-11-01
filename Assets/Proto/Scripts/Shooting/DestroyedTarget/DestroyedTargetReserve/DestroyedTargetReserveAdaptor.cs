@@ -9,12 +9,17 @@ namespace AppleShooterProto{
 	public class DestroyedTargetReserveAdaptor : MonoBehaviourAdaptor, IDestroyedTargetReserveAdaptor {
 
 		public override void SetUp(){
+			thisReserve = CreateDestroyedTargetReserve();
+			thisDestroyedTargetAdaptors = CreateDestroyedTargetAdaptors();
+		}
+		IDestroyedTargetReserve thisReserve;
+		IDestroyedTargetReserve CreateDestroyedTargetReserve(){
 			DestroyedTargetReserve.IConstArg arg = new DestroyedTargetReserve.ConstArg(
 				this	
 			);
-			thisReserve = new DestroyedTargetReserve(arg);
+			return new DestroyedTargetReserve(arg);
+
 		}
-		IDestroyedTargetReserve thisReserve;
 		public IDestroyedTargetReserve GetDestroyedTargetReserve(){
 			return thisReserve;
 		}
@@ -26,7 +31,31 @@ namespace AppleShooterProto{
 		public GameObject destroyedTargetPrefab;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public IDestroyedTargetAdaptor[] thisDestroyedTargetAdaptors;
-		IDestroyedTarget[] CreateDestroyedTargets(){
+		IDestroyedTargetAdaptor[] CreateDestroyedTargetAdaptors(){
+
+			List<IDestroyedTargetAdaptor> resultList = new List<IDestroyedTargetAdaptor>();
+
+			IPopUIReserve popUIReserve =  popUIReserveAdaptor.GetPopUIReserve();
+
+			for(int i = 0; i < destroyedTargetsCount; i ++){
+
+				GameObject destroyedTargetGO = GameObject.Instantiate(
+					destroyedTargetPrefab
+				);
+
+				IDestroyedTargetAdaptor adaptor = (IDestroyedTargetAdaptor)destroyedTargetGO.GetComponent(typeof(IDestroyedTargetAdaptor));
+
+				adaptor.SetPopUIReserve(popUIReserve);
+				adaptor.SetIndex(i);
+				adaptor.SetDestroyedTargetReserve(thisReserve);
+				adaptor.SetUp();
+
+				resultList.Add(adaptor);
+			}
+
+			return resultList.ToArray();
+		}
+		IDestroyedTarget[] Obs_CreateDestroyedTargets(){
 
 			List<IDestroyedTarget> resultList = new List<IDestroyedTarget>();
 			IPopUIReserve popUIReserve =  popUIReserveAdaptor.GetPopUIReserve();
@@ -37,13 +66,13 @@ namespace AppleShooterProto{
 					destroyedTargetPrefab
 				);
 				IDestroyedTargetAdaptor adaptor = (IDestroyedTargetAdaptor)destroyedTargetGO.GetComponent(typeof(IDestroyedTargetAdaptor));
-				adaptor.SetMonoBehaviourAdaptorManager(thisMonoBehaviourAdaptorManager);
+				// adaptor.SetMonoBehaviourAdaptorManager(thisMonoBehaviourAdaptorManager);
 				adaptor.SetPopUIReserve(popUIReserve);
 				adaptor.SetIndex(i);
 				adaptor.SetDestroyedTargetReserve(thisReserve);
 
-				adaptor.SetUp();
-				adaptor.SetUpReference();
+				// adaptor.SetUp();
+				// adaptor.SetUpReference();
 
 				adaptorsList.Add(adaptor);
 
@@ -55,10 +84,11 @@ namespace AppleShooterProto{
 
 			return resultList.ToArray();
 		}
-		public override void FinalizeSetUp(){
-			foreach(IDestroyedTargetAdaptor targetAdaptor in thisDestroyedTargetAdaptors){
-				targetAdaptor.FinalizeSetUp();
-			}
+		IDestroyedTarget[] CreateDestroyedTargets(){
+			List<IDestroyedTarget> resultList = new List<IDestroyedTarget>();
+			foreach(IDestroyedTargetAdaptor adaptor in thisDestroyedTargetAdaptors)
+				resultList.Add(adaptor.GetDestroyedTarget());
+			return resultList.ToArray();
 		}
 	}
 }

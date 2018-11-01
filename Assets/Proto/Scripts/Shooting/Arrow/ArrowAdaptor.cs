@@ -5,13 +5,12 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface IArrowAdaptor: IMonoBehaviourAdaptor{
-		void SetArrowReserveTransform(Transform arrowReserveTrans);
-		void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor);
-		void SetCollisionDetectionIntervalFrameCount(int count);
-
 		IArrow GetArrow();
-		void BecomeChildToLaunchPoint();
-		void BecomeChildToReserve();
+
+		void SetArrowReserveAdaptor(IArrowReserveAdaptor adaptor);
+		void SetLaunchPointAdaptor(ILaunchPointAdaptor adaptor);
+		void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor);
+		void SetCollisionDetectionIntervalFrameCount(int count);
 
 		void StartCollisionCheck();
 		void StopCollisionCheck();
@@ -22,58 +21,69 @@ namespace AppleShooterProto{
 	public class ArrowAdaptor : MonoBehaviourAdaptor, IArrowAdaptor {
 		
 		/* Ref */
-			ILaunchPointAdaptor thisLaunchPointAdaptor;
-			public void SetLaunchPointAdaptor(ILaunchPointAdaptor launchPointAdaptor){
-				thisLaunchPointAdaptor = launchPointAdaptor;
-			}
-			Transform thisArrowReserveTrans;
-			public void SetArrowReserveTransform(Transform reserveTrans){
-				thisArrowReserveTrans = reserveTrans;
-			}
-			public void SetCollisionDetectionIntervalFrameCount(int count){
-				checkPerEveryThisFrames = count;
-			}
+		public void SetCollisionDetectionIntervalFrameCount(int count){
+			checkPerEveryThisFrames = count;
+		}
+		IArrowReserveAdaptor thisArrowReserveAdaptor;
+		public void SetArrowReserveAdaptor(IArrowReserveAdaptor adaptor){
+			thisArrowReserveAdaptor = adaptor;
+		}
+		ILaunchPointAdaptor thisLaunchPointAdaptor;
+		public void SetLaunchPointAdaptor(ILaunchPointAdaptor adaptor){
+			thisLaunchPointAdaptor  = adaptor;
+		}
+		IShootingManagerAdaptor thisShootingManagerAdaptor;
+		public void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor){
+			thisShootingManagerAdaptor = adaptor;
+		}
 		/*  */
 		public override void SetUp(){
-			Arrow.IConstArg arg = new Arrow.ConstArg(
-				this,
-				processFactory,
-				thisIndex
-			);
-			thisArrow = new Arrow(arg);
-			thisIsReadyForGizmo = true;
+			thisArrow = CreateArrow();
 		}
-		/* Action */
-			IArrow thisArrow;
-			public IArrow GetArrow(){
-				return thisArrow;
-			}
-			public void BecomeChildToLaunchPoint(){
-				this.transform.SetParent(thisLaunchPointAdaptor.GetTransform(), true);
-			}
-			public void BecomeChildToReserve(){
-				this.transform.SetParent(thisArrowReserveTrans, true);
-			}
-		
+		IArrow thisArrow;
+		public IArrow GetArrow(){
+			return thisArrow;
+		}
+		IArrow CreateArrow(){
+			Arrow.IConstArg arg = new Arrow.ConstArg(
+				thisIndex,
+				this
+			);
+			thisIsReadyForGizmo = true;
+			return new Arrow(arg);
+		}
+		public override void SetUpReference(){
+			IArrowReserve reserve = thisArrowReserveAdaptor.GetArrowReserve();
+			thisArrow.SetArrowReserve(reserve);
+
+			ILaunchPoint launchPoint = thisLaunchPointAdaptor.GetLaunchPoint();
+			thisArrow.SetLaunchPoint(launchPoint);
+
+			IShootingManager shootingManager = thisShootingManagerAdaptor.GetShootingManager();
+			thisArrow.SetShootingManager(shootingManager);
+		}
+		public override void FinalizeSetUp(){
+			thisArrow.Deactivate();
+		}
 		/* Debug */
-			bool thisIsReadyForGizmo = false;
-			public void OnDrawGizmos(){
-				if(thisIsReadyForGizmo){
-					if(thisChecksForCollision){
-						Gizmos.color = Color.red;
-						Gizmos.DrawLine(prevForDebug, curForDebug);
-					}
-					Gizmos.color = Color.magenta;
-					Gizmos.DrawWireSphere(hitPosition, 2f);
+		bool thisIsReadyForGizmo = false;
+		public void OnDrawGizmos(){
+			if(thisIsReadyForGizmo){
+				if(thisChecksForCollision){
+					Gizmos.color = Color.red;
+					Gizmos.DrawLine(prevForDebug, curForDebug);
 				}
+				Gizmos.color = Color.magenta;
+				Gizmos.DrawWireSphere(hitPosition, 2f);
 			}
-			public string GetParentName(){
-				return this.transform.parent.ToString();
-			}
-			int thisIndex;
-			public void SetIndex(int index){
-				thisIndex = index;
-			}
+		}
+		public string GetParentName(){
+			return this.transform.parent.ToString();
+		}
+		int thisIndex;
+		public void SetIndex(int index){
+			thisIndex = index;
+		}
 		/* Collision Detection */
 			int checkPerEveryThisFrames;
 			Vector3 thisPrevPosition;

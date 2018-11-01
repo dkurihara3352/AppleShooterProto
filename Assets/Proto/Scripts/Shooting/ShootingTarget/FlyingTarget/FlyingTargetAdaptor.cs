@@ -7,6 +7,8 @@ namespace AppleShooterProto{
 	public interface IFlyingTargetAdaptor: IShootingTargetAdaptor{
 		IFlyingTarget GetFlyingTarget();
 		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);
+
+		void SetDistanceThresholdForGizmo(float thresh);
 	}
 
 	public class FlyingTargetAdaptor : AbsShootingTargetAdaptor, IFlyingTargetAdaptor {
@@ -44,7 +46,6 @@ namespace AppleShooterProto{
 		public override void SetUp(){
 			base.SetUp();
 			thisSmoothLookerAdaptor = CollectSmoothLookerAdaptor();
-			thisSmoothLookerAdaptor.SetMonoBehaviourAdaptorManager(thisMonoBehaviourAdaptorManager);
 			thisSmoothLookerAdaptor.SetUp();
 		}
 		public override void SetUpReference(){
@@ -55,12 +56,16 @@ namespace AppleShooterProto{
 			thisFlyingTarget.SetFlyingTargetReserve(thisFlyingTargetReserve);
 			thisSmoothLookerAdaptor.SetUpReference();
 		}
-
+		
+		public void SetDistanceThresholdForGizmo(float thresh){
+			distanceThresholdForGizmo = thresh;
+		}
+		float distanceThresholdForGizmo;
 		public void OnDrawGizmos(){
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(
 				GetPosition(),
-				distanceThreshold
+				distanceThresholdForGizmo
 			);
 		}
 	}

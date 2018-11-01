@@ -4,33 +4,21 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface ILaunchPointAdaptor: IMonoBehaviourAdaptor{
-		Vector3 GetWorldForwardDirection();
-		Vector3 GetWorldPosition();
 		ILaunchPoint GetLaunchPoint();
 	}
 	public class LaunchPointAdaptor : MonoBehaviourAdaptor, ILaunchPointAdaptor {
 		ILaunchPoint thisLaunchPoint;
 		public override void SetUp(){
-			ILaunchPointConstArg arg = new LaunchPointConstArg(this);
-			thisLaunchPoint = new LaunchPoint(arg);
+			thisLaunchPoint = CreateLaunchPoint();
+		}
+		ILaunchPoint CreateLaunchPoint(){
+			LaunchPoint.IConstArg arg = new LaunchPoint.ConstArg(
+				this
+			);
+			return new LaunchPoint(arg);
 		}
 		public ILaunchPoint GetLaunchPoint(){
 			return thisLaunchPoint;
-		}
-		public Vector3 GetWorldForwardDirection(){
-			return this.transform.forward;
-		}
-		public Vector3 GetWorldPosition(){
-			return this.transform.position;
-		}
-
-		void OnDrawGizmos(){
-			Gizmos.color = Color.yellow;
-			Vector3 worldPos = this.GetWorldPosition();
-			Gizmos.DrawLine(
-				worldPos,
-				worldPos + GetWorldForwardDirection() * 10f
-			);
 		}
 	}
 }

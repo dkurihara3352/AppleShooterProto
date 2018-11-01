@@ -12,8 +12,6 @@ namespace AppleShooterProto{
 
 		IShootingTarget GetShootingTarget();
 		int GetIndex();
-		void SetIndex(int index);
-
 		void SetArrowTwang(IArrowTwang twang);
 	}
 	public class LandedArrow: AbsSceneObject, ILandedArrow{
@@ -22,7 +20,8 @@ namespace AppleShooterProto{
 		): base(
 			arg
 		){
-
+			thisIndex = arg.index;
+			thisActivationStateEngine = new ActivationStateEngine(this);
 		}
 		ILandedArrowReserve thisReserve;
 		ILandedArrowAdaptor thisTypedAdaptor{
@@ -73,10 +72,6 @@ namespace AppleShooterProto{
 			return thisTarget;
 		}
 		int thisIndex;
-		public void SetIndex(int index){
-			thisIndex = index;
-			thisTypedAdaptor.SetIndexOnTextMesh(index);
-		}
 		public int GetIndex(){
 			return thisIndex;
 		}
@@ -105,14 +100,19 @@ namespace AppleShooterProto{
 			}
 		/* Const */
 			public new interface IConstArg: AbsSceneObject.IConstArg{
+				int index{get;}
 			}
 			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
-					ILandedArrowAdaptor adaptor
+					ILandedArrowAdaptor adaptor,
+					int index
 				): base(
 					adaptor
 				){
+					thisIndex = index;
 				}
+				readonly int thisIndex;
+				public int index{get{return thisIndex;}}
 			}
 		/*  */
 	}

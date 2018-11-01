@@ -67,8 +67,9 @@ namespace AppleShooterProto{
 				PrintSequence();
 				PrintReserved();
 				ConnectWaypointCurveSequence();
-				
-				thisFollower.SetWaypointCurve(thisCurveSequence[0]);
+
+				if(thisFollower != null)				
+					thisFollower.SetWaypointCurve(thisCurveSequence[0]);
 			}
 			void PrintSequence(){
 				string result = "curves in sequence: ";

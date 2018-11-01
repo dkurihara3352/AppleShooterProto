@@ -5,13 +5,14 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IStaticShootingTargetAdaptor: IShootingTargetAdaptor{
 		IStaticShootingTarget GetStaticShootingTarget();
-		void SetTargetReserve(IStaticShootingTargetReserve reserve);
+		void SetStaticShootingTargetReserveAdaptor(IStaticShootingTargetReserveAdaptor reserveAdaptor);
 		void SetIndexOnTextMesh(int index);
 	}
 	public class StaticShootingTargetAdaptor: AbsShootingTargetAdaptor, IStaticShootingTargetAdaptor{
 		public override void SetUp(){
 			base.SetUp();
 			thisTextMesh = CollectTextMesh();
+			SetIndexOnTextMesh(thisIndex);
 		}
 		protected override IShootingTarget CreateShootingTarget(){
 			StaticShootingTarget.IConstArg arg = new StaticShootingTarget.ConstArg(
@@ -31,9 +32,17 @@ namespace AppleShooterProto{
 		public IStaticShootingTarget GetStaticShootingTarget(){
 			return thisStaticShootingTarget;
 		}
-		public IStaticShootingTargetReserve reserve;
-		public void SetTargetReserve(IStaticShootingTargetReserve reserve){
-			this.reserve = reserve;
+		// public IStaticShootingTargetReserve reserve;
+		// public void SetTargetReserve(IStaticShootingTargetReserve reserve){
+		// 	this.reserve = reserve;
+		// }
+		IStaticShootingTargetReserveAdaptor thisReserveAdaptor;
+		public void SetStaticShootingTargetReserveAdaptor(IStaticShootingTargetReserveAdaptor adaptor){
+			thisReserveAdaptor = adaptor;
+		}
+		public override void SetUpReference(){
+			IStaticShootingTargetReserve reserve = thisReserveAdaptor.GetStaticShootingTargetReserve();
+			thisStaticShootingTarget.SetStaticShootingTargetReserve(reserve);
 		}
 		TextMesh thisTextMesh;
 		public void SetIndexOnTextMesh(int index){

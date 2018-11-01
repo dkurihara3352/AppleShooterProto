@@ -28,17 +28,11 @@ namespace AppleShooterProto{
 		void SetParent(Transform parent);
 		void ResetLocalTransform();
 		Vector3 GetForwardDirection();
-
-		void SetMonoBehaviourAdaptorManager(IMonoBehaviourAdaptorManager manager);
 	}
 	public abstract class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
-		public bool isInstatiable = false;
 		protected virtual void Awake(){
-			if(!isInstatiable){
-				thisMonoBehaviourAdaptorManager = FindAndSetMonoBehaviourAdaptor();
-				thisMonoBehaviourAdaptorManager.AddAdaptor(this);
-			}
-
+			thisMonoBehaviourAdaptorManager = FindAndSetMonoBehaviourAdaptor();
+			thisMonoBehaviourAdaptorManager.AddAdaptor(this);
 		}
 		protected IMonoBehaviourAdaptorManager thisMonoBehaviourAdaptorManager;
 		public IMonoBehaviourAdaptorManager FindAndSetMonoBehaviourAdaptor(){
@@ -48,9 +42,6 @@ namespace AppleShooterProto{
 					"MonoBehaviourManager is not found"
 				);
 			return result;
-		}
-		public void SetMonoBehaviourAdaptorManager(IMonoBehaviourAdaptorManager manager){
-			thisMonoBehaviourAdaptorManager = manager;
 		}
 		public IMonoBehaviourAdaptorManager GetMonoBehaviourAdaptorManager(){
 			return thisMonoBehaviourAdaptorManager;
