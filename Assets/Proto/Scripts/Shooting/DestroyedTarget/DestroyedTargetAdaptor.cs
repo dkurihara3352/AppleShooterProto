@@ -5,11 +5,13 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IDestroyedTargetAdaptor: IMonoBehaviourAdaptor{
 		IDestroyedTarget GetDestroyedTarget();
-		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
+		// void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
+		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
+		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
+		
 		/* used by client */
 			void StartDestruction();
 			void StopDestruction();
-		void SetPopUIReserve(IPopUIReserve reserve);
 		/* used by process */
 			void PlayParticleSystem();
 			void StopParticleSystem();
@@ -24,8 +26,11 @@ namespace AppleShooterProto{
 			thisParticleSystem = GetComponent<ParticleSystem>();
 		}
 		public override void SetUpReference(){
-			thisDestroyedTarget.SetDestroyedTargetReserve(thisDestroyedTargetReserve);
-			thisDestroyedTarget.SetPopUIReserve(thisPopUIReserve);
+			IDestroyedTargetReserve destroyedTargetReserve = thisDestroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
+			thisDestroyedTarget.SetDestroyedTargetReserve(destroyedTargetReserve);
+			
+			IPopUIReserve popUIReserve  = thisPopUIReserveAdaptor.GetPopUIReserve();
+			thisDestroyedTarget.SetPopUIReserve(popUIReserve);
 		}
 		public override void FinalizeSetUp(){
 			thisDestroyedTarget.Deactivate();
@@ -41,13 +46,13 @@ namespace AppleShooterProto{
 		public IDestroyedTarget GetDestroyedTarget(){
 			return thisDestroyedTarget;
 		}
-		IDestroyedTargetReserve thisDestroyedTargetReserve;
-		public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
-			thisDestroyedTargetReserve = reserve;
+		IDestroyedTargetReserveAdaptor thisDestroyedTargetReserveAdaptor;
+		public void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor){
+			thisDestroyedTargetReserveAdaptor = adaptor;
 		}
-		IPopUIReserve thisPopUIReserve;
-		public void SetPopUIReserve(IPopUIReserve reserve){
-			thisPopUIReserve = reserve;
+		IPopUIReserveAdaptor thisPopUIReserveAdaptor;
+		public void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor){
+			thisPopUIReserveAdaptor = adaptor;
 		}
 
 		/* process */

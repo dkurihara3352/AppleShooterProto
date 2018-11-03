@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IMarkerUIReserve: ISceneObjectReserve<IMarkerUI>{
-		void ActivateMarkerUIAt(ISceneObject sceneObj);
+		void ActivateMarkerUIAt(
+			ISceneObject sceneObj
+		);
 	}
 	public class MarkerUIReserve: AbsSceneObjectReserve<IMarkerUI>, IMarkerUIReserve{
 		public MarkerUIReserve(
@@ -17,15 +19,15 @@ namespace AppleShooterProto{
 			markerUI.ResetLocalTransform();
 			Vector2 reservedPosition = GetReservedLocalPosition(markerUI.GetIndex());
 			markerUI.SetLocalPosition(reservedPosition);
-
-			markerUI.OnResetAtReserve();
 		}
-		float thisSpace = 50f;
+		float thisSpace = 150;
 		Vector2 GetReservedLocalPosition(int index){
 			float posX = index * thisSpace;
 			return new Vector2(posX, 0f);
 		}
-		public void ActivateMarkerUIAt(ISceneObject sceneObj){
+		public virtual void ActivateMarkerUIAt(
+			ISceneObject sceneObj
+		){
 			IMarkerUI markerUI = GetNext();
 			markerUI.Deactivate();
 			markerUI.SetTargetSceneObject(sceneObj);

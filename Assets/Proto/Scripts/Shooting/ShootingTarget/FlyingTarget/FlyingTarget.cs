@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IFlyingTarget: IShootingTarget{
-		void SetWaypoints(IFlyingTargetWaypoint[] waypoints);
+		void SetWaypointsManager(IFlyingTargetWaypointManager waypointsManager);
 		void SetSmoothLooker(ISmoothLooker looker);
 		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);
 		void SetUpWaypoints();
@@ -38,6 +38,8 @@ namespace AppleShooterProto{
 
 		public override void ActivateImple(){
 			base.ActivateImple();
+			SetParent(thisWaypointManager);
+			ResetLocalTransform();
 			StartFlight();
 		}
 		public override void DeactivateImple(){
@@ -73,8 +75,11 @@ namespace AppleShooterProto{
 			thisSmoothLooker.StopSmoothLook();
 		}
 		IFlyingTargetWaypoint[] thisAllWaypoints;
-		public void SetWaypoints(IFlyingTargetWaypoint[] waypoints){
-			thisAllWaypoints  = waypoints;
+		IFlyingTargetWaypointManager thisWaypointManager;
+		public void SetWaypointsManager(IFlyingTargetWaypointManager waypointManager){
+			thisWaypointManager = waypointManager;
+			if(waypointManager != null)
+				thisAllWaypoints = waypointManager.GetWaypoints();
 		}
 		readonly int thisWaypointsCountInSequence;
 		IFlyingTargetWaypoint[] thisWaypointsInSequence;

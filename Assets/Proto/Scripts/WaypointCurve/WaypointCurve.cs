@@ -4,8 +4,8 @@ using UnityEngine;
 using DKUtility.CurveUtility;
 
 namespace AppleShooterProto{
-	public interface IWaypointCurve{
-		IWaypointCurveAdaptor GetAdaptor();
+	public interface IWaypointCurve: ISceneObject{
+		// IWaypointCurveAdaptor GetAdaptor();
 
 		void CalculateCurve();
 
@@ -38,30 +38,25 @@ namespace AppleShooterProto{
 
 		int GetIndex();
 		void SetIndex(int i);
-		void SetPosition(Vector3 position);
-		void SetRotation(Quaternion rotation);
-		void SetLocalPosition(Vector3 position);
-		void SetLocalRotation(Quaternion rotation);
-		Vector3 GetPosition();
-		Quaternion GetRotation();
+
 		/* Events */
 			List<IWaypointEvent> GetWaypointEvents();
 			void SetWaypointEvents(List<IWaypointEvent> events);
 		/*  */
 			void PrintCurve();
 	}
-	public abstract class AbsWaypointCurve: IWaypointCurve{
+	public abstract class AbsWaypointCurve: AbsSceneObject, IWaypointCurve{
 		/* SetUp */
 			public AbsWaypointCurve(
 				IConstArg arg
+			): base(
+				arg
 			){
-				thisAdaptor = arg.adaptor;
 				thisControlPoints = arg.controlPoints;
 				CalculateCurve();
 			}
-			readonly IWaypointCurveAdaptor thisAdaptor;
-			public IWaypointCurveAdaptor GetAdaptor(){
-				return thisAdaptor;
+			protected IWaypointCurveAdaptor thisTypedAdaptor{
+				get{return (IWaypointCurveAdaptor)thisAdaptor;}
 			}
 			readonly ICurveControlPoint[] thisControlPoints;
 			ICurveControlPoint thisLastControlPoint{
@@ -73,13 +68,14 @@ namespace AppleShooterProto{
 			public virtual void CalculateCurve(){
 				thisCurvePoints = CreateCurvePoints();
 				thisTotalDistance = CalculateTotalDistance();
-				// PrintCurve();
 			}
 			public void PrintCurve(){
-				DKUtility.DebugHelper.PrintInBlue(
-					"WaypointCurve: " + GetIndex().ToString() + ", " +
-					"curvePointCount: " + thisCurvePoints.Length.ToString() + ", " +
-					"totalDist: " + CalculateTotalDistance().ToString()
+				Debug.Log(
+					DKUtility.DebugHelper.BlueString(
+						"WaypointCurve: " + GetIndex().ToString() + ", " +
+						"curvePointCount: " + thisCurvePoints.Length.ToString() + ", " +
+						"totalDist: " + CalculateTotalDistance().ToString()
+					)
 				);
 				int index = 0;
 				foreach(ICurvePoint point in thisCurvePoints){
@@ -97,12 +93,12 @@ namespace AppleShooterProto{
 			}
 			ICurvePoint[] thisCurvePoints;
 			ICurvePoint[] CreateCurvePoints(){
-				thisAdaptor.UpdateCurve();
-				return thisAdaptor.GetCurvePoints();
+				thisTypedAdaptor.UpdateCurve();
+				return thisTypedAdaptor.GetCurvePoints();
 			}
 			float thisTotalDistance;
 			float CalculateTotalDistance(){
-				return thisAdaptor.GetTotalDistance();
+				return thisTypedAdaptor.GetTotalDistance();
 			}
 			public float GetTotalDistance(){
 				return thisTotalDistance;
@@ -115,8 +111,6 @@ namespace AppleShooterProto{
 				SetRotation(rotation);
 				CalculateCurve();
 				SetPrevPointPosOnFirstCurvePointOnConnection(prevCurve);
-				// DKUtility.DebugHelper.PrintInBlue("below is valid");
-				// PrintCurve();
 			}
 			public Vector3 GetConnectionPosition(){
 				return thisLastControlPoint.GetPosition();
@@ -205,24 +199,6 @@ namespace AppleShooterProto{
 				return lastCurvePoint.GetPrevPointPosition();
 			}
 		/* Misc */
-			public Vector3 GetPosition(){
-				return thisAdaptor.GetPosition();
-			}
-			public Quaternion GetRotation(){
-				return thisAdaptor.GetRotation();
-			}
-			public void SetPosition(Vector3 position){
-				thisAdaptor.SetPosition(position);
-			}
-			public void SetRotation(Quaternion rotation){
-				thisAdaptor.SetRotation(rotation);
-			}
-			public void SetLocalPosition(Vector3 localPosition){
-				thisAdaptor.SetLocalPosition(localPosition);
-			}
-			public void SetLocalRotation(Quaternion localRotation){
-				thisAdaptor.SetLocalRotation(localRotation);
-			}
 			int thisIndex;
 			public int GetIndex(){
 				return thisIndex;
@@ -243,23 +219,21 @@ namespace AppleShooterProto{
 			public virtual void OnUnreserve(){
 			}
 		/* Const */
-			public interface IConstArg{
-				IWaypointCurveAdaptor adaptor{get;}
+			public new interface IConstArg: AbsSceneObject.IConstArg{
 				ICurveControlPoint[] controlPoints{get;}
 				ICurvePoint[] curvePoints{get;}
 			}
-			public struct ConstArg: IConstArg{
+			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IWaypointCurveAdaptor adaptor,
 					ICurveControlPoint[] controlPoints,
 					ICurvePoint[] curvePoints
+				): base(
+					adaptor
 				){
-					thisAdaptor = adaptor;
 					thisControlPoints = controlPoints;
 					thisCurvePoints = curvePoints;
 				}
-				readonly IWaypointCurveAdaptor thisAdaptor;
-				public IWaypointCurveAdaptor adaptor{get{return thisAdaptor;}}
 				readonly ICurveControlPoint[] thisControlPoints;
 				public ICurveControlPoint[] controlPoints{get{return thisControlPoints;}}
 				readonly ICurvePoint[] thisCurvePoints;

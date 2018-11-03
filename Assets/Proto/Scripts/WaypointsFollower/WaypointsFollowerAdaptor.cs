@@ -15,7 +15,7 @@ namespace AppleShooterProto{
 		}
 		public float followSpeed;
 		public float GetSpeed(){return followSpeed;}
-		public WaypointsManagerAdaptor waypointsManagerAdaptor;
+		public WaypointCurveCycleManagerAdaptor waypointsManagerAdaptor;
 		public int processOrder = 100;
 		public override void SetUp(){
 			IWaypointsFollowerConstArg arg = new WaypointsFollowerConstArg(
@@ -27,8 +27,10 @@ namespace AppleShooterProto{
 			thisFollower = new WaypointsFollower(arg);
 		}
 		public override void SetUpReference(){
-			IWaypointsManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
-			thisFollower.SetWaypointsManager(waypointsManager);
+			if(waypointsManagerAdaptor != null){
+				IWaypointCurveCycleManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
+				thisFollower.SetWaypointsManager(waypointsManager);
+			}
 		}
 	}
 }

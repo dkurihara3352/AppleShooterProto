@@ -17,19 +17,28 @@ namespace AppleShooterProto{
 		IPCWaypointCurve thisTypedCurve{
 			get{return thisWaypointCurve as IPCWaypointCurve;}
 		}
-		public AbsWaypointCurveAdaptor[] subordinateCurveAdaptors;
+		// public AbsWaypointCurveAdaptor[] subordinateCurveAdaptors;
 		public override void SetUpReference(){
 			base.SetUpReference();
 			IShootingTargetSpawnManager targetSpawnManager = testTargetSpawnManagerAdaptor.GetShootingTargetSpawnManager();
 			thisTypedCurve.SetTargetSpawnManager(targetSpawnManager);
+		}
+		public override void FinalizeSetUp(){
 			IWaypointCurve[] subordinateCurves = CollectSubordinateCurves();
 			thisTypedCurve.SetSubordinateCurves(subordinateCurves);
+			base.FinalizeSetUp();
 		}
+		public WaypointCurveCycleManagerAdaptor[] subWaypointsManagersAdaptors;
 		IWaypointCurve[] CollectSubordinateCurves(){
 			List<IWaypointCurve> resultList = new List<IWaypointCurve>();
-			foreach(AbsWaypointCurveAdaptor adaptor in subordinateCurveAdaptors){
-				if(adaptor != null)
-					resultList.Add(adaptor.GetWaypointCurve());
+			// foreach(AbsWaypointCurveAdaptor adaptor in subordinateCurveAdaptors){
+			// 	if(adaptor != null)
+			// 		resultList.Add(adaptor.GetWaypointCurve());
+			// }
+			foreach(WaypointCurveCycleManagerAdaptor waypointsManagerAdaptor in subWaypointsManagersAdaptors){
+				IWaypointCurveCycleManager manager = ((IWaypointCurveCycleManagerAdaptor)waypointsManagerAdaptor).GetWaypointsManager();
+				IWaypointCurve[] curves = manager.GetAllWaypointCurves().ToArray();
+				resultList.AddRange(curves);
 			}
 			return resultList.ToArray();
 		}

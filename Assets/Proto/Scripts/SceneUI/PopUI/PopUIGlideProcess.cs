@@ -113,7 +113,7 @@ namespace AppleShooterProto{
 					AnimationCurve alhpaCurve,
 					AnimationCurve scaleCurve,
 					Vector2 graphicOriginalLocalPosition,
-					Color graphicOrignalColor,
+					Color graphicOriginalColor,
 
 					IProcessManager processManager,
 					float glideTime

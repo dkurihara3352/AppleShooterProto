@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface ISceneUIAdaptor: IMonoBehaviourAdaptor{
 		void SetCamera(Camera camera);
+		void SetCanvas(Canvas canvas);
 		void SetUISize(Vector2 size);
 		void SetUIScale(Vector2 scale);
 		void SetUIPosition(Vector2 position);
@@ -34,7 +35,7 @@ namespace AppleShooterProto{
 		}
 		public override void SetUp(){
 			thisRectTransform = CollectRectTransform();
-			thisCanvas  = CollectCanvas();
+			// thisCanvas  = CollectCanvas();
 			thisSceneUI = CreateSceneUI();
 		}
 		protected abstract ISceneUI CreateSceneUI();
@@ -58,8 +59,15 @@ namespace AppleShooterProto{
 			return targetTransform.position;
 		}
 		protected Canvas thisCanvas;
-		Canvas CollectCanvas(){
-			return this.transform.GetComponentInParent<Canvas>();
+		// Canvas CollectCanvas(){
+		// 	Canvas result = this.transform.GetComponentInParent<Canvas>();
+		// 	Debug.Log(
+		// 		"canvas is null: " + (result == null).ToString()
+		// 	);
+		// 	return result;
+		// }
+		public void SetCanvas(Canvas canvas){
+			thisCanvas = canvas;
 		}
 		public void BecomeChildToCanvas(){
 			SetParent(thisCanvas.transform);

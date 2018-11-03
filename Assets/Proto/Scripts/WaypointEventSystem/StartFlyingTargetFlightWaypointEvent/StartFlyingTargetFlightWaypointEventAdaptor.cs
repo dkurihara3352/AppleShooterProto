@@ -11,15 +11,41 @@ namespace AppleShooterProto{
 		}
 		public float eventPoint;
 		public override void SetUp(){
+			thisEvent = CreateWaypointEvent();
+			thisWaypointAdaptors = CollectWaypointAdaptors();
+		}
+		IStartFlyingTargetFlightWaypointEvent CreateWaypointEvent(){
 			AbsWaypointEvent.IConstArg arg = new AbsWaypointEvent.ConstArg(
 				eventPoint
 			);
-			thisEvent = new StartFlyingTargetFlightWaypointEvent(arg);
+			return new StartFlyingTargetFlightWaypointEvent(arg);
 		}
-		public FlyingTargetAdaptor flyingTargetAdaptor;
+		public FlyingTargetReserveAdaptor flyingTargetReserveAdaptor;
+		public Transform waypointsParent;
+		IFlyingTargetWaypointAdaptor[] thisWaypointAdaptors;
+		IFlyingTargetWaypointAdaptor[] CollectWaypointAdaptors(){
+			Component[] childComps = waypointsParent.GetComponentsInChildren<Component>();
+			List<IFlyingTargetWaypointAdaptor> resultList = new List<IFlyingTargetWaypointAdaptor>();
+			foreach(Component comp in childComps){
+				if(comp is IFlyingTargetWaypointAdaptor)
+					resultList.Add((IFlyingTargetWaypointAdaptor)comp);
+			}
+			return resultList.ToArray();
+		}
+		public FlyingTargetWaypointManagerAdaptor flyingTargetWaypointManagerAdaptor;
 		public override void SetUpReference(){
-			IFlyingTarget flyingTarget = flyingTargetAdaptor.GetShootingTarget() as IFlyingTarget;
-			thisEvent.SetFlyingTarget(flyingTarget);
+			IFlyingTargetWaypointManager manager = flyingTargetWaypointManagerAdaptor.GetFlyingTargetWaypointManager();
+			thisEvent.SetFlyingTargetWaypointManager(manager);
+			IFlyingTargetReserve reserve  = flyingTargetReserveAdaptor.GetFlyingTargetReserve();
+			thisEvent.SetFlyingTargetReserve(reserve);
+		}
+
+		IFlyingTargetWaypoint[] GetWaypoints(){
+			List<IFlyingTargetWaypoint> resultList = new List<IFlyingTargetWaypoint>();
+			foreach(IFlyingTargetWaypointAdaptor adaptor in thisWaypointAdaptors){
+				resultList.Add(adaptor.GetWaypoint());
+			}
+			return resultList.ToArray();
 		}
 	}
 }

@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IWaypointsManagerAdaptor: IMonoBehaviourAdaptor{
-		IWaypointsManager GetWaypointsManager();
+	public interface IWaypointCurveCycleManagerAdaptor: IMonoBehaviourAdaptor{
+		IWaypointCurveCycleManager GetWaypointsManager();
 	}
-	public class WaypointsManagerAdaptor : MonoBehaviourAdaptor, IWaypointsManagerAdaptor {
+	public class WaypointCurveCycleManagerAdaptor : MonoBehaviourAdaptor, IWaypointCurveCycleManagerAdaptor {
 		
 		public override void SetUp(){
 			MakeSureCycleStartIndexIsValid();
-			WaypointsManager.IConstArg arg = new WaypointsManager.ConstArg(
+			WaypointCurveCycleManager.IConstArg arg = new WaypointCurveCycleManager.ConstArg(
+				this,
 				reserve,
 				curvesCountInSequence,
 				initialCurvePosition,
 				initialCurveRotation,
 				cycleStartIndex
 			);
-			thisWaypointsManager = new WaypointsManager(arg);
+			thisWaypointsManager = new WaypointCurveCycleManager(arg);
 		}
 		void MakeSureCycleStartIndexIsValid(){
 			if(cycleStartIndex < 1){
@@ -26,8 +27,8 @@ namespace AppleShooterProto{
 				);
 			}
 		}
-		protected IWaypointsManager thisWaypointsManager;
-		public IWaypointsManager GetWaypointsManager(){
+		protected IWaypointCurveCycleManager thisWaypointsManager;
+		public IWaypointCurveCycleManager GetWaypointsManager(){
 			return thisWaypointsManager;
 		}
 		public Vector3 initialCurvePosition;

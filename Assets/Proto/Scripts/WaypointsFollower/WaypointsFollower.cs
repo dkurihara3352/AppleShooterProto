@@ -5,7 +5,7 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface IWaypointsFollower{
-		void SetWaypointsManager(IWaypointsManager wayointsManager);
+		void SetWaypointsManager(IWaypointCurveCycleManager wayointsManager);
 		float GetFollowSpeed();
 		void StartFollowing();
 		void StopFollowing();
@@ -38,10 +38,10 @@ namespace AppleShooterProto{
 		readonly IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisFollowSpeed;
 
-		public void SetWaypointsManager(IWaypointsManager waypointsManager){
+		public void SetWaypointsManager(IWaypointCurveCycleManager waypointsManager){
 			thisWaypointsManager = waypointsManager;
 		}
-		IWaypointsManager thisWaypointsManager;
+		IWaypointCurveCycleManager thisWaypointsManager;
 
 		public float GetFollowSpeed(){
 			return thisFollowSpeed;

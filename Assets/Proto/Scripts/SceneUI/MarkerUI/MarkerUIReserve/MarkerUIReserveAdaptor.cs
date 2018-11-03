@@ -7,15 +7,16 @@ namespace AppleShooterProto{
 		IMarkerUIReserve GetMarkerUIReserve();
 	}
 	public class MarkerUIReserveAdaptor : MonoBehaviourAdaptor, IMarkerUIReserveAdaptor {
-		IMarkerUIReserve thisReserve;
+		protected IMarkerUIReserve thisReserve;
 		public IMarkerUIReserve GetMarkerUIReserve(){
 			return thisReserve;
 		}
 		public override void SetUp(){
 			thisReserve = CreateReserve();
+			thisCanvas = CollectCanvas();
 			thisMarkerUIAdaptors = CreateMarkerUIAdaptors();
 		}
-		IMarkerUIReserve CreateReserve(){
+		protected virtual IMarkerUIReserve CreateReserve(){
 			MarkerUIReserve.IConstArg arg = new MarkerUIReserve.ConstArg(
 				this
 			);
@@ -28,6 +29,10 @@ namespace AppleShooterProto{
 			IMarkerUI[] markerUIs = CreateMarkerUIs();
 			thisReserve.SetSceneObjects(markerUIs);
 		}
+		Canvas thisCanvas;
+		Canvas CollectCanvas(){
+			return this.transform.GetComponentInParent<Canvas>();
+		}
 		IMarkerUIAdaptor[] thisMarkerUIAdaptors;
 		IMarkerUIAdaptor[] CreateMarkerUIAdaptors(){
 			List<IMarkerUIAdaptor> resultList = new List<IMarkerUIAdaptor>();
@@ -39,6 +44,7 @@ namespace AppleShooterProto{
 				markerUIAdaptor.SetIndex(i);
 				markerUIAdaptor.SetMarkerUIReserve(thisReserve);
 				markerUIAdaptor.SetCamera(uiCamera);
+				markerUIAdaptor.SetCanvas(thisCanvas);
 
 				markerUIAdaptor.SetUp();
 

@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IStaticShootingTargetReserve: ISceneObjectReserve<IStaticShootingTarget>{
 		void ActivateStaticShootingTargetAt(IShootingTargetSpawnPoint point);
+		IStaticShootingTarget[] GetStaticShootingTargets();
 	}
 	public class StaticShootingTargetReserve : AbsSceneObjectReserve<IStaticShootingTarget>, IStaticShootingTargetReserve {
 		public StaticShootingTargetReserve(
@@ -26,7 +27,11 @@ namespace AppleShooterProto{
 			);
 		}
 		public void ActivateStaticShootingTargetAt(IShootingTargetSpawnPoint point){
-			
+			IStaticShootingTarget target = GetNext();
+			target.ActivateAt(point);
+		}
+		public IStaticShootingTarget[] GetStaticShootingTargets(){
+			return thisSceneObjects;
 		}
 		/*  */
 			public new interface IConstArg: AbsSceneObject.IConstArg{}

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IMarkerUI: ISceneUI{
 		void SetMarkerUIReserve(IMarkerUIReserve reserve);
-		void OnResetAtReserve();
+		void OnDeactivationAnimationEnd();
 		void UpdateMarkerUI();
 	}
 	public class MarkerUI : AbsSceneUI, IMarkerUI {
@@ -20,7 +20,7 @@ namespace AppleShooterProto{
 			}
 		}
 		public override void DeactivateImple(){
-			base.DeactivateImple();
+			// base.DeactivateImple();
 			thisTypedAdaptor.TriggerDeactivationOnAnimator();
 		}
 		public override void ActivateImple(){
@@ -42,7 +42,9 @@ namespace AppleShooterProto{
 				thisProcess.Stop();
 			thisProcess = null;
 		}
-		public void OnResetAtReserve(){
+		public void OnDeactivationAnimationEnd(){
+			if(thisReserve != null)
+				Reserve();
 			StopMark();
 		}
 		public void UpdateMarkerUI(){

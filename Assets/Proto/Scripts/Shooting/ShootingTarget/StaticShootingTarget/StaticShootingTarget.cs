@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 			IStaticShootingTargetReserve reserve
 		);
 		void ActivateAt(IShootingTargetSpawnPoint point);
+		IShootingTargetSpawnPoint GetShootingTargetSpawnPoint();
 	}
 	public class StaticShootingTarget: AbsShootingTarget, IStaticShootingTarget{
 		public StaticShootingTarget(
@@ -24,7 +25,6 @@ namespace AppleShooterProto{
 		}
 		public override void SetIndex(int index){
 			base.SetIndex(index);
-			// thisTypedAdaptor.SetIndexOnTextMesh(index);
 		}
 		IStaticShootingTargetAdaptor thisTypedAdaptor{
 			get{
@@ -32,7 +32,11 @@ namespace AppleShooterProto{
 			}
 		}
 		IShootingTargetSpawnPoint thisSpawnPoint;
+		public IShootingTargetSpawnPoint GetShootingTargetSpawnPoint(){
+			return thisSpawnPoint;
+		}
 		public void ActivateAt(IShootingTargetSpawnPoint point){
+			Deactivate();
 			thisSpawnPoint = point;
 			point.SetTarget(this);
 			SetParent(point);
@@ -41,7 +45,7 @@ namespace AppleShooterProto{
 		}
 		public override void DeactivateImple(){
 			if(thisSpawnPoint != null)
-				thisSpawnPoint.SetTarget(null);
+				thisSpawnPoint.CheckAndClearTarget(this);
 			thisSpawnPoint = null;
 			base.DeactivateImple();
 		}

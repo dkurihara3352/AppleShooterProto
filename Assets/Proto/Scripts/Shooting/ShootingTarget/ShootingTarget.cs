@@ -34,6 +34,7 @@ namespace AppleShooterProto{
 				return (IShootingTargetAdaptor)thisAdaptor;
 			}
 		}
+		public IMarkerUIReserve thisMarkerUIReserve;
 		/* Activation */
 			IActivationStateEngine thisActivationStateEngine;
 			public bool IsActivated(){
@@ -46,6 +47,14 @@ namespace AppleShooterProto{
 				thisHealth = thisOriginalHealth;
 				thisTypedAdaptor.SetColor(thisDefaultColor);
 				thisTypedAdaptor.ToggleCollider(true);
+				thisPopUIReserve.PopText(
+					this,
+					GetHealthString()
+				);
+			}
+			string GetHealthString(){
+				string result = "health \n" + thisHealth.ToString();
+				return result;
 			}
 			public void Deactivate(){
 				thisActivationStateEngine.Deactivate();

@@ -16,7 +16,7 @@ namespace AppleShooterProto{
 		protected override IShootingTarget CreateShootingTarget(){
 			AbsShootingTarget.IConstArg arg = new AbsShootingTarget.ConstArg(
 				thisIndex,
-				thisHealth,
+				health,
 				thisDefaultColor,
 				this
 			);

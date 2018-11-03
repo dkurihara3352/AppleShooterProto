@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IDestroyedTarget: ISceneObject{
+	public interface IDestroyedTarget: ISceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void ActivateAt(IShootingTarget shootingTarget);
-		void Deactivate();
 		void SetPopUIReserve(IPopUIReserve reserve);
 		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
 		int GetIndex();
@@ -17,7 +16,9 @@ namespace AppleShooterProto{
 			arg
 		){
 			thisIndex = arg.index;
+			thisActivationStateEngine = new ActivationStateEngine(this);
 		}
+		IActivationStateEngine thisActivationStateEngine;
 		int thisIndex;
 		public int GetIndex(){
 			return thisIndex;
@@ -40,33 +41,27 @@ namespace AppleShooterProto{
 			SetRotation(rotation);
 			Activate();
 		}
-		bool thisIsInitialized = false;
-		bool thisIsActivated = false;
-		void Activate(){
-			if(thisIsActivated)
-				return;
-			ActivateImle();
+		public void Activate(){
+			thisActivationStateEngine.Activate();
 		}
-		void ActivateImle(){
+		public void ActivateImple(){
 			thisTypedAdaptor.StartDestruction();
 			thisPopUIReserve.PopText(
 				this,
 				"Destroyed"
 			);
 		}
+		public bool IsActivated(){
+			return thisActivationStateEngine.IsActivated();
+		}
 		public void Deactivate(){
-			if(thisIsInitialized && !thisIsActivated)
-				return;
-			DeactivateImple();
-			if(!thisIsInitialized)
-				thisIsInitialized = true;
-			thisIsActivated = false;
+			thisActivationStateEngine.Deactivate();
 		}
 		IDestroyedTargetReserve thisDestroyedTargetReserve;
 		public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
 			thisDestroyedTargetReserve = reserve;
 		}
-		void DeactivateImple(){
+		public void DeactivateImple(){
 			thisTypedAdaptor.StopDestruction();
 			thisDestroyedTargetReserve.Reserve(this);
 		}

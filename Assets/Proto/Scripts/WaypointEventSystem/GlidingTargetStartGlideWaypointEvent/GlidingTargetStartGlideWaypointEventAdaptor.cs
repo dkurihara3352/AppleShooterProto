@@ -13,15 +13,21 @@ namespace AppleShooterProto{
 		}
 		public float eventPoint;
 		public override void SetUp(){
+			thisEvent = CreateWaypointEvent();
+		}
+		public GlidingTargetStartGlideWaypointEvent CreateWaypointEvent(){
 			AbsWaypointEvent.IConstArg arg = new AbsWaypointEvent.ConstArg(
 				eventPoint
 			);
-			thisEvent = new GlidingTargetStartGlideWaypointEvent(arg);
+			return new GlidingTargetStartGlideWaypointEvent(arg);
 		}
-		public GlidingTargetAdaptor glidingTargetAdaptor;
+		public GlidingTargetReserveAdaptor glidingTargetReserveAdaptor;
+		public WaypointCurveCycleManagerAdaptor glidingTargetWaypointsManagerAdaptor;
+		public GlidingTargetWaypointCurveAdaptor glidingTargetWaypointCurveAdaptor;
 		public override void SetUpReference(){
-			IGlidingTarget target = (IGlidingTarget)glidingTargetAdaptor.GetShootingTarget();
-			thisEvent.SetGlidingTarget(target);
+			IGlidingTargetReserve reserve = glidingTargetReserveAdaptor.GetGlidingTargetReserve();
+			thisEvent.SetGlidingTargetReserve(reserve);
+			IGlidingTargetWaypointCurve curve = glidingTargetWaypointCurveAdaptor.GetGlidingTargetWaypointCurve();
 		}
 	}
 }

@@ -40,5 +40,17 @@ namespace AppleShooterProto{
 			);
 			return result;
 		}
+		protected Rect GetHorizontalSubRect(
+			Rect source,
+			int index,
+			int count
+		){
+			float width = source.width/ count;
+			float height = source.height;
+			float posX = (index * width) + source.position.x;
+			float posY = source.position.y;
+
+			return new Rect(posX, posY, width, height);
+		}
 	}
 }

@@ -35,8 +35,6 @@ namespace AppleShooterProto{
 
 			List<IDestroyedTargetAdaptor> resultList = new List<IDestroyedTargetAdaptor>();
 
-			IPopUIReserve popUIReserve =  popUIReserveAdaptor.GetPopUIReserve();
-
 			for(int i = 0; i < destroyedTargetsCount; i ++){
 
 				GameObject destroyedTargetGO = GameObject.Instantiate(
@@ -45,42 +43,13 @@ namespace AppleShooterProto{
 
 				IDestroyedTargetAdaptor adaptor = (IDestroyedTargetAdaptor)destroyedTargetGO.GetComponent(typeof(IDestroyedTargetAdaptor));
 
-				adaptor.SetPopUIReserve(popUIReserve);
+				adaptor.SetPopUIReserveAdaptor(popUIReserveAdaptor);
+				adaptor.SetDestroyedTargetReserveAdaptor(this);
 				adaptor.SetIndex(i);
-				adaptor.SetDestroyedTargetReserve(thisReserve);
 				adaptor.SetUp();
 
 				resultList.Add(adaptor);
 			}
-
-			return resultList.ToArray();
-		}
-		IDestroyedTarget[] Obs_CreateDestroyedTargets(){
-
-			List<IDestroyedTarget> resultList = new List<IDestroyedTarget>();
-			IPopUIReserve popUIReserve =  popUIReserveAdaptor.GetPopUIReserve();
-
-			List<IDestroyedTargetAdaptor> adaptorsList = new List<IDestroyedTargetAdaptor>();
-			for(int i = 0; i < destroyedTargetsCount; i ++){
-				GameObject destroyedTargetGO = GameObject.Instantiate(
-					destroyedTargetPrefab
-				);
-				IDestroyedTargetAdaptor adaptor = (IDestroyedTargetAdaptor)destroyedTargetGO.GetComponent(typeof(IDestroyedTargetAdaptor));
-				// adaptor.SetMonoBehaviourAdaptorManager(thisMonoBehaviourAdaptorManager);
-				adaptor.SetPopUIReserve(popUIReserve);
-				adaptor.SetIndex(i);
-				adaptor.SetDestroyedTargetReserve(thisReserve);
-
-				// adaptor.SetUp();
-				// adaptor.SetUpReference();
-
-				adaptorsList.Add(adaptor);
-
-				IDestroyedTarget target = adaptor.GetDestroyedTarget();
-				resultList.Add(target);
-			}
-
-			thisDestroyedTargetAdaptors = adaptorsList.ToArray();
 
 			return resultList.ToArray();
 		}

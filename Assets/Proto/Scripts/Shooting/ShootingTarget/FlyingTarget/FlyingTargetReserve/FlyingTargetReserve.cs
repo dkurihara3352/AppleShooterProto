@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IFlyingTargetReserve: ISceneObjectReserve<IFlyingTarget>{
-		void ActivateFlyingTargetAt(IFlyingTargetWaypoint[] waypoints);
+		void ActivateFlyingTargetAt(IFlyingTargetWaypointManager waypointManager);
 	}
 	public class FlyingTargetReserve : AbsSceneObjectReserve<IFlyingTarget>, IFlyingTargetReserve {
 		public FlyingTargetReserve(
@@ -12,10 +12,10 @@ namespace AppleShooterProto{
 		): base(arg){
 
 		}
-		public void ActivateFlyingTargetAt(IFlyingTargetWaypoint[] waypoints){
+		public void ActivateFlyingTargetAt(IFlyingTargetWaypointManager waypointManager){
 			IFlyingTarget target = GetNext();
 			target.Deactivate();
-			target.SetWaypoints(waypoints);
+			target.SetWaypointsManager(waypointManager);
 			target.Activate();
 		}
 		public override void Reserve(IFlyingTarget target){
@@ -24,7 +24,7 @@ namespace AppleShooterProto{
 			Vector2 reservedPosition = GetReservedLocalPosition(target.GetIndex());
 			target.SetLocalPosition(reservedPosition);
 
-			target.SetWaypoints(null);
+			target.SetWaypointsManager(null);
 		}
 		float thisReservedSpace = 4f;
 		Vector3 GetReservedLocalPosition(int index){

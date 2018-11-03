@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 		protected override IShootingTarget CreateShootingTarget(){
 			FlyingTarget.IConstArg arg = new FlyingTarget.ConstArg(
 				thisIndex,
-				thisHealth,
+				health,
 				thisDefaultColor,
 				this,
 				initialVelocity,
@@ -50,6 +50,7 @@ namespace AppleShooterProto{
 		}
 		public override void SetUpReference(){
 			base.SetUpReference();
+
 			ISmoothLooker looker = thisSmoothLookerAdaptor.GetSmoothLooker();
 			thisFlyingTarget.SetSmoothLooker(looker);
 

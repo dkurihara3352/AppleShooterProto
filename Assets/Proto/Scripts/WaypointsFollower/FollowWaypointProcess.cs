@@ -16,13 +16,14 @@ namespace AppleShooterProto{
 			thisFollower = arg.follower;
 			thisSpeed = arg.speed;
 			thisProcessOrder = arg.processOrder;
-			thisWaypointsManager = arg.waypointsManager;
+			thisCycleManager = arg.cycleManager;
 			thisWaypointEventManager = new WaypointEventManager();
 			SetNewCurve(
 				arg.initialCurve,
 				0f
 			);
-			thisWaypointEventManager.SetNewCurve(arg.initialCurve);
+			if(thisCycleManager != null)
+				thisWaypointEventManager.SetNewCurve(arg.initialCurve);
 		}
 		readonly IWaypointsFollower thisFollower;
 		readonly float thisSpeed;
@@ -30,7 +31,7 @@ namespace AppleShooterProto{
 		public override int GetProcessOrder(){
 			return thisProcessOrder;
 		}
-		readonly IWaypointsManager thisWaypointsManager;
+		readonly IWaypointCurveCycleManager thisCycleManager;
 		readonly IWaypointEventManager thisWaypointEventManager;
 		
 
@@ -51,18 +52,21 @@ namespace AppleShooterProto{
 		protected override void UpdateProcessImple(float deltaT){
 			thisTotalElapsedTimeOnCurrentCurve += deltaT;
 			if(RequiredTimeForCurrentCurveHasPassed()){
-				IWaypointCurve nextCurve = thisWaypointsManager.GetNextCurve(thisCurrentCurve);
-				if(nextCurve != null){
-					float residualTime = thisTotalElapsedTimeOnCurrentCurve - thisRequiredTimeForCurrentCurve;
-					SetNewCurve(
-						nextCurve,
-						residualTime
-					);
-					thisWaypointsManager.CycleCurve();
-					MoveFollower();
-				}else{
+				if(thisCycleManager != null){
+					IWaypointCurve nextCurve = thisCycleManager.GetNextCurve(thisCurrentCurve);
+					if(nextCurve != null){
+						float residualTime = thisTotalElapsedTimeOnCurrentCurve - thisRequiredTimeForCurrentCurve;
+						SetNewCurve(
+							nextCurve,
+							residualTime
+						);
+						thisCycleManager.CycleCurve();
+						MoveFollower();
+					}else{
+						Expire();
+					}
+				}else
 					Expire();
-				}
 			}else{
 				MoveFollower();
 			}
@@ -110,7 +114,7 @@ namespace AppleShooterProto{
 		float speed{get;}
 		int processOrder{get;}
 		IWaypointCurve initialCurve{get;}
-		IWaypointsManager waypointsManager{get;}
+		IWaypointCurveCycleManager cycleManager{get;}
 	}
 	public struct FollowWaypointProcessConstArg: IFollowWaypointProcessConstArg{
 		public FollowWaypointProcessConstArg(
@@ -119,7 +123,7 @@ namespace AppleShooterProto{
 			float speed,
 			int processOrder,
 			IWaypointCurve initialCurve,
-			IWaypointsManager waypointsManager
+			IWaypointCurveCycleManager waypointsManager
 		){
 			thisProcessManager = processManager;
 			thisFollower = follwer;
@@ -140,8 +144,8 @@ namespace AppleShooterProto{
 		public IWaypointCurve initialCurve{
 			get{return thisInitialCurve;}
 		}
-		readonly IWaypointsManager thisWaypointsManager;
-		public IWaypointsManager waypointsManager{get{return thisWaypointsManager;}}
+		readonly IWaypointCurveCycleManager thisWaypointsManager;
+		public IWaypointCurveCycleManager cycleManager{get{return thisWaypointsManager;}}
 	}
 	
 }

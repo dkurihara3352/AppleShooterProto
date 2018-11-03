@@ -43,12 +43,11 @@ namespace AppleShooterProto{
 			return new PopUI(arg);
 		}
 		public override void SetUp(){
-			base.SetUp();
 			thisGraphic = CollectGraphic();
 			thisOriginalColor  = thisGraphic.color;
 			thisChildGraphicOriginalColor = thisGraphic.color;
 			thisChildGraphicOriginalLocalPosition = thisGraphic.transform.localPosition;
-
+			base.SetUp();
 		}
 		IPopUIReserve thisPopUIReserve;
 		public override void SetUpReference(){

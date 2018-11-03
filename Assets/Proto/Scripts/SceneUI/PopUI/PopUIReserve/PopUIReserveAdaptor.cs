@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 
 		public override void SetUp(){
 			thisReserve = CreatePopUIReserve();
+			thisCanvas = CollectCanvas();
 			thisPopUIAdaptors = CreatePopUIAdaptors();
 		}
 		IPopUIReserve thisReserve;
@@ -32,6 +33,10 @@ namespace AppleShooterProto{
 		public int popUICount;
 		public GameObject popUIPrefab;
 		public Camera uiCamera;
+		Canvas thisCanvas;
+		Canvas CollectCanvas(){
+			return this.transform.GetComponentInParent<Canvas>();
+		}
 		IPopUIAdaptor[] thisPopUIAdaptors;
 		IPopUIAdaptor[] CreatePopUIAdaptors(){
 			List<IPopUIAdaptor> resultList = new List<IPopUIAdaptor>();
@@ -47,6 +52,7 @@ namespace AppleShooterProto{
 				popUIAdaptor.SetIndex(i);
 				popUIAdaptor.SetPopUIReserve(thisReserve);
 				popUIAdaptor.SetCamera(uiCamera);
+				popUIAdaptor.SetCanvas(thisCanvas);
 
 				popUIAdaptor.SetUp();
 

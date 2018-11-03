@@ -6,16 +6,26 @@ namespace AppleShooterProto{
 	public interface IGlidingTarget: IShootingTarget{
 		void SetWaypointsFollower(IWaypointsFollower follower);
 		void SetGlidingTargetReserve(IGlidingTargetReserve reserve);
-		// void SetWaypointCurveToFollow(IWaypointCurve curve);
-		void SetWaypointsManager(IWaypointsManager manager);
+		// void SetWaypointsManager(IGlidingTargetWaypointsManager manager);
+		// void SetWaypointCurve(IGlidingTargetWaypointCurve curve);
+		void ActivateAt(IGlidingTargetWaypointCurve curve);
 	}
 	public class GlidingTarget: AbsShootingTarget, IGlidingTarget{
 		public GlidingTarget(
 			AbsShootingTarget.IConstArg arg
 		): base(arg){}
 
+		public void ActivateAt(IGlidingTargetWaypointCurve curve){
+			Deactivate();
+			// SetWaypointsManager(manager);
+			SetWaypointCurve(curve);
+			Activate();
+		}
+
 		public override void DeactivateImple(){
 			base.DeactivateImple();
+			if(thisWaypointCurve != null)
+				thisWaypointCurve.CheckAndClearGlidingTarget(this);
 			StopGlide();
 		}
 		public override void ActivateImple(){
@@ -41,16 +51,19 @@ namespace AppleShooterProto{
 		protected override void ReserveSelf(){
 			thisGlidingTargetReserve.Reserve(this);
 		}
-		// public void SetWaypointCurveToFollow(IWaypointCurve curve){
-		// 	thisWaypointsFollower.SetWaypointCurve(curve);
-		// }
-		public void SetWaypointsManager(IWaypointsManager manager){
-			thisWaypointsFollower.SetWaypointsManager(manager);
-			manager.SetWaypointsFollower(thisWaypointsFollower);
-			// IWaypointCurve curve = manager.GetCurrentCurve();
-			IWaypointCurve firstCurveInSequence = manager.GetWaypointCurvesInSequence()[0];
-			thisWaypointsFollower.SetWaypointCurve(firstCurveInSequence);
+		IGlidingTargetWaypointCurve thisWaypointCurve;
+		public void SetWaypointCurve(IGlidingTargetWaypointCurve curve){
+			thisWaypointCurve = curve;
+			curve.SetGlidingTarget(this);
+			thisWaypointsFollower.SetWaypointCurve(curve);
 		}
+		// public void SetWaypointsManager(IGlidingTargetWaypointsManager manager){
+		// 	thisWaypointsFollower.SetWaypointsManager(manager);
+		// 	// manager.SetWaypointsFollower(thisWaypointsFollower);
+		// 	manager.SetGlidingTarget(this);
+		// 	IWaypointCurve firstCurveInSequence = manager.GetWaypointCurvesInSequence()[0];
+		// 	thisWaypointsFollower.SetWaypointCurve(firstCurveInSequence);
+		// }
 	}
 }
 

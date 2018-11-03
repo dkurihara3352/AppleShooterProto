@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void TriggerActivationOnAnimator();
 		void TriggerDeactivationOnAnimator();
 		void SetIndex(int index);
+		void OnDeactivationAnimationEnd();
 	}
 	[RequireComponent(typeof(Animator))]
 	public class MarkerUIAdaptor : AbsSceneUIAdaptor, IMarkerUIAdaptor {
@@ -72,9 +73,12 @@ namespace AppleShooterProto{
 				thisDeactivationHash
 			);
 		}
-		int thisIndex;
+		protected int thisIndex;
 		public void SetIndex(int index){
 			thisIndex = index;
+		}
+		public void OnDeactivationAnimationEnd(){
+			thisMarkerUI.OnDeactivationAnimationEnd();
 		}
 	}
 }

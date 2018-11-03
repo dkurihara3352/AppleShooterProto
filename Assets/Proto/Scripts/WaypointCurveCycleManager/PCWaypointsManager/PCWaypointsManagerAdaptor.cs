@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IPCWaypointsManagerAdaptor: IWaypointsManagerAdaptor{
+	public interface IPCWaypointsManagerAdaptor: IWaypointCurveCycleManagerAdaptor{
 		IPCWaypointsManager GetPCWaypointsManager();
 	}
-	public class PCWaypointsManagerAdaptor : WaypointsManagerAdaptor, IPCWaypointsManagerAdaptor {
+	public class PCWaypointsManagerAdaptor : WaypointCurveCycleManagerAdaptor, IPCWaypointsManagerAdaptor {
 		public override void SetUp(){
 			PCWaypointsManager.IConstArg arg = new PCWaypointsManager.ConstArg(
+				this,
 				reserve,
 				curvesCountInSequence,
 				initialCurvePosition,

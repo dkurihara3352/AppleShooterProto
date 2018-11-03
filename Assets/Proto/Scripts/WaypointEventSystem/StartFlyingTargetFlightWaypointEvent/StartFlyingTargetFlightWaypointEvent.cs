@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IStartFlyingTargetFlightWaypointEvent: IWaypointEvent{
-		void SetFlyingTarget(IFlyingTarget flyingTarget);
+	
+		void SetFlyingTargetWaypointManager(IFlyingTargetWaypointManager manager);
+		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);
 	}
 	public class StartFlyingTargetFlightWaypointEvent : AbsWaypointEvent, IStartFlyingTargetFlightWaypointEvent {
 		public StartFlyingTargetFlightWaypointEvent(
@@ -12,12 +14,16 @@ namespace AppleShooterProto{
 		): base(arg){
 
 		}
-		IFlyingTarget thisFlyingTarget;
-		public void SetFlyingTarget(IFlyingTarget target){
-			thisFlyingTarget = target;
+		IFlyingTargetWaypointManager thisWaypointManager;
+		public void SetFlyingTargetWaypointManager(IFlyingTargetWaypointManager manager){
+			thisWaypointManager = manager;
+		}
+		IFlyingTargetReserve thisReserve;
+		public void SetFlyingTargetReserve(IFlyingTargetReserve reserve){
+			thisReserve = reserve;
 		}
 		public override void Execute(){
-			thisFlyingTarget.Activate();
+			thisReserve.ActivateFlyingTargetAt(thisWaypointManager);
 		}
 	}
 }

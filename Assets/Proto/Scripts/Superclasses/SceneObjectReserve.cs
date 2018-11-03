@@ -20,11 +20,13 @@ namespace AppleShooterProto{
 		}
 		protected T[] thisSceneObjects;
 		int nextIndex = 0;
+		protected T thisCurrent;
 		protected T GetNext(){
 			T next = thisSceneObjects[nextIndex];
 			nextIndex ++;
 			if(nextIndex >= thisSceneObjects.Length)
 				nextIndex = 0;
+			thisCurrent = next;
 			return next;
 		}
 		public abstract void Reserve(T sceneObject);

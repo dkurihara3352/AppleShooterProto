@@ -28,13 +28,11 @@ namespace AppleShooterProto{
 		public int targetsCount;
 		public GameObject flyingTargetPrefab;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
-		public DestroyedTargetReserveAdaptor destoryedTargetReserveAdaptor;
+		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 		IFlyingTargetAdaptor[] thisFlyingTargetAdaptors;
 		IFlyingTargetAdaptor[] CreateFlyingTargetAdaptors(){
 			List<IFlyingTargetAdaptor> resultList = new List<IFlyingTargetAdaptor>();
 
-			IPopUIReserve popUIReserve = popUIReserveAdaptor.GetPopUIReserve();
-			IDestroyedTargetReserve destroyedTargetReserve = destoryedTargetReserveAdaptor.GetDestroyedTargetReserve();
 
 			for(int i = 0; i < targetsCount; i++){
 				GameObject targetGO = GameObject.Instantiate(
@@ -44,8 +42,8 @@ namespace AppleShooterProto{
 
 				targetAdaptor.SetFlyingTargetReserve(thisReserve);
 				targetAdaptor.SetIndex(i);
-				targetAdaptor.SetPopUIReserve(popUIReserve);
-				targetAdaptor.SetDestroyedTargetReserve(destroyedTargetReserve);
+				targetAdaptor.SetPopUIReserveAdaptor(popUIReserveAdaptor);
+				targetAdaptor.SetDestroyedTargetReserveAdaptor(destroyedTargetReserveAdaptor);
 				
 				targetAdaptor.SetUp();
 

@@ -16,6 +16,14 @@ namespace DKUtility{
 		public static void PrintInGreen(string text){
 			Debug.Log("<color=#00ff00ff>" + text + "</color>");
 		}
-		
+		public static string RedString(string text){
+			return "<color=#ff0000ff>" + text + "</color>";
+		}
+		public static string GreenString(string text){
+			return "<color=#00ff00ff>" + text + "</color>";
+		}
+		public static string BlueString(string text){
+			return "<color=#0000ffff>" + text + "</color>";
+		}
 	}
 }

@@ -33,9 +33,6 @@ namespace AppleShooterProto{
 		IStaticShootingTargetAdaptor[] thisStaticShootingTargetAdaptors;
 		public IStaticShootingTargetAdaptor[] CreateStaticShootingTargetAdaptors(){
 
-			IPopUIReserve popUIReserve = popUIReserveAdaptor.GetPopUIReserve();
-			IDestroyedTargetReserve destroyedTargetReserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
-
 			List<IStaticShootingTargetAdaptor> resultList = new List<IStaticShootingTargetAdaptor>();
 
 			for(int i = 0; i < totalTargetsCount; i ++){
@@ -48,8 +45,8 @@ namespace AppleShooterProto{
 
 				targetAdaptor.SetIndex(i);
 				targetAdaptor.SetStaticShootingTargetReserveAdaptor(this);
-				targetAdaptor.SetPopUIReserve(popUIReserve);
-				targetAdaptor.SetDestroyedTargetReserve(destroyedTargetReserve);
+				targetAdaptor.SetPopUIReserveAdaptor(popUIReserveAdaptor);
+				targetAdaptor.SetDestroyedTargetReserveAdaptor(destroyedTargetReserveAdaptor);
 
 				targetAdaptor.SetUp();
 

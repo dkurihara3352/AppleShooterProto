@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IWaypointsManager{
+	public interface IWaypointCurveCycleManager: ISceneObject{
 
 		void SetWaypointsFollower(IWaypointsFollower follower);
+		void CheckAndClearWaypointsFollower(IWaypointsFollower follower);
 		void SetWaypointCurves(List<IWaypointCurve> curves);
 
 		List<IWaypointCurve> GetWaypointCurvesInSequence();
@@ -25,9 +26,13 @@ namespace AppleShooterProto{
 		int GetCurrentCurveIDInSequence();
 	}
 
-	public class WaypointsManager : IWaypointsManager{
+	public class WaypointCurveCycleManager : AbsSceneObject, IWaypointCurveCycleManager{
 		/* SetUp */
-			public WaypointsManager(IConstArg arg){
+			public WaypointCurveCycleManager(
+				IConstArg arg
+			): base(
+				arg
+			){
 				thisCurveReservePointTransform = arg.curveReserveTransform;
 				thisCurveCountInSequence = arg.curvesCountInSequence;
 				thisInitialCurvePosition = arg.initialCurvePosition;
@@ -48,6 +53,11 @@ namespace AppleShooterProto{
 			}
 			public void SetWaypointsFollower(IWaypointsFollower follower){
 				thisFollower = follower;
+			}
+			public void CheckAndClearWaypointsFollower(IWaypointsFollower follower){
+				if(thisFollower != null)
+					if(thisFollower == follower)
+						thisFollower = null;
 			}
 			public float GetSpeed(){return thisFollower.GetFollowSpeed();}
 			List<IWaypointCurve> thisWaypointCurves;
@@ -234,21 +244,24 @@ namespace AppleShooterProto{
 				return thisCurveSequence.IndexOf(currentCurve);
 			}
 		/* Const */
-			public interface IConstArg{
+			public new interface IConstArg: AbsSceneObject.IConstArg{
 				Transform curveReserveTransform{get;}
 				int curvesCountInSequence{get;}
 				Vector3 initialCurvePosition{get;}
 				Quaternion initialCurveRotation{get;}
 				int cycleStartIndex{get;}
 			}
-			public struct ConstArg: IConstArg{
+			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
+					IWaypointCurveCycleManagerAdaptor adaptor,
 					Transform curveReserveTransform,
 					int curvesCountInSequence,
 					Vector3 initialPosition,
 					Quaternion initialRotation,
 					int cycleStartIndex
 
+				): base(
+					adaptor
 				){
 					thisCurveReserveTransform = curveReserveTransform;
 					thisCurvesCountInSequence = curvesCountInSequence;
@@ -274,6 +287,7 @@ namespace AppleShooterProto{
 				public int cycleStartIndex{get{return thisCycleStartIndex;}}
 			}
 		/*  */
+
 	}
 
 }

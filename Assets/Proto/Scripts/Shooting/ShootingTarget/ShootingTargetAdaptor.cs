@@ -5,10 +5,10 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IShootingTargetAdaptor: IMonoBehaviourAdaptor{
 		IShootingTarget GetShootingTarget();
-		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
-		void SetPopUIReserve(IPopUIReserve reserve);
+		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
+		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
 		void SetIndex(int index);
-		void SetHealth(float health);
+		// void SetHealth(float health);
 		void ToggleCollider(bool on);
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
@@ -35,11 +35,21 @@ namespace AppleShooterProto{
 		public IShootingTarget GetShootingTarget(){
 			return thisShootingTarget;
 		}
-
+		IDestroyedTargetReserveAdaptor thisDestroyedTargetReserveAdaptor;
+		public void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor){
+			thisDestroyedTargetReserveAdaptor = adaptor;
+		}
+		IPopUIReserveAdaptor thisPopUIReserveAdaptor;
+		public void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor){
+			thisPopUIReserveAdaptor = adaptor;
+		}
 		public override void SetUpReference(){
+			IDestroyedTargetReserve destroyedTargetReserve = thisDestroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
+			thisShootingTarget.SetDestroyedTargetReserve(destroyedTargetReserve);
+			
+			IPopUIReserve popUIReserve = thisPopUIReserveAdaptor.GetPopUIReserve();
+			thisShootingTarget.SetPopUIReserve(popUIReserve);
 
-			thisShootingTarget.SetDestroyedTargetReserve(thisDestroyedTargetReserve);
-			thisShootingTarget.SetPopUIReserve(thisPopUIReserve);
 		}
 		public override void FinalizeSetUp(){
 			thisShootingTarget.Deactivate();
@@ -58,10 +68,10 @@ namespace AppleShooterProto{
 		public void SetIndex(int index){
 			thisIndex = index;
 		}
-		protected float thisHealth;
-		public void SetHealth(float health){
-			thisHealth = health;
-		}
+		public float health;
+		// public void SetHealth(float health){
+		// 	thisHealth = health;
+		// }
 		/* Collider */
 		Collider thisCollider;
 		public void ToggleCollider( bool on){
