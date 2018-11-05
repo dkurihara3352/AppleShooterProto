@@ -40,8 +40,11 @@ namespace AppleShooterProto{
 		public void SetStaticShootingTargetReserveAdaptor(IStaticShootingTargetReserveAdaptor adaptor){
 			thisReserveAdaptor = adaptor;
 		}
+		public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
 		public override void SetUpReference(){
 			base.SetUpReference();
+			if(staticShootingTargetReserveAdaptor != null)
+				thisReserveAdaptor = staticShootingTargetReserveAdaptor;
 			IStaticShootingTargetReserve reserve = thisReserveAdaptor.GetStaticShootingTargetReserve();
 			thisStaticShootingTarget.SetStaticShootingTargetReserve(reserve);
 		}

@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 			ISceneObject targetSceneObject,
 			string text
 		);
+		IPopUI[] GetPopUIs();
 	}
 	public class PopUIReserve: AbsSceneObjectReserve<IPopUI>, IPopUIReserve{
 		public PopUIReserve(
@@ -57,11 +58,18 @@ namespace AppleShooterProto{
 			string text
 		){
 			IPopUI popUI = GetNext();
+			popUI.ActivateAt(
+				targetSceneObject,
+				text
+			);
 
-			popUI.SetTargetSceneObject(targetSceneObject);
-			popUI.SetText(text);
+			// popUI.SetTargetSceneObject(targetSceneObject);
+			// popUI.SetText(text);
 
-			popUI.Activate();
+			// popUI.Activate();
+		}
+		public IPopUI[] GetPopUIs(){
+			return thisSceneObjects;
 		}
 		/* Const */
 			public new interface IConstArg: AbsSceneObject.IConstArg{

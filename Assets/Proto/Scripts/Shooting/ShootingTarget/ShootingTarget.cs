@@ -8,12 +8,19 @@ namespace AppleShooterProto{
 		void AddLandedArrow(ILandedArrow landedArrow);
 		void RemoveLandedArrow(ILandedArrow landedArrow);
 		void DeactivateAllLandedArrows();
+		ILandedArrow[] GetLandedArrows();
 
 		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
 		void SetPopUIReserve(IPopUIReserve reserve);
 
+		void DeactivateAll();// called when curve is cycled
+
 		void SetIndex(int index);
 		int GetIndex();
+
+		void CheckAndClearDestroyedTarget(IDestroyedTarget target);
+		void SetDestroyedTarget(IDestroyedTarget target);
+		IDestroyedTarget GetDestroyedTarget();
 	}
 	public abstract class AbsShootingTarget : AbsSceneObject, IShootingTarget {
 		public AbsShootingTarget(
@@ -82,15 +89,31 @@ namespace AppleShooterProto{
 					IndicateHit(attack);
 				}
 			}
-			
-			IDestroyedTargetReserve thisDestroyedTargetReserve;
-			public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
-				thisDestroyedTargetReserve = reserve;
-			}
-			protected virtual void DestroyTarget(){
-				thisDestroyedTargetReserve.ActivateDestoryedTargetAt(this);
-				Deactivate();
-			}
+			/* DestroyedTarget */
+				IDestroyedTargetReserve thisDestroyedTargetReserve;
+				public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
+					thisDestroyedTargetReserve = reserve;
+				}
+				protected virtual void DestroyTarget(){
+					thisDestroyedTargetReserve.ActivateDestoryedTargetAt(this);
+					Deactivate();
+				}
+				IDestroyedTarget thisDestroyedTarget;
+				public void SetDestroyedTarget(IDestroyedTarget target){
+					thisDestroyedTarget = target;
+				}
+				public void CheckAndClearDestroyedTarget(IDestroyedTarget target){
+					if(thisDestroyedTarget == target)
+						thisDestroyedTarget = null;
+				}
+				public IDestroyedTarget GetDestroyedTarget(){
+					return thisDestroyedTarget;
+				}
+				void DeactivateDestroyedTarget(){
+					if(thisDestroyedTarget != null)
+						thisDestroyedTarget.Deactivate();
+				}
+			/*  */
 			readonly Color thisDefaultColor;
 			protected virtual void IndicateHealth(
 				float health,
@@ -118,7 +141,11 @@ namespace AppleShooterProto{
 			float CalculateHitMagnitude(float delta){
 				return delta/thisOriginalHealth;
 			}
+			/* Landed Arrows */
 			List<ILandedArrow> thisLandedArrows = new List<ILandedArrow>();
+			public ILandedArrow[] GetLandedArrows(){
+				return thisLandedArrows.ToArray();
+			}
 			public void AddLandedArrow(ILandedArrow arrow){
 				thisLandedArrows.Add(arrow);
 			}
@@ -143,6 +170,11 @@ namespace AppleShooterProto{
 			}
 			public int GetIndex(){
 				return thisIndex;
+			}
+			public void DeactivateAll(){
+				Deactivate();
+				DeactivateAllLandedArrows();
+				DeactivateDestroyedTarget();
 			}
 		/* Const */
 			public new interface IConstArg: AbsSceneObject.IConstArg{

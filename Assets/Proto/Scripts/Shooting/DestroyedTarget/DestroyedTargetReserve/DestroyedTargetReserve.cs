@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IDestroyedTargetReserve: ISceneObjectReserve<IDestroyedTarget>{
 		void ActivateDestoryedTargetAt(IShootingTarget target);
+		IDestroyedTarget[] GetTargets();
 	}
 	public class DestroyedTargetReserve: AbsSceneObjectReserve<IDestroyedTarget>, IDestroyedTargetReserve{
 		public DestroyedTargetReserve(
@@ -37,6 +38,9 @@ namespace AppleShooterProto{
 		public void ActivateDestoryedTargetAt(IShootingTarget target){
 			IDestroyedTarget nextTarget = GetNext();
 			nextTarget.ActivateAt(target);
+		}
+		public IDestroyedTarget[] GetTargets(){
+			return thisSceneObjects;
 		}
 		/* ConstArg */
 			public new interface IConstArg: AbsSceneObject.IConstArg{

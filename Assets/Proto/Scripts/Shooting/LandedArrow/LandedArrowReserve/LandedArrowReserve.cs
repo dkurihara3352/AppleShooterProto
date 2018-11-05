@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 			Vector3 position,
 			Quaternion rotation
 		);
+		ILandedArrow[] GetLandedArrows();
 	}
 	public class LandedArrowReserve : AbsSceneObjectReserve<ILandedArrow>, ILandedArrowReserve {
 		public LandedArrowReserve(
@@ -51,7 +52,9 @@ namespace AppleShooterProto{
 				rotation
 			);
 		}
-
+		public ILandedArrow[] GetLandedArrows(){
+			return thisSceneObjects;
+		}
 		/* Const */
 			public new interface IConstArg: AbsSceneObject.IConstArg{
 			}	

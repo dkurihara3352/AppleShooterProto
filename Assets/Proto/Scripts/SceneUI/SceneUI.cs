@@ -101,6 +101,7 @@ namespace AppleShooterProto{
 			public void Activate(){
 				thisActivationStateEngine.Activate();
 			}
+			
 			public virtual void ActivateImple(){
 				thisTypedAdaptor.BecomeChildToCanvas();
 			}
@@ -115,6 +116,7 @@ namespace AppleShooterProto{
 				return thisActivationStateEngine.IsActivated();
 			}
 		/*  */
+			
 		public Vector2 GetRectSize(){
 			return thisTypedAdaptor.GetRectSize();
 		}

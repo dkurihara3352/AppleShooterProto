@@ -6,8 +6,7 @@ namespace AppleShooterProto{
 	public interface IGlidingTarget: IShootingTarget{
 		void SetWaypointsFollower(IWaypointsFollower follower);
 		void SetGlidingTargetReserve(IGlidingTargetReserve reserve);
-		// void SetWaypointsManager(IGlidingTargetWaypointsManager manager);
-		// void SetWaypointCurve(IGlidingTargetWaypointCurve curve);
+		IGlidingTargetWaypointCurve GetGlidingTargetWaypointCurve();
 		void ActivateAt(IGlidingTargetWaypointCurve curve);
 	}
 	public class GlidingTarget: AbsShootingTarget, IGlidingTarget{
@@ -26,6 +25,7 @@ namespace AppleShooterProto{
 			base.DeactivateImple();
 			if(thisWaypointCurve != null)
 				thisWaypointCurve.CheckAndClearGlidingTarget(this);
+			thisWaypointCurve = null;
 			StopGlide();
 		}
 		public override void ActivateImple(){
@@ -57,13 +57,9 @@ namespace AppleShooterProto{
 			curve.SetGlidingTarget(this);
 			thisWaypointsFollower.SetWaypointCurve(curve);
 		}
-		// public void SetWaypointsManager(IGlidingTargetWaypointsManager manager){
-		// 	thisWaypointsFollower.SetWaypointsManager(manager);
-		// 	// manager.SetWaypointsFollower(thisWaypointsFollower);
-		// 	manager.SetGlidingTarget(this);
-		// 	IWaypointCurve firstCurveInSequence = manager.GetWaypointCurvesInSequence()[0];
-		// 	thisWaypointsFollower.SetWaypointCurve(firstCurveInSequence);
-		// }
+		public IGlidingTargetWaypointCurve GetGlidingTargetWaypointCurve(){
+			return thisWaypointCurve;
+		}
 	}
 }
 

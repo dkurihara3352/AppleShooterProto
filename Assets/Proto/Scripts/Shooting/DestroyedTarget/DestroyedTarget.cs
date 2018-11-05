@@ -8,6 +8,9 @@ namespace AppleShooterProto{
 		void SetPopUIReserve(IPopUIReserve reserve);
 		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
 		int GetIndex();
+		IShootingTarget GetShootingTarget();
+		void StopParticleSystem();
+
 	}
 	public class DestroyedTarget : AbsSceneObject, IDestroyedTarget {
 		public DestroyedTarget(
@@ -35,6 +38,9 @@ namespace AppleShooterProto{
 
 		public void ActivateAt(IShootingTarget target){
 			Deactivate();
+			thisTarget = target;
+			thisTarget.SetDestroyedTarget(this);
+					
 			Vector3 position = target.GetPosition();
 			Quaternion rotation = target.GetRotation();
 			SetPosition(position);
@@ -51,6 +57,10 @@ namespace AppleShooterProto{
 				"Destroyed"
 			);
 		}
+		IShootingTarget thisTarget;
+		public IShootingTarget GetShootingTarget(){
+			return thisTarget;
+		}
 		public bool IsActivated(){
 			return thisActivationStateEngine.IsActivated();
 		}
@@ -62,10 +72,16 @@ namespace AppleShooterProto{
 			thisDestroyedTargetReserve = reserve;
 		}
 		public void DeactivateImple(){
+			if(thisTarget != null)
+				thisTarget.CheckAndClearDestroyedTarget(this);
+			thisTarget = null;
 			thisTypedAdaptor.StopDestruction();
+			// thisTypedAdaptor.StopParticleSystem();
 			thisDestroyedTargetReserve.Reserve(this);
 		}
-
+		public void StopParticleSystem(){
+			thisTypedAdaptor.StopParticleSystem();
+		}
 		/* Const */
 			public new interface IConstArg: AbsSceneObject.IConstArg{
 				int index{get;}

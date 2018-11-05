@@ -71,8 +71,9 @@ namespace AppleShooterProto{
 			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints){
 				IStaticShootingTarget spawnedTarget = point.GetSpawnedTarget() as IStaticShootingTarget;
 				if(spawnedTarget != null){
-					point.SetTarget(null);
-					thisTargetReserve.Reserve(spawnedTarget);
+					// point.SetTarget(null);
+					// thisTargetReserve.Reserve(spawnedTarget);
+					spawnedTarget.DeactivateAll();
 				}
 			}
 		}

@@ -76,6 +76,7 @@ namespace AppleShooterProto{
 			}
 			public void StopDestruction(){
 				StopParticleProcess();
+				thisParticleSystem.Stop();
 			}
 		/* particle */
 			ParticleSystem thisParticleSystem;
@@ -83,7 +84,7 @@ namespace AppleShooterProto{
 				thisParticleSystem.Play();
 			}
 			public void StopParticleSystem(){
-				thisParticleSystem.Stop();
+				thisParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 			}
 		/* misc */
 

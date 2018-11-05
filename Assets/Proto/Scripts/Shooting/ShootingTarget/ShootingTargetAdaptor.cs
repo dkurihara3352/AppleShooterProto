@@ -36,14 +36,22 @@ namespace AppleShooterProto{
 			return thisShootingTarget;
 		}
 		IDestroyedTargetReserveAdaptor thisDestroyedTargetReserveAdaptor;
+		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 		public void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor){
 			thisDestroyedTargetReserveAdaptor = adaptor;
 		}
 		IPopUIReserveAdaptor thisPopUIReserveAdaptor;
+		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor){
 			thisPopUIReserveAdaptor = adaptor;
 		}
 		public override void SetUpReference(){
+
+			if(destroyedTargetReserveAdaptor != null)
+				thisDestroyedTargetReserveAdaptor = destroyedTargetReserveAdaptor;
+			if(popUIReserveAdaptor != null)
+				thisPopUIReserveAdaptor = popUIReserveAdaptor;
+				
 			IDestroyedTargetReserve destroyedTargetReserve = thisDestroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
 			thisShootingTarget.SetDestroyedTargetReserve(destroyedTargetReserve);
 			

@@ -22,12 +22,13 @@ namespace AppleShooterProto{
 			return new GlidingTargetStartGlideWaypointEvent(arg);
 		}
 		public GlidingTargetReserveAdaptor glidingTargetReserveAdaptor;
-		public WaypointCurveCycleManagerAdaptor glidingTargetWaypointsManagerAdaptor;
+		// public WaypointCurveCycleManagerAdaptor glidingTargetWaypointsManagerAdaptor;
 		public GlidingTargetWaypointCurveAdaptor glidingTargetWaypointCurveAdaptor;
 		public override void SetUpReference(){
 			IGlidingTargetReserve reserve = glidingTargetReserveAdaptor.GetGlidingTargetReserve();
 			thisEvent.SetGlidingTargetReserve(reserve);
 			IGlidingTargetWaypointCurve curve = glidingTargetWaypointCurveAdaptor.GetGlidingTargetWaypointCurve();
+			thisEvent.SetGlidingTargetWaypointCurve(curve);
 		}
 	}
 }

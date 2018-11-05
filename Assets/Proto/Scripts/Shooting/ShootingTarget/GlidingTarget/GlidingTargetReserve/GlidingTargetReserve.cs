@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IGlidingTargetReserve: ISceneObjectReserve<IGlidingTarget>{
 		// void ActivateGlidingTargetAt(IWaypointCurve waypointCurve);
+		IGlidingTarget[] GetGlidingTargets();
 		void ActivateGlidingTargetAt(IGlidingTargetWaypointCurve curve);
 	}
 	public class GlidingTargetReserve: AbsSceneObjectReserve<IGlidingTarget>, IGlidingTargetReserve{
@@ -28,6 +29,9 @@ namespace AppleShooterProto{
 		public void ActivateGlidingTargetAt(IGlidingTargetWaypointCurve curve){
 			IGlidingTarget nextTarget = GetNext();
 			nextTarget.ActivateAt(curve);
+		}
+		public IGlidingTarget[] GetGlidingTargets(){
+			return thisSceneObjects;
 		}
 		/* Const */
 			public new interface IConstArg: AbsSceneObject.IConstArg{}

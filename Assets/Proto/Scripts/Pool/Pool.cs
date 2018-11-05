@@ -7,6 +7,8 @@ namespace AppleShooterProto{
 		int Draw();
 		void Log();
 		void ClearLog();
+		int[] GetDrawResult();
+		int[] GetDrawCountsByIndex();
 	}
 	public class Pool: IPool{
 		public Pool(
@@ -48,11 +50,18 @@ namespace AppleShooterProto{
 			return thisProgressiveProbabilities.Length -1;
 		}
 		List<int> thisDrawResult = new List<int>();
-		public void Log(){
+		public int[] GetDrawResult(){
+			return thisDrawResult.ToArray();
+		}
+		public int[] GetDrawCountsByIndex(){
 			int[] drawCountsByIndex = new int[thisProgressiveProbabilities.Length];
 			foreach(int draw in thisDrawResult){
 				drawCountsByIndex[draw] += 1;
 			}
+			return drawCountsByIndex;
+		}
+		public void Log(){
+			int[] drawCountsByIndex = GetDrawCountsByIndex();
 			string overview = 
 				"pool draw result: " +
 				", total draw count: " + 

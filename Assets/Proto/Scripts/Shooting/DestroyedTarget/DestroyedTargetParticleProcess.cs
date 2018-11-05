@@ -14,13 +14,16 @@ namespace AppleShooterProto{
 			arg
 		){
 			thisAdaptor = arg.adaptor;
+			thisTarget = thisAdaptor.GetDestroyedTarget();
 		}
 		IDestroyedTargetAdaptor thisAdaptor;
+		IDestroyedTarget thisTarget;
 		protected override void RunImple(){
 			thisAdaptor.PlayParticleSystem();
 		}
 		protected override void StopImple(){
 			thisAdaptor.StopParticleSystem();
+			thisTarget.Deactivate();
 		}
 		/*  */
 		public interface IConstArg: IConstrainedProcessConstArg{

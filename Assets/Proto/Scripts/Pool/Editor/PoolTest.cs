@@ -28,4 +28,21 @@ public class PoolTest{
 		}
 		pool.Log();
 	}
+	[Test]
+	public void BellCurveTest_Various(){
+		IBellCurve curve = new BellCurve(
+			10f,
+			3f,
+			8f,
+			12f,
+			20
+		);
+
+		int numOfAttemp = 1000;
+
+		for(int i = 0; i < numOfAttemp; i ++)
+			curve.Evaluate();
+		
+		curve.Log();
+	}
 }

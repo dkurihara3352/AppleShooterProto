@@ -8,11 +8,16 @@ namespace AppleShooterProto{
 		void SetPopUIReserve(IPopUIReserve reserve);
 		void SetText(string text);
 		void Pop();
+		void ActivateAt(
+			ISceneObject targetObj,
+			string text
+		);
 
 		/* used by process */
 		void SetChildGraphicColor(Color color);
 		void SetChildGraphicLocalScale(Vector3 scale);
 		void SetChildGraphicLocalPosition(Vector3 position);
+		ISceneObject GetSceneObject();
 	
 	}
 	public class PopUI: AbsSceneUI, IPopUI{
@@ -33,15 +38,30 @@ namespace AppleShooterProto{
 				return (IPopUIAdaptor)thisAdaptor;
 			}
 		}
+		public void ActivateAt(
+			ISceneObject obj,
+			string text
+		){
+			Deactivate();
+			thisTargetObject = obj;
+			SetTargetSceneObject(obj);
+			SetText(text);
+			Activate();
+		}
 		public override void ActivateImple(){
 			base.ActivateImple();
 			Pop();
 		}
 		public override void DeactivateImple(){
 			base.DeactivateImple();
+			thisTargetObject = null;
 			StopMark();
 			StopGlide();
 
+		}
+		protected ISceneObject thisTargetObject;
+		public ISceneObject GetSceneObject(){
+			return thisTargetObject;
 		}
 		public void Pop(){
 			UpdateUI();
