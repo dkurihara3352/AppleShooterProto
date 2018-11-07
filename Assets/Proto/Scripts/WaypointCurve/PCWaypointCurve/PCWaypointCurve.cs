@@ -4,12 +4,9 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IPCWaypointCurve: IWaypointCurve{
-	/* Targets management */
-		void SetTargetSpawnManager(IShootingTargetSpawnManager targetSpawnManager);
-		void SpawnTargets();
+		void SetLevelSectionShootingTargetSpawner(ILevelSectionShootingTargetSpawner spawner);
+		void SetUpTargetSpawnEvents();
 		void DespawnTargets();
-		int[] GetSpawnIndices();
-		IShootingTarget[] GetSpawnedShootingTargets();
 		void SetSubordinateCurves(IWaypointCurve[] curves);
 	}
 	public class PCWaypointCurve: AbsWaypointCurve, IPCWaypointCurve{
@@ -17,22 +14,32 @@ namespace AppleShooterProto{
 		public override void OnReserve(){
 			DespawnTargets();
 		}
+
+		ILevelSectionShootingTargetSpawner thisSpawner;
+		public void SetLevelSectionShootingTargetSpawner(ILevelSectionShootingTargetSpawner spawner){
+			thisSpawner = spawner;
+		}
 		/* target Spawn */
-			IShootingTargetSpawnManager thisTargetSpawnManager;
-			public void SetTargetSpawnManager(IShootingTargetSpawnManager manager){
-				thisTargetSpawnManager = manager;
-			}
-			public void SpawnTargets(){
-				thisTargetSpawnManager.Spawn();
-			}
+			
 			public void DespawnTargets(){
-				thisTargetSpawnManager.Despawn();
+				// thisSpawner.Despawn();
 			}
-			public int[] GetSpawnIndices(){
-				return thisTargetSpawnManager.GetSpawnPointIndices();
+			IShootingTargetSpawnWaypointEvent[] thisSpawnEvents;
+			public override IWaypointEvent[] GetWaypointEvents(){
+				IWaypointEvent[] sceneWaypointEvents = thisWaypointEvents;
+				List<IWaypointEvent> allWaypointEvents = new List<IWaypointEvent>();
+				allWaypointEvents.AddRange(sceneWaypointEvents);
+				allWaypointEvents.AddRange(thisSpawnEvents);
+				WaypointEventComparer comparer = new WaypointEventComparer();
+				
+				allWaypointEvents.Sort(comparer);
+
+				return allWaypointEvents.ToArray();
 			}
-			public IShootingTarget[] GetSpawnedShootingTargets(){
-				return thisTargetSpawnManager.GetSpawnedShootingTargets();
+			public void SetUpTargetSpawnEvents(){
+				thisSpawner.SetUpSpawnWaypointEvents();
+				IShootingTargetSpawnWaypointEvent[] spawnEvents = thisSpawner.GetSpawnWaypointEvents();
+				thisWaypointEvents = spawnEvents;
 			}
 		/* CurveUpdate */
 			public override void CalculateCurve(){

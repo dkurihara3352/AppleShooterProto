@@ -3,27 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTargetReserveAdaptor: IMonoBehaviourAdaptor{
+	public interface IFlyingTargetReserveAdaptor: IShootingTargetReserveAdaptor{
 		IFlyingTargetReserve GetFlyingTargetReserve();
 	}
-	public class FlyingTargetReserveAdaptor: MonoBehaviourAdaptor, IFlyingTargetReserveAdaptor{
-		IFlyingTargetReserve thisReserve;
+	public class FlyingTargetReserveAdaptor: AbsShootingTargetReserveAdaptor, IFlyingTargetReserveAdaptor{
+		IFlyingTargetReserve thisTypedReserve{
+			get{
+				return (IFlyingTargetReserve)thisReserve;
+			}
+		}
 		public override void SetUp(){
 			thisReserve = CreateFlyingTargetReserve();
 			thisFlyingTargetAdaptors = CreateFlyingTargetAdaptors();
 		}
 		IFlyingTargetReserve CreateFlyingTargetReserve(){
 			FlyingTargetReserve.IConstArg arg = new FlyingTargetReserve.ConstArg(
-				this
+				this,
+				reservedSpace
 			);
 			return new FlyingTargetReserve(arg);
 		}
 		public IFlyingTargetReserve GetFlyingTargetReserve(){
-			return thisReserve;
+			return thisTypedReserve;
 		}
 		public override void SetUpReference(){
 			IFlyingTarget[] targets = CreateFlyingTargets();
-			thisReserve.SetSceneObjects(targets);
+			thisTypedReserve.SetSceneObjects(targets);
 		}
 		public int targetsCount;
 		public GameObject flyingTargetPrefab;
@@ -40,7 +45,7 @@ namespace AppleShooterProto{
 				);
 				IFlyingTargetAdaptor targetAdaptor = (IFlyingTargetAdaptor)targetGO.GetComponent(typeof(IFlyingTargetAdaptor));
 
-				targetAdaptor.SetFlyingTargetReserve(thisReserve);
+				targetAdaptor.SetFlyingTargetReserve(thisTypedReserve);
 				targetAdaptor.SetIndex(i);
 				targetAdaptor.SetPopUIReserveAdaptor(popUIReserveAdaptor);
 				targetAdaptor.SetDestroyedTargetReserveAdaptor(destroyedTargetReserveAdaptor);

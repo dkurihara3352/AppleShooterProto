@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IGlidingTargetReserveAdaptor: IMonoBehaviourAdaptor{
+	public interface IGlidingTargetReserveAdaptor: IShootingTargetReserveAdaptor{
 		IGlidingTargetReserve GetGlidingTargetReserve();
 	}
-	public class GlidingTargetReserveAdaptor : MonoBehaviourAdaptor, IGlidingTargetReserveAdaptor{
-		IGlidingTargetReserve thisReserve;
+	public class GlidingTargetReserveAdaptor : AbsShootingTargetReserveAdaptor, IGlidingTargetReserveAdaptor{
+		IGlidingTargetReserve thisTypedReserve{
+			get{
+				return (IGlidingTargetReserve)thisReserve;
+			}
+		}
 		public IGlidingTargetReserve GetGlidingTargetReserve(){
-			return thisReserve;
+			return thisTypedReserve;
 		}
 		public override void SetUp(){
 			thisReserve = CreateGlidingTargetReserve();
@@ -17,13 +21,14 @@ namespace AppleShooterProto{
 		}
 		IGlidingTargetReserve CreateGlidingTargetReserve(){
 			GlidingTargetReserve.IConstArg arg = new GlidingTargetReserve.ConstArg(
-				this
+				this,
+				reservedSpace
 			);
 			return new GlidingTargetReserve(arg);
 		}
 		public override void SetUpReference(){
 			IGlidingTarget[] glidingTargets = CreateGlidingTargets();
-			thisReserve.SetSceneObjects(glidingTargets);
+			thisTypedReserve.SetSceneObjects(glidingTargets);
 		}
 		IGlidingTargetAdaptor[] thisGlidingTargetAdaptors;
 
@@ -43,7 +48,7 @@ namespace AppleShooterProto{
 				IGlidingTargetAdaptor targetAdaptor = (IGlidingTargetAdaptor)targetGO.GetComponent(typeof(IGlidingTargetAdaptor));
 
 				targetAdaptor.SetIndex(i);
-				targetAdaptor.SetGlidingTargetReserve(thisReserve);
+				targetAdaptor.SetGlidingTargetReserve(thisTypedReserve);
 				targetAdaptor.SetPopUIReserveAdaptor(popUIReserveAdaptor);
 				targetAdaptor.SetDestroyedTargetReserveAdaptor(destroyedTargetReserveAdaptor);
 

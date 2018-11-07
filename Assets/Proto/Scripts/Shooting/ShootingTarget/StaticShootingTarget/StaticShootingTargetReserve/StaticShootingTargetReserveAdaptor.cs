@@ -4,27 +4,32 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IStaticShootingTargetReserveAdaptor: IMonoBehaviourAdaptor{
+	public interface IStaticShootingTargetReserveAdaptor: IShootingTargetReserveAdaptor{
 		IStaticShootingTargetReserve GetStaticShootingTargetReserve();
 	}
-	public class StaticShootingTargetReserveAdaptor : MonoBehaviourAdaptor, IStaticShootingTargetReserveAdaptor {
+	public class StaticShootingTargetReserveAdaptor : AbsShootingTargetReserveAdaptor, IStaticShootingTargetReserveAdaptor {
 		public override void SetUp(){
 			thisReserve = CreateStaticShootingTargetReserve();
 			thisStaticShootingTargetAdaptors = CreateStaticShootingTargetAdaptors();
 		}
-		IStaticShootingTargetReserve thisReserve;
+		IStaticShootingTargetReserve thisTypedReserve{
+			get{
+				return (IStaticShootingTargetReserve)thisReserve;
+			}
+		}
 		IStaticShootingTargetReserve CreateStaticShootingTargetReserve(){
 			StaticShootingTargetReserve.IConstArg arg = new StaticShootingTargetReserve.ConstArg(
-				this
+				this,
+				reservedSpace
 			);
 			return new StaticShootingTargetReserve(arg);
 		}
 		public IStaticShootingTargetReserve GetStaticShootingTargetReserve(){
-			return thisReserve;
+			return thisTypedReserve;
 		}
 		public override void SetUpReference(){
 			IStaticShootingTarget[] targets = CreateStaticShootingTargets();
-			thisReserve.SetSceneObjects(targets);
+			thisTypedReserve.SetSceneObjects(targets);
 		}
 		public int totalTargetsCount;
 		public GameObject staticShootingTargetPrefab;

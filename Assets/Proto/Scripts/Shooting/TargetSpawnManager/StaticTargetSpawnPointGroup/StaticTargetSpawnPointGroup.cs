@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPointGroup: ISceneObject{
-		IShootingTargetSpawnPoint[] GetShootingTargetSpawnPoints();
-		void SetShootingTargetSpawnPoints(IShootingTargetSpawnPoint[] points);
+	public interface IStaticTargetSpawnPointGroup: ISceneObject{
+		IStaticTargetSpawnPoint[] GetShootingTargetSpawnPoints();
+		void SetShootingTargetSpawnPoints(IStaticTargetSpawnPoint[] points);
 	}
-	public class ShootingTargetSpawnPointGroup : AbsSceneObject, IShootingTargetSpawnPointGroup {
+	public class ShootingTargetSpawnPointGroup : AbsSceneObject, IStaticTargetSpawnPointGroup {
 		
 		public ShootingTargetSpawnPointGroup(
 			IConstArg arg
 		): base(
 			arg
 		){}
-		IShootingTargetSpawnPoint[] thisSpawnPoints;
+		IStaticTargetSpawnPoint[] thisSpawnPoints;
 		public void SetShootingTargetSpawnPoints(
-			IShootingTargetSpawnPoint[] spawnPoints
+			IStaticTargetSpawnPoint[] spawnPoints
 		){
 			thisSpawnPoints = spawnPoints;
 		}
-		public IShootingTargetSpawnPoint[] GetShootingTargetSpawnPoints(){
+		public IStaticTargetSpawnPoint[] GetShootingTargetSpawnPoints(){
 			return thisSpawnPoints;
 		}
 
@@ -30,7 +30,7 @@ namespace AppleShooterProto{
 		}
 		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 			public ConstArg(
-				IShootingTargetSpawnPointGroupAdaptor adaptor
+				IStaticTargetSpawnPointGroupAdaptor adaptor
 			): base(
 				adaptor
 			){}

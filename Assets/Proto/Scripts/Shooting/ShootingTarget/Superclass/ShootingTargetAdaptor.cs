@@ -13,23 +13,41 @@ namespace AppleShooterProto{
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
 	}
-	[RequireComponent(typeof(Collider), typeof(MeshRenderer), typeof(Animator))]
+	[RequireComponent(/* typeof(Collider), typeof(MeshRenderer),  */typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: MonoBehaviourAdaptor, IShootingTargetAdaptor{
 		public override void SetUp(){
-			MeshRenderer meshRenderer = this.transform.GetComponent<MeshRenderer>();
+			MeshRenderer meshRenderer = CollectMeshRenderer();
 			thisMaterial = meshRenderer.material;
 			thisDefaultColor = thisMaterial.color;
 			
 			thisShootingTarget = CreateShootingTarget();
 
-			thisCollider = transform.GetComponent<Collider>();
+			thisCollider = CollectCollider();
 
-			thisAnimator = transform.GetComponent<Animator>();
+			thisAnimator = CollectAnimator();
 
 			thisHitTriggerHash = Animator.StringToHash("Hit");
 			thisHitMagnitudeHash = Animator.StringToHash("HitMagnitude");
 		}
-
+		public MeshRenderer modelMeshRenderer;
+		MeshRenderer CollectMeshRenderer(){
+			return modelMeshRenderer;
+			// int childCount = transform.childCount;
+			// for(int i = 0; i < childCount; i ++){
+			// 	Transform child = transform.GetChild(i);
+			// 	if(child.name == "model")
+			// 		return GetComponentInChildren<MeshRenderer>();
+			// }
+			// throw new System.InvalidOperationException(
+			// 	"there's no child with name 'model' that has MeshRenderer"
+			// );
+		}
+		BoxCollider CollectCollider(){
+			return GetComponentInChildren<BoxCollider>();
+		}
+		Animator CollectAnimator(){
+			return GetComponent<Animator>();
+		}
 		protected IShootingTarget thisShootingTarget;
 		protected abstract IShootingTarget CreateShootingTarget();
 		public IShootingTarget GetShootingTarget(){

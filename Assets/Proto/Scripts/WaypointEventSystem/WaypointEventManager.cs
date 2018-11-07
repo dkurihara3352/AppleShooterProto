@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		Queue<IWaypointEvent> thisCurrentWaypontCurveEvents;
 		public void SetNewCurve(IWaypointCurve curve){
 			thisCurrentCurve = curve;
-			List<IWaypointEvent> list = thisCurrentCurve.GetWaypointEvents();
+			IWaypointEvent[] list = thisCurrentCurve.GetWaypointEvents();
 			Queue<IWaypointEvent> result = new Queue<IWaypointEvent>();
 			foreach(IWaypointEvent waypointEvent in list){
 				result.Enqueue(waypointEvent);

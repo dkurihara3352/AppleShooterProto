@@ -4,7 +4,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IGlidingTargetStartGlideWaypointEvent: IWaypointEvent{
 		void SetGlidingTargetReserve(IGlidingTargetReserve reserve);
-		void SetGlidingTargetWaypointCurve(IGlidingTargetWaypointCurve curve);
+		void SetGlidingTargetSpawnPoint(IGlidingTargetSpawnPoint point);
 	}
 	public class GlidingTargetStartGlideWaypointEvent: AbsWaypointEvent, IGlidingTargetStartGlideWaypointEvent{
 		public GlidingTargetStartGlideWaypointEvent(
@@ -14,13 +14,13 @@ namespace AppleShooterProto{
 		public void SetGlidingTargetReserve(IGlidingTargetReserve reserve){
 			thisGlidingTargetReserve = reserve;
 		}
-		IGlidingTargetWaypointCurve thisWaypointCurve;
-		public void SetGlidingTargetWaypointCurve(IGlidingTargetWaypointCurve curve){
-			thisWaypointCurve = curve;
+		IGlidingTargetSpawnPoint thisGlidingTargetSpawnPoint;
+		public void SetGlidingTargetSpawnPoint(IGlidingTargetSpawnPoint point){
+			thisGlidingTargetSpawnPoint = point;
 		}
 		public override void Execute(){
-			thisGlidingTargetReserve.ActivateGlidingTargetAt(
-				thisWaypointCurve
+			thisGlidingTargetReserve.ActivateShootingTargetAt(
+				thisGlidingTargetSpawnPoint
 			);
 		}
 	}

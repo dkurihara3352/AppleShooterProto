@@ -23,7 +23,7 @@ namespace AppleShooterProto{
 			thisReserve = reserve;
 		}
 		public override void Execute(){
-			thisReserve.ActivateFlyingTargetAt(thisWaypointManager);
+			thisReserve.ActivateShootingTargetAt(thisWaypointManager);
 		}
 	}
 }

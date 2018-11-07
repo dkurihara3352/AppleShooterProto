@@ -3,47 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTargetReserve: ISceneObjectReserve<IFlyingTarget>{
-		void ActivateFlyingTargetAt(IFlyingTargetWaypointManager waypointManager);
+	public interface IFlyingTargetReserve: ISceneObjectReserve<IFlyingTarget>, IShootingTargetReserve{
+		IFlyingTarget[] GetFlyingTargets();
 	}
-	public class FlyingTargetReserve : AbsSceneObjectReserve<IFlyingTarget>, IFlyingTargetReserve {
+	public class FlyingTargetReserve : AbsShootingTargetReserve<IFlyingTarget>, IFlyingTargetReserve {
 		public FlyingTargetReserve(
 			IConstArg arg
 		): base(arg){
 
 		}
-		public void ActivateFlyingTargetAt(IFlyingTargetWaypointManager waypointManager){
+		public override void ActivateShootingTargetAt(IShootingTargetSpawnPoint point){
+			IFlyingTargetWaypointManager waypointManager = (IFlyingTargetWaypointManager)point;
 			IFlyingTarget target = GetNext();
-			target.Deactivate();
-			target.SetWaypointsManager(waypointManager);
-			target.Activate();
+			target.ActivateAt(waypointManager);
 		}
-		public override void Reserve(IFlyingTarget target){
-			target.SetParent(this);
-			target.ResetLocalTransform();
-			Vector2 reservedPosition = GetReservedLocalPosition(target.GetIndex());
-			target.SetLocalPosition(reservedPosition);
-
-			target.SetWaypointsManager(null);
+		public IFlyingTarget[] GetFlyingTargets(){
+			return thisSceneObjects;
 		}
-		float thisReservedSpace = 4f;
-		Vector3 GetReservedLocalPosition(int index){
-			float posX = index * thisReservedSpace;
-			return new Vector3(
-				posX,
-				0f,
-				0f
-			);
+		public override TargetType GetTargetType(){
+			return TargetType.Flier;
 		}
-		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
-			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
-				public ConstArg(
-					IFlyingTargetReserveAdaptor adaptor
-				): base(
-					adaptor
-				){}
-			}
 	}
 }

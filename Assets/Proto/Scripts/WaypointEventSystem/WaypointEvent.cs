@@ -22,7 +22,7 @@ namespace AppleShooterProto{
 		public interface IConstArg{
 			float eventPoint{get;}
 		}
-		public struct ConstArg: IConstArg{
+		public class ConstArg: IConstArg{
 			public ConstArg(
 				float eventPoint
 			){

@@ -40,8 +40,8 @@ namespace AppleShooterProto{
 		void SetIndex(int i);
 
 		/* Events */
-			List<IWaypointEvent> GetWaypointEvents();
-			void SetWaypointEvents(List<IWaypointEvent> events);
+			IWaypointEvent[] GetWaypointEvents();
+			void SetWaypointEvents(IWaypointEvent[] events);
 		/*  */
 			void PrintCurve();
 	}
@@ -207,11 +207,11 @@ namespace AppleShooterProto{
 				thisIndex = i;
 			}
 		/* Events */
-			public List<IWaypointEvent> GetWaypointEvents(){
+			public virtual IWaypointEvent[] GetWaypointEvents(){
 				return thisWaypointEvents;
 			}
-			List<IWaypointEvent> thisWaypointEvents;
-			public void SetWaypointEvents(List<IWaypointEvent> events){
+			protected IWaypointEvent[] thisWaypointEvents;
+			public void SetWaypointEvents(IWaypointEvent[] events){
 				thisWaypointEvents = events;
 			}
 		/* abs */

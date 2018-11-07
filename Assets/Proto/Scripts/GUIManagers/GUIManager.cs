@@ -126,120 +126,7 @@ namespace AppleShooterProto{
 				}
 				return result;
 			}
-			// void DrawSpawnedShootingTargets(){
-			// 	if(thisSystemIsReady){
-			// 		IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
-			// 		List<IPCWaypointCurve> allWaypointCurves = pcWaypointsManager.GetAllPCWaypointCurves();
-			// 		IStaticShootingTargetReserve targetReserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
-			// 		int waypointCurveCount = allWaypointCurves.Count;
-			// 		int rectsCount = waypointCurveCount + 1;
-			// 		foreach(IPCWaypointCurve curve in allWaypointCurves){
-			// 			Rect rect = GetSubRect(
-			// 				buttomLeftRect,
-			// 				allWaypointCurves.IndexOf(curve),
-			// 				rectsCount
-			// 			);
-			// 			DrawSpawnedShootingTargetsForCurve(
-			// 				curve,
-			// 				rect
-			// 			);
-			// 		}
-			// 		Rect lastRect = GetSubRect(
-			// 			buttomLeftRect,
-			// 			rectsCount -1,
-			// 			rectsCount
-			// 		);
-			// 		DrawReservedShootingTargets(
-			// 			lastRect
-			// 		);
-			// 	}
-			// }
-			void DrawSpawnedShootingTargetsForCurve(
-				IPCWaypointCurve curve,
-				Rect rect
-			){
-				IShootingTarget[] spawnedTargets = curve.GetSpawnedShootingTargets();
-				string indicesString = "";
-				foreach(IShootingTarget target in spawnedTargets){
-					indicesString += 
-					target.GetIndex().ToString() + ", ";
-				}
-				GUI.Label(
-					rect,
-					"curve " + 
-					curve.GetIndex() + ": " +
-					indicesString
-				);
-			}
-			// void DrawReservedShootingTargets(
-			// 	Rect rect
-			// ){
-			// 	IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
-			// 	ITestShootingTarget[] targetsInReserve = reserve.GetTestTargetsInReserve();
-			// 	string indicesString = "";
-			// 	foreach(ITestShootingTarget target in targetsInReserve){
-			// 		indicesString += target.GetIndex() + ", ";
-			// 	}
-			// 	GUI.Label(
-			// 		rect,
-			// 		"inReserve: " + indicesString
-			// 	);
-			// }
-			// void DrawLandedArrows(){
-			// 	if(thisSystemIsReady){
-			// 		ILandedArrowReserve landedArrowReserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
-			// 		ILandedArrow[] landedArrows = landedArrowReserve.GetLandedArrows();
-			// 		int rectsCount = landedArrows.Length;
-			// 		int index = 0;
-			// 		foreach(ILandedArrow landedArrow in landedArrows){
-			// 			Rect rect = GetSubRect(
-			// 				buttomLeftRect,
-			// 				index ++,
-			// 				rectsCount
-			// 			);
-			// 			DrawLandedArrow(
-			// 				landedArrow,
-			// 				rect
-			// 			);
-			// 		}
-			// 	}
-			// }
-			void DrawLandedArrow(
-				ILandedArrow arrow,
-				Rect rect
-			){
-				IShootingTarget target = arrow.GetShootingTarget();
-				IWaypointCurve waypointCurve = GetWaypointCurveFromShootingTarget(target);
 
-				int curveID = -1;
-				if(waypointCurve != null)
-					curveID = waypointCurve.GetIndex();
-				int arrowID = arrow.GetIndex();
-
-				string curveString;
-				if(waypointCurve == null)
-					curveString = "reserved";
-				else
-					curveString = "wpCurve " + curveID.ToString();
-
-				GUI.Label(
-					rect,
-					"landedArrow " + arrowID.ToString() + ": " +
-					curveString
-				);
-			}
-			IPCWaypointCurve GetWaypointCurveFromShootingTarget(IShootingTarget target){
-				IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
-				List<IPCWaypointCurve> waypointCurves = pcWaypointsManager.GetAllPCWaypointCurves();
-				foreach(IPCWaypointCurve curve in waypointCurves){
-					IShootingTarget[] shootingTargets = curve.GetSpawnedShootingTargets();
-					foreach(IShootingTarget spawnedTarget in shootingTargets)
-						if(spawnedTarget == target)
-							return curve;
-				}
-				/* reserved */
-				return null;
-			}
 		/* right */
 			bool thisGroupSequenceIsReady = false;
 			void DrawCurveSequence(Rect rect){
@@ -320,24 +207,6 @@ namespace AppleShooterProto{
 						"normPos: " + normalizedPosInCurve.ToString()
 					);
 				}
-			}
-			void DrawSpawnIndices(Rect rect){
-				if(thisSystemIsReady){
-					IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
-					IPCWaypointCurve currentCurve = pcWaypointsManager.GetCurrentPCCurve();
-					int[] indices = currentCurve.GetSpawnIndices();
-
-					string indicesString = "";
-					foreach(int i in indices){
-						indicesString += ", " + i.ToString();
-					}
-					GUI.Label(
-						rect,
-						indicesString
-					);
-				}
-
-				
 			}
 			void DrawShootingMetrics(Rect rect){
 				if(thisSystemIsReady){

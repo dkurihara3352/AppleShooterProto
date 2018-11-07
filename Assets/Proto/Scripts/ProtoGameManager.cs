@@ -57,7 +57,7 @@ namespace AppleShooterProto{
 
 			ActivateUISystem();
 			// GetTargetsReadyAtReserve();
-			SpawnTargetsOnFirstWaypointCurve();
+			SetUpWaypointEventsOnFirstWaypointCurve();
 
 			StartWaypointsFollower();//		100
 			StartCameraSmoothFollow();//	140
@@ -75,16 +75,12 @@ namespace AppleShooterProto{
 			IUIManager uim = uiManagerAdaptor.GetUIManager();
 			uim.ActivateUISystem(false);
 		}
-		public void SpawnTargetsOnFirstWaypointCurve(){
+		public void SetUpWaypointEventsOnFirstWaypointCurve(){
 			IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			IPCWaypointCurve firstWaypointCurve = pcWaypointsManager.GetPCWaypointCurvesInSequence()[0];
-			firstWaypointCurve.SpawnTargets();
+			firstWaypointCurve.SetUpTargetSpawnEvents();
 		}
 
-		// public void GetTargetsReadyAtReserve(){
-		// 	IStaticShootingTargetReserve reserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
-		// 	reserve.GetTargetsReadyInReserve();
-		// }
 		public void StartWaypointsFollower(){
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 			follower.StartFollowing();

@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IFlyingTarget: IShootingTarget{
-		void SetWaypointsManager(IFlyingTargetWaypointManager waypointsManager);
 		void SetSmoothLooker(ISmoothLooker looker);
 		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);
 		void SetUpWaypoints();
 		IFlyingTargetWaypoint GetCurrentWaypoint();
+
+		void ActivateAt(IFlyingTargetWaypointManager waypointManager);
 		void SetUpNextWaypoint();
 
 		int[] GetWaypointsInSequenceIndices();
@@ -34,6 +35,11 @@ namespace AppleShooterProto{
 		ISmoothLooker thisSmoothLooker;
 		public void SetSmoothLooker(ISmoothLooker looker){
 			thisSmoothLooker = looker;
+		}
+		public void ActivateAt(IFlyingTargetWaypointManager waypointManager){
+			Deactivate();
+			SetWaypointsManager(waypointManager);
+			Activate();
 		}
 
 		public override void ActivateImple(){

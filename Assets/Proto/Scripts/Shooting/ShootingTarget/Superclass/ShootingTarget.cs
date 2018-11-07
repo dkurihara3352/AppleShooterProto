@@ -131,7 +131,7 @@ namespace AppleShooterProto{
 				float delta
 			){
 				float hitMagnitude = CalculateHitMagnitude(delta);
-				thisTypedAdaptor.PlayHitAnimation(delta);
+				thisTypedAdaptor.PlayHitAnimation(hitMagnitude);
 				int deltaInt = Mathf.RoundToInt(delta);
 				thisPopUIReserve.PopText(
 					this,

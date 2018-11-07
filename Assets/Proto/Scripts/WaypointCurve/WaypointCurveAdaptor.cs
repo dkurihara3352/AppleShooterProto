@@ -232,11 +232,11 @@ namespace AppleShooterProto{
 			}
 		/*  */
 		public override void SetUpReference(){
-			List<IWaypointEvent> waypointEvents = CollectWaypointEvents();
+			IWaypointEvent[] waypointEvents = CollectWaypointEvents();
 			thisWaypointCurve.SetWaypointEvents(waypointEvents);
 		}
-		List<IWaypointEvent> CollectWaypointEvents(){
-			List<IWaypointEvent> result = new List<IWaypointEvent>();
+		IWaypointEvent[] CollectWaypointEvents(){
+			List<IWaypointEvent> resultList = new List<IWaypointEvent>();
 			List<IWaypointEventAdaptor> adaptors = new List<IWaypointEventAdaptor>();
 			Component[] components = this.transform.GetComponents(typeof(Component));
 			foreach(Component component in components){
@@ -246,11 +246,11 @@ namespace AppleShooterProto{
 
 			if(adaptors != null){
 				foreach(IWaypointEventAdaptor adaptor in adaptors)
-					result.Add(adaptor.GetWaypointEvent());
+					resultList.Add(adaptor.GetWaypointEvent());
 				IWaypointEventComparer comparer = new WaypointEventComparer();
-				result.Sort(comparer);
+				resultList.Sort(comparer);
 			}
-			return result;
+			return resultList.ToArray();
 		}
 	}
 	public interface IWaypointEventComparer: IComparer<IWaypointEvent>{

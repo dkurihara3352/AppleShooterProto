@@ -10,8 +10,8 @@ namespace AppleShooterProto{
 		void SetIndex(int index);
 		int GetIndex();
 	}
-	public class ShootingTargetSpawnPoint: AbsSceneObject, IShootingTargetSpawnPoint {
-		public ShootingTargetSpawnPoint(
+	public abstract class AbsShootingTargetSpawnPoint: AbsSceneObject, IShootingTargetSpawnPoint{
+		public AbsShootingTargetSpawnPoint(
 			IConstArg arg
 		): base(
 			arg
@@ -34,17 +34,6 @@ namespace AppleShooterProto{
 		}
 		public int GetIndex(){
 			return thisIndex;
-		}
-		/*  */
-		public new interface IConstArg: AbsSceneObject.IConstArg{
-		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
-			public ConstArg(
-				IShootingTargetSpawnPointAdaptor adaptor
-			): base(
-				adaptor
-			){
-			}
 		}
 	}
 }

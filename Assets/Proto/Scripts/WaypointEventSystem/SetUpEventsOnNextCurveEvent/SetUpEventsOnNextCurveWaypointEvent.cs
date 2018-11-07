@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ITargetSpawnWaypointEvent: IWaypointEvent{
+	public interface ISetUpEventsOnNextCurveWaypointEvent: IWaypointEvent{
 		void SetPCWaypointsManager(IPCWaypointsManager pcWaypointsManager);
 	}
-	public class TargetSpawnWaypointEvent : AbsWaypointEvent, ITargetSpawnWaypointEvent {
-		public TargetSpawnWaypointEvent(
+	public class SetUpEventsOnNextCurveWaypointEvent : AbsWaypointEvent, ISetUpEventsOnNextCurveWaypointEvent {
+		public SetUpEventsOnNextCurveWaypointEvent(
 			IConstArg arg
 		): base(arg){
 			
@@ -18,7 +18,7 @@ namespace AppleShooterProto{
 		}
 		public override void Execute(){
 			IPCWaypointCurve nextCurve = thisPCWaypointsManager.GetNextPCCurve();
-			nextCurve.SpawnTargets();
+			nextCurve.SetUpTargetSpawnEvents();
 		}
 	}
 }

@@ -120,7 +120,7 @@ namespace AppleShooterProto{
 						if(hasHit){
 							Transform hitTrans = hit.transform;
 							hitPosition = hit.point;
-							IShootingTargetAdaptor targetAdaptor = hitTrans.GetComponent(typeof(IShootingTargetAdaptor)) as IShootingTargetAdaptor;
+							IShootingTargetAdaptor targetAdaptor = hitTrans.GetComponentInParent(typeof(IShootingTargetAdaptor)) as IShootingTargetAdaptor;
 							if(targetAdaptor == null)
 								throw new System.InvalidOperationException(
 									"hitTrans seems not to have IShootingTargetAdaptor"
