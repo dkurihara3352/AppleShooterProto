@@ -39,7 +39,7 @@ namespace AppleShooterProto{
 			public void SetUpTargetSpawnEvents(){
 				thisSpawner.SetUpSpawnWaypointEvents();
 				IShootingTargetSpawnWaypointEvent[] spawnEvents = thisSpawner.GetSpawnWaypointEvents();
-				thisWaypointEvents = spawnEvents;
+				thisSpawnEvents = spawnEvents;
 			}
 		/* CurveUpdate */
 			public override void CalculateCurve(){

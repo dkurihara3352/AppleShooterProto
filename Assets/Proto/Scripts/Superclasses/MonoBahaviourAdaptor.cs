@@ -28,6 +28,7 @@ namespace AppleShooterProto{
 		void SetParent(Transform parent);
 		void ResetLocalTransform();
 		Vector3 GetForwardDirection();
+		bool IsEnabled();
 	}
 	public abstract class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -132,6 +133,9 @@ namespace AppleShooterProto{
 		}
 		public Vector3 GetForwardDirection(){
 			return this.transform.forward;
+		}
+		public bool IsEnabled(){
+			return this.enabled;
 		}
 	}
 }

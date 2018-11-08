@@ -29,6 +29,7 @@ namespace AppleShooterProto{
 			}
 			public void OnDrawGizmos(){
 				DrawHandles();
+				DrawSelf();
 			}
 			public void Update(){
 				if(!UnityEditor.EditorApplication.isPlaying){
@@ -40,6 +41,11 @@ namespace AppleShooterProto{
 
 		protected abstract void InitializeHandles();
 		protected abstract void DrawHandles();
+		public Color pointColor;
+		void DrawSelf(){
+			Gizmos.color = pointColor;
+			Gizmos.DrawCube(this.transform.position, Vector3.one);
+		}
 		protected abstract void LockTransform();
 		protected void LockHandle(Transform handle){
 			float originalZ = handle.transform.localPosition.z;

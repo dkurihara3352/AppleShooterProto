@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 
 		}
 		public override void ActivateShootingTargetAt(IShootingTargetSpawnPoint point){
-			IFlyingTargetWaypointManager waypointManager = (IFlyingTargetWaypointManager)point;
+			IFlyingTargetWaypointManager waypointManager = ((IFlyingTargetSpawnPoint)point).GetWaypointManager();
 			IFlyingTarget target = GetNext();
 			target.ActivateAt(waypointManager);
 		}

@@ -14,7 +14,8 @@ namespace AppleShooterProto{
 		){
 			thisPopUI = arg.popUI;
 			thisPopMode = arg.popMode;
-			thisGlideDistance = arg.glideDistance;
+			thisMinGlideDistance = arg.minGlideDistance;
+			thisMaxGlideDistance = arg.maxGlideDistance;
 			thisNormalizedDistanceCurve = arg.normalizedDistanceCurve;
 			thisAlphaCurve = arg.alphaCurve;
 			thisScaleCurve = arg.scaleCurve;
@@ -25,7 +26,8 @@ namespace AppleShooterProto{
 		}
 		readonly IPopUI thisPopUI;
 		readonly PopUIAdaptor.PopMode thisPopMode;
-		readonly float thisGlideDistance;
+		readonly float thisMaxGlideDistance;
+		readonly float thisMinGlideDistance;
 		readonly AnimationCurve thisNormalizedDistanceCurve;
 		readonly AnimationCurve thisAlphaCurve;
 		readonly AnimationCurve thisScaleCurve;
@@ -50,7 +52,13 @@ namespace AppleShooterProto{
 				return;
 						
 			float normalizedDistance = thisNormalizedDistanceCurve.Evaluate(thisNormalizedTime);
-			Vector2 displacement = normalizedDistance * thisGlideDirection * thisGlideDistance;
+			float normalizedSqrDistanceOfUIToCam = thisPopUI.GetNormalizedSqrDist();
+			float glideDistance = Mathf.Lerp(
+				thisMaxGlideDistance,
+				thisMinGlideDistance,
+				normalizedSqrDistanceOfUIToCam
+			);
+			Vector2 displacement = normalizedDistance * thisGlideDirection * glideDistance;
 
 			Vector2 newPosition = thisInitialPosition + displacement;
 
@@ -97,7 +105,9 @@ namespace AppleShooterProto{
 			public interface IConstArg: IConstrainedProcessConstArg{
 				IPopUI popUI{get;}
 				PopUIAdaptor.PopMode popMode{get;}
-				float glideDistance{get;}
+				// float glideDistance{get;}
+				float minGlideDistance{get;}
+				float maxGlideDistance{get;}
 				AnimationCurve normalizedDistanceCurve{get;}
 				AnimationCurve alphaCurve{get;}
 				AnimationCurve scaleCurve{get;}
@@ -108,7 +118,9 @@ namespace AppleShooterProto{
 				public ConstArg(
 					IPopUI popUI,
 					PopUIAdaptor.PopMode popMode,
-					float glideDistance,
+					// float glideDistance,
+					float minGlideDistance,
+					float maxGlideDistance,
 					AnimationCurve normalizedDistanceCurve,
 					AnimationCurve alhpaCurve,
 					AnimationCurve scaleCurve,
@@ -125,7 +137,9 @@ namespace AppleShooterProto{
 				){
 					thisPopUI = popUI;
 					thisPopMode = popMode;
-					thisGlideDistance = glideDistance;
+					// thisGlideDistance = glideDistance;
+					thisMinGlideDistance = minGlideDistance;
+					thisMaxGlideDistance = maxGlideDistance;
 					thisNormalizedDistanceCurve = normalizedDistanceCurve;
 					thisAlphaCurve = alhpaCurve;
 					thisScaleCurve = scaleCurve;
@@ -144,10 +158,14 @@ namespace AppleShooterProto{
 						return thisPopMode;
 					}
 				}
-				readonly float thisGlideDistance;
-				public float glideDistance{
+				readonly float thisMinGlideDistance;
+				public float minGlideDistance{
+					get{return thisMinGlideDistance;}
+				}
+				readonly float thisMaxGlideDistance;
+				public float maxGlideDistance{
 					get{
-						return thisGlideDistance;
+						return thisMaxGlideDistance;
 					}
 				}
 				readonly AnimationCurve thisNormalizedDistanceCurve;

@@ -25,5 +25,11 @@ namespace DKUtility{
 		public static string BlueString(string text){
 			return "<color=#0000ffff>" + text + "</color>";
 		}
+		public static string GetIndicesString(int[] indices){
+			string result = "";
+			foreach(int i in indices)
+				result += i.ToString() + ", ";
+			return result;
+		}
 	}
 }

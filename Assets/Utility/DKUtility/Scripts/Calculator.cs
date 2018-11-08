@@ -47,8 +47,14 @@ namespace DKUtility{
 		static int GetRandomInt(
 			ref int[] unused
 		){
-			int randomIndex = Random.Range(0, unused.Length);
-			int result = unused[randomIndex];
+			int result;
+			// Debug.Log(GetIndicesString(unused));
+			if(unused.Length > 1){
+				int randomIndex = Random.Range(0, unused.Length);
+				result = unused[randomIndex];
+			}else
+				result = unused[0];
+
 			int[] newUnused = CreateNewUnused(unused, result);
 			unused = newUnused;
 			return result;
@@ -64,6 +70,12 @@ namespace DKUtility{
 				}
 			}
 			return result.ToArray();
+		}
+		static string GetIndicesString(int[] indices){
+			string result = "";
+			foreach(int i in indices)
+				result += i.ToString() + ", ";
+			return result.ToString();
 		}
 	}
 }

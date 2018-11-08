@@ -50,6 +50,7 @@ namespace AppleShooterProto{
 					pairs
 				);
 				entriesList.Add(entry);
+				typeIndex ++;
 			}
 			TargetSpawnData.Entry[] entries = entriesList.ToArray();
 			return new TargetSpawnData(entries);
@@ -84,13 +85,19 @@ namespace AppleShooterProto{
 				int targetTypeIndex = thisIndexPool.Draw();
 				TargetSpawnDataInput input = thisDataInput[targetTypeIndex];
 				int numToCreate = numToCreateArray[targetTypeIndex];
+				// Debug.Log("max: " + input.maxCount.ToString() + ", " + "numToCreate: "+ numToCreate.ToString());
 				if(input.maxCount > numToCreate){
+					// Debug.Log("eval");
 					numToCreate ++;
 					numToCreateArray[targetTypeIndex] = numToCreate;
 					float spawnValue = spawnValues[targetTypeIndex];
 					sumOfSpawnValue += spawnValue;
+					// Debug.Log(
+					// 	"numToCreateArray #" + targetTypeIndex.ToString() +": " + numToCreate.ToString()
+					// );
 				}
 			}
+			// Debug.Log("numToCreateArray: " + DKUtility.DebugHelper.GetIndicesString(numToCreateArray));
 			return numToCreateArray;
 		}
 

@@ -57,7 +57,7 @@ namespace AppleShooterProto{
 			for(int i = 0; i < childCount; i++){
 				Transform child = transform.GetChild(i);
 				IWaypointCurveAdaptor curveAdaptor = (IWaypointCurveAdaptor)child.GetComponent(typeof(IWaypointCurveAdaptor));
-				if(curveAdaptor != null)
+				if(curveAdaptor != null && curveAdaptor.IsEnabled())
 					result.Add(curveAdaptor.GetWaypointCurve());
 			}
 			foreach(IWaypointCurve curve in result){

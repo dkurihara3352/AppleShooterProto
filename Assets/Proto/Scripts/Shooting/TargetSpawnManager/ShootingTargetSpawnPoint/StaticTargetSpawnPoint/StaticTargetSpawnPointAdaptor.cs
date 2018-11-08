@@ -5,7 +5,7 @@ namespace AppleShooterProto{
 	public interface IStaticTargetSpawnPointAdaptor: IShootingTargetSpawnPointAdaptor{
 		IStaticTargetSpawnPoint GetStaticTargetSpawnPoint();
 	}
-	public class ShootingTargetSpawnPointAdaptor : AbsShootingTargetSpawnPointAdaptor, IStaticTargetSpawnPointAdaptor {
+	public class StaticTargetSpawnPointAdaptor : AbsShootingTargetSpawnPointAdaptor, IStaticTargetSpawnPointAdaptor {
 
 		public override void SetUp(){
 			thisSpawnPoint = CreateSpawnPoint();

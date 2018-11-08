@@ -91,6 +91,13 @@ namespace AppleShooterProto{
 					gameManager.RunSystem();			
 					thisSystemIsReady = true;
 				}
+
+				if(GUI.Button(
+					sTL_3,
+					"CalcCurve"
+				)){
+					CalcCurveOnGliderSpawnPointGroup();
+				}
 			}
 			void DrawArrowsState(){
 				if(thisSystemIsReady){
@@ -226,6 +233,16 @@ namespace AppleShooterProto{
 					);
 				}
 			}
+			public GlidingTargetSpawnPointGroupAdaptor glidingTargetSpawnPointGroupAdaptor;
+			void CalcCurveOnGliderSpawnPointGroup(){
+				IGlidingTargetSpawnPointGroup group = glidingTargetSpawnPointGroupAdaptor.GetGroup();
+				IGlidingTargetSpawnPoint[] spawnPoints = group.GetSpawnPoints();
+				foreach(IGlidingTargetSpawnPoint point in spawnPoints){
+					IGlidingTargetWaypointCurve curve = point.GetGlidingTargetWaypointCurve();
+					curve.CalculateCurve();
+				}
+			}
+
 		/*  */
 	}
 }

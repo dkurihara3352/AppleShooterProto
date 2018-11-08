@@ -73,10 +73,8 @@ namespace AppleShooterProto{
 			thisArrowReserve = arrowReserveAdaptor.GetArrowReserve();
 			thisGlidingTargetWaypointCurve  = glidingTargetWaypointCurveAdaptor.GetGlidingTargetWaypointCurve();
 			thisGlidingTargetReserve = glidingTargetReserveAdaptor.GetGlidingTargetReserve();
-			thisGlidingTargetWaypointCurvePool = glidingTargetWaypointCurvePoolAdaptor.GetSceneObjectPool();
-			thisShootingTargetSpawnPointPool = shootingTargetSpawnPointPoolAdaptor.GetSceneObjectPool();
 			thisStaticShootingTargetReserve = staticShootingTargetReserveAdaptor.GetStaticShootingTargetReserve();
-			thisShootingTargetSpawnPointGroup = shootingTargetSpawnPointGroupAdaptor.GetSpawnPointGroup();
+			thisStaticTargetSpawnPointGroup = staticTargetSpawnPointGroupAdaptor.GetSpawnPointGroup();
 			thisDestroyedTargetReserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
 			thisPopUIReserve = popUIReserveAdaptor.GetPopUIReserve();
 			thisLandedArrowReserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
@@ -101,22 +99,17 @@ namespace AppleShooterProto{
 				sTL_2,
 				"Run"
 			)){
+				ActivatePopUIAtDrawnShootingTarget();
+
+				// done
 				// ActivateFlyingTarget();
-				// ActivateNextGlidingTargetAtWaypointsManager();
-				// TestPool();
-				// ActivateGlidingTargetAtDrawnWaypointsManager();
+				// ActivateNextGlidingTargetAtSpawnPoint();
+				// ActivateGlidingTargetAtDrawnSpawnPoint();
 				// ActivateStaticShootingTargetAtDrawnSpawnPoint();
 				// ActivateDestroyedTargetAtDrawnShootingTarget();
-				// ActivatePopUIAtDrawnShootingTarget();
-				ActivateLandedArrowAtDrawnShootingTarget();
+
+				// ActivateLandedArrowAtDrawnShootingTarget();
 			}
-			// if(GUI.Button(
-			// 	sTL_3,
-			// 	"ShowDeactivateControl"
-			// )){
-			// 	ToggleShowDeactivateControl();
-			// }
-			// 	ShowDeactivateControl(sTL_4);
 		}
 		
 		/* Left */
@@ -141,30 +134,26 @@ namespace AppleShooterProto{
 			IGlidingTargetReserve thisGlidingTargetReserve;
 			IGlidingTargetSpawnPoint thisGlidingTargetSpawnPoint;
 			public GlidingTargetSpawnPointAdaptor glidingTargetSpawnPointAdaptor;
-			void ActivateNextGlidingTargetAtWaypointsManager(){
+			void ActivateNextGlidingTargetAtSpawnPoint(){
 				
 				thisGlidingTargetReserve.ActivateShootingTargetAt(thisGlidingTargetSpawnPoint);
 			}
-			public GlidingTargetWaypointCurvePoolAdaptor glidingTargetWaypointCurvePoolAdaptor;
-			ISceneObjectPool<IGlidingTargetWaypointCurve> thisGlidingTargetWaypointCurvePool;
 
 
-			public void ActivateGlidingTargetAtDrawnWaypointsManager(){
+			public void ActivateGlidingTargetAtDrawnSpawnPoint(){
 				IGlidingTargetSpawnPoint drawnPoint = thisGlidingTargetSpawnPointGroup.Draw();
 				thisGlidingTargetReserve.ActivateShootingTargetAt(drawnPoint);
 
-				thisGlidingTargetWaypointCurvePool.Log();
+				thisGlidingTargetSpawnPointGroup.Log();
 			}
-			public ShootingTargetSpawnPointPoolAdaptor shootingTargetSpawnPointPoolAdaptor;
-			ISceneObjectPool<IStaticTargetSpawnPoint> thisShootingTargetSpawnPointPool;
 			public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
 			IStaticShootingTargetReserve thisStaticShootingTargetReserve;
 			public void ActivateStaticShootingTargetAtDrawnSpawnPoint(){
-				IStaticTargetSpawnPoint spawnPoint = thisShootingTargetSpawnPointPool.Draw();
+				IStaticTargetSpawnPoint spawnPoint = thisStaticTargetSpawnPointGroup.Draw();
 
 				thisStaticShootingTargetReserve.ActivateShootingTargetAt(spawnPoint);
 
-				thisShootingTargetSpawnPointPool.Log();
+				thisStaticTargetSpawnPointGroup.Log();
 			}
 			bool thisShowsDeactivateControl = false;
 			void ToggleShowDeactivateControl(){
@@ -190,7 +179,7 @@ namespace AppleShooterProto{
 					}
 				}
 			}
-			public ShootingTargetSpawnPointGroupAdaptor shootingTargetSpawnPointGroupAdaptor;
+			public StaticTargetSpawnPointGroupAdaptor staticTargetSpawnPointGroupAdaptor;
 			void DrawStaticTargetSpawnStatus(Rect rect){
 				Rect subTop = GetSubRect(
 					rect,
@@ -205,10 +194,10 @@ namespace AppleShooterProto{
 				DrawTargetsBySpawnPoints(subTop);
 				DrawSpawnPointForEachTarget(subBottom);
 			}
-			IStaticTargetSpawnPointGroup thisShootingTargetSpawnPointGroup;
+			IStaticTargetSpawnPointGroup thisStaticTargetSpawnPointGroup;
 			void DrawTargetsBySpawnPoints(Rect rect){
 				if(thisSystemIsReady){
-					IStaticTargetSpawnPoint[] spawnPoints = thisShootingTargetSpawnPointGroup.GetShootingTargetSpawnPoints();
+					IStaticTargetSpawnPoint[] spawnPoints = thisStaticTargetSpawnPointGroup.GetShootingTargetSpawnPoints();
 					string result = "";
 					int indexOfPoint = 0;
 					foreach(IStaticTargetSpawnPoint point in spawnPoints){
@@ -323,7 +312,7 @@ namespace AppleShooterProto{
 				thisDestroyedTargetReserve.ActivateDestoryedTargetAt(target);
 			}
 			void SetStaticShootingTargetsAtSpawnPoints(){
-				IStaticTargetSpawnPoint[] points = thisShootingTargetSpawnPointGroup.GetShootingTargetSpawnPoints();
+				IStaticTargetSpawnPoint[] points = thisStaticTargetSpawnPointGroup.GetShootingTargetSpawnPoints();
 
 				IStaticShootingTarget[] targets = thisStaticShootingTargetReserve.GetStaticShootingTargets();
 				int targetCount = targets.Length;

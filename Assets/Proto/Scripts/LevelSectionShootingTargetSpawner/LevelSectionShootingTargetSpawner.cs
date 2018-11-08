@@ -41,10 +41,19 @@ namespace AppleShooterProto{
 				int spawnCount = entry.numToCreate;
 				ISpawnPointEventPointPair[] pairs = entry.spawnPointEventPointPairs;
 
+				// Debug.Log(
+				// 	entry.targetType.ToString() + ": " +
+				// 	"pairs.length: " + pairs.Length.ToString() + ", " +
+				// 	"spawnCount: "  + spawnCount.ToString()
+				// );
 				int[] spawnPointIndexToSpawn = DKUtility.Calculator.GetRandomIntegers(
 					count: spawnCount, 
 					maxNumber: pairs.Length -1
 				);
+				// Debug.Log(
+				// 	entry.targetType.ToString() + ": "+ 
+				// 	"spawnPointIndex: " + GetIndicesString(spawnPointIndexToSpawn)
+				// );
 
 				foreach(int spawnPointIndex in spawnPointIndexToSpawn){
 					ISpawnPointEventPointPair pointPair = pairs[spawnPointIndex];
@@ -65,6 +74,12 @@ namespace AppleShooterProto{
 				}
 			}
 			thisSpawnEvents = spawnWaypointEventsList.ToArray();
+		}
+		string GetIndicesString(int[] indices){
+			string result =  "";
+			foreach(int i in indices)
+				result += i.ToString() + ", " ;
+			return result;
 		}
 		protected virtual IShootingTargetSpawnDataCalculator CreateCalculator(){
 			ShootingTargetSpawnDataCalculator.IConstArg arg = new ShootingTargetSpawnDataCalculator.ConstArg(

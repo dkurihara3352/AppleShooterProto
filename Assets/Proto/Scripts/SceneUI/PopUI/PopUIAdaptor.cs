@@ -33,7 +33,8 @@ namespace AppleShooterProto{
 
 				popMode,
 				glideTime,
-				glideDistance,
+				minGlideDistance,
+				maxGlideDistance,
 				normalizedDistanceCurve,
 				alphaCurve,
 				scaleCurve,
@@ -65,7 +66,9 @@ namespace AppleShooterProto{
 		public PopMode popMode;
 		IPopUIGlideProcess thisGlideProcess;
 		public float glideTime = .5f;
-		public float glideDistance;
+		// public float glideDistance;
+		public float minGlideDistance;
+		public float maxGlideDistance;
 		public AnimationCurve normalizedDistanceCurve;
 		public AnimationCurve alphaCurve;
 		public AnimationCurve scaleCurve;

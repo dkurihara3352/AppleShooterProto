@@ -6,7 +6,7 @@ namespace AppleShooterProto{
 	public interface IStaticTargetSpawnPointGroupAdaptor: IMonoBehaviourAdaptor{
 		IStaticTargetSpawnPointGroup GetSpawnPointGroup();
 	}
-	public class ShootingTargetSpawnPointGroupAdaptor: MonoBehaviourAdaptor, IStaticTargetSpawnPointGroupAdaptor{
+	public class StaticTargetSpawnPointGroupAdaptor: MonoBehaviourAdaptor, IStaticTargetSpawnPointGroupAdaptor{
 		public override void SetUp(){
 			thisGroup = CreateSpawnPointGroup();
 			thisSpawnPointAdaptors = CollectSpawnPointAdaptors();
@@ -16,10 +16,10 @@ namespace AppleShooterProto{
 			return thisGroup;
 		}
 		IStaticTargetSpawnPointGroup CreateSpawnPointGroup(){
-			ShootingTargetSpawnPointGroup.IConstArg arg = new ShootingTargetSpawnPointGroup.ConstArg(
+			StaticTargetSpawnPointGroup.IConstArg arg = new StaticTargetSpawnPointGroup.ConstArg(
 				this
 			);
-			return new ShootingTargetSpawnPointGroup(arg);
+			return new StaticTargetSpawnPointGroup(arg);
 		}
 		IStaticTargetSpawnPointAdaptor[] thisSpawnPointAdaptors;
 		IStaticTargetSpawnPointAdaptor[] CollectSpawnPointAdaptors(){

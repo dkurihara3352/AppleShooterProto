@@ -13,7 +13,6 @@ namespace AppleShooterProto{
 			);
 			thisWaypointCurve = new PCWaypointCurve(arg);
 		}
-		public ShootingTargetSpawnManagerAdaptor testTargetSpawnManagerAdaptor;
 		IPCWaypointCurve thisTypedCurve{
 			get{return thisWaypointCurve as IPCWaypointCurve;}
 		}
@@ -22,17 +21,18 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			ILevelSectionShootingTargetSpawner spawner = spawnerAdaptor.GetSpawner();
 			thisTypedCurve.SetLevelSectionShootingTargetSpawner(spawner);
-		}
-		public override void FinalizeSetUp(){
+
 			IWaypointCurve[] subordinateCurves = CollectSubordinateCurves();
 			thisTypedCurve.SetSubordinateCurves(subordinateCurves);
-			base.FinalizeSetUp();
 		}
-		public GlidingTargetWaypointCurveAdaptor[] glidingWaypointCurveAdaptors;
+		public GlidingTargetSpawnPointGroupAdaptor gliderSpawnPointGroupAdaptor;
 		IWaypointCurve[] CollectSubordinateCurves(){
 			List<IWaypointCurve> resultList = new List<IWaypointCurve>();
-			foreach(GlidingTargetWaypointCurveAdaptor adaptor in glidingWaypointCurveAdaptors)
-				resultList.Add(adaptor.GetGlidingTargetWaypointCurve());
+			IGlidingTargetSpawnPointGroup group = gliderSpawnPointGroupAdaptor.GetGroup();
+			IGlidingTargetSpawnPoint[] points = group.GetSpawnPoints();
+			foreach(IGlidingTargetSpawnPoint point in points){
+				resultList.Add(point.GetGlidingTargetWaypointCurve());
+			}
 			return resultList.ToArray();
 		}
 	}

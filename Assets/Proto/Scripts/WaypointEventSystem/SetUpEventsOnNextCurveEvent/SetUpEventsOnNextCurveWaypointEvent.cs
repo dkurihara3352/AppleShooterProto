@@ -18,7 +18,8 @@ namespace AppleShooterProto{
 		}
 		public override void Execute(){
 			IPCWaypointCurve nextCurve = thisPCWaypointsManager.GetNextPCCurve();
-			nextCurve.SetUpTargetSpawnEvents();
+			if(nextCurve != null)
+				nextCurve.SetUpTargetSpawnEvents();
 		}
 	}
 }

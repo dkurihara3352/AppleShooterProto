@@ -33,17 +33,20 @@ namespace AppleShooterProto{
 		public void SetUpAllMonoBehaviourAdaptors(){
 			IMonoBehaviourAdaptor[] temp = thisMonoBehaviourAdaptors.ToArray();
 			foreach(IMonoBehaviourAdaptor adaptor in temp)
-				adaptor.SetUp();
+				if(adaptor.IsEnabled())
+					adaptor.SetUp();
 		}
 		public void SetUpAdaptorReference(){
 			IMonoBehaviourAdaptor[] temp = thisMonoBehaviourAdaptors.ToArray();
 			foreach(IMonoBehaviourAdaptor adaptor in temp)
-				adaptor.SetUpReference();
+				if(adaptor.IsEnabled())
+					adaptor.SetUpReference();
 		}
 		public void FinalizeSetUp(){
 			IMonoBehaviourAdaptor[] temp = thisMonoBehaviourAdaptors.ToArray();
 			foreach(IMonoBehaviourAdaptor adaptor in temp)
-				adaptor.FinalizeSetUp();
+				if(adaptor.IsEnabled())
+					adaptor.FinalizeSetUp();
 		}
 	}
 }

@@ -15,6 +15,7 @@ namespace AppleShooterProto{
 		void SetTargetSceneObject(ISceneObject obj);
 		int GetIndex();
 		void SetIndex(int index);
+		float GetNormalizedSqrDist();
 	}
 	public abstract class AbsSceneUI : AbsSceneObject, ISceneUI {
 		public AbsSceneUI(
@@ -62,12 +63,16 @@ namespace AppleShooterProto{
 			Vector3 uiScreenPos = GetUIPosition(thisUIWorldPosition);
 			thisTypedAdaptor.SetUIPosition(uiScreenPos);
 		}
+		float thisNormalizedSqpDist;
+		public float GetNormalizedSqrDist(){
+			return thisNormalizedSqpDist;
+		}
 		protected Vector2 GetUISize(Vector3 targetWorldPosition){
 			float sqrDistance = (targetWorldPosition - thisUICamera.transform.position).sqrMagnitude;
 			float nearSqrDist = thisNearUIDistance * thisNearUIDistance;
 			float farSqrDist = thisFarUIDistance * thisFarUIDistance;
 			float normalizedSqrDist = (sqrDistance - nearSqrDist) / farSqrDist;
-			
+			thisNormalizedSqpDist = normalizedSqrDist;
 			Vector2 newUISize = Vector2.Lerp(
 				thisMaxUISize,
 				thisMinUISize,
