@@ -21,6 +21,8 @@ namespace AppleShooterProto{
 		void CheckAndClearDestroyedTarget(IDestroyedTarget target);
 		void SetDestroyedTarget(IDestroyedTarget target);
 		IDestroyedTarget GetDestroyedTarget();
+
+		// void SetHealth(float health);
 	}
 	public abstract class AbsShootingTarget : AbsSceneObject, IShootingTarget {
 		public AbsShootingTarget(
@@ -33,9 +35,11 @@ namespace AppleShooterProto{
 			thisHealth = thisOriginalHealth;
 			thisDefaultColor = arg.defaultColor;
 			thisActivationStateEngine = new ActivationStateEngine(this);
+			thisHealthBellCurve = arg.healthBellCurve;
 		}
 		protected float thisOriginalHealth;
 		protected float thisHealth;
+
 		IShootingTargetAdaptor thisTypedAdaptor{
 			get{
 				return (IShootingTargetAdaptor)thisAdaptor;
@@ -50,8 +54,11 @@ namespace AppleShooterProto{
 			public void Activate(){
 				thisActivationStateEngine.Activate();
 			}
+			IBellCurve thisHealthBellCurve;
 			public virtual void ActivateImple(){
-				thisHealth = thisOriginalHealth;
+				float randomeMult = thisHealthBellCurve.Evaluate();
+				
+				thisHealth = thisOriginalHealth *= randomeMult;
 				thisTypedAdaptor.SetColor(thisDefaultColor);
 				thisTypedAdaptor.ToggleCollider(true);
 				thisPopUIReserve.PopText(
@@ -60,7 +67,7 @@ namespace AppleShooterProto{
 				);
 			}
 			string GetHealthString(){
-				string result = "health \n" + thisHealth.ToString();
+				string result = "health \n" + Mathf.RoundToInt(thisHealth).ToString();
 				return result;
 			}
 			public void Deactivate(){
@@ -181,12 +188,14 @@ namespace AppleShooterProto{
 				int index{get;}
 				float health{get;}
 				Color defaultColor{get;}
+				IBellCurve healthBellCurve{get;}
 			}
 			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
 					float health,
 					Color defaultColor,
+					IBellCurve healthBellCurve,
 					IShootingTargetAdaptor adaptor
 				): base(
 					adaptor
@@ -194,6 +203,7 @@ namespace AppleShooterProto{
 					thisIndex = index;
 					thisHealth = health;
 					thisDefaultColor = defaultColor;
+					thisHealthBellCurve = healthBellCurve;
 				}
 				readonly int thisIndex;
 				public int index{get{return thisIndex;}}
@@ -201,6 +211,10 @@ namespace AppleShooterProto{
 				public float health{get{return thisHealth;}}
 				readonly Color thisDefaultColor;
 				public Color defaultColor{get{return thisDefaultColor;}}
+				readonly IBellCurve thisHealthBellCurve;
+				public IBellCurve healthBellCurve{
+					get{return thisHealthBellCurve;}
+				}
 			}
 		/*  */
 	}

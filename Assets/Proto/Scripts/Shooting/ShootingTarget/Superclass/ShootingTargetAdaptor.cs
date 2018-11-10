@@ -8,17 +8,17 @@ namespace AppleShooterProto{
 		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
 		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
 		void SetIndex(int index);
-		// void SetHealth(float health);
 		void ToggleCollider(bool on);
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
 	}
-	[RequireComponent(/* typeof(Collider), typeof(MeshRenderer),  */typeof(Animator))]
+	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: MonoBehaviourAdaptor, IShootingTargetAdaptor{
 		public override void SetUp(){
 			MeshRenderer meshRenderer = CollectMeshRenderer();
 			thisMaterial = meshRenderer.material;
 			thisDefaultColor = thisMaterial.color;
+			thisHealthBellCurve = CreateHealthBellCurve();
 			
 			thisShootingTarget = CreateShootingTarget();
 
@@ -32,15 +32,6 @@ namespace AppleShooterProto{
 		public MeshRenderer modelMeshRenderer;
 		MeshRenderer CollectMeshRenderer(){
 			return modelMeshRenderer;
-			// int childCount = transform.childCount;
-			// for(int i = 0; i < childCount; i ++){
-			// 	Transform child = transform.GetChild(i);
-			// 	if(child.name == "model")
-			// 		return GetComponentInChildren<MeshRenderer>();
-			// }
-			// throw new System.InvalidOperationException(
-			// 	"there's no child with name 'model' that has MeshRenderer"
-			// );
 		}
 		BoxCollider CollectCollider(){
 			return GetComponentInChildren<BoxCollider>();
@@ -62,6 +53,16 @@ namespace AppleShooterProto{
 		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor){
 			thisPopUIReserveAdaptor = adaptor;
+		}
+		protected IBellCurve thisHealthBellCurve;
+		IBellCurve CreateHealthBellCurve(){
+			return new BellCurve(
+				1f,
+				.3f,
+				.8f,
+				1.2f,
+				30
+			);
 		}
 		public override void SetUpReference(){
 

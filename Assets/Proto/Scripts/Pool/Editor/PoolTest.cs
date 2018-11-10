@@ -31,14 +31,14 @@ public class PoolTest{
 	[Test]
 	public void BellCurveTest_Various(){
 		IBellCurve curve = new BellCurve(
-			10f,
-			3f,
-			8f,
-			12f,
+			1f,
+			.3f,
+			.8f,
+			1.2f,
 			20
 		);
 
-		int numOfAttemp = 1000;
+		int numOfAttemp = 10000;
 
 		for(int i = 0; i < numOfAttemp; i ++)
 			curve.Evaluate();

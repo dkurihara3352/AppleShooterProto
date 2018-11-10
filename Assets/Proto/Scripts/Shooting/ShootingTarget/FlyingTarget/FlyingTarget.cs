@@ -177,6 +177,7 @@ namespace AppleShooterProto{
 				int index,
 				float health,
 				Color defaultColor,
+				IBellCurve healthBellCurve,
 				IFlyingTargetAdaptor adaptor,
 
 				Vector3 initialVelocity,
@@ -187,6 +188,7 @@ namespace AppleShooterProto{
 				index,
 				health,
 				defaultColor,
+				healthBellCurve,
 				adaptor
 			){	
 				thisInitialVelocity = initialVelocity;

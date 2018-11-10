@@ -21,6 +21,7 @@ namespace AppleShooterProto{
 				thisIndex,
 				health,
 				thisDefaultColor,
+				thisHealthBellCurve,
 				this,
 				initialVelocity,
 				distanceThreshold,

@@ -61,7 +61,7 @@ namespace AppleShooterProto{
 		void OnGUI(){
 			/* left */
 				DrawControl();
-				DrawArrowsState();
+				// DrawArrowsState();
 				// DrawSpawnedShootingTargets();
 				// DrawLandedArrows();
 			/* right */
@@ -69,8 +69,8 @@ namespace AppleShooterProto{
 				// DrawScrollMultiplier();
 				// DrawLaunchAngle();
 				// DrawFlightSpeed();
-				DrawWaypointsFollower(sTR_1);
-				DrawCurveSequence(sTR_2);
+				// DrawWaypointsFollower(sTR_1);
+				// DrawCurveSequence(sTR_2);
 				// DrawSpawnIndices(sTR_4);
 				DrawShootingMetrics(sTR_3);
 		}
@@ -220,14 +220,12 @@ namespace AppleShooterProto{
 					IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
 					float drawTime = shootingManager.GetDrawElapsedTime();
 					float drawStrength = shootingManager.GetDrawStrength();
-					float globalDrawStrength = shootingManager.GetGlobalDrawStrength();
 					float arrowAttack = shootingManager.GetArrowAttack();
 					float flightSpeed = shootingManager.GetFlightSpeed();
 					GUI.Label(
 						rect,
 						"drawTime: " + drawTime.ToString() + "\n" +
 						"drawStrength: " + drawStrength.ToString() + "\n" +
-						"globalDS: " + globalDrawStrength.ToString() + "\n" +
 						"arrowAttack: " + arrowAttack.ToString() + "\n" +
 						"flightSpeed: " + flightSpeed.ToString() + "\n"
 					);

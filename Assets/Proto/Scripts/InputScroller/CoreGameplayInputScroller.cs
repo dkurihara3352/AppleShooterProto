@@ -37,8 +37,11 @@ namespace AppleShooterProto{
 				dimension
 			);
 		}
+		float minMult = 0.5f;
+		float maxMult = 1f;
 		public void SetScrollMultiplier(float multiplier){
-			thisScrollMultiplier = multiplier;
+			thisScrollMultiplier = Mathf.Lerp(minMult, maxMult, multiplier);
+			// thisScrollMultiplier = multiplier;
 		}
 		float thisScrollMultiplier = 1.0f;
 		public float GetScrollMultiplier(){

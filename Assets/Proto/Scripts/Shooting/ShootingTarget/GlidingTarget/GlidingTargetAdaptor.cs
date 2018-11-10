@@ -18,6 +18,7 @@ namespace AppleShooterProto{
 				thisIndex,
 				health,
 				thisDefaultColor,
+				thisHealthBellCurve,
 				this
 			);
 			return new GlidingTarget(arg);

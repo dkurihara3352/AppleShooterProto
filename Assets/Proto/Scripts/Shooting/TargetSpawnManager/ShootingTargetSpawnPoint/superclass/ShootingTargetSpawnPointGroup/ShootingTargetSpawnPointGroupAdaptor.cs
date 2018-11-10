@@ -6,6 +6,7 @@ namespace AppleShooterProto{
 	public interface IShootingTargetSpawnPointGroupAdaptor: IMonoBehaviourAdaptor{
 		IShootingTargetSpawnPointGroup GetGroup();
 		IShootingTargetSpawnPointAdaptor[] GetAdaptors();
+		IShootingTargetSpawnPoint[] GetSpawnPoints();
 	}
 	public abstract class AbsShootingTargetSpawnPointGroupAdaptor : MonoBehaviourAdaptor, IShootingTargetSpawnPointGroupAdaptor {
 
@@ -31,7 +32,7 @@ namespace AppleShooterProto{
 			IShootingTargetSpawnPoint[] spawnPoints = GetSpawnPoints();
 			thisGroup.SetSpawnPoints(spawnPoints);
 		}
-		IShootingTargetSpawnPoint[] GetSpawnPoints(){
+		public IShootingTargetSpawnPoint[] GetSpawnPoints(){
 			List<IShootingTargetSpawnPoint> resultList = new List<IShootingTargetSpawnPoint>();
 			foreach(IShootingTargetSpawnPointAdaptor adaptor in thisSpawnPointAdaptors)
 				resultList.Add(adaptor.GetSpawnPoint());

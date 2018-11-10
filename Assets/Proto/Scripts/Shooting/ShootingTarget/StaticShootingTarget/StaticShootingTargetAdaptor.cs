@@ -19,6 +19,7 @@ namespace AppleShooterProto{
 				thisIndex,
 				health,
 				thisDefaultColor,
+				thisHealthBellCurve,
 				this
 			);
 			return new StaticShootingTarget(arg);

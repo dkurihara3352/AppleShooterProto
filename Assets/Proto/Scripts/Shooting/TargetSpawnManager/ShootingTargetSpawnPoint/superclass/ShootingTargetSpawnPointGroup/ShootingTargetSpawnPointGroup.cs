@@ -15,7 +15,22 @@ namespace AppleShooterProto{
 		): base(
 			arg
 		){}
-		protected IShootingTargetSpawnPoint[] thisSpawnPoints;
+		protected IShootingTargetSpawnPoint[] thisSpawnPoints{
+			get{
+				if(_spawnPoints == null)
+					_spawnPoints = thisTypedAdaptor.GetSpawnPoints();
+				return _spawnPoints;
+			}
+			set{
+				_spawnPoints = value;
+			}
+		}
+		IShootingTargetSpawnPointGroupAdaptor thisTypedAdaptor{
+			get{
+				return (IShootingTargetSpawnPointGroupAdaptor)thisAdaptor;
+			}
+		}
+		IShootingTargetSpawnPoint[] _spawnPoints;
 		public void SetSpawnPoints(IShootingTargetSpawnPoint[] spawnPoints){
 			thisSpawnPoints = spawnPoints;
 			float[] relativeProb = CreateRelativeProb(spawnPoints.Length);

@@ -16,14 +16,18 @@ namespace AppleShooterProto{
 		public int drawProcessOrder;
 		public float fireRate = 1f;
 
-		public AnimationCurve drawStrengthCurve;
+		public AnimationCurve bowDrawProfileCurve;
+		public float bowMinDrawStrength;
+		public float bowMaxDrawStrength;
+
+
 		public float globalMinDrawStrength;
 		public float globalMaxDrawStrength;
 
 		public float globalMinArrowAttack;
-		public float arrowAttackMultiplier;
+		public float globalMaxArrowAttack;
 		public float globalMinFlightSpeed;
-		public float flightSpeedMultiplier;
+		public float globalMaxFlightSpeed;
 
 		public override void SetUp(){
 			thisShootingManager = CreateShootingManager();
@@ -38,14 +42,18 @@ namespace AppleShooterProto{
 				drawProcessOrder,
 				fireRate,
 
-				drawStrengthCurve,
+				bowDrawProfileCurve,
+				bowMinDrawStrength,
+				bowMaxDrawStrength,
+
+				
 				globalMinDrawStrength,
 				globalMaxDrawStrength,
 
 				globalMinArrowAttack,
-				arrowAttackMultiplier,
+				globalMaxArrowAttack,
 				globalMinFlightSpeed,
-				flightSpeedMultiplier
+				globalMaxFlightSpeed
 			);
 			return new ShootingManager(arg);
 		}
