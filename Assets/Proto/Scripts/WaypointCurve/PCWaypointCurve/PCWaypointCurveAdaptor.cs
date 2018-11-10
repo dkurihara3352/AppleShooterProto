@@ -28,8 +28,8 @@ namespace AppleShooterProto{
 		public GlidingTargetSpawnPointGroupAdaptor gliderSpawnPointGroupAdaptor;
 		IWaypointCurve[] CollectSubordinateCurves(){
 			List<IWaypointCurve> resultList = new List<IWaypointCurve>();
-			IGlidingTargetSpawnPointGroup group = gliderSpawnPointGroupAdaptor.GetGroup();
-			IGlidingTargetSpawnPoint[] points = group.GetSpawnPoints();
+			IGlidingTargetSpawnPointGroup group = gliderSpawnPointGroupAdaptor.GetGlidingTargetSpawnPointGroup();
+			IGlidingTargetSpawnPoint[] points = group.GetGlidingTargetSpawnPoints();
 			foreach(IGlidingTargetSpawnPoint point in points){
 				resultList.Add(point.GetGlidingTargetWaypointCurve());
 			}

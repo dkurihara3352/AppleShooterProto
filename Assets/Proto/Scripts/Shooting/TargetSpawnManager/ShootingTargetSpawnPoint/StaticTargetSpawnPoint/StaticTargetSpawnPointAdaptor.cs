@@ -11,7 +11,10 @@ namespace AppleShooterProto{
 			thisSpawnPoint = CreateSpawnPoint();
 		}
 		IStaticTargetSpawnPoint CreateSpawnPoint(){
-			StaticTargetSpawnPoint.IConstArg arg = new StaticTargetSpawnPoint.ConstArg(this);
+			StaticTargetSpawnPoint.IConstArg arg = new StaticTargetSpawnPoint.ConstArg(
+				eventPoint,
+				this
+			);
 			return new StaticTargetSpawnPoint(arg);
 		}
 		public IStaticTargetSpawnPoint GetStaticTargetSpawnPoint(){

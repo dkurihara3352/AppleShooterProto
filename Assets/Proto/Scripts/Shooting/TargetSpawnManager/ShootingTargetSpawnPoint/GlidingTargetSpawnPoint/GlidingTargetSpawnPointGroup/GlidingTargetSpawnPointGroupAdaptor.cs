@@ -3,45 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IGlidingTargetSpawnPointGroupAdaptor: IMonoBehaviourAdaptor{
-		IGlidingTargetSpawnPointGroup GetGroup();
+	public interface IGlidingTargetSpawnPointGroupAdaptor: IShootingTargetSpawnPointGroupAdaptor{
+		IGlidingTargetSpawnPointGroup GetGlidingTargetSpawnPointGroup();
 	}
-	public class GlidingTargetSpawnPointGroupAdaptor : MonoBehaviourAdaptor, IGlidingTargetSpawnPointGroupAdaptor {
+	public class GlidingTargetSpawnPointGroupAdaptor : AbsShootingTargetSpawnPointGroupAdaptor, IGlidingTargetSpawnPointGroupAdaptor {
 
-		IGlidingTargetSpawnPointGroup thisGroup;
-		public IGlidingTargetSpawnPointGroup GetGroup(){
-			return thisGroup;
+		IGlidingTargetSpawnPointGroup thisTypedGroup{
+			get{
+				return (IGlidingTargetSpawnPointGroup)thisGroup;
+			}
 		}
-		public override void SetUp(){
-			thisGroup = CreateGroup();
-			thisSpawnPointAdaptors = CollectSpawnPointAdaptors();
+		public IGlidingTargetSpawnPointGroup GetGlidingTargetSpawnPointGroup(){
+			return thisTypedGroup;
 		}
-		IGlidingTargetSpawnPointGroup CreateGroup(){
+		protected override IShootingTargetSpawnPointGroup CreateGroup(){
 			GlidingTargetSpawnPointGroup.IConstArg arg = new GlidingTargetSpawnPointGroup.ConstArg(
 				this
 			);
 			return new GlidingTargetSpawnPointGroup(arg);
 		}
-		IGlidingTargetSpawnPointAdaptor[] thisSpawnPointAdaptors;
-		IGlidingTargetSpawnPointAdaptor[] CollectSpawnPointAdaptors(){
-			List<IGlidingTargetSpawnPointAdaptor> resultList = new List<IGlidingTargetSpawnPointAdaptor>();
-			Component[] childComps = transform.GetComponentsInChildren<Component>();
-			foreach(Component comp in childComps)
-				if(comp is IGlidingTargetSpawnPointAdaptor)
-					resultList.Add((IGlidingTargetSpawnPointAdaptor)comp);
-			return resultList.ToArray();
-		}
-		public override void SetUpReference(){
-			IGlidingTargetSpawnPoint[] spawnPoints = GetSpawnPoints();
-			thisGroup.SetSpawnPoints(spawnPoints);
-		}
-
-		IGlidingTargetSpawnPoint[] GetSpawnPoints(){
-			List<IGlidingTargetSpawnPoint> resultList = new List<IGlidingTargetSpawnPoint>();
-			foreach(IGlidingTargetSpawnPointAdaptor adaptor in thisSpawnPointAdaptors)
-				resultList.Add(adaptor.GetGlidingTargetSpawnPoint());
-			
-			return resultList.ToArray();
+		protected override IShootingTargetSpawnPointAdaptor[] CollectSpawnPointAdaptors(){
+			return CollectTypedSpawnPointAdaptorFromChildren<IShootingTargetSpawnPointAdaptor>();
 		}
 	}
 }

@@ -21,11 +21,13 @@ namespace AppleShooterProto{
 		public IFlyingTargetWaypointManager GetWaypointManager(){
 			return thisWaypointManager;
 		}
-		public new interface IConstArg: AbsSceneObject.IConstArg{}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new interface IConstArg: AbsShootingTargetSpawnPoint.IConstArg{}
+		public new class ConstArg: AbsShootingTargetSpawnPoint.ConstArg, IConstArg{
 			public ConstArg(
+				float eventPoint,
 				IFlyingTargetSpawnPointAdaptor adaptor
 			): base(
+				eventPoint,
 				adaptor
 			){
 

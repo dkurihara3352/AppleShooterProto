@@ -3,23 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTargetWaypointManagerAdaptor: IShootingTargetSpawnPointAdaptor{
+	public interface IFlyingTargetWaypointManagerAdaptor: IMonoBehaviourAdaptor{
 		IFlyingTargetWaypointManager GetFlyingTargetWaypointManager();
 	}
-	public class FlyingTargetWaypointManagerAdaptor: AbsShootingTargetSpawnPointAdaptor, IFlyingTargetWaypointManagerAdaptor{
+	public class FlyingTargetWaypointManagerAdaptor: MonoBehaviourAdaptor, IFlyingTargetWaypointManagerAdaptor{
 		public override void SetUp(){
-			thisSpawnPoint = CreateFlyingTargetWaypointManager();
+			thisManager = CreateManager();
 			thisWaypointAdaptors = CollectWaypointAdaptors();
 		}
-		IFlyingTargetWaypointManager thisManager{
-			get{
-				return (IFlyingTargetWaypointManager)thisSpawnPoint;
-			}
-		}
+		IFlyingTargetWaypointManager thisManager;
 		public IFlyingTargetWaypointManager GetFlyingTargetWaypointManager(){
 			return thisManager;
 		}
-		IFlyingTargetWaypointManager CreateFlyingTargetWaypointManager(){
+		IFlyingTargetWaypointManager CreateManager(){
 			FlyingTargetWaypointManager.IConstArg arg = new FlyingTargetWaypointManager.ConstArg(
 				this
 			);

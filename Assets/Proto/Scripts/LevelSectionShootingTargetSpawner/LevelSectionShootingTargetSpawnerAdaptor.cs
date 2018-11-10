@@ -48,6 +48,6 @@ namespace AppleShooterProto{
 		}
 		public float relativeProbability;
 		public int maxCount;
-		public SpawnPointAdaptorEventPointPair[] spawnPointAdaptorEventPointPairs;
+		public AbsShootingTargetSpawnPointGroupAdaptor spawnPointGroupAdaptor;
 	}
 }

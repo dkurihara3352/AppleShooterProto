@@ -42,18 +42,23 @@ namespace AppleShooterProto{
 				TargetType targetType = input.targetType;
 				int numToCreate = numToCreateByTargetType[typeIndex];
 				IShootingTargetReserve reserve = input.reserve;
-				ISpawnPointEventPointPair[] pairs = CreatePairs(input.spawnPointAdaptorEventPointPairs);
+				// ISpawnPointEventPointPair[] pairs = CreatePairs(input.spawnPointAdaptorEventPointPairs);
+				IShootingTargetSpawnPoint[] spawnPoints = CreateSpawnPoints(input.spawnPointGroupAdaptor);
 				TargetSpawnData.Entry entry = new TargetSpawnData.Entry(
 					targetType,
 					numToCreate,
 					reserve,
-					pairs
+					spawnPoints
 				);
 				entriesList.Add(entry);
 				typeIndex ++;
 			}
 			TargetSpawnData.Entry[] entries = entriesList.ToArray();
 			return new TargetSpawnData(entries);
+		}
+		IShootingTargetSpawnPoint[] CreateSpawnPoints(IShootingTargetSpawnPointGroupAdaptor spawnPointGroupAdaptor){
+			IShootingTargetSpawnPointGroup group = spawnPointGroupAdaptor.GetGroup();
+			return group.GetSpawnPoints();
 		}
 		ISpawnPointEventPointPair[] CreatePairs(SpawnPointAdaptorEventPointPair[] adaptorPairs){
 			List<ISpawnPointEventPointPair> pairs = new List<ISpawnPointEventPointPair>();
@@ -163,17 +168,20 @@ namespace AppleShooterProto{
 				TargetType targetType,
 				int numToCreate,
 				IShootingTargetReserve reserve,
-				ISpawnPointEventPointPair[] pointPairs
+				// ISpawnPointEventPointPair[] pointPairs
+				IShootingTargetSpawnPoint[] spawnPoints
 			){
 				this.targetType = targetType;
 				this.numToCreate = numToCreate;
 				this.reserve = reserve;
-				this.spawnPointEventPointPairs = pointPairs;
+				// this.spawnPointEventPointPairs = pointPairs;
+				this.spawnPoints = spawnPoints;
 			}
 			public TargetType targetType;
 			public int numToCreate;
 			public IShootingTargetReserve reserve;
-			public ISpawnPointEventPointPair[] spawnPointEventPointPairs;
+			// public ISpawnPointEventPointPair[] spawnPointEventPointPairs;
+			public IShootingTargetSpawnPoint[] spawnPoints;
 		}
 	}
 }

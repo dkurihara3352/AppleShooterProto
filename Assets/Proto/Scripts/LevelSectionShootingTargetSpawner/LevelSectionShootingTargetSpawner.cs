@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		
 		void SetUpSpawnWaypointEvents();
 		IShootingTargetSpawnWaypointEvent[] GetSpawnWaypointEvents();
+		void Despawn();
 	}
 	public class LevelSectionShootingTargetSpawner : AbsSceneObject, ILevelSectionShootingTargetSpawner {
 
@@ -39,21 +40,13 @@ namespace AppleShooterProto{
 			foreach(TargetSpawnData.Entry entry in entries){
 			
 				int spawnCount = entry.numToCreate;
-				ISpawnPointEventPointPair[] pairs = entry.spawnPointEventPointPairs;
+				ISpawnPointEventPointPair[] pairs = CreateSpawnPointEventPointPairs(entry);
 
-				// Debug.Log(
-				// 	entry.targetType.ToString() + ": " +
-				// 	"pairs.length: " + pairs.Length.ToString() + ", " +
-				// 	"spawnCount: "  + spawnCount.ToString()
-				// );
 				int[] spawnPointIndexToSpawn = DKUtility.Calculator.GetRandomIntegers(
 					count: spawnCount, 
 					maxNumber: pairs.Length -1
 				);
-				// Debug.Log(
-				// 	entry.targetType.ToString() + ": "+ 
-				// 	"spawnPointIndex: " + GetIndicesString(spawnPointIndexToSpawn)
-				// );
+
 
 				foreach(int spawnPointIndex in spawnPointIndexToSpawn){
 					ISpawnPointEventPointPair pointPair = pairs[spawnPointIndex];
@@ -75,6 +68,16 @@ namespace AppleShooterProto{
 			}
 			thisSpawnEvents = spawnWaypointEventsList.ToArray();
 		}
+		ISpawnPointEventPointPair[] CreateSpawnPointEventPointPairs(TargetSpawnData.Entry entry){
+			IShootingTargetSpawnPoint[] spawnPoints = entry.spawnPoints;
+			List<ISpawnPointEventPointPair> resultList = new List<ISpawnPointEventPointPair>();
+			foreach(IShootingTargetSpawnPoint spawnPoint in spawnPoints){
+				float eventPoint = spawnPoint.GetEventPoint();
+				ISpawnPointEventPointPair pair = new SpawnPointEventPointPair(spawnPoint, eventPoint);
+				resultList.Add(pair);
+			}
+			return resultList.ToArray();
+		}
 		string GetIndicesString(int[] indices){
 			string result =  "";
 			foreach(int i in indices)
@@ -92,6 +95,20 @@ namespace AppleShooterProto{
 		IShootingTargetSpawnWaypointEvent[] thisSpawnEvents;
 		public IShootingTargetSpawnWaypointEvent[] GetSpawnWaypointEvents(){
 			return thisSpawnEvents;
+		}
+		public void Despawn(){
+			DeactivateSpawnedTargets();
+		}
+		void DeactivateSpawnedTargets(){
+			IShootingTargetSpawnWaypointEvent[] spawnEvents = thisSpawnEvents;
+			if(spawnEvents != null){
+				foreach(IShootingTargetSpawnWaypointEvent spawnEvent in spawnEvents){
+					IShootingTargetSpawnPoint spawnPoint = spawnEvent.GetSpawnPoint();
+					IShootingTarget spawnedTarget = spawnPoint.GetSpawnedTarget();
+					if(spawnedTarget != null)
+						spawnedTarget.Deactivate();
+				}	
+			}
 		}
 		/*  */
 			public new interface IConstArg: AbsSceneObject.IConstArg{

@@ -5,7 +5,6 @@ using DKUtility.CurveUtility;
 
 namespace AppleShooterProto{
 	public interface IWaypointCurve: ISceneObject{
-		// IWaypointCurveAdaptor GetAdaptor();
 
 		void CalculateCurve();
 
@@ -13,24 +12,16 @@ namespace AppleShooterProto{
 		void Connect(IWaypointCurve prevCurve);
 		Vector3 GetConnectionPosition();
 		Quaternion GetConnectionRotation();
-		int GetIndexOfCeilingCurvePoint(float totalDistInCurve);
+
 		float GetTotalDistance();
-		float GetNormalizedPositionBetweenPoints(
-			int ceilingIndex,
-			float totalDistanceCoveredInCurve
+		void OutputFollowData(
+			float normalizedTime,
+			out Vector3 position,
+			out Vector3 forward,
+			out Vector3 up
 		);
-		Vector3 CalculatePositionOnCurve(
-			int ceilingIndex,
-			float normalizedPositionBetweenPoints
-		);
-		Vector3 CalculateForwardDirectionOnCurve(
-			int ceilingIndex,
-			float normalizedPositionBetweenPoints
-		);
-		Vector3 CalculateUpDirectionOnCurve(
-			int ceilingIndex,
-			float normalizedPositionBetweenPoints
-		);
+		Vector3 GetPositionOnCurve(float normalizedTime);
+		
 		Vector3 GetLastCurvePointPrevPosition();
 		void OnReserve();
 		void OnUnreserve();
@@ -125,7 +116,50 @@ namespace AppleShooterProto{
 				ICurvePoint firstPointOfThisCurve = thisCurvePoints[0];
 				firstPointOfThisCurve.SetPrevPointPosition(prevCurveLastCurvePointPrevPosition);
  			}
-			public int GetIndexOfCeilingCurvePoint(float totalDistInCurve){
+			public void OutputFollowData(
+				float normalizedTime,
+				out Vector3 position,
+				out Vector3 forward,
+				out Vector3 upward
+			){
+				float totalDistanceCoveredInCurve = normalizedTime * thisTotalDistance;
+				int ceilingIndex = GetIndexOfCeilingCurvePoint(totalDistanceCoveredInCurve);
+				float normalizedPositionBetweenPoints = GetNormalizedPositionBetweenPoints(
+					ceilingIndex,
+					totalDistanceCoveredInCurve
+				);
+				Vector3 thisPosition = CalculatePositionOnCurve(
+					ceilingIndex,
+					normalizedPositionBetweenPoints
+				);
+				Vector3 thisForward = CalculateForwardDirectionOnCurve(
+					ceilingIndex,
+					normalizedPositionBetweenPoints
+				);
+				Vector3 thisUp = CalculateUpDirectionOnCurve(
+					ceilingIndex,
+					normalizedPositionBetweenPoints
+				);
+				position = thisPosition;
+				forward = thisForward;
+				upward = thisUp;
+			}
+			public Vector3 GetPositionOnCurve(float normalizedTime){
+				float totalDistanceCoveredInCurve = normalizedTime * thisTotalDistance;
+				int ceilingIndex = GetIndexOfCeilingCurvePoint(totalDistanceCoveredInCurve);
+				float normalizedPositionBetweenPoints = GetNormalizedPositionBetweenPoints(
+					ceilingIndex,
+					totalDistanceCoveredInCurve
+				);
+				return CalculatePositionOnCurve(
+					ceilingIndex,
+					normalizedPositionBetweenPoints
+				);
+			}
+			
+			
+
+			int GetIndexOfCeilingCurvePoint(float totalDistInCurve){
 				/*  totalDist must be less than thisTotalDistnce
 					(cannot be even equal to it)
 					must be checked before this
@@ -139,7 +173,7 @@ namespace AppleShooterProto{
 				}
 				return -1;
 			}
-			public float GetNormalizedPositionBetweenPoints(
+			float GetNormalizedPositionBetweenPoints(
 				int ceilingIndex,
 				float totalDistanceCoveredInCurve
 			){
@@ -154,7 +188,7 @@ namespace AppleShooterProto{
 					return residualDist/ lengthBetweenPoints;
 				}
 			}
-			public Vector3 CalculatePositionOnCurve(
+			Vector3 CalculatePositionOnCurve(
 				int ceilingIndex,
 				float normalizedPositionBetweenPoints
 			){
@@ -166,7 +200,7 @@ namespace AppleShooterProto{
 					normalizedPositionBetweenPoints
 				);
 			}
-			public Vector3 CalculateForwardDirectionOnCurve(
+			Vector3 CalculateForwardDirectionOnCurve(
 				int ceilingIndex,
 				float normalizedPositionBetweenPoints
 			){
@@ -182,7 +216,7 @@ namespace AppleShooterProto{
 					normalizedPositionBetweenPoints
 				);
 			}
-			public Vector3 CalculateUpDirectionOnCurve(
+			Vector3 CalculateUpDirectionOnCurve(
 				int ceilingIndex,
 				float normalizedPositionBetweenPoints
 			){

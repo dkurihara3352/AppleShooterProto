@@ -235,8 +235,8 @@ namespace AppleShooterProto{
 			}
 			public GlidingTargetSpawnPointGroupAdaptor glidingTargetSpawnPointGroupAdaptor;
 			void CalcCurveOnGliderSpawnPointGroup(){
-				IGlidingTargetSpawnPointGroup group = glidingTargetSpawnPointGroupAdaptor.GetGroup();
-				IGlidingTargetSpawnPoint[] spawnPoints = group.GetSpawnPoints();
+				IGlidingTargetSpawnPointGroup group = glidingTargetSpawnPointGroupAdaptor.GetGlidingTargetSpawnPointGroup();
+				IGlidingTargetSpawnPoint[] spawnPoints = group.GetGlidingTargetSpawnPoints();
 				foreach(IGlidingTargetSpawnPoint point in spawnPoints){
 					IGlidingTargetWaypointCurve curve = point.GetGlidingTargetWaypointCurve();
 					curve.CalculateCurve();

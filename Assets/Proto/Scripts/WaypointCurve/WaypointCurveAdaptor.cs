@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void UpdateCurve();
 		ICurvePoint[] GetCurvePoints();
 		float GetTotalDistance();
+		Vector3 GetPositionOnCurve(float normalizedPosition);
 	}
 	[ExecuteInEditMode]
 	public abstract class AbsWaypointCurveAdaptor : MonoBehaviourAdaptor, IWaypointCurveAdaptor {
@@ -230,6 +231,63 @@ namespace AppleShooterProto{
 				}
 				return result;
 			}
+		/*  below is for event point drawing
+			overlap with curve imple
+		*/
+		public Vector3 GetPositionOnCurve(float normalizedPosition){
+			float totalDistance = GetTotalDistance();
+			float totalDistanceCoveredInCurve = normalizedPosition * totalDistance;
+			int ceilingIndex = GetIndexOfCeilingCurvePoint(totalDistanceCoveredInCurve);
+			float normalizedPositionBetweenPoints = GetNormalizedPositionBetweenPoints(
+				ceilingIndex,
+				totalDistanceCoveredInCurve
+			);
+			return CalculatePositionOnCurve(
+				ceilingIndex,
+				normalizedPositionBetweenPoints
+			);
+		}
+		int GetIndexOfCeilingCurvePoint(float totalDistInCurve){
+			/*  totalDist must be less than thisTotalDistnce
+				(cannot be even equal to it)
+				must be checked before this
+
+				never returns 0
+			*/
+			for(int i = 0; i < thisCurvePoints.Length; i ++){
+				if(thisCurvePoints[i].GetDistanceUpToPointOnCurve() > totalDistInCurve){
+					return i;
+				}
+			}
+			return -1;
+		}
+		float GetNormalizedPositionBetweenPoints(
+			int ceilingIndex,
+			float totalDistanceCoveredInCurve
+		){
+			if(ceilingIndex == 0)
+				return 0f;
+			else{
+				int floorIndex = ceilingIndex -1;
+				float distToFloor = thisCurvePoints[floorIndex].GetDistanceUpToPointOnCurve();
+				float residualDist = totalDistanceCoveredInCurve - distToFloor;
+				float lengthBetweenPoints = thisCurvePoints[ceilingIndex].GetDelta();
+				
+				return residualDist/ lengthBetweenPoints;
+			}
+		}
+		Vector3 CalculatePositionOnCurve(
+			int ceilingIndex,
+			float normalizedPositionBetweenPoints
+		){
+			ICurvePoint ceiling = thisCurvePoints[ceilingIndex];
+			ICurvePoint floor = thisCurvePoints[ceilingIndex -1];
+			return Vector3.Lerp(
+				floor.GetPosition(),
+				ceiling.GetPosition(),
+				normalizedPositionBetweenPoints
+			);
+		}
 		/*  */
 		public override void SetUpReference(){
 			IWaypointEvent[] waypointEvents = CollectWaypointEvents();

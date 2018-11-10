@@ -22,7 +22,7 @@ namespace AppleShooterProto{
 		/* target Spawn */
 			
 			public void DespawnTargets(){
-				// thisSpawner.Despawn();
+				thisSpawner.Despawn();
 			}
 			IShootingTargetSpawnWaypointEvent[] thisSpawnEvents;
 			public override IWaypointEvent[] GetWaypointEvents(){

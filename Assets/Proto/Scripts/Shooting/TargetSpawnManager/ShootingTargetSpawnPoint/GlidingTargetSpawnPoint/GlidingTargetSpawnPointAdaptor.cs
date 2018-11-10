@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 		}
 		IShootingTargetSpawnPoint CreateSpawnPoint(){
 			GlidingTargetSpawnPoint.IConstArg arg = new GlidingTargetSpawnPoint.ConstArg(
+				eventPoint,
 				this
 			);
 			return new GlidingTargetSpawnPoint(arg);

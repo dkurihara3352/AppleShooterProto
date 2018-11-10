@@ -77,31 +77,26 @@ namespace AppleShooterProto{
 			else
 				return false;
 		}
+
 		void MoveFollower(){
-			float totalDistanceCoveredInCurrentCurve = thisTotalElapsedTimeOnCurrentCurve * thisSpeed;
-			int ceilingIndex = thisCurrentCurve.GetIndexOfCeilingCurvePoint(totalDistanceCoveredInCurrentCurve);
-			float normalizedPositionBetweenPoints = thisCurrentCurve.GetNormalizedPositionBetweenPoints(
-				ceilingIndex,
-				totalDistanceCoveredInCurrentCurve
+			float normalizedTime = thisTotalElapsedTimeOnCurrentCurve/ thisRequiredTimeForCurrentCurve;
+			Vector3 targetPosition;
+			Vector3 targetForwardDirection;
+			Vector3 targetUpDirection;
+
+			thisCurrentCurve.OutputFollowData(
+				normalizedTime,
+				out targetPosition,
+				out targetForwardDirection,
+				out targetUpDirection
 			);
-			Vector3 targetPosition = thisCurrentCurve.CalculatePositionOnCurve(
-				ceilingIndex,
-				normalizedPositionBetweenPoints
-			);
-			Vector3 targetForwardDirection = thisCurrentCurve.CalculateForwardDirectionOnCurve(
-				ceilingIndex,
-				normalizedPositionBetweenPoints
-			);
-			Vector3 targetUpDirection = thisCurrentCurve.CalculateUpDirectionOnCurve(
-				ceilingIndex,
-				normalizedPositionBetweenPoints
-			);
+
 			thisFollower.SetPosition(targetPosition);
 			thisFollower.LookAt(
 				targetForwardDirection,
 				targetUpDirection
 			);
-			thisWaypointEventManager.CheckForWaypointEvent(GetNormalizedPositionOnCurve());
+			thisWaypointEventManager.CheckForWaypointEvent(normalizedTime);
 		}
 		public float GetNormalizedPositionOnCurve(){
 			return thisTotalElapsedTimeOnCurrentCurve/ thisRequiredTimeForCurrentCurve;

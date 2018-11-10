@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTargetWaypointManager: IShootingTargetSpawnPoint{
+	public interface IFlyingTargetWaypointManager: ISceneObject{
 		IFlyingTargetWaypoint[] GetWaypoints();
 		void SetWaypoints(IFlyingTargetWaypoint[] waypoints);
 	}
-	public class FlyingTargetWaypointManager : AbsShootingTargetSpawnPoint, IFlyingTargetWaypointManager {
+	public class FlyingTargetWaypointManager : AbsSceneObject, IFlyingTargetWaypointManager {
 		public FlyingTargetWaypointManager(
 			IConstArg arg
 		): base(arg){

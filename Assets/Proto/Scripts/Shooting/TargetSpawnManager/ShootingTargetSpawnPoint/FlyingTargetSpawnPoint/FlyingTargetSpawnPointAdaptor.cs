@@ -22,6 +22,7 @@ namespace AppleShooterProto{
 		}
 		IFlyingTargetSpawnPoint CreateSpawnPoint(){
 			FlyingTargetSpawnPoint.IConstArg arg = new FlyingTargetSpawnPoint.ConstArg(
+				eventPoint,
 				this
 			);
 			return new FlyingTargetSpawnPoint(arg);

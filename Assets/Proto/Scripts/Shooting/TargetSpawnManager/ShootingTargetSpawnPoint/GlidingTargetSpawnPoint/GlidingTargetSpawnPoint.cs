@@ -21,16 +21,17 @@ namespace AppleShooterProto{
 			return thisCurve;
 		}
 		/*  */
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AbsShootingTargetSpawnPoint.IConstArg{
 			
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AbsShootingTargetSpawnPoint.ConstArg, IConstArg{
 			public ConstArg(
+				float eventPoint,
 				IGlidingTargetSpawnPointAdaptor adaptor
 			): base(
+				eventPoint,
 				adaptor
 			){
-				
 			}
 		}
 	}
