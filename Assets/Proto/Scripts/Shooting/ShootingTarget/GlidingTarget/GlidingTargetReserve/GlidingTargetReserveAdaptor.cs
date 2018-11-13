@@ -33,7 +33,6 @@ namespace AppleShooterProto{
 		IGlidingTargetAdaptor[] thisGlidingTargetAdaptors;
 
 		public int targetCounts;
-		public GameObject glidingTargetPrefab;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 
@@ -43,7 +42,7 @@ namespace AppleShooterProto{
 
 			for(int i = 0; i < targetCounts; i ++){
 				GameObject targetGO = GameObject.Instantiate(
-					glidingTargetPrefab
+					shootingTargetPrefab
 				);
 				IGlidingTargetAdaptor targetAdaptor = (IGlidingTargetAdaptor)targetGO.GetComponent(typeof(IGlidingTargetAdaptor));
 
@@ -51,6 +50,7 @@ namespace AppleShooterProto{
 				targetAdaptor.SetGlidingTargetReserve(thisTypedReserve);
 				targetAdaptor.SetPopUIReserveAdaptor(popUIReserveAdaptor);
 				targetAdaptor.SetDestroyedTargetReserveAdaptor(destroyedTargetReserveAdaptor);
+				targetAdaptor.SetGameStatsTrackerAdaptor(gameStatsTrackerAdaptor);
 
 				targetAdaptor.SetUp();
 

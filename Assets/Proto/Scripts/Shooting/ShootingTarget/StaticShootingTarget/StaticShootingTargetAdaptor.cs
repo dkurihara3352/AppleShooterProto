@@ -20,6 +20,7 @@ namespace AppleShooterProto{
 				health,
 				thisDefaultColor,
 				thisHealthBellCurve,
+				heatBonus,
 				this
 			);
 			return new StaticShootingTarget(arg);

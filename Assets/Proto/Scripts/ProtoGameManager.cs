@@ -26,6 +26,8 @@ namespace AppleShooterProto{
 			SetUpUISystem();
 			SetUpMBAdaptors();
 			FinalizeUISystemSetUp();
+
+			SetUpSceneObjectRefs();
 		}
 
 		void SetUpUISystem(){
@@ -36,7 +38,6 @@ namespace AppleShooterProto{
 			SetUpAllMonoBehaviourAdaptors();
 			SetUpAdaptorReference();
 			FinalizeMBAdaptorSetUp();
-			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 		}
 		void SetUpAllMonoBehaviourAdaptors(){
 			mbAdaptorManager.SetUpAllMonoBehaviourAdaptors();
@@ -51,6 +52,12 @@ namespace AppleShooterProto{
 			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
 			IPlayerInputManager inputManager = playerInputManagerAdaptor.GetInputManager();
 			scroller.SetPlayerInputManager(inputManager);
+		}
+		IHeatManager thisHeatManager;
+		public HeatManagerAdaptor heatManagerAdaptor;
+		void SetUpSceneObjectRefs(){
+			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
+			thisHeatManager = heatManagerAdaptor.GetHeatManager();
 		}
 
 		public void RunSystem(){
@@ -67,6 +74,8 @@ namespace AppleShooterProto{
 			//Bow drawing					165
 				//trajectory here
 			StartSmoothZoom();//			170
+
+			StartHeatManager();
 
 			//arrow flight process			200 ->
 			
@@ -118,6 +127,9 @@ namespace AppleShooterProto{
 				resultList.Add(index);
 			}
 			return resultList.ToArray();
+		}
+		void StartHeatManager(){
+			thisHeatManager.StartCountingDown();
 		}
 	}
 }

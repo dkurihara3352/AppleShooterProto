@@ -82,6 +82,24 @@ namespace AppleShooterProto{
 			IDestroyedTargetAdaptor adaptor,
 			float particleSystemDuration
 		);
+		IHeatCountDownProcess CreateHeatCountDownProcess(
+			float heatDecayRate,
+			IHeatManagerStateEngine engine
+		);
+		IHeatImageSmoothFollowDeltaImageProcess CreateHeatImageSmoothFollowDeltaImageProcess(
+			IHeatImage heatImage,
+			float followTime,
+			float targetHeat
+		);
+		IHeatImageWaitForNextAdditionProcess CreateHeatImageWaitForNextAdditionProcess(
+			IHeatImage heatImage,
+			float comboTime
+		);
+		IHeatLevelUpProcess CreateHeatLevelUpProcess(
+			IHeatManager heatManager,
+			float targetMaxHeat,
+			float smoothTime
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -290,6 +308,54 @@ namespace AppleShooterProto{
 				particleDuration
 			);
 			return new DestroyedTargetParticleProcess(arg);
+		}
+		public IHeatCountDownProcess CreateHeatCountDownProcess(
+			float heatDecayRate,
+			IHeatManagerStateEngine engine
+		){
+			HeatCountDownProcess.IConstArg arg = new HeatCountDownProcess.ConstArg(
+				thisProcessManager,
+				engine,
+				heatDecayRate
+			);
+			return new HeatCountDownProcess(arg);
+		}
+		public IHeatImageSmoothFollowDeltaImageProcess CreateHeatImageSmoothFollowDeltaImageProcess(
+			IHeatImage heatImage,
+			float followTime,
+			float targetHeat
+		){
+			HeatImageSmoothFollowDeltaImageProcess.IConstArg arg = new HeatImageSmoothFollowDeltaImageProcess.ConstArg(
+				thisProcessManager,
+				heatImage,
+				targetHeat,
+				followTime
+			);
+			return new HeatImageSmoothFollowDeltaImageProcess(arg);
+		}
+		public IHeatImageWaitForNextAdditionProcess CreateHeatImageWaitForNextAdditionProcess(
+			IHeatImage heatImage,
+			float comboTime
+		){
+			HeatImageWaitForNextAdditionProcess.IConstArg arg = new HeatImageWaitForNextAdditionProcess.ConstArg(
+				thisProcessManager,
+				comboTime,
+				heatImage
+			);
+			return new HeatImageWaitForNextAdditionProcess(arg);
+		}
+		public IHeatLevelUpProcess CreateHeatLevelUpProcess(
+			IHeatManager heatManager,
+			float targetMaxHeat,
+			float smoothTime
+		){
+			HeatLevelUpProcess.IConstArg arg = new HeatLevelUpProcess.ConstArg(
+				thisProcessManager,
+				heatManager,
+				targetMaxHeat,
+				smoothTime
+			);
+			return new HeatLevelUpProcess(arg);
 		}
 	}
 }

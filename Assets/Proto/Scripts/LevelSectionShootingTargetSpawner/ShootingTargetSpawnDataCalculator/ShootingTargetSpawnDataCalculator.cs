@@ -75,7 +75,8 @@ namespace AppleShooterProto{
 		protected float[] GetSpawnValueByTargetType(){
 			List<float> resultList = new List<float>();
 			foreach(TargetSpawnDataInput input in thisDataInput){
-				float spawnValue = thisSpawnManager.GetSpawnValue(input.targetType);
+				// float spawnValue = thisSpawnManager.GetSpawnValue(input.targetType);
+				float spawnValue = input.spawnValue;
 				resultList.Add(spawnValue);
 			}
 			return resultList.ToArray();
@@ -168,19 +169,16 @@ namespace AppleShooterProto{
 				TargetType targetType,
 				int numToCreate,
 				IShootingTargetReserve reserve,
-				// ISpawnPointEventPointPair[] pointPairs
 				IShootingTargetSpawnPoint[] spawnPoints
 			){
 				this.targetType = targetType;
 				this.numToCreate = numToCreate;
 				this.reserve = reserve;
-				// this.spawnPointEventPointPairs = pointPairs;
 				this.spawnPoints = spawnPoints;
 			}
 			public TargetType targetType;
 			public int numToCreate;
 			public IShootingTargetReserve reserve;
-			// public ISpawnPointEventPointPair[] spawnPointEventPointPairs;
 			public IShootingTargetSpawnPoint[] spawnPoints;
 		}
 	}

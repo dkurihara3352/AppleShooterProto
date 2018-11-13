@@ -88,16 +88,17 @@ namespace AppleShooterProto{
 					sTL_2,
 					"Run"
 				)){
-					gameManager.RunSystem();			
+					gameManager.RunSystem();
 					thisSystemIsReady = true;
 				}
 
 				if(GUI.Button(
 					sTL_3,
-					"CalcCurve"
+					"AddHeat"
 				)){
-					CalcCurveOnGliderSpawnPointGroup();
+					AddHeat();
 				}
+				
 			}
 			void DrawArrowsState(){
 				if(thisSystemIsReady){
@@ -239,6 +240,11 @@ namespace AppleShooterProto{
 					IGlidingTargetWaypointCurve curve = point.GetGlidingTargetWaypointCurve();
 					curve.CalculateCurve();
 				}
+			}
+			public HeatManagerAdaptor heatManagerAdaptor;
+			void AddHeat(){
+				IHeatManager manager = heatManagerAdaptor.GetHeatManager();
+				manager.AddHeat(.05f);
 			}
 
 		/*  */

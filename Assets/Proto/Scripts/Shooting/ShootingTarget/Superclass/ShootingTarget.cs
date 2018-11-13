@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 
 		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
 		void SetPopUIReserve(IPopUIReserve reserve);
+		void SetGameStatsTracker(IGameStatsTracker tracker);
 
 		void DeactivateAll();// called when curve is cycled
 
@@ -22,7 +23,7 @@ namespace AppleShooterProto{
 		void SetDestroyedTarget(IDestroyedTarget target);
 		IDestroyedTarget GetDestroyedTarget();
 
-		// void SetHealth(float health);
+		float GetHeatBonus();
 	}
 	public abstract class AbsShootingTarget : AbsSceneObject, IShootingTarget {
 		public AbsShootingTarget(
@@ -36,6 +37,8 @@ namespace AppleShooterProto{
 			thisDefaultColor = arg.defaultColor;
 			thisActivationStateEngine = new ActivationStateEngine(this);
 			thisHealthBellCurve = arg.healthBellCurve;
+
+			thisHeatBonus = arg.heatBonus;
 		}
 		protected float thisOriginalHealth;
 		protected float thisHealth;
@@ -101,9 +104,14 @@ namespace AppleShooterProto{
 				public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
 					thisDestroyedTargetReserve = reserve;
 				}
+				IGameStatsTracker thisGameStatsTracker;
+				public void SetGameStatsTracker(IGameStatsTracker tracker){
+					thisGameStatsTracker = tracker;
+				}
 				protected virtual void DestroyTarget(){
 					thisDestroyedTargetReserve.ActivateDestoryedTargetAt(this);
 					Deactivate();
+					thisGameStatsTracker.RegisterTargetDestroyed(this);
 				}
 				IDestroyedTarget thisDestroyedTarget;
 				public void SetDestroyedTarget(IDestroyedTarget target){
@@ -170,6 +178,11 @@ namespace AppleShooterProto{
 			public void SetPopUIReserve(IPopUIReserve reserve){
 				thisPopUIReserve = reserve;
 			}
+
+			readonly float thisHeatBonus;
+			public float GetHeatBonus(){
+				return thisHeatBonus;
+			}
 		/* Misc */
 			int thisIndex;
 			public virtual void SetIndex(int index){
@@ -189,6 +202,7 @@ namespace AppleShooterProto{
 				float health{get;}
 				Color defaultColor{get;}
 				IBellCurve healthBellCurve{get;}
+				float heatBonus{get;}
 			}
 			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
 				public ConstArg(
@@ -196,7 +210,8 @@ namespace AppleShooterProto{
 					float health,
 					Color defaultColor,
 					IBellCurve healthBellCurve,
-					IShootingTargetAdaptor adaptor
+					IShootingTargetAdaptor adaptor,
+					float heatBonus
 				): base(
 					adaptor
 				){
@@ -204,6 +219,7 @@ namespace AppleShooterProto{
 					thisHealth = health;
 					thisDefaultColor = defaultColor;
 					thisHealthBellCurve = healthBellCurve;
+					thisHeatBonus = heatBonus;
 				}
 				readonly int thisIndex;
 				public int index{get{return thisIndex;}}
@@ -215,6 +231,8 @@ namespace AppleShooterProto{
 				public IBellCurve healthBellCurve{
 					get{return thisHealthBellCurve;}
 				}
+				readonly float thisHeatBonus;
+				public float heatBonus{get{return thisHeatBonus;}}
 			}
 		/*  */
 	}

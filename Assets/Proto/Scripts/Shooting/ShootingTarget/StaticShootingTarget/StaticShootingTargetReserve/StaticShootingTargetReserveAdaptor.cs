@@ -32,7 +32,6 @@ namespace AppleShooterProto{
 			thisTypedReserve.SetSceneObjects(targets);
 		}
 		public int totalTargetsCount;
-		public GameObject staticShootingTargetPrefab;
 		public PopUIReserveAdaptor popUIReserveAdaptor;
 		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 		IStaticShootingTargetAdaptor[] thisStaticShootingTargetAdaptors;
@@ -42,7 +41,7 @@ namespace AppleShooterProto{
 
 			for(int i = 0; i < totalTargetsCount; i ++){
 				GameObject targetGO = GameObject.Instantiate(
-					staticShootingTargetPrefab,
+					shootingTargetPrefab,
 					Vector3.zero,
 					Quaternion.identity
 				);
@@ -52,6 +51,7 @@ namespace AppleShooterProto{
 				targetAdaptor.SetStaticShootingTargetReserveAdaptor(this);
 				targetAdaptor.SetPopUIReserveAdaptor(popUIReserveAdaptor);
 				targetAdaptor.SetDestroyedTargetReserveAdaptor(destroyedTargetReserveAdaptor);
+				targetAdaptor.SetGameStatsTrackerAdaptor(gameStatsTrackerAdaptor);
 
 				targetAdaptor.SetUp();
 

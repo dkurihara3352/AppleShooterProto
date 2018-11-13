@@ -7,10 +7,13 @@ namespace AppleShooterProto{
 		IShootingTarget GetShootingTarget();
 		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
 		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
+		void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor);
 		void SetIndex(int index);
 		void ToggleCollider(bool on);
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
+
+		float GetSpawnValue();
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: MonoBehaviourAdaptor, IShootingTargetAdaptor{
@@ -55,6 +58,14 @@ namespace AppleShooterProto{
 			thisPopUIReserveAdaptor = adaptor;
 		}
 		protected IBellCurve thisHealthBellCurve;
+
+		public float heatBonus;
+
+		IGameStatsTrackerAdaptor thisGameStatsTrackerAdaptor;
+		public void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor){
+			thisGameStatsTrackerAdaptor = adaptor;
+		}
+
 		IBellCurve CreateHealthBellCurve(){
 			return new BellCurve(
 				1f,
@@ -76,6 +87,9 @@ namespace AppleShooterProto{
 			
 			IPopUIReserve popUIReserve = thisPopUIReserveAdaptor.GetPopUIReserve();
 			thisShootingTarget.SetPopUIReserve(popUIReserve);
+
+			IGameStatsTracker tracker = thisGameStatsTrackerAdaptor.GetTracker();
+			thisShootingTarget.SetGameStatsTracker(tracker);
 
 		}
 		public override void FinalizeSetUp(){
@@ -121,6 +135,10 @@ namespace AppleShooterProto{
 		public void PlayHitAnimation(float magnitude){
 			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
 			thisAnimator.SetTrigger(thisHitTriggerHash);
+		}
+		public float spawnValue;
+		public float GetSpawnValue(){
+			return spawnValue;
 		}
 	}
 }

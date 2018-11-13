@@ -65,13 +65,15 @@ namespace AppleShooterProto{
 					float health,
 					Color defaultColor,
 					IBellCurve healthBellCurve,
+					float heatBonus,
 					IStaticShootingTargetAdaptor adaptor
 				): base(
 					index,
 					health,
 					defaultColor,
 					healthBellCurve,
-					adaptor
+					adaptor,
+					heatBonus
 				){
 				}
 			}

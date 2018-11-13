@@ -179,6 +179,7 @@ namespace AppleShooterProto{
 				Color defaultColor,
 				IBellCurve healthBellCurve,
 				IFlyingTargetAdaptor adaptor,
+				float heatBonus,
 
 				Vector3 initialVelocity,
 				float distThreshold,
@@ -189,7 +190,8 @@ namespace AppleShooterProto{
 				health,
 				defaultColor,
 				healthBellCurve,
-				adaptor
+				adaptor,
+				heatBonus
 			){	
 				thisInitialVelocity = initialVelocity;
 				thisDistThreshold = distThreshold;

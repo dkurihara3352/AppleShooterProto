@@ -23,6 +23,7 @@ namespace AppleShooterProto{
 				thisDefaultColor,
 				thisHealthBellCurve,
 				this,
+				heatBonus,
 				initialVelocity,
 				distanceThreshold,
 				waypointsCountInSequence,

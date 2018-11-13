@@ -254,11 +254,12 @@ namespace AppleShooterProto{
 
 				never returns 0
 			*/
-			for(int i = 0; i < thisCurvePoints.Length; i ++){
-				if(thisCurvePoints[i].GetDistanceUpToPointOnCurve() > totalDistInCurve){
-					return i;
+			if(thisCurvePoints != null)
+				for(int i = 0; i < thisCurvePoints.Length; i ++){
+					if(thisCurvePoints[i].GetDistanceUpToPointOnCurve() > totalDistInCurve){
+						return i;
+					}
 				}
-			}
 			return -1;
 		}
 		float GetNormalizedPositionBetweenPoints(

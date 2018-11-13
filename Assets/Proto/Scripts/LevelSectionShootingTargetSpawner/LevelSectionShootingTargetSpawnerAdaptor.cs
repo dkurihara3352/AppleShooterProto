@@ -46,6 +46,9 @@ namespace AppleShooterProto{
 				return reserveAdaptor.GetReserve();
 			}
 		}
+		public float spawnValue{
+			get{return reserveAdaptor.GetSpawnValue();}
+		}
 		public float relativeProbability;
 		public int maxCount;
 		public AbsShootingTargetSpawnPointGroupAdaptor spawnPointGroupAdaptor;
