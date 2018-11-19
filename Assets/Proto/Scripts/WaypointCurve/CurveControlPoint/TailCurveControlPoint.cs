@@ -17,7 +17,7 @@ namespace AppleShooterProto{
 			base.LockTransform();
 			LockPositionAtOrigin();
 		}
-		void LockPositionAtOrigin(){
+		protected void LockPositionAtOrigin(){
 			this.transform.localPosition = Vector3.zero;
 		}
 		protected override void LockRotation(){

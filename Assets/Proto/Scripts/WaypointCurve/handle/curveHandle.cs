@@ -8,6 +8,6 @@ public class curveHandle : MonoBehaviour {
 	public Color handleColor;
 	void OnDrawGizmos(){
 		Gizmos.color = handleColor;
-		Gizmos.DrawCube(this.transform.position, Vector3.one);
+		Gizmos.DrawCube(this.transform.position, Vector3.one * .5f);
 	}
 }

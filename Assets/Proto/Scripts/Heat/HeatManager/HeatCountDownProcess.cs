@@ -23,7 +23,7 @@ namespace AppleShooterProto{
 				for(int i = 0; i < quotient; i ++){
 					float maxHeat = thisStateEngine.GetMaxHeat();
 					float decayAmount = maxHeat * thisHeatDecayRate;
-					thisStateEngine.TickAwayHeat(thisHeatDecayRate);
+					thisStateEngine.TickAwayHeat(decayAmount);
 				}
 				elapsedTimeSinceLastTick = elapsedTimeSinceLastTick - quotient;
 			}

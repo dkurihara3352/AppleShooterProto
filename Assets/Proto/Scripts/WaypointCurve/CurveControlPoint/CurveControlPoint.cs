@@ -44,7 +44,7 @@ namespace AppleShooterProto{
 		public Color pointColor;
 		void DrawSelf(){
 			Gizmos.color = pointColor;
-			Gizmos.DrawCube(this.transform.position, Vector3.one);
+			Gizmos.DrawCube(this.transform.position, Vector3.one * .5f);
 		}
 		protected abstract void LockTransform();
 		protected void LockHandle(Transform handle){
