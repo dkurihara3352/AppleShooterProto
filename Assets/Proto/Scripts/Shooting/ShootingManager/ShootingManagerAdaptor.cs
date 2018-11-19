@@ -62,6 +62,7 @@ namespace AppleShooterProto{
 		public TrajectoryAdaptor trajectoryAdaptor;
 		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		public ArrowReserveAdaptor arrowReserveAdaptor;
+		public ArrowTrailReserveAdaptor arrowTrailReserveAdaptor;
 		public float initialFlightSpeed;
 		public float GetInitialSpeed(){
 			return initialFlightSpeed;
@@ -93,6 +94,9 @@ namespace AppleShooterProto{
 
 			IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
 			thisShootingManager.SetArrowReserve(arrowReserve);
+
+			IArrowTrailReserve arrowTrailReserve = arrowTrailReserveAdaptor.GetArrowTrailReserve();
+			thisShootingManager.SetArrowTrailReserve(arrowTrailReserve);
 		}
 	}
 }

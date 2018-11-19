@@ -100,6 +100,11 @@ namespace AppleShooterProto{
 			float targetMaxHeat,
 			float smoothTime
 		);
+		IArrowTrailFadeProcess CreateArrowTrailFadeProcess(
+			float fadeTime,
+			IArrowTrail trail,
+			float initialAlpha
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -356,6 +361,19 @@ namespace AppleShooterProto{
 				smoothTime
 			);
 			return new HeatLevelUpProcess(arg);
+		}
+		public IArrowTrailFadeProcess CreateArrowTrailFadeProcess(
+			float fadeTime,
+			IArrowTrail trail,
+			float initialAlpha
+		){
+			ArrowTrailFadeProcess.IConstArg arg = new ArrowTrailFadeProcess.ConstArg(
+				thisProcessManager,
+				fadeTime,
+				trail,
+				initialAlpha
+			);
+			return new ArrowTrailFadeProcess(arg);
 		}
 	}
 }

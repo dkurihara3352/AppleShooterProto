@@ -60,9 +60,14 @@ namespace AppleShooterProto{
 		}
 
 		public void SetParent(ISceneObject sceneObj){
-			IMonoBehaviourAdaptor parentAdaptor = sceneObj.GetAdaptor();
-			Transform parentTrans = parentAdaptor.GetTransform();
-			thisAdaptor.SetParent(parentTrans);
+			Transform parentTrans;
+			if(sceneObj != null){
+				IMonoBehaviourAdaptor parentAdaptor = sceneObj.GetAdaptor();
+				parentTrans = parentAdaptor.GetTransform();
+			}else{
+				parentTrans = null;
+			}
+				thisAdaptor.SetParent(parentTrans);
 		}
 		public void ResetLocalTransform(){
 			thisAdaptor.ResetLocalTransform();

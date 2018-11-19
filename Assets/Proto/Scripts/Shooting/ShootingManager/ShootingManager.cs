@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void SetTrajectory(ITrajectory trajectory);
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
 		void SetArrowReserve(IArrowReserve reserve);
+		void SetArrowTrailReserve(IArrowTrailReserve reserve);
 
 		void NockArrow();
 		void SetNockedArrow(IArrow arrow);
@@ -92,6 +93,10 @@ namespace AppleShooterProto{
 			public void SetLandedArrowReserve(ILandedArrowReserve reserve){
 				thisLandedArrowReserve = reserve;
 			}
+			IArrowTrailReserve thisArrowTrailReserve;
+			public void SetArrowTrailReserve(IArrowTrailReserve reserve){
+				thisArrowTrailReserve = reserve;
+			}
 		/* Nock */
 			IArrow thisNockedArrow;
 			public void NockArrow(){
@@ -120,7 +125,6 @@ namespace AppleShooterProto{
 					float normalizedDrawTime = GetNormalizedDrawTime();
 					thisDrawStrength = CalculateDrawStrength(normalizedDrawTime);
 
-					// thisGlobalDrawStrength = CalculateGlobalDrawStrength(thisDrawStrength);
 					thisInputManager.Zoom(thisDrawStrength);
 					thisFlightSpeed = CalculateFlightSpeed();
 					thisArrowAttack = CalculateArrowAttack();
@@ -149,21 +153,9 @@ namespace AppleShooterProto{
 				public float GetDrawStrength(){
 					return thisDrawStrength;
 				}
-				// float thisGlobalDrawStrength;
-				/*  draw strength relative to global min and max
-					0f equals minimum possible draw strength
-					1f to maximum
-				*/
-				// public float GetGlobalDrawStrength(){
-				// 	return thisGlobalDrawStrength;
-				// }
 				float thisGlobalMinDrawStrength;
 				float thisGlobalMaxDrawStrength;
-				// float CalculateGlobalDrawStrength(float drawStrength){
-				// 	float numerator = drawStrength - thisGlobalMinDrawStrength;
-				// 	float denominator = thisGlobalMaxDrawStrength - thisGlobalMinDrawStrength;
-				// 	return numerator / denominator;
-				// }
+
 			/* ArrowAttack */
 				float thisArrowAttack;
 				public float GetArrowAttack(){
@@ -178,7 +170,6 @@ namespace AppleShooterProto{
 						thisDrawStrength
 					);
 					return result;
-					// return thisGlobalMinAttack + (thisGlobalDrawStrength * thisGlobalMaxAttack);
 				}
 			/* FlightSpeed */
 				float thisFlightSpeed;			
@@ -188,7 +179,6 @@ namespace AppleShooterProto{
 				float thisGlobalMinFlightSpeed;
 				float thisGlobalMaxFlightSpeed;
 				float CalculateFlightSpeed(){
-					// return thisGlobalMinFlightSpeed + (thisGlobalDrawStrength * thisGlobalMaxFlightSpeed);
 					float result = Mathf.Lerp(
 						thisGlobalMinFlightSpeed,
 						thisGlobalMaxFlightSpeed,
@@ -208,10 +198,8 @@ namespace AppleShooterProto{
 				ClearDrawFields();
 			}
 			void ClearDrawFields(){
-				// StopDraw();
 				thisDrawElapsedTime = 0f;
 				thisDrawStrength = CalculateDrawStrength(0f);
-				// thisGlobalDrawStrength = CalculateGlobalDrawStrength(thisDrawStrength);
 				thisFlightSpeed = CalculateFlightSpeed();
 				thisArrowAttack = CalculateArrowAttack();
 				thisTrajectory.Clear();
@@ -280,6 +268,8 @@ namespace AppleShooterProto{
 				arrow.SetAttack(thisArrowAttack);
 				arrow.Release();
 				StopDraw();
+
+				thisArrowTrailReserve.ActivateTrailAt(arrow);
 				// ResetDraw();
 			}
 		/* shooting Process */

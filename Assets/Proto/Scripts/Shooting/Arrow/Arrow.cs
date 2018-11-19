@@ -29,6 +29,8 @@ namespace AppleShooterProto{
 		void SetLookRotation(Vector3 forward);
 		string GetParentName();
 
+		void SetArrowTrail(IArrowTrail trail);
+		void CheckAndClearArrowTrail(IArrowTrail trail);
 	}
 	public class Arrow : AbsSceneObject, IArrow{
 		/* Setup */
@@ -97,10 +99,26 @@ namespace AppleShooterProto{
 				thisShootingManager.RegisterShot(this);
 			}
 			public void DeactivateImple(){
+				DetachTrail();
+
 				StopFlight();
 				SetAttack(0f);
 				thisArrowReserve.Reserve(this);
 				thisShootingManager.CheckAndClearNockedArrow(this);
+
+			}
+			IArrowTrail thisTrail;
+			public void SetArrowTrail(IArrowTrail trail){
+				thisTrail = trail;
+			}
+			void DetachTrail(){
+				if(thisTrail != null)
+					thisTrail.Detach();
+				thisTrail = null;
+			}
+			public void CheckAndClearArrowTrail(IArrowTrail trail){
+				if(thisTrail != null && thisTrail == trail)
+					thisTrail = null;
 			}
 			public void TryRegisterShot(){
 				if(thisShootingManager.AcceptsNewShot())
