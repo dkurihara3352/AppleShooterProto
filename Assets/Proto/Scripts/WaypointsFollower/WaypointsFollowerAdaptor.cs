@@ -7,6 +7,10 @@ namespace AppleShooterProto{
 	public interface IWaypointsFollowerAdaptor: IMonoBehaviourAdaptor{
 		IWaypointsFollower GetWaypointsFollower();
 		float GetSpeed();
+		float GetSmoothStartTime();
+		AnimationCurve GetSmoothStartCurve();
+		float GetSmoothStopTime();
+		AnimationCurve GetSmoothStopCurve();
 	}
 	public class WaypointsFollowerAdaptor : MonoBehaviourAdaptor, IWaypointsFollowerAdaptor {
 		IWaypointsFollower thisFollower;
@@ -31,6 +35,22 @@ namespace AppleShooterProto{
 				IWaypointCurveCycleManager waypointsManager = waypointsManagerAdaptor.GetWaypointsManager();
 				thisFollower.SetWaypointsManager(waypointsManager);
 			}
+		}
+		public AnimationCurve smoothStartCurve;
+		public AnimationCurve GetSmoothStartCurve(){
+			return smoothStartCurve;
+		}
+		public float smoothStartTime;
+		public float GetSmoothStartTime(){
+			return smoothStartTime;
+		}
+		public AnimationCurve smoothStopCurve;
+		public AnimationCurve GetSmoothStopCurve(){
+			return smoothStopCurve;
+		}
+		public float smoothStopTime;
+		public float GetSmoothStopTime(){
+			return smoothStopTime;
 		}
 	}
 }

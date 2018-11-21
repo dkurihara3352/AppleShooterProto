@@ -6,6 +6,8 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface IFollowWaypointProcess: IProcess{
 		float GetNormalizedPositionOnCurve();
+		void SetTimeScale(float timeScale);
+		float GetTimeScale();
 	}
 	public class FollowWaypointProcess: AbsProcess, IFollowWaypointProcess{
 		public FollowWaypointProcess(
@@ -20,10 +22,10 @@ namespace AppleShooterProto{
 			thisWaypointEventManager = new WaypointEventManager();
 			SetNewCurve(
 				arg.initialCurve,
-				0f
+				arg.initialTime
 			);
-			if(thisCycleManager != null)
-				thisWaypointEventManager.SetNewCurve(arg.initialCurve);
+			// if(thisCycleManager != null)
+			// 	thisWaypointEventManager.SetNewCurve(arg.initialCurve);
 		}
 		readonly IWaypointsFollower thisFollower;
 		readonly float thisSpeed;
@@ -46,11 +48,22 @@ namespace AppleShooterProto{
 			thisRequiredTimeForCurrentCurve = curve.GetTotalDistance() / thisSpeed;
 			thisTotalElapsedTimeOnCurrentCurve = initialTime;
 			thisWaypointEventManager.SetNewCurve(curve);
+			float initialEventPoint = 0f;
+			if(initialTime != 0f)
+				initialEventPoint = initialTime/thisRequiredTimeForCurrentCurve;
+			thisWaypointEventManager.SetInitialEventPoint(initialEventPoint);
 		}
 		float thisTotalElapsedTimeOnCurrentCurve = 0f;
 		float thisRequiredTimeForCurrentCurve;
+		float thisTimeScale = 1f;
+		public void SetTimeScale(float timeScale){
+			thisTimeScale = timeScale;
+		}
+		public float GetTimeScale(){
+			return thisTimeScale;
+		}
 		protected override void UpdateProcessImple(float deltaT){
-			thisTotalElapsedTimeOnCurrentCurve += deltaT;
+			thisTotalElapsedTimeOnCurrentCurve += deltaT * thisTimeScale;
 			if(RequiredTimeForCurrentCurveHasPassed()){
 				if(thisCycleManager != null){
 					IWaypointCurve nextCurve = thisCycleManager.GetNextCurve(thisCurrentCurve);
@@ -97,6 +110,8 @@ namespace AppleShooterProto{
 				targetUpDirection
 			);
 			thisWaypointEventManager.CheckForWaypointEvent(normalizedTime);
+
+			thisFollower.SetElapsedTimeOnCurrentCurve(thisTotalElapsedTimeOnCurrentCurve);
 		}
 		public float GetNormalizedPositionOnCurve(){
 			return thisTotalElapsedTimeOnCurrentCurve/ thisRequiredTimeForCurrentCurve;
@@ -110,6 +125,7 @@ namespace AppleShooterProto{
 		int processOrder{get;}
 		IWaypointCurve initialCurve{get;}
 		IWaypointCurveCycleManager cycleManager{get;}
+		float initialTime{get;}
 	}
 	public struct FollowWaypointProcessConstArg: IFollowWaypointProcessConstArg{
 		public FollowWaypointProcessConstArg(
@@ -118,7 +134,9 @@ namespace AppleShooterProto{
 			float speed,
 			int processOrder,
 			IWaypointCurve initialCurve,
-			IWaypointCurveCycleManager waypointsManager
+			IWaypointCurveCycleManager waypointsManager,
+
+			float initialTime
 		){
 			thisProcessManager = processManager;
 			thisFollower = follwer;
@@ -126,6 +144,8 @@ namespace AppleShooterProto{
 			thisProcessOrder = processOrder;
 			thisInitialCurve = initialCurve;
 			thisWaypointsManager = waypointsManager;
+
+			thisInitialTime = initialTime;
 		}
 		readonly IProcessManager thisProcessManager;
 		public IProcessManager processManager{get{return thisProcessManager;}}
@@ -141,6 +161,9 @@ namespace AppleShooterProto{
 		}
 		readonly IWaypointCurveCycleManager thisWaypointsManager;
 		public IWaypointCurveCycleManager cycleManager{get{return thisWaypointsManager;}}
+
+		readonly float thisInitialTime;
+		public float initialTime{get{return thisInitialTime;}}
 	}
 	
 }

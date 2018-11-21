@@ -92,7 +92,8 @@ namespace AppleShooterProto{
 
 		public void StartWaypointsFollower(){
 			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
-			follower.StartFollowing();
+			// follower.StartFollowing();
+			follower.SmoothStart();
 		}
 		public void StartCameraSmoothFollow(){
 			ISmoothFollower follower = camSmoothFollowerAdaptor.GetSmoothFollower();

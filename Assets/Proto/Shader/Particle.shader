@@ -3,8 +3,8 @@
 	Properties
 	{
 		_Color("Color", COLOR) = (1, 1, 1, 1)
-		_MinDist("min dist", Range(0, 3)) = 1
-		_MaxDist("max dist", Range(3, 5)) = 4
+		_ClearDist("clear dist", Range(0, 10)) = 3
+		_FadeDist("fade dist", Range(0, 10)) = 3
 	}
 	SubShader
 	{
@@ -30,19 +30,15 @@
 				float4 vertex : SV_POSITION;
 				fixed alpha: TEXCOORD0;
 			};
-			half _MinDist;
-			half _MaxDist;
+			half _ClearDist;
+			half _FadeDist;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 
-				// float3 worCamPos = _WorldSpaceCameraPos;
-
-				// o.alpha = .1;
-				half fadeDist = _MaxDist - _MinDist;
-				o.alpha = saturate((o.vertex.z - _MinDist)/ fadeDist);
+				o.alpha = saturate((o.vertex.z - _ClearDist)/ _FadeDist);
 				return o;
 			}
 			fixed4 _Color;

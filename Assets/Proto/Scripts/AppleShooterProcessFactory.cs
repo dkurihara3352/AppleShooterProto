@@ -10,7 +10,8 @@ namespace AppleShooterProto{
 			float speed,
 			int processOrder,
 			IWaypointCurve initialCurve,
-			IWaypointCurveCycleManager waypointsManager
+			IWaypointCurveCycleManager waypointsManager,
+			float initialTime
 		);
 		ISmoothFollowTargetProcess CreateSmoothFollowTargetProcess(
 			ISmoothFollower follower,
@@ -105,6 +106,11 @@ namespace AppleShooterProto{
 			IArrowTrail trail,
 			float initialAlpha
 		);
+		IWaypointsFollowerChangeSpeedProcess CreateWaypointsFollowerChangeSpeedProcess(
+			IFollowWaypointProcess followProcess,
+			float time,
+			AnimationCurve speedCurve
+		);
 	}
 
 	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
@@ -119,7 +125,8 @@ namespace AppleShooterProto{
 			float speed,
 			int processOrder,
 			IWaypointCurve initialCurve,
-			IWaypointCurveCycleManager waypointsManager
+			IWaypointCurveCycleManager waypointsManager,
+			float initialTime
 		){
 			IFollowWaypointProcessConstArg arg = new FollowWaypointProcessConstArg(
 				thisProcessManager,
@@ -128,7 +135,9 @@ namespace AppleShooterProto{
 				processOrder,
 
 				initialCurve,
-				waypointsManager
+				waypointsManager,
+
+				initialTime
 			);
 			return new FollowWaypointProcess(arg);
 		}
@@ -374,6 +383,19 @@ namespace AppleShooterProto{
 				initialAlpha
 			);
 			return new ArrowTrailFadeProcess(arg);
+		}
+		public IWaypointsFollowerChangeSpeedProcess CreateWaypointsFollowerChangeSpeedProcess(
+			IFollowWaypointProcess followProcess,
+			float time,
+			AnimationCurve speedCurve
+		){
+			WaypointsFollowerChangeSpeedProcess.IConstArg arg= new WaypointsFollowerChangeSpeedProcess.ConstArg(
+				thisProcessManager,
+				time,
+				followProcess,
+				speedCurve
+			);
+			return new WaypointsFollowerChangeSpeedProcess(arg);
 		}
 	}
 }

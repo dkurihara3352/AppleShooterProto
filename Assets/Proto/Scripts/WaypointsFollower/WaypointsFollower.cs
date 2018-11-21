@@ -24,6 +24,10 @@ namespace AppleShooterProto{
 
 		int GetCurrentWaypointCurveIndex();
 		float GetNormalizedPositionInCurve();
+
+		void SmoothStart();
+		void SmoothStop();
+		void SetElapsedTimeOnCurrentCurve(float elapsedTime);
 	}
 	public class WaypointsFollower: IWaypointsFollower{
 		public WaypointsFollower(
@@ -49,14 +53,19 @@ namespace AppleShooterProto{
 		IFollowWaypointProcess thisProcess;
 		readonly int thisProcessOrder;
 		public void StartFollowing(){
-			thisProcess = thisProcessFactory.CreateFollowWaypointProcess(
+			StopFollowing();
+			thisProcess = CreateFollowProcess();
+			thisProcess.Run();
+		}
+		IFollowWaypointProcess CreateFollowProcess(){
+			return thisProcessFactory.CreateFollowWaypointProcess(
 				this,
 				thisFollowSpeed,
 				thisProcessOrder,
 				thisCurrentWaypointCurve,
-				thisWaypointsManager
+				thisWaypointsManager,
+				thisElapsedTimeOnCurrentCurve
 			);
-			thisProcess.Run();
 		}
 		public void StopFollowing(){
 			if(thisProcess != null && thisProcess.IsRunning())
@@ -105,7 +114,44 @@ namespace AppleShooterProto{
 			else
 				return 0f;
 		}
+		IWaypointsFollowerChangeSpeedProcess thisChangeSpeedProcess;
+		IWaypointsFollowerAdaptor thisTypedAdaptor{
+			get{
+				return (IWaypointsFollowerAdaptor)thisAdaptor;
+			}
+		}
+		public void SmoothStart(){
+			StopFollowing();
+			StopChangeSpeed();
+			thisProcess = CreateFollowProcess();
+			thisProcess.SetTimeScale(0f);
+			thisProcess.Run();
+			thisChangeSpeedProcess = thisProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
+				thisProcess,
+				thisTypedAdaptor.GetSmoothStartTime(),
+				thisTypedAdaptor.GetSmoothStartCurve()
+			);
+			thisChangeSpeedProcess.Run();
+		}
+		void StopChangeSpeed(){
+			if(thisChangeSpeedProcess != null && thisChangeSpeedProcess.IsRunning())
+				thisChangeSpeedProcess.Stop();
+			thisChangeSpeedProcess = null;
+		}
 
+		public void SmoothStop(){
+			StopChangeSpeed();
+			thisChangeSpeedProcess = thisProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
+				thisProcess,
+				thisTypedAdaptor.GetSmoothStopTime(),
+				thisTypedAdaptor.GetSmoothStopCurve()
+			);
+			thisChangeSpeedProcess.Run();
+		}
+		float thisElapsedTimeOnCurrentCurve = 0f;
+		public void SetElapsedTimeOnCurrentCurve(float elapsedTime){
+			thisElapsedTimeOnCurrentCurve = elapsedTime;
+		}
 	}
 
 

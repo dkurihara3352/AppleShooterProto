@@ -98,7 +98,21 @@ namespace AppleShooterProto{
 				)){
 					AddHeat();
 				}
+
+				if(GUI.Button(
+					sTL_4,
+					"SmoothStop"
+				)){
+					SmoothStopFollower();
+				}
 				
+				if(GUI.Button(
+					sTL_5,
+					"SmoothStart"
+				)){
+					SmoothStartFollower();
+				}
+
 			}
 			void DrawArrowsState(){
 				if(thisSystemIsReady){
@@ -246,7 +260,15 @@ namespace AppleShooterProto{
 				IHeatManager manager = heatManagerAdaptor.GetHeatManager();
 				manager.AddHeat(.05f);
 			}
-
+			
+			void SmoothStopFollower(){
+				IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
+				follower.SmoothStop();
+			}
+			void SmoothStartFollower(){
+				IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
+				follower.SmoothStart();
+			}
 		/*  */
 	}
 }
