@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IWaypointsFollowerAdaptor: IMonoBehaviourAdaptor{
+	public interface IWaypointsFollowerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IWaypointsFollower GetWaypointsFollower();
 		float GetSpeed();
 		float GetSmoothStartTime();
@@ -12,23 +12,25 @@ namespace AppleShooterProto{
 		float GetSmoothStopTime();
 		AnimationCurve GetSmoothStopCurve();
 	}
-	public class WaypointsFollowerAdaptor : MonoBehaviourAdaptor, IWaypointsFollowerAdaptor {
-		IWaypointsFollower thisFollower;
-		public IWaypointsFollower GetWaypointsFollower(){
-			return thisFollower;
-		}
+	public class WaypointsFollowerAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointsFollowerAdaptor {
 		public float followSpeed;
 		public float GetSpeed(){return followSpeed;}
 		public WaypointCurveCycleManagerAdaptor waypointsManagerAdaptor;
 		public int processOrder = 100;
 		public override void SetUp(){
-			IWaypointsFollowerConstArg arg = new WaypointsFollowerConstArg(
-				this, 
-				processFactory,
+			thisFollower = CreateFollower();
+		}
+		IWaypointsFollower thisFollower;
+		public IWaypointsFollower GetWaypointsFollower(){
+			return thisFollower;
+		}
+		IWaypointsFollower CreateFollower(){
+			WaypointsFollower.IConstArg arg = new WaypointsFollower.ConstArg(
+				this,
 				followSpeed,
 				processOrder
 			);
-			thisFollower = new WaypointsFollower(arg);
+			return new WaypointsFollower(arg);
 		}
 		public override void SetUpReference(){
 			if(waypointsManagerAdaptor != null){

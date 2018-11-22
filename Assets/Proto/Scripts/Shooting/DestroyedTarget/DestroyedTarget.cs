@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityBase;
 namespace AppleShooterProto{
-	public interface IDestroyedTarget: ISceneObject, IActivationStateHandler, IActivationStateImplementor{
+	public interface IDestroyedTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void ActivateAt(IShootingTarget shootingTarget);
 		void SetPopUIReserve(IPopUIReserve reserve);
 		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		void StopParticleSystem();
 
 	}
-	public class DestroyedTarget : AbsSceneObject, IDestroyedTarget {
+	public class DestroyedTarget : AppleShooterSceneObject, IDestroyedTarget {
 		public DestroyedTarget(
 			IConstArg arg
 		): base(
@@ -83,10 +83,10 @@ namespace AppleShooterProto{
 			thisTypedAdaptor.StopParticleSystem();
 		}
 		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
+			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int index{get;}
 			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
 					IDestroyedTargetAdaptor adaptor

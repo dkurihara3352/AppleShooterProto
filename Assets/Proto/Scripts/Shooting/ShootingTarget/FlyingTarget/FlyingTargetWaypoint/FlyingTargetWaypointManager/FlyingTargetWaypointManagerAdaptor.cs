@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTargetWaypointManagerAdaptor: IMonoBehaviourAdaptor{
+	public interface IFlyingTargetWaypointManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IFlyingTargetWaypointManager GetFlyingTargetWaypointManager();
 	}
-	public class FlyingTargetWaypointManagerAdaptor: MonoBehaviourAdaptor, IFlyingTargetWaypointManagerAdaptor{
+	public class FlyingTargetWaypointManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IFlyingTargetWaypointManagerAdaptor{
 		public override void SetUp(){
 			thisManager = CreateManager();
 			thisWaypointAdaptors = CollectWaypointAdaptors();

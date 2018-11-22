@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILaunchPointAdaptor: IMonoBehaviourAdaptor{
+	public interface ILaunchPointAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		ILaunchPoint GetLaunchPoint();
 	}
-	public class LaunchPointAdaptor : MonoBehaviourAdaptor, ILaunchPointAdaptor {
+	public class LaunchPointAdaptor : AppleShooterMonoBehaviourAdaptor, ILaunchPointAdaptor {
 		ILaunchPoint thisLaunchPoint;
 		public override void SetUp(){
 			thisLaunchPoint = CreateLaunchPoint();

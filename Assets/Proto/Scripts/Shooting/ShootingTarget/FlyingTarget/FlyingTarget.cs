@@ -63,7 +63,7 @@ namespace AppleShooterProto{
 		readonly float thisSpeed;
 		void StartFlight(){
 			StopFlight();
-			thisFlightProcess = thisProcessFactory.CreateFlyingTargetFlightProcess(
+			thisFlightProcess = thisAppleShooterProcessFactory.CreateFlyingTargetFlightProcess(
 				this,
 				thisInitialVelocity,
 				thisDistThreshold,
@@ -177,7 +177,7 @@ namespace AppleShooterProto{
 				int index,
 				float health,
 				Color defaultColor,
-				IBellCurve healthBellCurve,
+				UnityBase.IBellCurve healthBellCurve,
 				IFlyingTargetAdaptor adaptor,
 				float heatBonus,
 

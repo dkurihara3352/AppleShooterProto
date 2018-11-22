@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IPopUIReserve: ISceneObjectReserve<IPopUI>{
 		void PopText(
 			ISceneObject targetSceneObject,

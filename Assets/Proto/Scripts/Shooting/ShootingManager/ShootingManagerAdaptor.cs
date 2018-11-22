@@ -4,14 +4,14 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IShootingManagerAdaptor: IMonoBehaviourAdaptor{
+	public interface IShootingManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingManager GetShootingManager();
 		float GetInitialSpeed();
 		float GetMaxFlightSpeed();
 		float GetGravity();
 		float GetMaxDrawTime();
 	}
-	public class ShootingManagerAdaptor : MonoBehaviourAdaptor, IShootingManagerAdaptor{
+	public class ShootingManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingManagerAdaptor{
 
 		public int drawProcessOrder;
 		public float fireRate = 1f;

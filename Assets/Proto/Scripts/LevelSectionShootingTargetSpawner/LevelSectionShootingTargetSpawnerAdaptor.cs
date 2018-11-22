@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILevelSectionShootingTargetSpawnerAdaptor: IMonoBehaviourAdaptor{
+	public interface ILevelSectionShootingTargetSpawnerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		ILevelSectionShootingTargetSpawner GetSpawner();
 	}	
-	public class LevelSectionShootingTargetSpawnerAdaptor : MonoBehaviourAdaptor, ILevelSectionShootingTargetSpawnerAdaptor {
+	public class LevelSectionShootingTargetSpawnerAdaptor : AppleShooterMonoBehaviourAdaptor, ILevelSectionShootingTargetSpawnerAdaptor {
 		public override void SetUp(){
 			thisSpawner = CreateSpawner();
 		}

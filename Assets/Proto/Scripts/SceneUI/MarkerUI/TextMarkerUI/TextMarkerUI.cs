@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ITextMarkerUI: IMarkerUI{
 		void SetText(string text);
 		void SetAttachedSceneObject(ISceneObject sceneObject);

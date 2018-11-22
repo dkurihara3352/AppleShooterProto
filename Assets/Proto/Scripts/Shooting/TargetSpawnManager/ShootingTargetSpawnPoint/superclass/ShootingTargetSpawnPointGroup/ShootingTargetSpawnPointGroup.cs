@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPointGroup: ISceneObject{
+	public interface IShootingTargetSpawnPointGroup: IAppleShooterSceneObject{
 		IShootingTargetSpawnPoint[] GetSpawnPoints();
 		void SetSpawnPoints(IShootingTargetSpawnPoint[] spawnPoints);
 		IShootingTargetSpawnPoint Draw();
 		void Log();
 		void ClearLog();
 	}	
-	public abstract class AbsShootingTargetSpawnPointGroup : AbsSceneObject, IShootingTargetSpawnPointGroup {
+	public abstract class AbsShootingTargetSpawnPointGroup : AppleShooterSceneObject, IShootingTargetSpawnPointGroup {
 		public AbsShootingTargetSpawnPointGroup(
 			IConstArg arg
 		): base(
@@ -34,7 +34,7 @@ namespace AppleShooterProto{
 		public void SetSpawnPoints(IShootingTargetSpawnPoint[] spawnPoints){
 			thisSpawnPoints = spawnPoints;
 			float[] relativeProb = CreateRelativeProb(spawnPoints.Length);
-			thisIndexPool = new Pool(relativeProb);
+			thisIndexPool = new UnityBase.Pool(relativeProb);
 		}
 		public IShootingTargetSpawnPoint[] GetSpawnPoints(){
 			return thisSpawnPoints;
@@ -46,7 +46,7 @@ namespace AppleShooterProto{
 			}
 			return result;
 		}
-		IPool thisIndexPool;
+		UnityBase.IPool thisIndexPool;
 		public IShootingTargetSpawnPoint Draw(){
 			int index = thisIndexPool.Draw();
 			return thisSpawnPoints[index];
@@ -64,10 +64,10 @@ namespace AppleShooterProto{
 			return resultList.ToArray();
 		}
 		/*  */
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IShootingTargetSpawnPointGroupAdaptor adaptor
 			): base(

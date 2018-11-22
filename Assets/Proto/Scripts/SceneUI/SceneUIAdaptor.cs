@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ISceneUIAdaptor: IMonoBehaviourAdaptor{
 		void SetCamera(Camera camera);
 		void SetCanvas(Canvas canvas);

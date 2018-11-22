@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityBase;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IPopUI: ISceneUI{
 		void SetPopUIReserve(IPopUIReserve reserve);
 		void SetText(string text);

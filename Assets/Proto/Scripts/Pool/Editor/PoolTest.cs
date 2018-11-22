@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NSubstitute;
 using UnityEditor;
 using AppleShooterProto;
+using UnityBase;
 
 [TestFixture, Category("AppleShooterProto")]
 public class PoolTest{

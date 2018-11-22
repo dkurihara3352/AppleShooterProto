@@ -4,19 +4,14 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IPlayerCharacterLookAtTargetAdaptor: IMonoBehaviourAdaptor{
+	public interface IPlayerCharacterLookAtTargetAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IPlayerCharacterLookAtTarget GetLookAtTarget();
 	}
-	public class PlayerCharacterLookAtTargetAdaptor: MonoBehaviourAdaptor, IPlayerCharacterLookAtTargetAdaptor{
+	public class PlayerCharacterLookAtTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IPlayerCharacterLookAtTargetAdaptor{
 		IPlayerCharacterLookAtTarget thisLookAtTarget;
 		public int processOrder;
 		public override void SetUp(){
-			ILookAtTargetConstArg arg = new LookAtTargetConstArg(
-				this,
-				processFactory,
-				processOrder
-			);
-			thisLookAtTarget = new PlayerCharacterLookAtTarget(arg);
+			thisLookAtTarget = CreateLookAtTarget();
 		}
 		public SmoothLookerAdaptor smoothLookerAdaptor;
 		public override void SetUpReference(){
@@ -27,6 +22,13 @@ namespace AppleShooterProto{
 		}
 		public IPlayerCharacterLookAtTarget GetLookAtTarget(){
 			return thisLookAtTarget;
+		}
+		IPlayerCharacterLookAtTarget CreateLookAtTarget(){
+			PlayerCharacterLookAtTarget.IConstArg arg = new PlayerCharacterLookAtTarget.ConstArg(
+				this,
+				processOrder
+			);
+			return new PlayerCharacterLookAtTarget(arg);
 		}
 	}	
 }

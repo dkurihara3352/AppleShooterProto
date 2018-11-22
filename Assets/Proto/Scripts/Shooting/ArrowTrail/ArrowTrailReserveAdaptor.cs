@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IArrowTrailReserveAdaptor: IMonoBehaviourAdaptor{
+	public interface IArrowTrailReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IArrowTrailReserve GetArrowTrailReserve();
 	}
-	public class ArrowTrailReserveAdaptor: MonoBehaviourAdaptor, IArrowTrailReserveAdaptor{
+	public class ArrowTrailReserveAdaptor: AppleShooterMonoBehaviourAdaptor, IArrowTrailReserveAdaptor{
 
 		public override void SetUp(){
 			thisReserve = CreateArrowTrailReserve();

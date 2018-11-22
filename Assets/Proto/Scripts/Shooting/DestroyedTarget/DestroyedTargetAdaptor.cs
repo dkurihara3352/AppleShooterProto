@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityBase;
 
 namespace AppleShooterProto{
-	public interface IDestroyedTargetAdaptor: IMonoBehaviourAdaptor{
+	public interface IDestroyedTargetAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IDestroyedTarget GetDestroyedTarget();
-		// void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
+
 		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
 		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
 		
@@ -18,7 +19,7 @@ namespace AppleShooterProto{
 		void SetIndex(int index);
 		int GetIndex();
 	}
-	public class DestroyedTargetAdaptor: MonoBehaviourAdaptor, IDestroyedTargetAdaptor{
+	public class DestroyedTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IDestroyedTargetAdaptor{
 		public override void SetUp(){
 			base.SetUp();
 			thisDestroyedTarget = CreateDestroyedTarget();
@@ -63,7 +64,7 @@ namespace AppleShooterProto{
 			IDestroyedTargetParticleProcess thisProcess;
 			void StartParticleProcess(){
 				StopParticleProcess();
-				thisProcess = processFactory.CreateDestroyedTargetParticleProcess(
+				thisProcess = thisAppleShooterProcessFactory.CreateDestroyedTargetParticleProcess(
 					this,
 					particleSystemLifeTime
 				);

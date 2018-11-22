@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityBase;
 
 namespace AppleShooterProto{
-	public interface IShootingTarget: ISceneObject, IActivationStateHandler, IActivationStateImplementor{
+	public interface IShootingTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void Hit(IArrow arrow);
 		void AddLandedArrow(ILandedArrow landedArrow);
 		void RemoveLandedArrow(ILandedArrow landedArrow);
@@ -25,7 +26,7 @@ namespace AppleShooterProto{
 
 		float GetHeatBonus();
 	}
-	public abstract class AbsShootingTarget : AbsSceneObject, IShootingTarget {
+	public abstract class AbsShootingTarget : AppleShooterSceneObject, IShootingTarget {
 		public AbsShootingTarget(
 			IConstArg arg
 		): base(
@@ -197,14 +198,14 @@ namespace AppleShooterProto{
 				DeactivateDestroyedTarget();
 			}
 		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
+			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int index{get;}
 				float health{get;}
 				Color defaultColor{get;}
 				IBellCurve healthBellCurve{get;}
 				float heatBonus{get;}
 			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
 					float health,

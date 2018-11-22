@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IHeatManager: ISceneObject, IHeatManagerStateHandler{
+	public interface IHeatManager: IAppleShooterSceneObject, IHeatManagerStateHandler{
 		void SetHeatImage(IHeatImage heatImage);
 		void TickAwayHeat(float delta);
 		void AddHeat(float delta);
@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 		float GetMaxHeat();
 		void SetMaxHeat(float maxHeat);
 	}	
-	public class HeatManager: AbsSceneObject, IHeatManager{
+	public class HeatManager: AppleShooterSceneObject, IHeatManager{
 		
 		public HeatManager(
 			IConstArg arg
@@ -40,7 +40,7 @@ namespace AppleShooterProto{
 			HeatManagerStateEngine.IConstArg stateEngineArg = new HeatManagerStateEngine.ConstArg(
 				this,
 				thisHeatDecayRate,
-				thisProcessFactory
+				thisAppleShooterProcessFactory
 			);
 			return new HeatManagerStateEngine(stateEngineArg);
 		}
@@ -100,7 +100,7 @@ namespace AppleShooterProto{
 		readonly float thisLevelUpTime;
 		void LevelUpHeat(){
 			float targetMaxHeat = thisMaxHeat * 2f;
-			IHeatLevelUpProcess process = thisProcessFactory.CreateHeatLevelUpProcess(
+			IHeatLevelUpProcess process = thisAppleShooterProcessFactory.CreateHeatLevelUpProcess(
 				this,
 				targetMaxHeat,
 				thisLevelUpTime
@@ -108,7 +108,7 @@ namespace AppleShooterProto{
 			process.Run();
 		}
 		/*  */
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float initialHeat{get;}
 			float heatDecayRate{get;}
 			float followSmoothTime{get;}
@@ -121,7 +121,7 @@ namespace AppleShooterProto{
 			float initialMaxHeat{get;}
 			float levelUpTime{get;}
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IHeatManagerAdaptor adaptor,
 				float initialHeat,

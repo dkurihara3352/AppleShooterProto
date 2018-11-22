@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ISceneObjectPoolAdaptor<T>: IMonoBehaviourAdaptor where T: ISceneObject{
 		ISceneObjectPool<T> GetSceneObjectPool();
 	}

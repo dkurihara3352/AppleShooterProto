@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ISceneObject{
 		Vector3 GetPosition();
 		void SetPosition(Vector3 position);
@@ -28,11 +28,6 @@ namespace AppleShooterProto{
 			return thisAdaptor;
 		}
 		protected IMonoBehaviourAdaptorManager thisMonoBehaviourAdaptorManager;
-		protected IAppleShooterProcessFactory thisProcessFactory{
-			get{
-				return thisMonoBehaviourAdaptorManager.GetProcessFactory();
-			}
-		}
 		public Vector3 GetPosition(){
 			return thisAdaptor.GetPosition();
 		}
@@ -72,7 +67,11 @@ namespace AppleShooterProto{
 		public void ResetLocalTransform(){
 			thisAdaptor.ResetLocalTransform();
 		}
-		
+		protected IUnityBaseProcessFactory thisProcessFactory{
+			get{
+				return thisAdaptor.GetProcessFactory();
+			}
+		}
 		/* ConstArg */
 			public interface IConstArg{
 				IMonoBehaviourAdaptor adaptor{get;}

@@ -21,8 +21,8 @@ namespace UISystem{
 		void GetReadyForUISystemActivation();
 		void ActivateUISystem(bool instantly);
 		void DeactivateUISystem(bool instantly);
-		float GetUIImageDarknedBrightness();
-		float GetUIImageDefaultBrightness();
+		// float GetUIImageDarknedBrightness();
+		// float GetUIImageDefaultBrightness();
 		float GetSwipeVelocityThreshold();
 		float GetSwipeDistanceThreshold();
 	}
@@ -33,8 +33,8 @@ namespace UISystem{
 			RectTransform uieReserveTrans, 
 			bool showsInputability,
 
-			float imageDarkenedBrightness,
-			float imageDefaultBrightness,
+			// float imageDarkenedBrightness,
+			// float imageDefaultBrightness,
 
 			float swipeVelocityThreshold,
 			float swipeDistanceThreshold
@@ -44,8 +44,8 @@ namespace UISystem{
 			thisUIEReserveTrans = uieReserveTrans;
 			thisShowsInputability = showsInputability;
 
-			thisImageDarknedBrightness = imageDarkenedBrightness;
-			thisImageDefaultBrightnes = imageDefaultBrightness;
+			// thisImageDarknedBrightness = imageDarkenedBrightness;
+			// thisImageDefaultBrightnes = imageDefaultBrightness;
 			thisPopUpManager = new PopUpManager();
 
 			thisSwipeVelocityThreshold = swipeVelocityThreshold;
@@ -122,14 +122,14 @@ namespace UISystem{
 			thisRegisteredID = touchID;
 		}
 		/*  */
-		readonly float thisImageDarknedBrightness;
-		public float GetUIImageDarknedBrightness(){
-			return thisImageDarknedBrightness;
-		}
-		readonly float thisImageDefaultBrightnes;
-		public float GetUIImageDefaultBrightness(){
-			return thisImageDefaultBrightnes;
-		}
+		// readonly float thisImageDarknedBrightness;
+		// public float GetUIImageDarknedBrightness(){
+		// 	return thisImageDarknedBrightness;
+		// }
+		// readonly float thisImageDefaultBrightnes;
+		// public float GetUIImageDefaultBrightness(){
+		// 	return thisImageDefaultBrightnes;
+		// }
 
 
 		/* Debug */

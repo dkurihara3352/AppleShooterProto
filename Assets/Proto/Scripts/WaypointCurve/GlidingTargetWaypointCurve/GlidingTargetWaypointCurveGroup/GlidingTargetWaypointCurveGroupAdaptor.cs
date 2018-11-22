@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IGlidingTargetWaypointCurveGroupAdaptor: IMonoBehaviourAdaptor{
+	public interface IGlidingTargetWaypointCurveGroupAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IGlidingTargetWaypointCurveGroup GetCurveGroup();
 	}
-	public class GlidingTargetWaypointCurveGroupAdaptor: MonoBehaviourAdaptor, IGlidingTargetWaypointCurveGroupAdaptor{
+	public class GlidingTargetWaypointCurveGroupAdaptor: AppleShooterMonoBehaviourAdaptor, IGlidingTargetWaypointCurveGroupAdaptor{
 		IGlidingTargetWaypointCurveGroup thisGroup;
 		public IGlidingTargetWaypointCurveGroup GetCurveGroup(){
 			return thisGroup;

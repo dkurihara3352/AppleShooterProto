@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityBase;
 
 namespace AppleShooterProto{
-	public interface IArrowTrail: ISceneObject, IActivationStateHandler, IActivationStateImplementor{
+	public interface IArrowTrail: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void SetArrowTrailReserve(IArrowTrailReserve reserve);
 		void ActivateAt(IArrow arrow);
 		void Detach();
 
 		void SetAlpha(float alpha);
 	}
-	public class ArrowTrail : AbsSceneObject, IArrowTrail {
+	public class ArrowTrail : AppleShooterSceneObject, IArrowTrail {
 
 		public ArrowTrail(
 			IConstArg arg
@@ -70,7 +71,7 @@ namespace AppleShooterProto{
 		readonly float thisFadeTime;
 		void StartFade(){
 			StopFade();
-			thisProcess = thisProcessFactory.CreateArrowTrailFadeProcess(
+			thisProcess = thisAppleShooterProcessFactory.CreateArrowTrailFadeProcess(
 				thisFadeTime,
 				this,
 				thisTypedAdaptor.GetAlpha()
@@ -87,10 +88,10 @@ namespace AppleShooterProto{
 		}
 	
 
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float fadeTime{get;}
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IArrowTrailAdaptor adaptor,
 				float fadeTime

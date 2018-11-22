@@ -4,10 +4,10 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface ILandedArrowReserveAdaptor: IMonoBehaviourAdaptor{
+	public interface ILandedArrowReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		ILandedArrowReserve GetLandedArrowReserve();
 	}
-	public class LandedArrowReserveAdaptor: MonoBehaviourAdaptor, ILandedArrowReserveAdaptor{
+	public class LandedArrowReserveAdaptor: AppleShooterMonoBehaviourAdaptor, ILandedArrowReserveAdaptor{
 		ILandedArrowReserve thisReserve;
 		public ILandedArrowReserve GetLandedArrowReserve(){
 			return thisReserve;

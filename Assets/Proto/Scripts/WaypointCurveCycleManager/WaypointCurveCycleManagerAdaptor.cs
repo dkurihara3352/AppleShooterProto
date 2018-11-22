@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IWaypointCurveCycleManagerAdaptor: IMonoBehaviourAdaptor{
+	public interface IWaypointCurveCycleManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IWaypointCurveCycleManager GetWaypointsManager();
 	}
-	public class WaypointCurveCycleManagerAdaptor : MonoBehaviourAdaptor, IWaypointCurveCycleManagerAdaptor {
+	public class WaypointCurveCycleManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointCurveCycleManagerAdaptor {
 		
 		public override void SetUp(){
 			MakeSureCycleStartIndexIsValid();
@@ -57,6 +57,7 @@ namespace AppleShooterProto{
 			for(int i = 0; i < childCount; i++){
 				Transform child = transform.GetChild(i);
 				IWaypointCurveAdaptor curveAdaptor = (IWaypointCurveAdaptor)child.GetComponent(typeof(IWaypointCurveAdaptor));
+
 				if(curveAdaptor != null && curveAdaptor.IsEnabled())
 					result.Add(curveAdaptor.GetWaypointCurve());
 			}
@@ -64,6 +65,9 @@ namespace AppleShooterProto{
 				int index = result.IndexOf(curve);
 				curve.SetIndex(index);
 			}
+			Debug.Log(
+				result.Count.ToString()
+			);
 			return result;
 		}
 	}

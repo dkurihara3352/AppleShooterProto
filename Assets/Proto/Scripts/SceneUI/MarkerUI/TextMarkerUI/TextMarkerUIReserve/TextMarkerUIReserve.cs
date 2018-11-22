@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ITextMarkerUIReserve: IMarkerUIReserve{
 		ITextMarkerUI ActivateTextMarkerUIAt(
 			ISceneObject obj,

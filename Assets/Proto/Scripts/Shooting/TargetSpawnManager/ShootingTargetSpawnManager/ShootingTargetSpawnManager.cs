@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnManager: ISceneObject{
+	public interface IShootingTargetSpawnManager: IAppleShooterSceneObject{
 		float GetSpawnValue(TargetType targetType);
 	}
-	public class ShootingTargetSpawnManager : AbsSceneObject, IShootingTargetSpawnManager {
+	public class ShootingTargetSpawnManager : AppleShooterSceneObject, IShootingTargetSpawnManager {
 		public ShootingTargetSpawnManager(
 			IConstArg arg
 		): base(
@@ -32,12 +32,12 @@ namespace AppleShooterProto{
 			}
 		}
 
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float staticSpawnValue{get;}
 			float fattySpawnValue{get;}
 			float gliderSpawnValue{get;}
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IShootingTargetSpawnManagerAdaptor adaptor,
 				float staticSpawnValue,

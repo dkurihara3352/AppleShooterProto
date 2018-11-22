@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ITrajectory{
+	public interface ITrajectory: IAppleShooterSceneObject{
 		void DrawTrajectory(
 			Vector3 aimDirection,
 			float initialSpeed,
@@ -12,18 +12,16 @@ namespace AppleShooterProto{
 		);
 		void Clear();
 	}
-	public class Trajectory : ITrajectory {
+	public class Trajectory : AppleShooterSceneObject, ITrajectory {
 
 		public Trajectory(
-			ITrajectoryConstArg arg
-		){
+			IConstArg arg
+		): base(arg){
 			thisMaxT = arg.maxT;
 			thisResolution = arg.resolution;
-			thisAdaptor = arg.adaptor;
 		}
 		readonly float thisMaxT;
 		readonly int thisResolution;
-		readonly ITrajectoryAdaptor thisAdaptor;
 		public void DrawTrajectory(
 			Vector3 aimDirection,
 			float initialSpeed,
@@ -47,34 +45,36 @@ namespace AppleShooterProto{
 
 				trajectoryPoints[i] = trajectoryPoint;
 			}
-			thisAdaptor.DrawTrajectory(trajectoryPoints);
+			thisTypedAdaptor.DrawTrajectory(trajectoryPoints);
+		}
+		ITrajectoryAdaptor thisTypedAdaptor{
+			get{
+				return (ITrajectoryAdaptor)thisAdaptor;
+			}
 		}
 		public void Clear(){
-			thisAdaptor.Clear();
+			thisTypedAdaptor.Clear();
 		}
-	}
 
-
-	public interface ITrajectoryConstArg{
-		float maxT{get;}
-		int resolution{get;}
-		ITrajectoryAdaptor adaptor{get;}
-	}
-	public struct TrajectoryConstArg: ITrajectoryConstArg{
-		public TrajectoryConstArg(
-			float maxT,
-			int resolution,
-			ITrajectoryAdaptor adaptor
-		){
-			thisMaxT = maxT;
-			thisResolution = resolution;
-			thisAdaptor = adaptor;
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			float maxT{get;}
+			int resolution{get;}
 		}
-		readonly float thisMaxT;
-		public float maxT{get{return thisMaxT;}}
-		readonly int thisResolution;
-		public int resolution{get{return thisResolution;}}
-		readonly ITrajectoryAdaptor thisAdaptor;
-		public ITrajectoryAdaptor adaptor{get{return thisAdaptor;}}
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public ConstArg(
+				ITrajectoryAdaptor adaptor,
+				float maxT,
+				int resolution
+			): base(
+				adaptor
+			){
+				thisMaxT = maxT;
+				thisResolution = resolution;
+			}
+			readonly float thisMaxT;
+			public float maxT{get{return thisMaxT;}}
+			readonly int thisResolution;
+			public int resolution{get{return thisResolution;}}
+		}
 	}
 }

@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 		public SmoothLookerAdaptor cameraPivotSmoothLookerAdaptor;
 		public SmoothLookerAdaptor camSmoothLookerAdaptor;
 
-		public MonoBehaviourAdaptorManager mbAdaptorManager;
+		public AppleShooterMonoBehaviourAdaptorManager mbAdaptorManager;
 		public UIManagerAdaptor uiManagerAdaptor;
 
 		public CoreGameplayInputScrollerAdaptor coreGameplayInputScrollerAdaptor;

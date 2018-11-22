@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace AppleShooterProto{
-	public interface IArrowTrailAdaptor: IMonoBehaviourAdaptor{
+	public interface IArrowTrailAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		void SetArrowTrailReserveAdaptor(IArrowTrailReserveAdaptor adaptor);
 		IArrowTrail GetArrowTrail();
 		void SetAlpha(float alpha);
@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 		void ClearRenderer();
 	}
 	[RequireComponent(typeof(TrailRenderer))]
-	public class ArrowTrailAdaptor: MonoBehaviourAdaptor, IArrowTrailAdaptor{
+	public class ArrowTrailAdaptor: AppleShooterMonoBehaviourAdaptor, IArrowTrailAdaptor{
 		public override void SetUp(){
 			thisTrail = CreateTrail();
 			thisTrailRenderer = CollectTrailRenderer();

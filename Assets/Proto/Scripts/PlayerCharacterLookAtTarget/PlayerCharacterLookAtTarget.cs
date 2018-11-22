@@ -3,42 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IPlayerCharacterLookAtTarget{
+	public interface IPlayerCharacterLookAtTarget: IAppleShooterSceneObject{
 		void StartLookAtTargetMotion();
 		void SetDirection(Vector3 direction);
-		void SetPosition(Vector3 position);
 		Vector3 GetDirection();
-		Vector3 GetPosition();
 		void SetSmoothLooker(ISmoothLooker looker);
 	}
-	public class PlayerCharacterLookAtTarget : IPlayerCharacterLookAtTarget {
+	public class PlayerCharacterLookAtTarget : AppleShooterSceneObject, IPlayerCharacterLookAtTarget {
 		public PlayerCharacterLookAtTarget(
-			ILookAtTargetConstArg arg
+			IConstArg arg
+		): base(
+			arg
 		){
-			thisAdaptor = arg.adaptor;
-			thisProcessFactory = arg.processFactory;
 			thisProcessOrder = arg.processOrder;
 		}
-		readonly IPlayerCharacterLookAtTargetAdaptor thisAdaptor;
 		ISmoothLooker thisSmoothLooker;
-		readonly IAppleShooterProcessFactory thisProcessFactory;
 		public void SetSmoothLooker(ISmoothLooker looker){
 			thisSmoothLooker = looker;
 		}
 		readonly int thisProcessOrder;
 		public void StartLookAtTargetMotion(){
-			IPlayerCharacterLookAtTargetMotionProcess process = thisProcessFactory.CreateLookAtTargetMotionProcess(
+			IPlayerCharacterLookAtTargetMotionProcess process = thisAppleShooterProcessFactory.CreateLookAtTargetMotionProcess(
 				this,
 				thisSmoothLooker,
 				thisProcessOrder
 			);
 			process.Run();
-		}
-		public void SetPosition(Vector3 position){
-			thisAdaptor.SetPosition(position);
-		}
-		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
 		}
 		float thisAnchorLength = 20f;
 		Vector3 thisAnchorPosition{
@@ -53,28 +43,23 @@ namespace AppleShooterProto{
 			thisDirection = direction;
 			SetPosition(newPosition);
 		}
+
+
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			int processOrder{get;}
+		}
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public ConstArg(
+				IPlayerCharacterLookAtTargetAdaptor adaptor,
+				int processOrder
+			): base(
+				adaptor
+			){
+				thisProcessOrder = processOrder;
+			}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+		}
 	}
 
-	public interface ILookAtTargetConstArg{
-		IPlayerCharacterLookAtTargetAdaptor adaptor{get;}
-		IAppleShooterProcessFactory processFactory{get;}
-		int processOrder{get;}
-	}
-	public struct LookAtTargetConstArg: ILookAtTargetConstArg{
-		public LookAtTargetConstArg(
-			IPlayerCharacterLookAtTargetAdaptor adaptor,
-			IAppleShooterProcessFactory processFactory,
-			int processOrder
-		){
-			thisAdaptor = adaptor;
-			thisProcessFactory = processFactory;
-			thisProcessOrder = processOrder;
-		}
-		readonly IPlayerCharacterLookAtTargetAdaptor thisAdaptor;
-		public IPlayerCharacterLookAtTargetAdaptor adaptor{get{return thisAdaptor;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
-	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IArrow: ISceneObject, IArrowStateHandler, IArrowStateImplementor{
+	public interface IArrow: IAppleShooterSceneObject, IArrowStateHandler, IArrowStateImplementor{
 		void SetLaunchPoint(ILaunchPoint launchPoint);
 		void SetShootingManager(IShootingManager shootingManager);
 		void SetArrowReserve(IArrowReserve reserve);
@@ -32,7 +32,7 @@ namespace AppleShooterProto{
 		void SetArrowTrail(IArrowTrail trail);
 		void CheckAndClearArrowTrail(IArrowTrail trail);
 	}
-	public class Arrow : AbsSceneObject, IArrow{
+	public class Arrow : AppleShooterSceneObject, IArrow{
 		/* Setup */
 			public Arrow(
 				IConstArg arg
@@ -130,7 +130,7 @@ namespace AppleShooterProto{
 			IArrowFlightProcess thisFlightProcess;
 			public void StartFlight(){
 				StopFlight();
-				thisFlightProcess = thisProcessFactory.CreateArrowFlightProcess(
+				thisFlightProcess = thisAppleShooterProcessFactory.CreateArrowFlightProcess(
 					this,
 					thisShootingManager.GetFlightSpeed(),
 					thisShootingManager.GetFlightDirection(),
@@ -187,10 +187,10 @@ namespace AppleShooterProto{
 				thisAttack = attack;
 			}
 		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
+			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int index{get;}
 			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
 					IArrowAdaptor adaptor

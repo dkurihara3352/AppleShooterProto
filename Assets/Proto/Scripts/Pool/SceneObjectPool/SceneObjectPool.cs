@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ISceneObjectPool<T>: ISceneObject where T: ISceneObject{
 		void SetUpProbabilityTable(
 			Dictionary<T, float> relativeProbabilityTable

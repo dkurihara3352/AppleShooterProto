@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IMarkerUIMarkProcess: IProcess{}
 	public class MarkerUIMarkProcess: AbsProcess, IMarkerUIMarkProcess{
 		public MarkerUIMarkProcess(

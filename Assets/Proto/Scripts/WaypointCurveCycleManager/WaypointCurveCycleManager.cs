@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IWaypointCurveCycleManager: ISceneObject{
+	public interface IWaypointCurveCycleManager: IAppleShooterSceneObject{
 
 		void SetWaypointsFollower(IWaypointsFollower follower);
 		void CheckAndClearWaypointsFollower(IWaypointsFollower follower);
@@ -26,7 +26,7 @@ namespace AppleShooterProto{
 		int GetCurrentCurveIDInSequence();
 	}
 
-	public class WaypointCurveCycleManager : AbsSceneObject, IWaypointCurveCycleManager{
+	public class WaypointCurveCycleManager : AppleShooterSceneObject, IWaypointCurveCycleManager{
 		/* SetUp */
 			public WaypointCurveCycleManager(
 				IConstArg arg
@@ -139,6 +139,10 @@ namespace AppleShooterProto{
 				return this.GetNextCurve(currentCurve);
 			}
 			List<IWaypointCurve> CreateSequenceOfWaypointCurves(){
+				// Debug.Log(
+				// 	"thisCurveCountInSequence: " + thisCurveCountInSequence.ToString() + ", " +
+				// 	"allCurveIDs" + DKUtility.DebugHelper.GetIndicesString(GetAllCurveIDs())// nothing in the array!
+				// );
 				int[] indexes = DKUtility.Calculator.GetRandomIntegers(
 					thisCurveCountInSequence,
 					GetAllCurveIDs()
@@ -244,14 +248,14 @@ namespace AppleShooterProto{
 				return thisCurveSequence.IndexOf(currentCurve);
 			}
 		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
+			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				Transform curveReserveTransform{get;}
 				int curvesCountInSequence{get;}
 				Vector3 initialCurvePosition{get;}
 				Quaternion initialCurveRotation{get;}
 				int cycleStartIndex{get;}
 			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IWaypointCurveCycleManagerAdaptor adaptor,
 					Transform curveReserveTransform,

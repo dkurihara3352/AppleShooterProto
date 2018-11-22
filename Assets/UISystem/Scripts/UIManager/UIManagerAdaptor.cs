@@ -13,8 +13,8 @@ namespace UISystem{
 		public UIAdaptor rootUIAdaptor;/* assigned in inspector*/
 		public RectTransform uieReserveTrans;
 		public bool showsInputability;
-		public float uiImageDarkenedBrightness = .4f;
-		public float uiImageDefaultBrightness = .8f;
+		// public float uiImageDarkenedBrightness = .4f;
+		// public float uiImageDefaultBrightness = .8f;
 		public float swipeVelocityThreshold = 400f;
 		public float swipeDistanceThreshold = 20f;
 
@@ -24,8 +24,8 @@ namespace UISystem{
 				rootUIAdaptor,
 				uieReserveTrans,
 				showsInputability,
-				uiImageDarkenedBrightness,
-				uiImageDefaultBrightness,
+				// uiImageDarkenedBrightness,
+				// uiImageDefaultBrightness,
 				swipeVelocityThreshold,
 				swipeDistanceThreshold
 			);

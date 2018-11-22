@@ -4,17 +4,17 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IPlayerCameraAdaptor{
+	public interface IPlayerCameraAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IPlayerCamera GetPlayerCamera();
 		Vector2 GetDefaultFOVs();
 		Vector2 GetMaxPanAngle();
 	}
-	public class PlayerCameraAdaptor : MonoBehaviourAdaptor, IPlayerCameraAdaptor {
+	public class PlayerCameraAdaptor : AppleShooterMonoBehaviourAdaptor, IPlayerCameraAdaptor {
 		public Vector2 maxPanAngle;
 		public Vector2 GetMaxPanAngle(){
 			return maxPanAngle;
 		}
-		public MonoBehaviourAdaptor lookAtPivot;
+		public UnityBase.MonoBehaviourAdaptor lookAtPivot;
 		public float defaultVerticalFOV = 60f;
 		public Vector2 GetDefaultFOVs(){
 			Vector2 result = new Vector2();
@@ -40,17 +40,7 @@ namespace AppleShooterProto{
 		public Camera mainCamera;
 		public float smoothCoefficient = 5f;
 		public override void SetUp(){
-			IPlayerCameraConstArg arg = new PlayerCameraConstArg(
-				maxPanAngle,
-				lookAtPivot,
-				mainCamera,
-				defaultVerticalFOV,
-				processFactory,
-				smoothCoefficient
-			);
-			thisPlayerCamera = new PlayerCamera(
-				arg
-			);
+			thisPlayerCamera = CreatePlayerCamera();
 		}
 		public CoreGameplayInputScrollerAdaptor thisScrollerAdaptor;
 		public override void SetUpReference(){
@@ -61,6 +51,17 @@ namespace AppleShooterProto{
 		IPlayerCamera thisPlayerCamera;
 		public IPlayerCamera GetPlayerCamera(){
 			return thisPlayerCamera;
+		}
+		IPlayerCamera CreatePlayerCamera(){
+			PlayerCamera.IConstArg arg = new PlayerCamera.ConstArg(
+				this,
+				maxPanAngle,
+				lookAtPivot,
+				mainCamera,
+				defaultVerticalFOV,
+				smoothCoefficient
+			);
+			return new PlayerCamera(arg);
 		}
 	}
 }

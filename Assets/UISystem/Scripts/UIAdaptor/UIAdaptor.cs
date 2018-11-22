@@ -149,8 +149,8 @@ namespace UISystem{
 			protected IUISystemProcessFactory thisProcessFactory{get{return thisDomainInitializationData.processFactory;}}
 			void Initialize(){
 				this.enabled = true;
-				thisImageDarkenedBrightness = thisUIManager.GetUIImageDarknedBrightness();
-				thisImageDefaultBrightness = thisUIManager.GetUIImageDefaultBrightness();
+				// thisImageDarkenedBrightness = thisUIManager.GetUIImageDarknedBrightness();
+				// thisImageDefaultBrightness = thisUIManager.GetUIImageDefaultBrightness();
 			}
 		/* CreateAndSetUIElement */
 			public void CreateAndSetUIElement(

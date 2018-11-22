@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
-
+using UnityBase;
 namespace AppleShooterProto{
 	public interface ISmoothFollowTargetProcess: IProcess{
 		void UpdateFollowTarget(IMonoBehaviourAdaptor newTarget);

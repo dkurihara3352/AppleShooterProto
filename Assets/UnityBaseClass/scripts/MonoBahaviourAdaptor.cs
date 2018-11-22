@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IMonoBehaviourAdaptor{
 		void SetUp();
 		void SetUpReference();
@@ -29,6 +29,8 @@ namespace AppleShooterProto{
 		void ResetLocalTransform();
 		Vector3 GetForwardDirection();
 		bool IsEnabled();
+
+		IUnityBaseProcessFactory GetProcessFactory();
 	}
 	public abstract class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -52,8 +54,14 @@ namespace AppleShooterProto{
 				return thisMonoBehaviourAdaptorManager.GetProcessManager();
 			}
 		}
-		protected IAppleShooterProcessFactory processFactory{
-			get{return thisMonoBehaviourAdaptorManager.GetProcessFactory();}
+		protected IUnityBaseProcessFactory thisProcessFactory{
+			get{
+				return thisMonoBehaviourAdaptorManager.GetProcessFactory();
+			}
+		}
+		public IUnityBaseProcessFactory GetProcessFactory(){
+
+			return thisProcessFactory;
 		}
 
 		public virtual void SetUp(){}

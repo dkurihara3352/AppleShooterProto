@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityBase;
 
 namespace AppleShooterProto{
 	public interface IArrowReserve: ISceneObjectReserve<IArrow>{
@@ -16,6 +17,7 @@ namespace AppleShooterProto{
 		): base(
 			arg
 		){}
+		
 		public override void Reserve(IArrow arrow){
 			arrow.SetParent(this);
 			arrow.ResetLocalTransform();

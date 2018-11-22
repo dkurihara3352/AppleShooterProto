@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILandedArrowAdaptor: IMonoBehaviourAdaptor{
+	public interface ILandedArrowAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		ILandedArrow GetLandedArrow();
 		void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor landedArrowReserveAdaptor);
 		void SetIndex(int index);
 	}
-	public class LandedArrowAdaptor : MonoBehaviourAdaptor, ILandedArrowAdaptor {
+	public class LandedArrowAdaptor : AppleShooterMonoBehaviourAdaptor, ILandedArrowAdaptor {
 		ILandedArrow thisLandedArrow;
 		public ILandedArrow GetLandedArrow(){
 			return thisLandedArrow;

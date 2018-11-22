@@ -17,13 +17,13 @@ namespace AppleShooterProto{
 			thisDataInput = arg.dataInput;
 			float[] targetSpawnRelativeProbabilities = GetTargetSpawnRelativeProbabilities(arg.dataInput);
 
-			thisIndexPool = new Pool(targetSpawnRelativeProbabilities);
+			thisIndexPool = new UnityBase.Pool(targetSpawnRelativeProbabilities);
 
 
 		}
 		readonly protected IShootingTargetSpawnManager thisSpawnManager;
 		readonly float thisSpawnValueLimit;
-		readonly IPool thisIndexPool;
+		readonly UnityBase.IPool thisIndexPool;
 		TargetSpawnDataInput[] thisDataInput;
 		protected float[] GetTargetSpawnRelativeProbabilities(TargetSpawnDataInput[] inputs){
 			float[] result = new float[inputs.Length];
@@ -42,7 +42,6 @@ namespace AppleShooterProto{
 				TargetType targetType = input.targetType;
 				int numToCreate = numToCreateByTargetType[typeIndex];
 				IShootingTargetReserve reserve = input.reserve;
-				// ISpawnPointEventPointPair[] pairs = CreatePairs(input.spawnPointAdaptorEventPointPairs);
 				IShootingTargetSpawnPoint[] spawnPoints = CreateSpawnPoints(input.spawnPointGroupAdaptor);
 				TargetSpawnData.Entry entry = new TargetSpawnData.Entry(
 					targetType,
@@ -75,7 +74,6 @@ namespace AppleShooterProto{
 		protected float[] GetSpawnValueByTargetType(){
 			List<float> resultList = new List<float>();
 			foreach(TargetSpawnDataInput input in thisDataInput){
-				// float spawnValue = thisSpawnManager.GetSpawnValue(input.targetType);
 				float spawnValue = input.spawnValue;
 				resultList.Add(spawnValue);
 			}
@@ -91,19 +89,15 @@ namespace AppleShooterProto{
 				int targetTypeIndex = thisIndexPool.Draw();
 				TargetSpawnDataInput input = thisDataInput[targetTypeIndex];
 				int numToCreate = numToCreateArray[targetTypeIndex];
-				// Debug.Log("max: " + input.maxCount.ToString() + ", " + "numToCreate: "+ numToCreate.ToString());
+
 				if(input.maxCount > numToCreate){
-					// Debug.Log("eval");
+
 					numToCreate ++;
 					numToCreateArray[targetTypeIndex] = numToCreate;
 					float spawnValue = spawnValues[targetTypeIndex];
 					sumOfSpawnValue += spawnValue;
-					// Debug.Log(
-					// 	"numToCreateArray #" + targetTypeIndex.ToString() +": " + numToCreate.ToString()
-					// );
 				}
 			}
-			// Debug.Log("numToCreateArray: " + DKUtility.DebugHelper.GetIndicesString(numToCreateArray));
 			return numToCreateArray;
 		}
 

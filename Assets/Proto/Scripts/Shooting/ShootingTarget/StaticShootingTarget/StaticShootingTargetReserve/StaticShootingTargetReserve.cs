@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityBase;
 namespace AppleShooterProto{
 	public interface IStaticShootingTargetReserve: ISceneObjectReserve<IStaticShootingTarget>, IShootingTargetReserve{
 		IStaticShootingTarget[] GetStaticShootingTargets();

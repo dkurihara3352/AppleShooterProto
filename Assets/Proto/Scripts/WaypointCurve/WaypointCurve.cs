@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility.CurveUtility;
 
 namespace AppleShooterProto{
-	public interface IWaypointCurve: ISceneObject{
+	public interface IWaypointCurve: IAppleShooterSceneObject{
 
 		void CalculateCurve();
 
@@ -36,7 +36,7 @@ namespace AppleShooterProto{
 		/*  */
 			void PrintCurve();
 	}
-	public abstract class AbsWaypointCurve: AbsSceneObject, IWaypointCurve{
+	public abstract class AbsWaypointCurve: AppleShooterSceneObject, IWaypointCurve{
 		/* SetUp */
 			public AbsWaypointCurve(
 				IConstArg arg
@@ -253,11 +253,11 @@ namespace AppleShooterProto{
 			public virtual void OnUnreserve(){
 			}
 		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
+			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				ICurveControlPoint[] controlPoints{get;}
 				ICurvePoint[] curvePoints{get;}
 			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IWaypointCurveAdaptor adaptor,
 					ICurveControlPoint[] controlPoints,

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IPlayerInputManagerAdaptor{
+	public interface IPlayerInputManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IPlayerInputManager GetInputManager();
 		/* Debug */
 		string GetStateName();
 		float GetMaxZoom();
 	}
-	public class PlayerInputManagerAdaptor : MonoBehaviourAdaptor, IPlayerInputManagerAdaptor {
+	public class PlayerInputManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IPlayerInputManagerAdaptor {
 		public float defaultFOV = 60f;
 		public float drawDeltaThreshold = 100f;
 		public float maxZoom;
@@ -20,7 +20,7 @@ namespace AppleShooterProto{
 			IPlayerInputManagerConstArg arg = new PlayerInputManagerConstArg(
 				defaultFOV,
 				drawDeltaThreshold,
-				processFactory,
+				thisAppleShooterProcessFactory,
 				this
 			);
 			thisInputManager = new PlayerInputManager(arg);

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ITrajectoryAdaptor: IMonoBehaviourAdaptor{
+	public interface ITrajectoryAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		void DrawTrajectory(Vector3[] trajectoryPoints);
 		ITrajectory GetTrajectory();
 		void Clear();
 	}
-	public class TrajectoryAdaptor : MonoBehaviourAdaptor, ITrajectoryAdaptor {
+	public class TrajectoryAdaptor : AppleShooterMonoBehaviourAdaptor, ITrajectoryAdaptor {
 		public LineRenderer lineRenderer;
 		public void DrawTrajectory(
 			Vector3[] trajectoryPoints
@@ -27,14 +27,15 @@ namespace AppleShooterProto{
 		public float maxT = 3f;
 		public int resolution = 10;
 		public override void SetUp(){
-			ITrajectoryConstArg arg = new TrajectoryConstArg(
+			thisTrajectory = CreateTrajectory();
+		}
+		ITrajectory CreateTrajectory(){
+			Trajectory.IConstArg arg = new Trajectory.ConstArg(
+				this,
 				maxT,
-				resolution,
-				this
+				resolution
 			);
-			thisTrajectory = new Trajectory(
-				arg
-			);
+			return new Trajectory(arg);
 		}
 		public ITrajectory GetTrajectory(){
 			return thisTrajectory;

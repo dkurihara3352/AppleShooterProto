@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IArrowTwangAdaptor: IMonoBehaviourAdaptor{
+	public interface IArrowTwangAdaptor: IAppleShooterMonoBehaviourAdaptor{
 	
 		IArrowTwang GetArrowTwang();
 		void Twang();
@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 		void  SetTwangMagnitude(float twangMagnitude);
 		float GetTwangMagnitude(float normalizedTime);
 	}
-	public class ArrowTwangAdaptor: MonoBehaviourAdaptor, IArrowTwangAdaptor{
+	public class ArrowTwangAdaptor: AppleShooterMonoBehaviourAdaptor, IArrowTwangAdaptor{
 		public override void SetUp(){
 			ArrowTwang.IConstArg arg = new ArrowTwang.ConstArg(this);
 			thisTwang = new ArrowTwang(arg);
@@ -33,7 +33,7 @@ namespace AppleShooterProto{
 		public float twangTime;
 		public void Twang(){
 			StopTwang();
-			thisProcess =  processFactory.CreateArrowTwangProcess(
+			thisProcess =  thisAppleShooterProcessFactory.CreateArrowTwangProcess(
 				this,
 				twangTime
 			);

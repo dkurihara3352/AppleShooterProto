@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace AppleShooterProto{
-	public interface IHeatImageAdaptor: IMonoBehaviourAdaptor{
+	public interface IHeatImageAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IHeatImage GetHeatImage();
 
 		void UpdateMainHeatImageFill(float heat);
 		void UpdateDeltaHeatImageFill(float heat);
 	}
-	public class HeatImageAdaptor : MonoBehaviourAdaptor, IHeatImageAdaptor {
+	public class HeatImageAdaptor : AppleShooterMonoBehaviourAdaptor, IHeatImageAdaptor {
 		public Image thisMainImage;
 		public Image thisDeltaImage;
 		IHeatImage thisHeatImage;

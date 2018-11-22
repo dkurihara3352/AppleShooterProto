@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
+using UnityBase;
 
 namespace AppleShooterProto{
-	public interface IAppleShooterProcessFactory: IProcessFactory{
+	public interface IAppleShooterProcessFactory: IUnityBaseProcessFactory{
 		IFollowWaypointProcess CreateFollowWaypointProcess(
 			IWaypointsFollower follower,
 			float speed,
@@ -63,22 +64,7 @@ namespace AppleShooterProto{
 			IArrowTwangAdaptor adaptor,
 			float twangTime
 		);
-		IMarkerUIMarkProcess CreateMarkerUIMarkProcess(
-			ISceneUI ui
-		);
-		IPopUIGlideProcess CreatePopUIGlideProcess(
-			IPopUI popUI,
-			PopUIAdaptor.PopMode popMode,
-			float glideTime,
-			// float glideDistance,
-			float minGlideDistance,
-			float maxGlideDistance,
-			AnimationCurve normalizedDistanceCurve,
-			AnimationCurve alhpaCurve,
-			AnimationCurve scaleCurve,
-			Vector2 graphicOriginalLocalPosition,
-			Color graphicOriginalColor
-		);
+
 		IDestroyedTargetParticleProcess CreateDestroyedTargetParticleProcess(
 			IDestroyedTargetAdaptor adaptor,
 			float particleSystemDuration
@@ -113,7 +99,7 @@ namespace AppleShooterProto{
 		);
 	}
 
-	public class AppleShooterProcessFactory: AbsProcessFactory, IAppleShooterProcessFactory {
+	public class AppleShooterProcessFactory: UnityBaseProcessFactory, IAppleShooterProcessFactory {
 		public AppleShooterProcessFactory(
 			IProcessManager processManager
 		): base(
@@ -273,44 +259,6 @@ namespace AppleShooterProto{
 				adaptor
 			);
 			return new ArrowTwangProcess(arg);
-		}
-		public IMarkerUIMarkProcess CreateMarkerUIMarkProcess(
-			ISceneUI sceneUI
-		){
-			MarkerUIMarkProcess.IConstArg arg = new MarkerUIMarkProcess.ConstArg(
-				sceneUI,
-				thisProcessManager
-			);
-			return new MarkerUIMarkProcess(arg);
-		}
-		public IPopUIGlideProcess CreatePopUIGlideProcess(
-			IPopUI popUI,
-			PopUIAdaptor.PopMode popMode,
-			float glideTime,
-			// float glideDistance,
-			float minGlideDistance,
-			float maxGlideDistance,
-			AnimationCurve normalizedDistanceCurve,
-			AnimationCurve alhpaCurve,
-			AnimationCurve scaleCurve,
-			Vector2 graphicOriginalLocalPosition,
-			Color graphicOriginalColor
-		){
-			PopUIGlideProcess.IConstArg arg = new PopUIGlideProcess.ConstArg(
-				popUI,
-				popMode,
-				minGlideDistance,
-				maxGlideDistance,
-				normalizedDistanceCurve,
-				alhpaCurve,
-				scaleCurve,
-				graphicOriginalLocalPosition,
-				graphicOriginalColor,
-
-				thisProcessManager,
-				glideTime
-			);
-			return new PopUIGlideProcess(arg);
 		}
 		public IDestroyedTargetParticleProcess CreateDestroyedTargetParticleProcess(
 			IDestroyedTargetAdaptor adaptor,

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IGameStatsTracker: ISceneObject{
+	public interface IGameStatsTracker: IAppleShooterSceneObject{
 		void SetHeatManager(IHeatManager manager);
 
 		void RegisterTargetDestroyed(IShootingTarget target);
 	}
-	public class GameStatsTracker : AbsSceneObject, IGameStatsTracker {
+	public class GameStatsTracker : AppleShooterSceneObject, IGameStatsTracker {
 
 		public GameStatsTracker(
 			IConstArg arg
@@ -26,10 +26,10 @@ namespace AppleShooterProto{
 		}
 
 		/*  */
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IGameStatsTrackerAdaptor adaptor
 			): base(adaptor){

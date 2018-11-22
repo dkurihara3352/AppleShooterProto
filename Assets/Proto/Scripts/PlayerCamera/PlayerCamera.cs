@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IPlayerCamera{
+	public interface IPlayerCamera: IAppleShooterSceneObject{
 		void Pan(
 			float normalizedCameraPosition,
 			int axis
@@ -16,7 +16,7 @@ namespace AppleShooterProto{
 		float GetCurrentFOV();
 		void SetFOV(float fov);
 	}
-	public class PlayerCamera : IPlayerCamera {
+	public class PlayerCamera : AppleShooterSceneObject, IPlayerCamera {
 		/*  Make CameraParents the parent of both lookAtTarget and the Camera itself
 				this makes sure cam and target moves the same
 			Hiearchy
@@ -30,7 +30,11 @@ namespace AppleShooterProto{
 			CameraPivot is located at lookAtTargetDefaultPos
 				Rotating CameraPivot to change direction of everything as a whole 
 		*/
-		public PlayerCamera(IPlayerCameraConstArg arg){
+		public PlayerCamera(
+			IConstArg arg
+		): base(
+			arg
+		){
 			thisRotationCoefficient = arg.rotationCoefficient;
 			thisLookAtPivot = arg.lookAtPivot;
 			thisCamera = arg.camera;
@@ -38,8 +42,6 @@ namespace AppleShooterProto{
 
 			float defFOVInRadian = Mathf.Deg2Rad * thisDefaultFOV;
 			thisDefaultTangent = Mathf.Tan(defFOVInRadian);
-
-			thisProcessFactory = arg.processFactory;
 			thisSmoothCoefficient = arg.smoothCoefficient;
 		}
 		public void InitializeFOV(){
@@ -47,7 +49,7 @@ namespace AppleShooterProto{
 			SetFOV(thisDefaultFOV);
 		}
 		readonly Vector2 thisRotationCoefficient;
-		IMonoBehaviourAdaptor thisLookAtPivot;
+		UnityBase.IMonoBehaviourAdaptor thisLookAtPivot;
 		public void Pan(
 			float normalizedCameraPosition,
 			int axis
@@ -74,10 +76,9 @@ namespace AppleShooterProto{
 			thisInputScroller = scroller;
 		}
 
-		readonly IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisSmoothCoefficient;
 		public void StartSmoothZoom(){
-			ISmoothZoomProcess process = thisProcessFactory.CreateSmoothZoomProcess(
+			ISmoothZoomProcess process = thisAppleShooterProcessFactory.CreateSmoothZoomProcess(
 				this,
 				thisSmoothCoefficient
 			);
@@ -108,46 +109,45 @@ namespace AppleShooterProto{
 			float result = Mathf.Tan(targetFOVInRadian) / thisDefaultTangent;
 			return result;
 		}
-	}
-
-
-
-
-	public interface IPlayerCameraConstArg{
-		Vector2 rotationCoefficient{get;}
-		IMonoBehaviourAdaptor lookAtPivot{get;}
-		Camera camera{get;}
-		float defaultFOV{get;}
-		IAppleShooterProcessFactory processFactory{get;}
-		float smoothCoefficient{get;}
-	}
-	public struct PlayerCameraConstArg: IPlayerCameraConstArg{
-		public PlayerCameraConstArg(
-			Vector2 rotationCoefficient,
-			IMonoBehaviourAdaptor lookAtPivot,
-			Camera camera,
-			float defaultFOV,
-			IAppleShooterProcessFactory processFactory,
-			float smoothCoefficient
-		){
-			thisRotationCoefficient = rotationCoefficient;
-			thisLookAtPivot = lookAtPivot;
-			thisCamera = camera;
-			thisDefaultFOV = defaultFOV;
-			thisProcessFactory = processFactory;
-			thisSmoothCoefficient = smoothCoefficient;
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			Vector2 rotationCoefficient{get;}
+			UnityBase.IMonoBehaviourAdaptor lookAtPivot{get;}
+			Camera camera{get;}
+			float defaultFOV{get;}
+			float smoothCoefficient{get;}
 		}
-		readonly Vector2 thisRotationCoefficient;
-		public Vector2 rotationCoefficient{get{return thisRotationCoefficient;}}
-		readonly IMonoBehaviourAdaptor thisLookAtPivot;
-		public IMonoBehaviourAdaptor lookAtPivot{get{return thisLookAtPivot;}}
-		readonly Camera thisCamera;
-		public Camera camera{get{return thisCamera;}}
-		readonly float thisDefaultFOV;
-		public float defaultFOV{get{return thisDefaultFOV;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly float thisSmoothCoefficient;
-		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public ConstArg(
+				IPlayerCameraAdaptor adaptor,
+
+				Vector2 rotationCoefficient,
+				UnityBase.IMonoBehaviourAdaptor lookAtPivot,
+				Camera camera,
+				float defaultFOV,
+				float smoothCoefficient
+			): base(
+				adaptor
+			){
+				thisRotationCoefficient = rotationCoefficient;
+				thisLookAtPivot = lookAtPivot;
+				thisCamera = camera;
+				thisDefaultFOV = defaultFOV;
+				thisSmoothCoefficient = smoothCoefficient;
+			}
+			readonly Vector2 thisRotationCoefficient;
+			public Vector2 rotationCoefficient{get{return thisRotationCoefficient;}}
+			readonly UnityBase.IMonoBehaviourAdaptor thisLookAtPivot;
+			public UnityBase.IMonoBehaviourAdaptor lookAtPivot{get{return thisLookAtPivot;}}
+			readonly Camera thisCamera;
+			public Camera camera{get{return thisCamera;}}
+			readonly float thisDefaultFOV;
+			public float defaultFOV{get{return thisDefaultFOV;}}
+			readonly float thisSmoothCoefficient;
+			public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+		}
 	}
+
+
+
+
 }

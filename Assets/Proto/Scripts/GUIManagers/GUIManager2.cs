@@ -51,7 +51,7 @@ namespace AppleShooterProto{
 		Rect sTR_1;
 		Rect sTR_2;
 		Rect sTR_3;
-		public MonoBehaviourAdaptorManager monoBehaviourAdaptorManager;
+		public AppleShooterMonoBehaviourAdaptorManager monoBehaviourAdaptorManager;
 		public FlyingTargetReserveAdaptor flyingTargetReserveAdaptor;
 		/*  */
 		bool thisSystemIsReady = false;
@@ -296,7 +296,7 @@ namespace AppleShooterProto{
 			bool thisStaticTargetsAreSet = false;
 			public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 			IDestroyedTargetReserve thisDestroyedTargetReserve;
-			IPool thisIndexPool;
+			UnityBase.IPool thisIndexPool;
 			bool thisIndexPoolIsSet = false;
 			void ActivateDestroyedTargetAtDrawnShootingTarget(){
 				if(!thisStaticTargetsAreSet)
@@ -332,7 +332,7 @@ namespace AppleShooterProto{
 				}
 				float[] probTable = probList.ToArray();
 				
-				thisIndexPool = new Pool(
+				thisIndexPool = new UnityBase.Pool(
 					probTable
 				);
 				thisIndexPoolIsSet = true;
@@ -394,8 +394,8 @@ namespace AppleShooterProto{
 				foreach(IDestroyedTarget target in targets)
 					target.StopParticleSystem();
 			}
-			IPopUIReserve thisPopUIReserve;
-			public PopUIReserveAdaptor popUIReserveAdaptor;
+			UnityBase.IPopUIReserve thisPopUIReserve;
+			public UnityBase.PopUIReserveAdaptor popUIReserveAdaptor;
 			void ActivatePopUIAtDrawnShootingTarget(){
 				if(!thisStaticTargetsAreSet)
 					SetStaticShootingTargetsAtSpawnPoints();
@@ -417,11 +417,11 @@ namespace AppleShooterProto{
 				}
 			}
 			void DrawTargetByPopUI(Rect rect){
-				IPopUI[] uis = thisPopUIReserve.GetPopUIs();
+				UnityBase.IPopUI[] uis = thisPopUIReserve.GetPopUIs();
 				string result = "";
-				foreach(IPopUI ui in uis){
+				foreach(UnityBase.IPopUI ui in uis){
 					result += "ui #" + ui.GetIndex().ToString() + ", ";
-					ISceneObject obj = ui.GetSceneObject();
+					UnityBase.ISceneObject obj = ui.GetSceneObject();
 					if(obj != null){
 						IStaticShootingTarget target = (IStaticShootingTarget)obj;
 						result += "target# " + target.GetIndex().ToString();

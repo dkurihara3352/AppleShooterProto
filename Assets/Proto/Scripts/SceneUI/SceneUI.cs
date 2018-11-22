@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// using UnityBase;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ISceneUI: ISceneObject, IActivationStateHandler, IActivationStateImplementor{
 
 		void SetUIWorldPosition(Vector3 uiWorPos);

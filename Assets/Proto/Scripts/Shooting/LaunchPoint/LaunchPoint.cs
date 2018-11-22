@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface ILaunchPoint: ISceneObject{
+	public interface ILaunchPoint: IAppleShooterSceneObject{
 		Vector3 GetForwardDirection();
 	}
-	public class LaunchPoint : AbsSceneObject, ILaunchPoint {
+	public class LaunchPoint : AppleShooterSceneObject, ILaunchPoint {
 		public LaunchPoint(
 			IConstArg arg
 		): base(arg){
@@ -14,9 +14,9 @@ namespace AppleShooterProto{
 		public Vector3 GetForwardDirection(){
 			return thisAdaptor.GetForwardDirection();
 		}
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				ILaunchPointAdaptor adaptor
 			): base(

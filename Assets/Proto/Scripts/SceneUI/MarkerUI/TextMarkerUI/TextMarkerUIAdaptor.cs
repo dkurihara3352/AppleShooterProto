@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ITextMarkerUIAdaptor: IMarkerUIAdaptor{
 		void SetText(string text);
 	}

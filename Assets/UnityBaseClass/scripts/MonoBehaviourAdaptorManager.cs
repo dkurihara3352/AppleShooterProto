@@ -2,28 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
-namespace AppleShooterProto{
+
+namespace UnityBase{
 	public interface IMonoBehaviourAdaptorManager{
 		IProcessManager GetProcessManager();
-		IAppleShooterProcessFactory GetProcessFactory();
 		void SetUpAllMonoBehaviourAdaptors();
 		void SetUpAdaptorReference();
 		void FinalizeSetUp();
 		void AddAdaptor(IMonoBehaviourAdaptor adaptor);
+		IUnityBaseProcessFactory GetProcessFactory();
 	}
-	public class MonoBehaviourAdaptorManager: MonoBehaviour, IMonoBehaviourAdaptorManager{
-		void Awake(){
-			thisProcessFactory = new AppleShooterProcessFactory(
-				processManager
-			);
-		}
+	public abstract class MonoBehaviourAdaptorManager: MonoBehaviour, IMonoBehaviourAdaptorManager{
+
 		public ProcessManager processManager;
 		public IProcessManager GetProcessManager(){
 			return processManager;
-		}
-		IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory GetProcessFactory(){
-			return thisProcessFactory;
 		}
 
 		List<IMonoBehaviourAdaptor> thisMonoBehaviourAdaptors = new List<IMonoBehaviourAdaptor>();
@@ -48,6 +41,8 @@ namespace AppleShooterProto{
 				if(adaptor.IsEnabled())
 					adaptor.FinalizeSetUp();
 		}
+
+		public abstract IUnityBaseProcessFactory GetProcessFactory();
 	}
 }
 

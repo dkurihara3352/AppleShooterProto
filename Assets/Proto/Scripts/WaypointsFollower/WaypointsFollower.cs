@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IWaypointsFollower{
+	public interface IWaypointsFollower: IAppleShooterSceneObject{
 		void SetWaypointsManager(IWaypointCurveCycleManager wayointsManager);
 		float GetFollowSpeed();
 		void StartFollowing();
@@ -13,9 +13,6 @@ namespace AppleShooterProto{
 
 		IWaypointCurve GetCurrentWaypointCurve();
 
-		void SetPosition(Vector3 position);
-		Vector3 GetPosition();
-		void SetRotation(Quaternion rotation);
 		Vector3 GetForwardDirection();
 		void LookAt(
 			Vector3 foward,
@@ -29,17 +26,15 @@ namespace AppleShooterProto{
 		void SmoothStop();
 		void SetElapsedTimeOnCurrentCurve(float elapsedTime);
 	}
-	public class WaypointsFollower: IWaypointsFollower{
+	public class WaypointsFollower: AppleShooterSceneObject, IWaypointsFollower{
 		public WaypointsFollower(
-			IWaypointsFollowerConstArg arg
+			IConstArg arg
+		): base(
+			arg
 		){
-			thisAdaptor = arg.adaptor;
-			thisProcessFactory = arg.processFactory;
 			thisFollowSpeed = arg.followSpeed;
 			thisProcessOrder = arg.processOrder;
 		}
-		readonly IWaypointsFollowerAdaptor thisAdaptor;
-		readonly IAppleShooterProcessFactory thisProcessFactory;
 		readonly float thisFollowSpeed;
 
 		public void SetWaypointsManager(IWaypointCurveCycleManager waypointsManager){
@@ -58,7 +53,7 @@ namespace AppleShooterProto{
 			thisProcess.Run();
 		}
 		IFollowWaypointProcess CreateFollowProcess(){
-			return thisProcessFactory.CreateFollowWaypointProcess(
+			return thisAppleShooterProcessFactory.CreateFollowWaypointProcess(
 				this,
 				thisFollowSpeed,
 				thisProcessOrder,
@@ -71,17 +66,6 @@ namespace AppleShooterProto{
 			if(thisProcess != null && thisProcess.IsRunning())
 				thisProcess.Stop();
 			thisProcess = null;
-		}
-		public void SetPosition(
-			Vector3 position
-		){
-			thisAdaptor.SetPosition(position);
-		}
-		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
-		}
-		public void SetRotation(Quaternion rotation){
-			thisAdaptor.SetRotation(rotation);
 		}
 		public Vector3 GetForwardDirection(){
 			return thisAdaptor.GetForwardDirection();
@@ -126,7 +110,7 @@ namespace AppleShooterProto{
 			thisProcess = CreateFollowProcess();
 			thisProcess.SetTimeScale(0f);
 			thisProcess.Run();
-			thisChangeSpeedProcess = thisProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
+			thisChangeSpeedProcess = thisAppleShooterProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
 				thisProcess,
 				thisTypedAdaptor.GetSmoothStartTime(),
 				thisTypedAdaptor.GetSmoothStartCurve()
@@ -141,7 +125,7 @@ namespace AppleShooterProto{
 
 		public void SmoothStop(){
 			StopChangeSpeed();
-			thisChangeSpeedProcess = thisProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
+			thisChangeSpeedProcess = thisAppleShooterProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
 				thisProcess,
 				thisTypedAdaptor.GetSmoothStopTime(),
 				thisTypedAdaptor.GetSmoothStopCurve()
@@ -152,35 +136,25 @@ namespace AppleShooterProto{
 		public void SetElapsedTimeOnCurrentCurve(float elapsedTime){
 			thisElapsedTimeOnCurrentCurve = elapsedTime;
 		}
-	}
 
-
-	public interface IWaypointsFollowerConstArg{
-		IWaypointsFollowerAdaptor adaptor{get;}
-		IAppleShooterProcessFactory processFactory{get;}
-		float followSpeed{get;}
-		int processOrder{get;}
-	}
-	public struct WaypointsFollowerConstArg: IWaypointsFollowerConstArg{
-		public WaypointsFollowerConstArg(
-			IWaypointsFollowerAdaptor adaptor,
-			IAppleShooterProcessFactory processFactory,
-			float followSpeed,
-			int processOrder
-		){
-			thisAdaptor = adaptor;
-			thisProcessFactory = processFactory;
-			thisFollowSpeed = followSpeed;
-			thisProcessOrder = processOrder;
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			float followSpeed{get;}
+			int processOrder{get;}
 		}
-		readonly IWaypointsFollowerAdaptor thisAdaptor;
-		public IWaypointsFollowerAdaptor adaptor{get{return thisAdaptor;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly float thisFollowSpeed;
-		public float followSpeed{get{return thisFollowSpeed;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public ConstArg(
+				IWaypointsFollowerAdaptor adaptor,
+				float followSpeed,
+				int processOrder
+			): base(adaptor){
+				thisFollowSpeed = followSpeed;
+				thisProcessOrder = processOrder;
+			}
+			readonly float thisFollowSpeed;
+			public float followSpeed{get{return thisFollowSpeed;}}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+		}
 	}
 }
 

@@ -5,7 +5,7 @@ using DKUtility.CurveUtility;
 
 namespace AppleShooterProto{
 
-	public interface IWaypointCurveAdaptor: IMonoBehaviourAdaptor{
+	public interface IWaypointCurveAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IWaypointCurve GetWaypointCurve();
 		void UpdateCurve();
 		ICurvePoint[] GetCurvePoints();
@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 		Vector3 GetPositionOnCurve(float normalizedPosition);
 	}
 	[ExecuteInEditMode]
-	public abstract class AbsWaypointCurveAdaptor : MonoBehaviourAdaptor, IWaypointCurveAdaptor {
+	public abstract class AbsWaypointCurveAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointCurveAdaptor {
 		public Color lineColor = new Color(.2f, 1f, 1f, 1f);
 		public Color upDirColor = new Color(1f, .5f, 1f, 1f);
 		public float upDirLineLength = 1f;
@@ -27,13 +27,17 @@ namespace AppleShooterProto{
 		public bool drawGizmos = true;
 		// #if UNITY_EDITOR
 		// #endif
+		protected override void Awake(){
+			base.Awake();
+			UpdateCurve();
+		}
 		public void Start(){
 			UpdateCurve();
 		}
 		public void Update(){
-			if(!Application.isPlaying){
-				CheckAndUpdateControlPoints();
-			}
+			CheckAndUpdateControlPoints();
+			// if(!Application.isPlaying){
+			// }
 		}
 		void OnDrawGizmos(){
 			if(drawGizmos){
@@ -139,9 +143,10 @@ namespace AppleShooterProto{
 			}
 			public float GetTotalDistance(){
 				float sum = 0f;
-				foreach(ICurveSegment segment in thisCurveSegments){
-					sum += segment.GetLength();
-				}
+				if(thisCurveSegments != null)
+					foreach(ICurveSegment segment in thisCurveSegments){
+						sum += segment.GetLength();
+					}
 				return sum;
 			}
 		/* CurvePoints */

@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IHeatImage: ISceneObject{
+	public interface IHeatImage: IAppleShooterSceneObject{
 
 		void SetHeatManager(IHeatManager manager);
 
@@ -25,7 +25,7 @@ namespace AppleShooterProto{
 
 		float GetComboValue();
 	}
-	public class HeatImage : AbsSceneObject, IHeatImage {
+	public class HeatImage : AppleShooterSceneObject, IHeatImage {
 		public HeatImage(
 			IConstArg arg
 		): base(
@@ -88,7 +88,7 @@ namespace AppleShooterProto{
 		public void StartSmoothFollowDeltaImageProcess(){
 			StopAllProcess();
 			float followSmoothTime = thisHeatManager.GetFollowSmoothTime();
-			thisSmoothFollowDeltaImageProcess = thisProcessFactory.CreateHeatImageSmoothFollowDeltaImageProcess(
+			thisSmoothFollowDeltaImageProcess = thisAppleShooterProcessFactory.CreateHeatImageSmoothFollowDeltaImageProcess(
 				this,
 				followSmoothTime,
 				thisHeat
@@ -108,7 +108,7 @@ namespace AppleShooterProto{
 		public void StartWaitForNextAdditionProcess(){
 			StopAllProcess();
 			float comboTime = GetComboWindowTime();
-			thisWaitProcess = thisProcessFactory.CreateHeatImageWaitForNextAdditionProcess(
+			thisWaitProcess = thisAppleShooterProcessFactory.CreateHeatImageWaitForNextAdditionProcess(
 				this,
 				comboTime
 			);
@@ -240,9 +240,9 @@ namespace AppleShooterProto{
 					}
 			}
 		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
+			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IHeatImageAdaptor adaptor
 				): base(adaptor){

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IMarkerUIReserve: ISceneObjectReserve<IMarkerUI>{
 		void ActivateMarkerUIAt(
 			ISceneObject sceneObj

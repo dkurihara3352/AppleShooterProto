@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingManager: ISceneObject{
+	public interface IShootingManager: IAppleShooterSceneObject{
 
 		void SetInputManager(IPlayerInputManager inputManager);
 		void SetLaunchPoint(ILaunchPoint launchPoint);
@@ -49,7 +49,7 @@ namespace AppleShooterProto{
 
 		void DeactivateArrow();
 	}
-	public class ShootingManager : AbsSceneObject, IShootingManager {
+	public class ShootingManager : AppleShooterSceneObject, IShootingManager {
 		/* SetUp */
 			public ShootingManager(
 				IConstArg arg
@@ -113,7 +113,7 @@ namespace AppleShooterProto{
 		/* Draw */
 			public void StartDraw(){
 				StopDraw();
-				thisDrawProcess = thisProcessFactory.CreateDrawProcess(
+				thisDrawProcess = thisAppleShooterProcessFactory.CreateDrawProcess(
 					this,
 					thisDrawProcessOrder
 				);
@@ -286,7 +286,7 @@ namespace AppleShooterProto{
 
 					thisShotInBuffer = new Shot(arrow);
 					if(thisShootingProcess == null){
-						thisShootingProcess = thisProcessFactory.CreateShootingProcess(
+						thisShootingProcess = thisAppleShooterProcessFactory.CreateShootingProcess(
 							this,
 							thisFireRate
 						);
@@ -320,7 +320,7 @@ namespace AppleShooterProto{
 				thisNockedArrow.Deactivate();
 			}
 		/* Const */
-			public new interface IConstArg: AbsSceneObject.IConstArg{
+			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int drawProcessOrder{get;}
 				float fireRate{get;}
 
@@ -335,7 +335,7 @@ namespace AppleShooterProto{
 				float globalMinFlightSpeed{get;}
 				float globalMaxFlightSpeed{get;}
 			}
-			public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IShootingManagerAdaptor adaptor,
 

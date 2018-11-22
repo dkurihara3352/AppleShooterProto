@@ -6,7 +6,7 @@ namespace AppleShooterProto{
 	public interface IGlidingTargetStartGlideWaypointEventAdaptor: IWaypointEventAdaptor{
 
 	}
-	public class GlidingTargetStartGlideWaypointEventAdaptor: MonoBehaviourAdaptor, IGlidingTargetStartGlideWaypointEventAdaptor{
+	public class GlidingTargetStartGlideWaypointEventAdaptor: AppleShooterMonoBehaviourAdaptor, IGlidingTargetStartGlideWaypointEventAdaptor{
 		IGlidingTargetStartGlideWaypointEvent thisEvent;
 		public IWaypointEvent GetWaypointEvent(){
 			return thisEvent;

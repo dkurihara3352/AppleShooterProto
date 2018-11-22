@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnManagerAdaptor: IMonoBehaviourAdaptor{
+	public interface IShootingTargetSpawnManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingTargetSpawnManager GetManager();
 	}
-	public class ShootingTargetSpawnManagerAdaptor : MonoBehaviourAdaptor, IShootingTargetSpawnManagerAdaptor {
+	public class ShootingTargetSpawnManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingTargetSpawnManagerAdaptor {
 		
 		IShootingTargetSpawnManager thisManager;
 		public IShootingTargetSpawnManager GetManager(){

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IFlyingTargetWaypoint: ISceneObject{
+	public interface IFlyingTargetWaypoint: IAppleShooterSceneObject{
 	}
-	public class FlyingTargetWaypoint: AbsSceneObject, IFlyingTargetWaypoint{
+	public class FlyingTargetWaypoint: AppleShooterSceneObject, IFlyingTargetWaypoint{
 		public FlyingTargetWaypoint(
 			IConstArg arg
 		): base(
@@ -13,9 +13,9 @@ namespace AppleShooterProto{
 		){
 		}
 		/* Const */
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IFlyingTargetWaypointAdaptor adaptor
 			): base(

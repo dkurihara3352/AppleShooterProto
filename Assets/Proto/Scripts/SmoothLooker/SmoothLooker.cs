@@ -2,30 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
+using UnityBase;
 
 namespace AppleShooterProto{
-	public interface ISmoothLooker{
+	public interface ISmoothLooker: IAppleShooterSceneObject{
 		void StartSmoothLook();
 		void StopSmoothLook();
 		void SetLookAtTarget(IMonoBehaviourAdaptor target);
-		Vector3 GetPosition();
-		Quaternion GetRotation();
-		void SetRotation(Quaternion rotation);
 		void RotateToward(Quaternion to, float step);
 		void SetSmoothCoefficient(float k);
 	}
-	public class SmoothLooker :ISmoothLooker {
+	public class SmoothLooker : AppleShooterSceneObject, ISmoothLooker {
 		public SmoothLooker(
-			ISmoothLookerConstArg arg
-		){
-			thisAdaptor = arg.adaptor;
-			thisProcessFactory = arg.processFactory;
+			IConstArg arg
+		): base(arg){
 			thisSmoothCoefficient = arg.smoothCoefficient;
 			thisProcessOrder = arg.processOrder;
 		}
-
-		readonly ISmoothLookerAdaptor thisAdaptor;
-		readonly IAppleShooterProcessFactory thisProcessFactory;
 		IMonoBehaviourAdaptor thisLookAtTarget;
 		public void SetLookAtTarget(IMonoBehaviourAdaptor target){
 			thisLookAtTarget = target;
@@ -41,64 +34,41 @@ namespace AppleShooterProto{
 		}
 		readonly int thisProcessOrder;
 		public void StartSmoothLook(){
-			thisProcess = thisProcessFactory.CreateSmoothLookProcess(
+			thisProcess = thisAppleShooterProcessFactory.CreateSmoothLookProcess(
 				this,
 				thisLookAtTarget,
 				thisSmoothCoefficient,
 				thisProcessOrder
 			);
 			thisProcess.Run();
-			thisAdaptor.SetReady();
 		}
 		public void StopSmoothLook(){
 			if(thisProcess != null && thisProcess.IsRunning())
 				thisProcess.Stop();
 			thisProcess = null;
 		}
-		public Vector3 GetPosition(){
-			return thisAdaptor.GetPosition();
-		}
-		Vector3 thisLookAtPosition;
-		public Quaternion GetRotation(){
-			return thisAdaptor.GetRotation();
-		}
-		public void SetRotation(Quaternion rotation){
-			thisAdaptor.SetRotation(rotation);
-		}
 		public void RotateToward(Quaternion to, float step){
 			Quaternion newRotation = Quaternion.RotateTowards(GetRotation(), to, step);
 			thisAdaptor.SetRotation(newRotation);
 		}
-
-	}
-
-
-
-	public interface ISmoothLookerConstArg{
-		ISmoothLookerAdaptor adaptor{get;}
-		IAppleShooterProcessFactory processFactory{get;}
-		float smoothCoefficient{get;}
-		int processOrder{get;}
-	}
-	public struct SmoothLookerConstArg: ISmoothLookerConstArg{
-		public SmoothLookerConstArg(
-			ISmoothLookerAdaptor adaptor,
-			IAppleShooterProcessFactory processFactory,
-			float smoothCoefficient,
-			int processOrder
-		){
-			thisAdaptor = adaptor;
-			thisProcessFactory = processFactory;
-			thisSmoothCoefficient = smoothCoefficient;
-			thisProcessOrder = processOrder;
+		/*  */
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			float smoothCoefficient{get;}
+			int processOrder{get;}
 		}
-		readonly ISmoothLookerAdaptor thisAdaptor;
-		public ISmoothLookerAdaptor adaptor{get{return thisAdaptor;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly float thisSmoothCoefficient;
-		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public ConstArg(
+				ISmoothLookerAdaptor adaptor,
+				float smoothCoefficient,
+				int processOrder
+			):base( adaptor){
+				thisSmoothCoefficient = smoothCoefficient;
+				thisProcessOrder = processOrder;
+			}
+			readonly float thisSmoothCoefficient;
+			public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+		}
 	}
 }

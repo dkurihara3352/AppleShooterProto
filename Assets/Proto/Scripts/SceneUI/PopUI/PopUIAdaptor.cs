@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IPopUIAdaptor: ISceneUIAdaptor{
 		void SetPopUIReserve(IPopUIReserve reserve);
 		IPopUI GetPopUI();

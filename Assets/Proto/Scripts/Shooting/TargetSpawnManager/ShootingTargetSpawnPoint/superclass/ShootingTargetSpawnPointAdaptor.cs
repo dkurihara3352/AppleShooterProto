@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPointAdaptor: IMonoBehaviourAdaptor{
+	public interface IShootingTargetSpawnPointAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingTargetSpawnPoint GetSpawnPoint();
 		float GetEventPoint();
 	}
-	public abstract class AbsShootingTargetSpawnPointAdaptor: MonoBehaviourAdaptor, IShootingTargetSpawnPointAdaptor{
+	public abstract class AbsShootingTargetSpawnPointAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetSpawnPointAdaptor{
 		protected IShootingTargetSpawnPoint thisSpawnPoint;
 		public IShootingTargetSpawnPoint GetSpawnPoint(){
 			return thisSpawnPoint;

@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IPopUIGlideProcess: IProcess{}
 	public class PopUIGlideProcess: AbsConstrainedProcess, IPopUIGlideProcess{
 		public PopUIGlideProcess(

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IGameStatsTrackerAdaptor: IMonoBehaviourAdaptor{
+	public interface IGameStatsTrackerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IGameStatsTracker GetTracker();
 	}
-	public class GameStatsTrackerAdaptor : MonoBehaviourAdaptor, IGameStatsTrackerAdaptor {
+	public class GameStatsTrackerAdaptor : AppleShooterMonoBehaviourAdaptor, IGameStatsTrackerAdaptor {
 
 		public override void SetUp(){
 			thisTracker = CreateTracker();

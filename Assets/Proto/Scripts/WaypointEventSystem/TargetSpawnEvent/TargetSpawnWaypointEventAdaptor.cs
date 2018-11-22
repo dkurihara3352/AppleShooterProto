@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface ITargetSpawnWaypointEventAdaptor: IWaypointEventAdaptor{
 	}
-	public class TargetSpawnWaypointEventAdaptor : MonoBehaviourAdaptor, ITargetSpawnWaypointEventAdaptor {
+	public class TargetSpawnWaypointEventAdaptor : AppleShooterMonoBehaviourAdaptor, ITargetSpawnWaypointEventAdaptor {
 		public float eventPoint;
 		public override void SetUp(){
 			SetUpEventsOnNextCurveWaypointEvent.IConstArg arg = new SetUpEventsOnNextCurveWaypointEvent.ConstArg(

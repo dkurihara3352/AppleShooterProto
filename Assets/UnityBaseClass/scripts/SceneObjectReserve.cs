@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface ISceneObjectReserve<T>: ISceneObject where T: ISceneObject{
 		void SetSceneObjects(T[] sceneObjects);
 		void Reserve(T sceneObj);

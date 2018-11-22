@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IHeatManagerAdaptor: IMonoBehaviourAdaptor{
+	public interface IHeatManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IHeatManager GetHeatManager();
 	}
-	public class HeatManagerAdaptor : MonoBehaviourAdaptor, IHeatManagerAdaptor {
+	public class HeatManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IHeatManagerAdaptor {
 
 		IHeatManager thisHeatManager;
 		public IHeatManager GetHeatManager(){

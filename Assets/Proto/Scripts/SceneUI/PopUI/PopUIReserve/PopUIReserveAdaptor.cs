@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace UnityBase{
 	public interface IPopUIReserveAdaptor: IMonoBehaviourAdaptor{
 		IPopUIReserve GetPopUIReserve();
 	}

@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityBase;
 
 namespace AppleShooterProto{
 	public interface IChangeCameraPivotLATargetWaypointEventAdaptor: IWaypointEventAdaptor{}
-	public class ChangeCameraPivotLATargetWaypointEventAdaptor: MonoBehaviourAdaptor, IChangeCameraPivotLATargetWaypointEventAdaptor{
+	public class ChangeCameraPivotLATargetWaypointEventAdaptor: AppleShooterMonoBehaviourAdaptor, IChangeCameraPivotLATargetWaypointEventAdaptor{
 		public override void SetUp(){
 			ChangeCameraPivotLATargetWaypointEvent.IConstArg arg = new ChangeCameraPivotLATargetWaypointEvent.ConstArg(
 				eventPoint,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IWaypointEventAdaptor: IMonoBehaviourAdaptor{
+	public interface IWaypointEventAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IWaypointEvent GetWaypointEvent();
 	}
 }

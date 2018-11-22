@@ -64,7 +64,7 @@ namespace AppleShooterProto{
 					int index,
 					float health,
 					Color defaultColor,
-					IBellCurve healthBellCurve,
+					UnityBase.IBellCurve healthBellCurve,
 					float heatBonus,
 					IStaticShootingTargetAdaptor adaptor
 				): base(

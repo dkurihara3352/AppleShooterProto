@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityBase;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetAdaptor: IMonoBehaviourAdaptor{
+	public interface IShootingTargetAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingTarget GetShootingTarget();
 		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
 		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
@@ -16,7 +17,7 @@ namespace AppleShooterProto{
 		float GetSpawnValue();
 	}
 	[RequireComponent(typeof(Animator))]
-	public abstract class AbsShootingTargetAdaptor: MonoBehaviourAdaptor, IShootingTargetAdaptor{
+	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
 		public override void SetUp(){
 			MeshRenderer meshRenderer = CollectMeshRenderer();
 			thisMaterial = meshRenderer.material;
@@ -110,9 +111,7 @@ namespace AppleShooterProto{
 			thisIndex = index;
 		}
 		public float health;
-		// public void SetHealth(float health){
-		// 	thisHealth = health;
-		// }
+
 		/* Collider */
 		Collider thisCollider;
 		public void ToggleCollider( bool on){

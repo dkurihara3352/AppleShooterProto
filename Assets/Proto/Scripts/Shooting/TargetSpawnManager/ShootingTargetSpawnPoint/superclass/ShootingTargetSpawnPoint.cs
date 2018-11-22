@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPoint: ISceneObject{
+	public interface IShootingTargetSpawnPoint: IAppleShooterSceneObject{
 		void SetTarget(IShootingTarget target);
 		void CheckAndClearTarget(IShootingTarget target);
 		IShootingTarget GetSpawnedTarget();
@@ -11,7 +11,7 @@ namespace AppleShooterProto{
 		int GetIndex();
 		float GetEventPoint();
 	}
-	public abstract class AbsShootingTargetSpawnPoint: AbsSceneObject, IShootingTargetSpawnPoint{
+	public abstract class AbsShootingTargetSpawnPoint: AppleShooterSceneObject, IShootingTargetSpawnPoint{
 		public AbsShootingTargetSpawnPoint(
 			IConstArg arg
 		): base(
@@ -42,10 +42,10 @@ namespace AppleShooterProto{
 			return thisIndex;
 		}
 
-		public new interface IConstArg: AbsSceneObject.IConstArg{
+		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float eventPoint{get;}
 		}
-		public new class ConstArg: AbsSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				float eventPoint,
 				IShootingTargetSpawnPointAdaptor adaptor

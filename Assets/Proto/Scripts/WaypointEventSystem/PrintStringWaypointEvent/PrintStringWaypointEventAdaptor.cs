@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IPrintStringWaypointEventAdaptor: IMonoBehaviourAdaptor, IWaypointEventAdaptor{
+	public interface IPrintStringWaypointEventAdaptor: IAppleShooterMonoBehaviourAdaptor, IWaypointEventAdaptor{
 	}
-	public class PrintStringWaypointEventAdaptor : MonoBehaviourAdaptor, IPrintStringWaypointEventAdaptor {
+	public class PrintStringWaypointEventAdaptor : AppleShooterMonoBehaviourAdaptor, IPrintStringWaypointEventAdaptor {
 		public string stringToPrint;
 		public float eventPoint;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;

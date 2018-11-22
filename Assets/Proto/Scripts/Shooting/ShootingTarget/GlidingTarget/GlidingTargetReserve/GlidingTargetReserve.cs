@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityBase;
 
 namespace AppleShooterProto{
 	public interface IGlidingTargetReserve: ISceneObjectReserve<IGlidingTarget>, IShootingTargetReserve{
