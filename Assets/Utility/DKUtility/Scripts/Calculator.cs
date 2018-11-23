@@ -48,7 +48,6 @@ namespace DKUtility{
 			ref int[] unused
 		){
 			int result;
-			// Debug.Log(GetIndicesString(unused));
 			if(unused.Length > 1){
 				int randomIndex = Random.Range(0, unused.Length);
 				result = unused[randomIndex];

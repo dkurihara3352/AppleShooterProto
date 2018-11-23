@@ -15,15 +15,11 @@ namespace AppleShooterProto{
 			return new AppleShooterProcessFactory(processManager);
 		}
 		public IAppleShooterProcessFactory GetAppleShooterProcessFactory(){
-			if(!(thisProcessFactory is IAppleShooterProcessFactory))
-				throw new System.InvalidOperationException(
-					"processFactory must be of type AppleShooterProcessFactory"
-				);
-			return (IAppleShooterProcessFactory)thisProcessFactory;
+			return thisProcessFactory;
 		}
 		public override IUnityBaseProcessFactory GetProcessFactory(){
 			return thisProcessFactory;
 		}
-		IUnityBaseProcessFactory thisProcessFactory;
+		IAppleShooterProcessFactory thisProcessFactory;
 	}
 }

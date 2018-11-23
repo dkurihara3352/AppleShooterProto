@@ -275,6 +275,8 @@ namespace AppleShooterProto{
 				return 0f;
 			else{
 				int floorIndex = ceilingIndex -1;
+				if(thisCurvePoints == null)
+					UpdateCurve();
 				float distToFloor = thisCurvePoints[floorIndex].GetDistanceUpToPointOnCurve();
 				float residualDist = totalDistanceCoveredInCurve - distToFloor;
 				float lengthBetweenPoints = thisCurvePoints[ceilingIndex].GetDelta();

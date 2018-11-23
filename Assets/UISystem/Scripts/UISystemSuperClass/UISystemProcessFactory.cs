@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
+using UnityBase;
 
 namespace UISystem{
-	public interface IUISystemProcessFactory: IProcessFactory{
+	public interface IUISystemProcessFactory: IUnityBaseProcessFactory{
 		IUIAWaitForTapProcess CreateUIAWaitForTapProcess(
 			IWaitingForTapState state,
 			IUIAdaptorInputStateEngine engine
@@ -62,7 +63,7 @@ namespace UISystem{
 			bool hides
 		);
 	}
-	public class UISystemProcessFactory: AbsProcessFactory, IUISystemProcessFactory{
+	public class UISystemProcessFactory: UnityBaseProcessFactory, IUISystemProcessFactory{
 		public UISystemProcessFactory(
 			IProcessManager procManager, 
 			IUIManager uim
