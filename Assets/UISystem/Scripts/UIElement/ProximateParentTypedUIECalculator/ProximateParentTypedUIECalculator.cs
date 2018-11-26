@@ -15,7 +15,7 @@ namespace UISystem{
 		public T Calculate(){
 			IUIElement uieToExamine = thisUIElementToExamine;
 				while(true){
-					IUIElement parentUIE = uieToExamine.GetParentUIE();
+					IUIElement parentUIE = uieToExamine.GetParentUIElement();
 					if(parentUIE != null){
 						if(parentUIE is T){
 							return ((T)parentUIE);

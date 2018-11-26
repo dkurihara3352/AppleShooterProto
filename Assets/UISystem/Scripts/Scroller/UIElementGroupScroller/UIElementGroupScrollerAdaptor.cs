@@ -15,13 +15,9 @@ namespace UISystem{
 		public float startSearchSpeed = 200f;
 		public bool swipeToSnapNext = false;
 		public bool activatesCursoredElementsOnly = false;
-		protected override void CompleteUIElementReferenceSetUpImple(){
-			IUIElementGroupScroller scroller = (IUIElementGroupScroller)GetUIElement();
-			scroller.SetUpScrollerElement();
-			base.CompleteUIElementReferenceSetUpImple();
-		}
-		protected override IUIElement CreateUIElement(IUIImage image){
-			IUIElementGroupScrollerConstArg arg = new UIElementGroupScrollerConstArg(
+		
+		protected override IUIElement CreateUIElement(/* IUIImage image */){
+			UIElementGroupScroller.IConstArg arg = new UIElementGroupScroller.ConstArg(
 				initiallyCursoredElementIndex, 
 				cursorSize, 
 				startSearchSpeed, 
@@ -34,14 +30,17 @@ namespace UISystem{
 				swipeToSnapNext, 
 				locksInputAboveThisVelocity,
 				
-				thisDomainInitializationData.uim, 
-				thisDomainInitializationData.processFactory, 
-				thisDomainInitializationData.uiElementFactory, 
 				this, 
-				image,
 				activationMode
 			);
 			return new UIElementGroupScroller(arg);
+		}
+		protected override void SetUpScrollerReference(){
+			return;
+		}
+		public override void FinalizeSetUp(){
+			SetUpScrollerElement();
+			base.FinalizeSetUp();
 		}
 	}
 }

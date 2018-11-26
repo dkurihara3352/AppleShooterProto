@@ -13,7 +13,7 @@ public class ProximateParentScrollerCalculatorTest {
 	public void Calculate_NoParentUIE_ReturnsNull(){
 		IUIElement uie = Substitute.For<IUIElement>();
 		IUIElement parent = null;
-		uie.GetParentUIE().Returns(parent);
+		uie.GetParentUIElement().Returns(parent);
 
 		IProximateParentTypedUIECalculator<ISomeTestUIElement> calculator = new ProximateParentTypedUIECalculator<ISomeTestUIElement>(uie);
 
@@ -25,8 +25,8 @@ public class ProximateParentScrollerCalculatorTest {
 		IUIElement parent = Substitute.For<IUIElement>();
 		IUIElement nullParent = null;
 
-		uie.GetParentUIE().Returns(parent);
-		parent.GetParentUIE().Returns(nullParent);
+		uie.GetParentUIElement().Returns(parent);
+		parent.GetParentUIElement().Returns(nullParent);
 
 		IProximateParentTypedUIECalculator<ISomeTestUIElement> calculator = new ProximateParentTypedUIECalculator<ISomeTestUIElement>(uie);
 
@@ -38,8 +38,8 @@ public class ProximateParentScrollerCalculatorTest {
 		ISomeTestUIElement typedParent = Substitute.For<ISomeTestUIElement>();
 		IUIElement nullParent = null;
 
-		uie.GetParentUIE().Returns(typedParent);
-		typedParent.GetParentUIE().Returns(nullParent);
+		uie.GetParentUIElement().Returns(typedParent);
+		typedParent.GetParentUIElement().Returns(nullParent);
 
 		IProximateParentTypedUIECalculator<ISomeTestUIElement> calculator = new ProximateParentTypedUIECalculator<ISomeTestUIElement>(uie);
 
@@ -52,9 +52,9 @@ public class ProximateParentScrollerCalculatorTest {
 		ISomeTestUIElement typedParent = Substitute.For<ISomeTestUIElement>();
 		IUIElement nullParent = null;
 
-		uie.GetParentUIE().Returns(wrongTypedParent);
-		wrongTypedParent.GetParentUIE().Returns(typedParent);
-		typedParent.GetParentUIE().Returns(nullParent);
+		uie.GetParentUIElement().Returns(wrongTypedParent);
+		wrongTypedParent.GetParentUIElement().Returns(typedParent);
+		typedParent.GetParentUIElement().Returns(nullParent);
 
 		IProximateParentTypedUIECalculator<ISomeTestUIElement> calculator = new ProximateParentTypedUIECalculator<ISomeTestUIElement>(uie);
 
@@ -67,9 +67,9 @@ public class ProximateParentScrollerCalculatorTest {
 		ISomeTestUIElement farTypedParent = Substitute.For<ISomeTestUIElement>();
 		IUIElement nullParent = null;
 
-		uie.GetParentUIE().Returns(closeTypedParent);
-		closeTypedParent.GetParentUIE().Returns(farTypedParent);
-		farTypedParent.GetParentUIE().Returns(nullParent);
+		uie.GetParentUIElement().Returns(closeTypedParent);
+		closeTypedParent.GetParentUIElement().Returns(farTypedParent);
+		farTypedParent.GetParentUIElement().Returns(nullParent);
 
 		IProximateParentTypedUIECalculator<ISomeTestUIElement> calculator = new ProximateParentTypedUIECalculator<ISomeTestUIElement>(uie);
 

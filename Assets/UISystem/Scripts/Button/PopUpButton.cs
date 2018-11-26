@@ -8,7 +8,7 @@ namespace UISystem{
 	}
 	public class PopUpButton : UIElement, IPopUpButton {
 		public PopUpButton(
-			IUIElementConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){}
@@ -24,6 +24,19 @@ namespace UISystem{
 				thisTargetPopUp.Hide(false);
 			else
 				thisTargetPopUp.Show(false);
+		}
+
+		public new interface IConstArg: UIElement.IConstArg{
+
+		}
+		public new class ConstArg: UIElement.ConstArg, IConstArg{
+			public ConstArg(
+				IPopUpButtonAdaptor adaptor,
+				ActivationMode activationMode
+			): base(
+				adaptor,
+				activationMode
+			){}
 		}
 	}
 }

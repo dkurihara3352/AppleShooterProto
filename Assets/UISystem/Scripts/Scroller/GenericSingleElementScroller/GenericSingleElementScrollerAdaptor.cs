@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UISystem{
-public interface IGenericSingleElementScrollerAdaptor: IScrollerAdaptor{
+	public interface IGenericSingleElementScrollerAdaptor: IScrollerAdaptor{
 	}
 	public class GenericSingleElementScrollerAdaptor: AbsScrollerAdaptor<IGenericSingleElementScroller>, IGenericSingleElementScrollerAdaptor{
 		public Vector2 relativeCursorLength;
-		protected override IUIElement CreateUIElement(IUIImage image){
-			IGenericSingleElementScrollerConstArg arg = new GenericSingleElementScrollerConstArg(
+		protected override IUIElement CreateUIElement(){
+			GenericSingleElementScroller.IConstArg arg = new GenericSingleElementScroller.ConstArg(
 				relativeCursorLength, 
 				
 				scrollerAxis, 
@@ -17,11 +17,7 @@ public interface IGenericSingleElementScrollerAdaptor: IScrollerAdaptor{
 				isEnabledInertia, 
 				locksInputAboveThisVelocity,
 				
-				thisDomainInitializationData.uim, 
-				thisDomainInitializationData.processFactory, 
-				thisDomainInitializationData.uiElementFactory, 
 				this, 
-				image,
 				activationMode
 			);
 			return new GenericSingleElementScroller(arg);

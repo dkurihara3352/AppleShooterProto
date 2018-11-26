@@ -89,12 +89,12 @@ namespace UISystem{
 				if(parentUIAdaptor is IUIElementGroupScrollerAdaptor){
 					parentIsGroupScroller = true;
 					IUIElementGroupScrollerAdaptor groupScrollerAdaptor = (IUIElementGroupScrollerAdaptor)parentUIAdaptor;
-					thisGroupScrollerLength = groupScrollerAdaptor.GetRect().size;
+					thisGroupScrollerLength = groupScrollerAdaptor.GetRectSize();
 					thisCursorSize = groupScrollerAdaptor.GetCursorSize();
 					return;
 				}
 			}
-			thisGroupLengthAsNonScrollerElement = groupLengthAsNonScrollerElement;
+			// thisGroupLengthAsNonScrollerElement = groupLengthAsNonScrollerElement;
 		}
 		bool parentIsGroupScroller = false;
 		readonly Vector2 thisElementToPaddingRatio;

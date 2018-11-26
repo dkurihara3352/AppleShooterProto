@@ -20,7 +20,8 @@ namespace UISystem{
 
 		public float Calculate(int dimension){
 			float sectionLength = thisGroupElementLength[dimension] + thisPadding[dimension];
-			Vector2 uieGroupCursoredPosition = thisCursorLocalPosition - thisUIElementGroup.GetLocalPosition();
+			Vector2 elementGroupLocalPos = thisUIElementGroup.GetLocalPosition();
+			Vector2 uieGroupCursoredPosition = thisCursorLocalPosition - elementGroupLocalPos;
 			float modulo = uieGroupCursoredPosition[dimension] % sectionLength;
 			if(modulo == 0f)
 				return 0f;

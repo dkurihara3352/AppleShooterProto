@@ -4,31 +4,40 @@ using UnityEngine;
 using DKUtility;
 
 namespace UISystem{
-	public class UIManagerAdaptor: MonoBehaviour{
+	public interface IUIManagerAdaptor: IUISystemMonoBehaviourAdaptor{
+		IUIManager GetUIManager();
+	}
+	public class UIManagerAdaptor: UISystemMonoBehaviourAdaptor, IUIManagerAdaptor{
+		public override void SetUp(){
+			base.SetUp();
+			thisUIManager = CreateUIManager();
+		}
 		IUIManager thisUIManager;
 		public IUIManager GetUIManager(){
 			return thisUIManager;
 		}
-		public ProcessManager processManager;
-		public UIAdaptor rootUIAdaptor;/* assigned in inspector*/
-		public RectTransform uieReserveTrans;
+
 		public bool showsInputability;
-		// public float uiImageDarkenedBrightness = .4f;
-		// public float uiImageDefaultBrightness = .8f;
 		public float swipeVelocityThreshold = 400f;
 		public float swipeDistanceThreshold = 20f;
 
-		public void Awake(){
-			thisUIManager = new UIManager(
-				processManager,
-				rootUIAdaptor,
-				uieReserveTrans,
+		IUIManager CreateUIManager(){
+			UIManager.IConstArg arg = new UIManager.ConstArg(
+				this,
 				showsInputability,
-				// uiImageDarkenedBrightness,
-				// uiImageDefaultBrightness,
 				swipeVelocityThreshold,
 				swipeDistanceThreshold
 			);
+			return new UIManager(arg);
+		}
+		public override void SetUpReference(){
+			base.SetUpReference();
+			IPopUpManager popUpManager = CollectPopUpManager();
+			thisUIManager.SetPopUpManager(popUpManager);
+		}
+		public PopUpManagerAdaptor popUpManagerAdaptor;
+		IPopUpManager CollectPopUpManager(){
+			return popUpManagerAdaptor.GetPopUpManager();
 		}
 	}	
 }

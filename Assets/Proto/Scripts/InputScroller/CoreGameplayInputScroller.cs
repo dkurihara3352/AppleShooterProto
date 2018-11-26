@@ -5,16 +5,17 @@ using UISystem;
 
 namespace AppleShooterProto{
 	public interface ICoreGameplayInputScroller: IGenericSingleElementScroller{
+		void SetPlayerInputManager(IPlayerInputManager inputManager);
+
 		void SetScrollMultiplier(float multiplier);
 		float GetScrollMultiplier();
-		void SetPlayerInputManager(IPlayerInputManager inputManager);
 		void SnapToCenter();
-		// void AbortSnap();
+	
 	}
 	public class CoreGameplayInputScroller : GenericSingleElementScroller, ICoreGameplayInputScroller {
 
 		public CoreGameplayInputScroller(
-			ICoreGameplayInputScrollerConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -91,50 +92,33 @@ namespace AppleShooterProto{
 			SnapTo(.5f, 0f, 0);
 			SnapTo(.5f, 0f, 1);
 		}
-	}
-
-
-	public interface ICoreGameplayInputScrollerConstArg: IGenericSingleElementScrollerConstArg{
-		// IPlayerInputManager inputManager{get;}
-	}
-	public class CoreGameplayInputScrollerConstArg: GenericSingleElementScrollerConstArg, ICoreGameplayInputScrollerConstArg{
-		public CoreGameplayInputScrollerConstArg(
-			// IPlayerInputManager inputManager,
-
-			Vector2 relativeCursorLength, 
-			ScrollerAxis scrollerAxis, 
-			Vector2 rubberBandLimitMultiplier, 
-			Vector2 relativeCursorPosition, 
-			bool isEnabledInertia, 
-			float newScrollSpeedThreshold,
-
-			IUIManager uim, 
-			IUISystemProcessFactory processFactory, 
-			IUIElementFactory uieFactory, 
-			IGenericSingleElementScrollerAdaptor uia, 
-			IUIImage image,
-			ActivationMode activationMode
-
-		):base(
-
-			relativeCursorLength,
-			scrollerAxis, 
-			relativeCursorPosition, 
-			rubberBandLimitMultiplier, 
-			isEnabledInertia, 
-			newScrollSpeedThreshold,
-
-			uim, 
-			processFactory, 
-			uieFactory, 
-			uia, 
-			image,
-			activationMode
-		){
-			// thisInputManager = inputManager;
+		public new interface IConstArg: GenericSingleElementScroller.IConstArg{
 		}
-		// readonly IPlayerInputManager thisInputManager;
-		// public IPlayerInputManager inputManager{get{return thisInputManager;}}
+		public new class ConstArg: GenericSingleElementScroller.ConstArg, IConstArg{
+			public ConstArg(
+				Vector2 relativeCursorLength, 
+				ScrollerAxis scrollerAxis, 
+				Vector2 rubberBandLimitMultiplier, 
+				Vector2 relativeCursorPosition, 
+				bool isEnabledInertia, 
+				float newScrollSpeedThreshold,
+
+				IGenericSingleElementScrollerAdaptor adaptor, 
+				ActivationMode activationMode
+
+			):base(
+				relativeCursorLength,
+				scrollerAxis, 
+				relativeCursorPosition, 
+				rubberBandLimitMultiplier, 
+				isEnabledInertia, 
+				newScrollSpeedThreshold,
+
+				adaptor, 
+				activationMode
+			){
+			}
+		}
 	}
 }
 

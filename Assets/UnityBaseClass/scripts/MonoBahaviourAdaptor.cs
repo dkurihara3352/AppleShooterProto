@@ -31,6 +31,8 @@ namespace UnityBase{
 		bool IsEnabled();
 
 		IUnityBaseProcessFactory GetProcessFactory();
+
+		string GetName();
 	}
 	public abstract class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -144,6 +146,10 @@ namespace UnityBase{
 		}
 		public bool IsEnabled(){
 			return this.enabled;
+		}
+
+		public string GetName(){
+			return this.name;
 		}
 	}
 }

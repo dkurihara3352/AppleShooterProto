@@ -84,7 +84,7 @@ namespace UISystem{
 			}
 		/* Creating Calc Data */
 			protected override IRectCalculationData CreateRectCalculationData(
-				List<IUIElement> groupElements
+				IUIElement[] groupElements
 			){
 				IRectConstraint firstConstraint = CreateRectConstraint(
 					firstConstraintType,

@@ -8,9 +8,8 @@ namespace AppleShooterProto{
 		ICoreGameplayInputScroller GetInputScroller();
 	}
 	public class CoreGameplayInputScrollerAdaptor : GenericSingleElementScrollerAdaptor, ICoreGameplayInputScrollerAdaptor {
-		public PlayerInputManagerAdaptor inputManagerAdaptor;
-		protected override IUIElement CreateUIElement(IUIImage image){
-			ICoreGameplayInputScrollerConstArg arg = new CoreGameplayInputScrollerConstArg(
+		protected override IUIElement CreateUIElement(){
+			CoreGameplayInputScroller.IConstArg arg = new CoreGameplayInputScroller.ConstArg(
 				
 				relativeCursorLength,
 				scrollerAxis,
@@ -19,21 +18,19 @@ namespace AppleShooterProto{
 				isEnabledInertia,
 				locksInputAboveThisVelocity,
 
-				thisDomainInitializationData.uim,
-				thisDomainInitializationData.processFactory,
-				thisDomainInitializationData.uiElementFactory,
 				this,
-				image,
 				activationMode
 			);
 			return new CoreGameplayInputScroller(arg);
 		}
-		protected override void SetUpUIElementReferenceImple(){
-			base.SetUpUIElementReferenceImple();
-			IUIAdaptor scrollerElementAdaptor = thisChildUIAdaptors[0];
-			Vector2 newRectLength = CalculateScrollerElementRectLength();
-			scrollerElementAdaptor.SetRectLength(newRectLength);
-
+		public override void SetUpReference(){
+			base.SetUpReference();
+			IPlayerInputManager inputManager = GetInputManager();
+			thisInputScroller.SetPlayerInputManager(inputManager);
+		}
+		public PlayerInputManagerAdaptor inputManagerAdaptor;
+		IPlayerInputManager GetInputManager(){
+			return inputManagerAdaptor.GetInputManager();
 		}
 		public PlayerCameraAdaptor playerCameraAdaptor;
 		public Vector2 panAngleMultiplier = Vector2.one;
@@ -56,8 +53,13 @@ namespace AppleShooterProto{
 			}
 			return result;
 		}
+		ICoreGameplayInputScroller thisInputScroller{
+			get{
+				return (ICoreGameplayInputScroller)GetUIElement();
+			}
+		}
 		public ICoreGameplayInputScroller GetInputScroller(){
-			return (ICoreGameplayInputScroller)GetUIElement();
+			return thisInputScroller;
 		}
 		public float GetScrollMultiplier(){
 			return GetInputScroller().GetScrollMultiplier();

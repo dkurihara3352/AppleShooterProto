@@ -6,7 +6,7 @@ using DKUtility;
 namespace UISystem{
 	public interface IUIElementGroup: IUIElement{
 		int GetSize();
-		List<IUIElement> GetGroupElements();
+		IUIElement[] GetGroupElements();
 		int GetArraySize(int dimension);
 		IUIElement GetGroupElement(int index);
 		int GetGroupElementIndex(IUIElement groupElement);
@@ -14,14 +14,20 @@ namespace UISystem{
 		int[] GetGroupElementArrayIndex(IUIElement groupElement);
 		IUIElement[] GetGroupElementsWithinIndexRange(int minColumnIndex, int minRowIndex, int maxColumnIndex, int maxRowIndex);
 		IUIElement GetGroupElementAtPositionInGroupSpace(Vector2 positionInElementGroupSpace);
-		void SetUpElements(List<IUIElement> elements);
+
+
+		void SetUpElements(IUIElement[] elements);
+
+		
 		Vector2 GetGroupElementLength();
 		Vector2 GetPadding();
 		void SetUpRects(IRectCalculationData rectCalculationData);
 		void PlaceElements();
 	}
 	public abstract class AbsUIElementGroup<T> : UIElement, IUIElementGroup where T: class, IUIElement{
-		public AbsUIElementGroup(IUIElementGroupConstArg arg) :base(arg){
+		public AbsUIElementGroup(
+			IConstArg arg
+		) :base(arg){
 			thisRowCountConstraint = arg.rowCountConstraint;
 			thisColumnCountConstraint = arg.columnCountConstraint;
 			MakeSureArrayConstraintIsProperlySet();
@@ -62,28 +68,30 @@ namespace UISystem{
 					thisMaxElementCount = thisColumnCountConstraint * thisRowCountConstraint;
 			}
 		/* Accessing elements */
-			protected List<T> thisGroupElements;/* explicitly and externally set */
+			protected T[] thisGroupElements;/* explicitly and externally set */
 			public IUIElement GetGroupElement(int index){
 				return thisGroupElements[index];
 			}
-			public List<IUIElement> GetGroupElements(){
+			public IUIElement[] GetGroupElements(){
 				List<IUIElement> result = new List<IUIElement>();
 				foreach(T element in thisGroupElements){
 					result.Add(element);
 				}
-				return result;
+				return result.ToArray();
 			}
 			public int GetGroupElementIndex(IUIElement groupElement){
 				if(groupElement != null){
+					int index = 0;
 					foreach(T uie in thisGroupElements){
 						if( uie == groupElement)
-							return thisGroupElements.IndexOf(uie);
+							return index;
+						index ++;
 					}
 					throw new System.InvalidOperationException("groupElement is not found among thisGroupElements");
 				}else
 					throw new System.InvalidOperationException("groupElement should not be null");
 			}
-			public int GetSize(){return thisGroupElements.Count;}
+			public int GetSize(){return thisGroupElements.Length;}
 			protected T[,] thisElementsArray;
 			public IUIElement GetGroupElement(int columnIndex, int rowIndex){
 				return thisElementsArray[columnIndex, rowIndex];
@@ -95,9 +103,9 @@ namespace UISystem{
 				return thisGroupElementsArrayCalculator.GetGroupElementArrayIndex(element);
 			}
 		/* Setting up elements */
-			public void SetUpElements(List<IUIElement> elements){
-				MakeSureElementsCountIsValid(elements.Count);
-				thisGroupElements = CreateTypedList(elements);
+			public void SetUpElements(IUIElement[] elements){
+				MakeSureElementsCountIsValid(elements.Length);
+				thisGroupElements = CreateTypedElements(elements);
 				ChildrenAllElements(elements);
 				CalcAndSetGridCounts();
 				SetUpElementsArray(elements);
@@ -111,16 +119,16 @@ namespace UISystem{
 							"try either decrease the elements count or release one of the array constraints"
 						);
 			}
-			List<T> CreateTypedList(List<IUIElement> source){
-				List<T> result = new List<T>();
+			T[] CreateTypedElements(IUIElement[] source){
+				List<T> resultList = new List<T>();
 				foreach(IUIElement uie in source){
-					result.Add((T)uie);
+					resultList.Add((T)uie);
 				}
-				return result;
+				return resultList.ToArray();
 			}
-			void ChildrenAllElements(List<IUIElement> elements){
+			void ChildrenAllElements(IUIElement[] elements){
 				foreach(IUIElement uie in elements)
-					uie.SetParentUIE(this, true);
+					uie.SetParent(this);
 			}
 
 			void CalcAndSetGridCounts(){
@@ -133,8 +141,8 @@ namespace UISystem{
 				if(thisColumnCountConstraint != 0)
 					return thisColumnCountConstraint;
 				else{
-					int quotient = thisGroupElements.Count / thisRowCountConstraint;
-					int modulo = thisGroupElements.Count % thisRowCountConstraint;
+					int quotient = thisGroupElements.Length / thisRowCountConstraint;
+					int modulo = thisGroupElements.Length % thisRowCountConstraint;
 					return modulo > 0? quotient + 1 : quotient;
 				}
 			}
@@ -142,12 +150,12 @@ namespace UISystem{
 				if(thisRowCountConstraint != 0)
 					return thisRowCountConstraint;
 				else{
-					int quotient = thisGroupElements.Count / thisColumnCountConstraint;
-					int modulo = thisGroupElements.Count % thisColumnCountConstraint;
+					int quotient = thisGroupElements.Length / thisColumnCountConstraint;
+					int modulo = thisGroupElements.Length % thisColumnCountConstraint;
 					return modulo > 0? quotient + 1 : quotient;
 				}
 			}
-			void SetUpElementsArray(List<IUIElement> elements){
+			void SetUpElementsArray(IUIElement[] elements){
 				thisElementsArray = CreateElements2DArray(
 					thisNumOfColumns, 
 					thisNumOfRows
@@ -156,7 +164,7 @@ namespace UISystem{
 			protected T[ , ] CreateElements2DArray(int numOfColumns, int numOfRows){
 				T[ , ] array = new T[ numOfColumns, numOfRows];
 				foreach(T element in thisGroupElements){
-					int elementIndex = thisGroupElements.IndexOf(element);
+					int elementIndex = GetGroupElementIndex(element);
 					int columnIndex = CalcColumnIndex(elementIndex, numOfColumns, numOfRows);
 					int rowIndex = CalcRowIndex(elementIndex, numOfColumns, numOfRows);
 					array[columnIndex, rowIndex] = element;
@@ -207,7 +215,7 @@ namespace UISystem{
 			}
 			protected void SetUpGroupLength(Vector2 groupLength){
 				thisGroupLength = groupLength;
-				thisUIA.SetRectLength(groupLength);
+				thisUIAdaptor.SetRectLength(groupLength);
 			}
 			protected void SetUpElementLength(Vector2 elementLength){
 				thisElementLength = elementLength;
@@ -252,7 +260,7 @@ namespace UISystem{
 					thisElementsArray, 
 					thisElementLength, 
 					thisPadding, 
-					thisUIA.GetRect().size,
+					thisUIAdaptor.GetRectSize(),
 					GetName()
 				);
 			}
@@ -266,56 +274,48 @@ namespace UISystem{
 					element.SetLocalPosition(newLocalPos);
 				}
 			}
-		/*  */
+		/* Const */
+			public new interface IConstArg: UIElement.IConstArg{
+				int columnCountConstraint{get;}
+				int rowCountConstraint{get;}
+				bool topToBottom{get;}
+				bool leftToRight{get;}
+				bool rowToColumn{get;}
+			}
+			public new class ConstArg: UIElement.ConstArg ,IConstArg{
+				public ConstArg(
+					int columnCountConstraint, 
+					int rowCountConstraint, 
+					bool topToBottom, 
+					bool leftToRight, 
+					bool rowToColumn, 
+
+					IUIElementGroupAdaptor adaptor, 
+					ActivationMode activationMode
+
+				): base(
+					adaptor, 
+					activationMode
+				){
+					thisColumnCountConstraint = columnCountConstraint;
+					thisRowCountConstraint = rowCountConstraint;
+					thisTopToBottom = topToBottom;
+					thisLeftToRight = leftToRight;
+					thisRowToColumn = rowToColumn;
+				}
+				readonly int thisColumnCountConstraint;
+				public int columnCountConstraint{get{return thisColumnCountConstraint;}}
+				readonly int thisRowCountConstraint;
+				public int rowCountConstraint{get{return thisRowCountConstraint;}}
+				readonly bool thisTopToBottom;
+				public bool topToBottom{get{return thisTopToBottom;}}
+				readonly bool thisLeftToRight;
+				public bool leftToRight{get{return thisLeftToRight;}}
+				readonly bool thisRowToColumn;
+				public bool rowToColumn{get{return thisRowToColumn;}}
+			}
 	}
 
 
 
-	public interface IUIElementGroupConstArg: IUIElementConstArg{
-		int columnCountConstraint{get;}
-		int rowCountConstraint{get;}
-		bool topToBottom{get;}
-		bool leftToRight{get;}
-		bool rowToColumn{get;}
-	}
-	public class UIElementGroupConstArg: UIElementConstArg ,IUIElementGroupConstArg{
-		public UIElementGroupConstArg(
-			int columnCountConstraint, 
-			int rowCountConstraint, 
-			bool topToBottom, 
-			bool leftToRight, 
-			bool rowToColumn, 
-
-			IUIManager uim, 
-			IUISystemProcessFactory processFactory, 
-			IUIElementFactory uieFactory, 
-			IUIElementGroupAdaptor uia, 
-			IUIImage image,
-			ActivationMode activationMode
-
-		): base(
-			uim, 
-			processFactory, 
-			uieFactory, 
-			uia, 
-			image,
-			activationMode
-		){
-			thisColumnCountConstraint = columnCountConstraint;
-			thisRowCountConstraint = rowCountConstraint;
-			thisTopToBottom = topToBottom;
-			thisLeftToRight = leftToRight;
-			thisRowToColumn = rowToColumn;
-		}
-		readonly int thisColumnCountConstraint;
-		public int columnCountConstraint{get{return thisColumnCountConstraint;}}
-		readonly int thisRowCountConstraint;
-		public int rowCountConstraint{get{return thisRowCountConstraint;}}
-		readonly bool thisTopToBottom;
-		public bool topToBottom{get{return thisTopToBottom;}}
-		readonly bool thisLeftToRight;
-		public bool leftToRight{get{return thisLeftToRight;}}
-		readonly bool thisRowToColumn;
-		public bool rowToColumn{get{return thisRowToColumn;}}
-	}
 }

@@ -4,9 +4,21 @@ using UnityEngine;
 
 namespace UISystem{
 	public interface ISceneObjectElementGroupAdaptor: IUIElementGroupAdaptor{}
-	public class SceneObjectElementGroupAdaptor: /* AbsUIElementGroupAdaptor *//* AbsTwoConstraintsGroupAdaptor */AbsScrollerConstrainedGroupAdaptor, ISceneObjectElementGroupAdaptor{
-		protected override List<IUIElement> GetGroupElements(){
-			return GetChildUIEs();
+	public class SceneObjectElementGroupAdaptor: AbsScrollerConstrainedGroupAdaptor, ISceneObjectElementGroupAdaptor{
+		protected override IUIElement[] GetGroupElements(){
+			return GetChildUIElements();
+		}
+		protected override IUIElement CreateUIElement(){
+			GenericUIElementGroup.IConstArg arg = new GenericUIElementGroup.ConstArg(
+				columnCountConstraint,
+				rowCountConstraint,
+				topToBottom,
+				leftToRight,
+				rowToColumn,
+				this,
+				activationMode
+			);
+			return new GenericUIElementGroup(arg);
 		}
 	}
 }

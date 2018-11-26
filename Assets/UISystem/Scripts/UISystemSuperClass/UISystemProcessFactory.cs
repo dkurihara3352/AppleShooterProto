@@ -65,18 +65,25 @@ namespace UISystem{
 	}
 	public class UISystemProcessFactory: UnityBaseProcessFactory, IUISystemProcessFactory{
 		public UISystemProcessFactory(
-			IProcessManager procManager, 
-			IUIManager uim
+			IProcessManager procManager,
+			IUISystemMonoBehaviourAdaptorManager adaptorManager
 		): base(
 			procManager
 		){
-			if(uim != null)
-				thisUIManager = uim;
-			else
-				throw new System.ArgumentNullException("uim", "ProcessFactory does not operate without a uim");
+			// if(uim != null)
+			// 	thisUIManager = uim;
+			// else
+			// 	throw new System.ArgumentNullException("uim", "ProcessFactory does not operate without a uim");
 
+			thisAdaptorManager = adaptorManager;
 		}
-		protected readonly IUIManager thisUIManager;
+		// protected readonly IUIManager thisUIManager;
+		readonly IUISystemMonoBehaviourAdaptorManager thisAdaptorManager;
+		IUIManager thisUIManager{
+			get{
+				return thisAdaptorManager.GetUIManager();
+			}
+		}
 
 		public IUIAWaitForTapProcess CreateUIAWaitForTapProcess(
 			IWaitingForTapState state,

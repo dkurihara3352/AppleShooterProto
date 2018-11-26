@@ -7,7 +7,7 @@ namespace UISystem{
 	*/
 	public interface ICyclableUIElementGroupScroller: IUIElementGroupScroller{}
 	public class CyclableUIElementGroupScroller : UIElementGroupScroller, ICyclableUIElementGroupScroller {
-		public CyclableUIElementGroupScroller(ICyclableUIElementGroupScrollerConstArg arg): base(arg){
+		public CyclableUIElementGroupScroller(IConstArg arg): base(arg){
 			thisIsCycleEnabled = arg.isCycleEnabled;
 		}
 		readonly bool[] thisIsCycleEnabled;
@@ -77,54 +77,48 @@ namespace UISystem{
 			return elementPositionNormalizedToCursor != 0;
 		}
 		void Cycle(){}
-	}
-	public interface ICyclableUIElementGroupScrollerConstArg: IUIElementGroupScrollerConstArg{
-		bool[] isCycleEnabled{get;}
-	}
-	public class CyclableUIElementGroupScrollerConstArg: UIElementGroupScrollerConstArg, ICyclableUIElementGroupScrollerConstArg{
-		public CyclableUIElementGroupScrollerConstArg(
-			bool[] isCycleEnabled, 
-			int initiallyCursoredElementIndex, 
-			int[] cursorSize, 
-			float startSearchSpeed,
-			bool activatesCursoredElementsOnly,
 
-			Vector2 relativeCursorPosition, 
-			ScrollerAxis scrollerAxis, 
-			Vector2 rubberBandLimitMultiplier, 
-			bool isEnabledInertia, 
-			bool swipeToSnapNext, 
-			float newScrollSpeedThreshold,
 
-			IUIManager uim, 
-			IUISystemProcessFactory processFactory, 
-			IUIElementFactory uieFactory, 
-			IUIElementGroupScrollerAdaptor uia, 
-			IUIImage image,
-			ActivationMode activationMode
-		): base(
-			initiallyCursoredElementIndex, 
-			cursorSize, 
-			startSearchSpeed,
-			activatesCursoredElementsOnly,
-
-			relativeCursorPosition, 
-			scrollerAxis, 
-			rubberBandLimitMultiplier, 
-			isEnabledInertia, 
-			swipeToSnapNext, 
-			newScrollSpeedThreshold,
-
-			uim, 
-			processFactory, 
-			uieFactory, 
-			uia, 
-			image,
-			activationMode
-		){
-			thisIsCycleEnabled = isCycleEnabled;
+		public new interface IConstArg: UIElementGroupScroller.IConstArg{
+			bool[] isCycleEnabled{get;}
 		}
-		readonly bool[] thisIsCycleEnabled;
-		public bool[] isCycleEnabled{get{return thisIsCycleEnabled;}}
+		public new class ConstArg: UIElementGroupScroller.ConstArg, IConstArg{
+			public ConstArg(
+				bool[] isCycleEnabled, 
+				int initiallyCursoredElementIndex, 
+				int[] cursorSize, 
+				float startSearchSpeed,
+				bool activatesCursoredElementsOnly,
+
+				Vector2 relativeCursorPosition, 
+				ScrollerAxis scrollerAxis, 
+				Vector2 rubberBandLimitMultiplier, 
+				bool isEnabledInertia, 
+				bool swipeToSnapNext, 
+				float newScrollSpeedThreshold,
+
+				IUIElementGroupScrollerAdaptor adaptor, 
+				ActivationMode activationMode
+			): base(
+				initiallyCursoredElementIndex, 
+				cursorSize, 
+				startSearchSpeed,
+				activatesCursoredElementsOnly,
+
+				relativeCursorPosition, 
+				scrollerAxis, 
+				rubberBandLimitMultiplier, 
+				isEnabledInertia, 
+				swipeToSnapNext, 
+				newScrollSpeedThreshold,
+
+				adaptor, 
+				activationMode
+			){
+				thisIsCycleEnabled = isCycleEnabled;
+			}
+			readonly bool[] thisIsCycleEnabled;
+			public bool[] isCycleEnabled{get{return thisIsCycleEnabled;}}
+		}
 	}
 }

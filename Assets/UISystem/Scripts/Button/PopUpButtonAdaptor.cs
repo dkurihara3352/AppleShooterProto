@@ -3,25 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UISystem{
-	public interface IPopUpButtonAdaptor: IUIAdaptor{}
+	public interface IPopUpButtonAdaptor: IUIAdaptor{
+		IPopUpButton GetPopUpButton();
+	}
 	public class PopUpButtonAdaptor : UIAdaptor, IPopUpButtonAdaptor {
 		public PopUpAdaptor targetPopUpAdaptor;
-		protected override IUIElement CreateUIElement(IUIImage image){
-			IUIElementConstArg arg = new UIElementConstArg(
-				thisDomainInitializationData.uim,
-				thisDomainInitializationData.processFactory,
-				thisDomainInitializationData.uiElementFactory,
+		protected override IUIElement CreateUIElement(){
+			PopUpButton.IConstArg arg = new PopUpButton.ConstArg(
 				this,
-				image,
 				activationMode
 			);
 			return new PopUpButton(arg);
 		}
-		protected override void SetUpUIElementReferenceImple(){
-			base.SetUpUIElementReferenceImple();
-			IPopUp popUp = (IPopUp)targetPopUpAdaptor.GetUIElement();
-			IPopUpButton popUpButton = (IPopUpButton)GetUIElement();
-			popUpButton.SetTargetPopUp(popUp);
+		IPopUpButton thisPopUpButton{
+			get{
+				return (IPopUpButton)thisUIElement;
+			}
+		}
+		public IPopUpButton GetPopUpButton(){
+			return thisPopUpButton;
+		}
+		public override void SetUpReference(){
+			base.SetUpReference();
+			IPopUp targetPopUp = targetPopUpAdaptor.GetPopUp();
+			thisPopUpButton.SetTargetPopUp(targetPopUp);
 		}
 	}
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace UISystem{
 	public interface IUIElementGroupAdaptor: IUIAdaptor{
+		IUIElementGroup GetUIElementGroup();
 	}
 	public abstract class AbsUIElementGroupAdaptor: UIAdaptor, IUIElementGroupAdaptor{
 		public int columnCountConstraint;
@@ -12,33 +13,24 @@ namespace UISystem{
 		public bool leftToRight;
 		public bool rowToColumn;
 	
-		protected override void Awake(){
-			base.Awake();
+		public override void SetUp(){
+			base.SetUp();
 			MakeSureConstraintIsProperlySet();
 		}
+		protected IUIElementGroup thisUIElementGroup{
+			get{
+				return (IUIElementGroup)thisUIElement;
+			}
+		}
+		public IUIElementGroup GetUIElementGroup(){
+			return thisUIElementGroup;
+		}
+		protected abstract override IUIElement CreateUIElement();
 		protected abstract void MakeSureConstraintIsProperlySet();
 
-		protected override IUIElement CreateUIElement(IUIImage image){
-			IUIElementGroupConstArg arg = new UIElementGroupConstArg(
-				columnCountConstraint,
-				rowCountConstraint,
-				topToBottom,
-				leftToRight,
-				rowToColumn,
-
-				thisDomainInitializationData.uim,
-				thisDomainInitializationData.processFactory,
-				thisDomainInitializationData.uiElementFactory,
-				this,
-				image,
-				activationMode
-			);
-			IGenericUIElementGroup uie = new GenericUIElementGroup(arg);
-			return uie;
-		}
-		protected override void SetUpUIElementReferenceImple(){
-			base.SetUpUIElementReferenceImple();
-			List<IUIElement> groupElements = GetGroupElements();
+		public override void SetUpReference(){
+			base.SetUpReference();
+			IUIElement[] groupElements = GetGroupElements();
 			IRectCalculationData rectCalculationData = CreateRectCalculationData(groupElements);
 
 			IUIElementGroup uieGroup = (IUIElementGroup)this.GetUIElement();
@@ -47,8 +39,8 @@ namespace UISystem{
 			uieGroup.SetUpRects(rectCalculationData);
 			uieGroup.PlaceElements();
 		}
-		protected abstract List<IUIElement> GetGroupElements();
-		protected abstract IRectCalculationData CreateRectCalculationData(List<IUIElement> groupElements);
+		protected abstract IUIElement[] GetGroupElements();
+		protected abstract IRectCalculationData CreateRectCalculationData(IUIElement[] groupElements);
 
 	}
 }

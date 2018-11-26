@@ -5,6 +5,10 @@ using DKUtility.CurveUtility;
 using DKUtility;
 namespace UISystem{
 	public interface IScroller: IUIElement{
+		void SetUpScrollerElement(IUIElement element);
+		void UpdateRect();
+
+
 		void SwitchRunningElementMotorProcess(IScrollerElementMotorProcess process, int dimension);
 		void SetScrollerElementLocalPosOnAxis(float localPosOnAxis, int dimension);
 		float GetElementCursorOffsetInPixel(float scrollerElementLocalPosOnAxis, int dimension);
@@ -14,7 +18,6 @@ namespace UISystem{
 		void UpdateVelocity(float velocityOnAxis, int dimension);
 
 		IUIElement GetScrollerElement();
-		void SetUpScrollerElement();
 		void SetUpCursorTransform();
 		bool ScrollerElementIsUndersizedTo(Vector2 referenceLength, int dimension);
 
@@ -29,7 +32,9 @@ namespace UISystem{
 		Horizontal, Vertical, Both
 	}
 	public abstract class AbsScroller : UIElement, IScroller{
-		public AbsScroller(IScrollerConstArg arg): base(arg){
+		public AbsScroller(
+			IConstArg arg
+		): base(arg){
 			/* good here */
 			thisScrollerAxis = arg.scrollerAxis;
 			thisRelativeCursorPosition = MakeSureRelativeCursorPosIsClampedZeroToOne(arg.relativeCursorPosition);
@@ -38,7 +43,8 @@ namespace UISystem{
 			thisNewScrollSpeedThreshold = arg.newScrollSpeedThreshold;
 
 			/* good here */
-			UpdateRect();
+			//or maybe should be moved into SetUp
+			// UpdateRect();
 			
 			/* non dependent */
 			thisRunningScrollerMotorProcess = new IScrollerElementMotorProcess[2];
@@ -67,22 +73,23 @@ namespace UISystem{
 			protected readonly ScrollerAxis thisScrollerAxis;
 
 		/* ScrollerRect */
-			public override void UpdateRect(){
-				base.UpdateRect();
+			public /* override */ void UpdateRect(){
+				// base.UpdateRect();
 				SetUpScrollerRect();
-				MakeSureRectIsSet(thisRect);
+				// MakeSureRectIsSet(thisRect);
 				SetUpRubberBandCalculators();
 			}
-			protected Rect thisRect;
+			// protected Rect thisRect;
 			protected Vector2 thisRectLength;
 			void SetUpScrollerRect(){
-				thisRect = thisUIA.GetRect();
-				thisRectLength = new Vector2(thisRect.width, thisRect.height);
+				// thisRect = thisUIAdaptor.GetRect();
+				// thisRectLength = new Vector2(thisRect.width, thisRect.height);
+				thisRectLength = thisUIAdaptor.GetRectSize();
 			}
-			protected void MakeSureRectIsSet(Rect rect){
-				if(rect.width == 0f || rect.height == 0f)
-					throw new System.InvalidOperationException("rect has at least one dimension not set right");
-			}
+			// protected void MakeSureRectIsSet(Rect rect){
+			// 	if(rect.width == 0f || rect.height == 0f)
+			// 		throw new System.InvalidOperationException("rect has at least one dimension not set right");
+			// }
 		/* Rubber */
 			readonly protected Vector2 thisRubberBandLimitMultiplier;
 			Vector2 thisRubberLimit;
@@ -106,8 +113,11 @@ namespace UISystem{
 			}
 
 		/* ScrollerElement */
-			public void SetUpScrollerElement(){
-				SetTheOnlyChildAsScrollerElement();
+			public void SetUpScrollerElement(IUIElement scrollerElement){
+				//called in SetUpReference
+
+				// SetTheOnlyChildAsScrollerElement();
+				thisScrollerElement = scrollerElement;
 				SetUpScrollerElementRect();
 				SetUpCursorTransform();
 				OnRectsSetUpComplete();
@@ -125,25 +135,26 @@ namespace UISystem{
 			public IUIElement GetScrollerElement(){
 				return thisScrollerElement;
 			}
-			protected void SetTheOnlyChildAsScrollerElement(){
-				List<IUIElement> childUIEs = GetChildUIEs();
-				if(childUIEs == null)
-					throw new System.NullReferenceException("childUIEs must not be null");
-				if(childUIEs.Count != 1)
-					throw new System.InvalidOperationException("Scroller must have only one UIE child as Scroller Element");
-				if(childUIEs[0] == null)
-					throw new System.InvalidOperationException("Scroller's only child must not be null");
-				thisScrollerElement = childUIEs[0];
-			}
-			protected Rect thisScrollerElementRect;
+			// protected void SetTheOnlyChildAsScrollerElement(){
+			// 	// IUIElement[] childUIEs = GetChildUIElements();
+			// 	// if(childUIEs == null)
+			// 	// 	throw new System.NullReferenceException("childUIEs must not be null");
+			// 	// if(childUIEs.Length != 1)
+			// 	// 	throw new System.InvalidOperationException("Scroller must have only one UIE child as Scroller Element");
+			// 	// if(childUIEs[0] == null)
+			// 	// 	throw new System.InvalidOperationException("Scroller's only child must not be null");
+			// 	// thisScrollerElement = childUIEs[0];
+			// }
+			// protected Rect thisScrollerElementRect;
 			protected Vector2 thisScrollerElementLength;
 			protected virtual void SetUpScrollerElementRect(){
 				IUIAdaptor scrollerElementAdaptor = thisScrollerElement.GetUIAdaptor();
-				thisScrollerElementRect = scrollerElementAdaptor.GetRect();
-				thisScrollerElementLength = new Vector2(
-					thisScrollerElementRect.width, 
-					thisScrollerElementRect.height
-				);
+				thisScrollerElementLength = scrollerElementAdaptor.GetRectSize();
+				// thisScrollerElementRect = scrollerElementAdaptor.GetRect();
+				// thisScrollerElementLength = new Vector2(
+				// 	thisScrollerElementRect.width, 
+				// 	thisScrollerElementRect.height
+				// );
 			}
 			/* Cursor Transform */
 			public void SetUpCursorTransform(){
@@ -152,7 +163,7 @@ namespace UISystem{
 				thisCursorLocalPosition = CalcCursorLocalPos();
 
 				Rect cursorRect = new Rect(thisCursorLocalPosition, thisCursorLength);
-				((IScrollerAdaptor)thisUIA).ShowCursorRectInGUI(cursorRect);
+				((IScrollerAdaptor)thisUIAdaptor).SetCursorRect(cursorRect);
 			}
 			protected Vector2 thisCursorLength;
 			readonly protected Vector2 thisRelativeCursorPosition;
@@ -229,7 +240,7 @@ namespace UISystem{
 				protected override void OnBeginDragImple(ICustomEventData eventData){
 					if(thisTopmostScrollerInMotion != null){
 						EvaluateDrag(eventData);
-						thisUIM.SetInputHandlingScroller(
+						thisUIManager.SetInputHandlingScroller(
 							this, 
 							UIManager.InputName.BeginDrag
 						);
@@ -241,7 +252,7 @@ namespace UISystem{
 					}else{
 						EvaluateDrag(eventData);
 						if(thisShouldProcessDrag){
-							thisUIM.SetInputHandlingScroller(this, UIManager.InputName.BeginDrag);
+							thisUIManager.SetInputHandlingScroller(this, UIManager.InputName.BeginDrag);
 							CacheTouchPosition(eventData.position);
 						}
 						else
@@ -281,7 +292,7 @@ namespace UISystem{
 			/* Drag */
 				protected override void OnDragImple(ICustomEventData eventData){
 					if(thisShouldProcessDrag){
-						thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Drag);
+						thisUIManager.SetInputHandlingScroller(this, UIManager.InputName.Drag);
 						if(thisTopmostScrollerInMotion != null){
 							if(thisIsTopmostScrollerInMotion){
 								DisplaceScrollerElement(eventData.deltaPos);
@@ -409,18 +420,18 @@ namespace UISystem{
 
 		/* Release */
 			protected override void OnReleaseImple(){
-				thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Release);
+				thisUIManager.SetInputHandlingScroller(this, UIManager.InputName.Release);
 			}
 		/* Tap */
 			protected override void OnTapImple(int tapCount){
-				thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Tap);
+				thisUIManager.SetInputHandlingScroller(this, UIManager.InputName.Tap);
 			}
 		/* Swipe */
 			protected override void OnSwipeImple(ICustomEventData eventData){
 				if(!thisIsEvaluatedDrag)
 					this.OnBeginDragImple(eventData);
 				if(thisShouldProcessDrag){
-					thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Swipe);
+					thisUIManager.SetInputHandlingScroller(this, UIManager.InputName.Swipe);
 					if(thisTopmostScrollerInMotion != null){
 						if(thisIsTopmostScrollerInMotion){
 							ProcessSwipe(eventData);
@@ -457,9 +468,6 @@ namespace UISystem{
 						}
 					}
 					CheckAndPerformStaticBoundarySnapFrom(thisProximateParentScroller);
-					// 	StartInertialScroll(eventData.velocity);
-					// 	CheckAndPerformStaticBoundarySnapFrom(thisProximateParentScroller);
-					// 	return;
 				}else
 					CheckAndPerformStaticBoundarySnapFrom(this);
 			}
@@ -475,7 +483,7 @@ namespace UISystem{
 					velocity,
 					axis
 				);
-				IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(
+				IInertialScrollProcess process = thisUISystemProcessFactory.CreateInertialScrollProcess(
 					velocity[axis],
 					decelerationOnAxis,
 					this,
@@ -516,13 +524,9 @@ namespace UISystem{
 			}
 
 			protected virtual void StartInertialScroll(Vector2 swipeVelocity){
-				// ResetDrag();
-
-				// if(InitialVelocityIsOverThreshold(swipeVelocity))
-				// 	DisableScrollInputRecursively(this);
 
 				if(thisScrollerAxis == ScrollerAxis.Horizontal){
-					IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(
+					IInertialScrollProcess process = thisUISystemProcessFactory.CreateInertialScrollProcess(
 						swipeVelocity[0], 
 						1f, 
 						this, 
@@ -531,7 +535,7 @@ namespace UISystem{
 					);
 					process.Run();
 				}else if(thisScrollerAxis == ScrollerAxis.Vertical){
-					IInertialScrollProcess process = thisProcessFactory.CreateInertialScrollProcess(
+					IInertialScrollProcess process = thisUISystemProcessFactory.CreateInertialScrollProcess(
 						swipeVelocity[1], 
 						1f, 
 						this, 
@@ -548,7 +552,7 @@ namespace UISystem{
 					if(cosine < 0f)
 						cosine *= -1f;
 
-					IInertialScrollProcess horizontalProcess = thisProcessFactory.CreateInertialScrollProcess(
+					IInertialScrollProcess horizontalProcess = thisUISystemProcessFactory.CreateInertialScrollProcess(
 						swipeVelocity[0], 
 						cosine, 
 						this, 
@@ -556,7 +560,7 @@ namespace UISystem{
 						0
 					);
 					horizontalProcess.Run();
-					IInertialScrollProcess verticalProcess = thisProcessFactory.CreateInertialScrollProcess(
+					IInertialScrollProcess verticalProcess = thisUISystemProcessFactory.CreateInertialScrollProcess(
 						swipeVelocity[1], 
 						sine, 
 						this, 
@@ -620,13 +624,19 @@ namespace UISystem{
 					DisableScrollInputRecursively(this);
 					
 				float targetElementLocalPosOnAxis = CalcLocalPositionFromNormalizedCursoredPositionOnAxis(targetNormalizedCursoredPosOnAxis, dimension);
-				IScrollerElementSnapProcess newProcess = thisProcessFactory.CreateScrollerElementSnapProcess(this, thisScrollerElement, targetElementLocalPosOnAxis, initVelOnAxis, dimension);
+				IScrollerElementSnapProcess newProcess = thisUISystemProcessFactory.CreateScrollerElementSnapProcess(
+					this, 
+					thisScrollerElement, 
+					targetElementLocalPosOnAxis, 
+					initVelOnAxis, 
+					dimension
+				);
 				newProcess.Run();
 			}
 		/* Scroller Hieracrchy */
 			public override void DisableScrollInputRecursively(IScroller disablingScroller){
 				if(this == disablingScroller){// initiating
-					if(thisUIM.ShowsInputability())
+					if(thisUIManager.ShowsInputability())
 						TurnTo(Color.blue);
 				}
 				thisTopmostScrollerInMotion = disablingScroller;
@@ -634,7 +644,7 @@ namespace UISystem{
 			}
 			public override void EnableScrollInputSelf(){
 				if(thisIsTopmostScrollerInMotion){
-					if(thisUIM.ShowsInputability())
+					if(thisUIManager.ShowsInputability())
 						TurnTo(GetUIImage().GetDefaultColor());
 				}
 				thisTopmostScrollerInMotion = null;
@@ -655,28 +665,9 @@ namespace UISystem{
 			}
 			Vector2 thisVelocity;
 			public Vector2 GetVelocity(){return thisVelocity;}
-			// bool isSnapped = false;
 			public void UpdateVelocity(float velocityOnAxis, int dimension){
 				thisVelocity[dimension] = velocityOnAxis;
 				CheckAndTriggerScrollInputEnable();
-				// float normalizedCursoredPosition;
-				// if(!isSnapped)
-				// 	if(this.IsOutOfBounds(dimension, out normalizedCursoredPosition)){
-				// 		if(VelocityIsUnderBoundarySnapThreshold(velocityOnAxis)){
-				// 			isSnapped = true;
-				// 			CheckAndPerformStaticBoundarySnap();
-				// 			// float snapTarget;
-				// 			// if(normalizedCursoredPosition > 1f)
-				// 			// 	snapTarget = 1f;
-				// 			// else
-				// 			// 	snapTarget = 0f;
-				// 			// SnapTo(
-				// 			// 	snapTarget,
-				// 			// 	velocityOnAxis,
-				// 			// 	dimension
-				// 			// );
-				// 		}
-				// 	}	
 			}
 			bool IsOutOfBounds(int axis){
 				float normalizedCursoredPosition;
@@ -691,10 +682,6 @@ namespace UISystem{
 				normalizedCursoredPosition = thisNormalizedCursoredPosition;
 				return thisNormalizedCursoredPosition > 1f || thisNormalizedCursoredPosition < 0f;
 			}
-			// float thisStartBoundarySnapVelocity = 10f;
-			// bool VelocityIsUnderBoundarySnapThreshold(float velocityOnAxis){
-			// 	return velocityOnAxis <= thisStartBoundarySnapVelocity;
-			// }
 
 
 			/*  */
@@ -729,8 +716,7 @@ namespace UISystem{
 			}
 
 			protected override void OnTouchImple(int touchCount){
-				thisUIM.SetInputHandlingScroller(this, UIManager.InputName.Touch);
-				// isSnapped = false;
+				thisUIManager.SetInputHandlingScroller(this, UIManager.InputName.Touch);
 			}
 			public void PauseRunningMotorProcessRecursivelyUp(){
 				PauseAllRunningElementMotorProcess();
@@ -746,56 +732,48 @@ namespace UISystem{
 				for(int i = 0; i < 2; i ++)
 					PauseRunningElementMotorProcess(i);
 			}
-	}
 
 
+		/* Const */
+			public new interface IConstArg: UIElement.IConstArg{
+				ScrollerAxis scrollerAxis{get;}
+				Vector2 relativeCursorPosition{get;}
+				Vector2 rubberBandLimitMultiplier{get;}
+				bool isEnabledInertia{get;}
+				float newScrollSpeedThreshold{get;}
+			}
+			public new class ConstArg: UIElement.ConstArg, IConstArg{
+				public ConstArg(
+					ScrollerAxis scrollerAxis, 
+					Vector2 relativeCursorPosition, 
+					Vector2 rubberBandLimitMultiplier, 
+					bool isEnabledInertia, 
+					float newScrollSpeedThreshold,
 
-	public interface IScrollerConstArg: IUIElementConstArg{
-		ScrollerAxis scrollerAxis{get;}
-		Vector2 relativeCursorPosition{get;}
-		Vector2 rubberBandLimitMultiplier{get;}
-		bool isEnabledInertia{get;}
-		float newScrollSpeedThreshold{get;}
-	}
-	public abstract class ScrollerConstArg: UIElementConstArg, IScrollerConstArg{
-		public ScrollerConstArg(
-			ScrollerAxis scrollerAxis, 
-			Vector2 relativeCursorPosition, 
-			Vector2 rubberBandLimitMultiplier, 
-			bool isEnabledInertia, 
-			float newScrollSpeedThreshold,
-
-			IUIManager uim, 
-			IUISystemProcessFactory processFactory, 
-			IUIElementFactory uieFactory, 
-			IScrollerAdaptor uia, 
-			IUIImage uiImage,
-			ActivationMode activationMode
-		): base(
-			uim, 
-			processFactory, 
-			uieFactory, 
-			uia, 
-			uiImage,
-			activationMode
-		){
-			thisScrollerAxis = scrollerAxis;
-			thisRelativeCursorPos = relativeCursorPosition;
-			thisRubberBandLimitMultiplier = rubberBandLimitMultiplier;
-			thisIsEnabledInertia = isEnabledInertia;
-			thisNewScrollSpeedThreshold = newScrollSpeedThreshold;
-		}
-		readonly ScrollerAxis thisScrollerAxis;
-		public ScrollerAxis scrollerAxis{
-			get{return thisScrollerAxis;}
-		}
-		readonly Vector2 thisRelativeCursorPos;
-		public Vector2 relativeCursorPosition{get{return thisRelativeCursorPos;}}
-		readonly Vector2 thisRubberBandLimitMultiplier;
-		public Vector2 rubberBandLimitMultiplier{get{return thisRubberBandLimitMultiplier;}}
-		readonly bool thisIsEnabledInertia;
-		public bool isEnabledInertia{get{return thisIsEnabledInertia;}}
-		readonly float thisNewScrollSpeedThreshold;
-		public float newScrollSpeedThreshold{get{return thisNewScrollSpeedThreshold;}}
+					IScrollerAdaptor adaptor, 
+					ActivationMode activationMode
+				): base(
+					adaptor,
+					activationMode
+				){
+					thisScrollerAxis = scrollerAxis;
+					thisRelativeCursorPos = relativeCursorPosition;
+					thisRubberBandLimitMultiplier = rubberBandLimitMultiplier;
+					thisIsEnabledInertia = isEnabledInertia;
+					thisNewScrollSpeedThreshold = newScrollSpeedThreshold;
+				}
+				readonly ScrollerAxis thisScrollerAxis;
+				public ScrollerAxis scrollerAxis{
+					get{return thisScrollerAxis;}
+				}
+				readonly Vector2 thisRelativeCursorPos;
+				public Vector2 relativeCursorPosition{get{return thisRelativeCursorPos;}}
+				readonly Vector2 thisRubberBandLimitMultiplier;
+				public Vector2 rubberBandLimitMultiplier{get{return thisRubberBandLimitMultiplier;}}
+				readonly bool thisIsEnabledInertia;
+				public bool isEnabledInertia{get{return thisIsEnabledInertia;}}
+				readonly float thisNewScrollSpeedThreshold;
+				public float newScrollSpeedThreshold{get{return thisNewScrollSpeedThreshold;}}
+			}
 	}
 }

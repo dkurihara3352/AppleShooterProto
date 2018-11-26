@@ -72,7 +72,8 @@ public class InertialScrollProcessTest {
         arg.initialVelocity.Returns(initDeltaPosOnAxis);
         arg.dimension.Returns(dimension);
         IUIElement scrollerElement = Substitute.For<IUIElement>();
-        scrollerElement.GetLocalPosition().Returns(elementInitLocalPos);
+        Vector3 elementInitLocalPosV3 = elementInitLocalPos;
+        scrollerElement.GetLocalPosition().Returns(elementInitLocalPosV3);
         arg.scrollerElement.Returns(scrollerElement);
         TestInertialScrollProcess process = new TestInertialScrollProcess(arg);
 

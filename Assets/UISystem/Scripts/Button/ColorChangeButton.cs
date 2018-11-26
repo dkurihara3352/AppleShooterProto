@@ -9,7 +9,9 @@ namespace UISystem{
 	}
 	public class ColorChangeButton : UIElement, IColorChangeButton {
 
-		public ColorChangeButton(IColorChangeButtonConstArg arg): base(arg){
+		public ColorChangeButton(
+			IConstArg arg
+		): base(arg){
 			thisTargetColor = arg.targetColor;
 			thisTargetText = arg.targetText;
 		}
@@ -50,41 +52,28 @@ namespace UISystem{
 			count = 0;
 			UpdateText();
 		}
-	}
-	public interface IColorChangeButtonConstArg: IUIElementConstArg{
-		IUIAdaptor targetUIAdaptor{get;}
-		Color targetColor{get;}
-		Text targetText{get;}
-	}
-	public class ColorChangeButtonConstArg: UIElementConstArg, IColorChangeButtonConstArg{
-		public ColorChangeButtonConstArg(
-			IUIManager uim,
-			IUISystemProcessFactory processFactory,
-			IUIElementFactory uieFactory,
-			IColorChangeButtonAdaptor uia,
-			IUIImage uiImage,
-
-			IUIAdaptor targetUIAdaptor,
-			Color targetColor,
-			Text targetText
-		): base(
-			uim,
-			processFactory,
-			uieFactory,
-			uia,
-			uiImage,
-			ActivationMode.None
-		){
-			thisTargetUIAdaptor = targetUIAdaptor;
-			thisTargetColor = targetColor;
-			thisText = targetText;
+		public new interface IConstArg: UIElement.IConstArg{
+			Color targetColor{get;}
+			Text targetText{get;}
 		}
-		readonly IUIAdaptor thisTargetUIAdaptor;
-		public IUIAdaptor targetUIAdaptor{get{return thisTargetUIAdaptor;}}
-		readonly Color thisTargetColor;
-		public Color targetColor{get{return thisTargetColor;}}
-		readonly Text thisText;
-		public Text targetText{get{return thisText;}}
+		public new class ConstArg: UIElement.ConstArg, IConstArg{
+			public ConstArg(
+				IColorChangeButtonAdaptor adaptor,
+
+				Color targetColor,
+				Text targetText
+			): base(
+				adaptor,
+				ActivationMode.None
+			){
+				thisTargetColor = targetColor;
+				thisText = targetText;
+			}
+			readonly Color thisTargetColor;
+			public Color targetColor{get{return thisTargetColor;}}
+			readonly Text thisText;
+			public Text targetText{get{return thisText;}}
+		}
 	}
 }
 

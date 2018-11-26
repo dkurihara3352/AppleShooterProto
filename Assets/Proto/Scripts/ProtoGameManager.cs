@@ -23,30 +23,19 @@ namespace AppleShooterProto{
 		public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
 
 		public void SetUp(){
-			SetUpUISystem();
 			SetUpMBAdaptors();
-			FinalizeUISystemSetUp();
-
 			SetUpSceneObjectRefs();
 		}
-
-		void SetUpUISystem(){
-			IUIManager uim = uiManagerAdaptor.GetUIManager();
-			uim.GetReadyForUISystemActivation();
-		}
 		void SetUpMBAdaptors(){
-			SetUpAllMonoBehaviourAdaptors();
-			SetUpAdaptorReference();
-			FinalizeMBAdaptorSetUp();
+			mbAdaptorManager.SetUpAllMonoBehaviourAdaptors();
+			mbAdaptorManager.SetUpAdaptorReference();
+			mbAdaptorManager.FinalizeSetUp();
 		}
 		void SetUpAllMonoBehaviourAdaptors(){
-			mbAdaptorManager.SetUpAllMonoBehaviourAdaptors();
 		}
 		void SetUpAdaptorReference(){
-			mbAdaptorManager.SetUpAdaptorReference();
 		}
 		void FinalizeMBAdaptorSetUp(){
-			mbAdaptorManager.FinalizeSetUp();
 		}
 		void FinalizeUISystemSetUp(){
 			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
@@ -58,6 +47,7 @@ namespace AppleShooterProto{
 		void SetUpSceneObjectRefs(){
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			thisHeatManager = heatManagerAdaptor.GetHeatManager();
+			thisRootUIElement = GetRootUIElement();
 		}
 
 		public void RunSystem(){
@@ -80,9 +70,15 @@ namespace AppleShooterProto{
 			//arrow flight process			200 ->
 			
 		}
+		IUIElement thisRootUIElement;
+		public UIAdaptor rootUIAdaptor;
+		IUIElement GetRootUIElement(){
+			return rootUIAdaptor.GetUIElement();
+		}
 		void ActivateUISystem(){
-			IUIManager uim = uiManagerAdaptor.GetUIManager();
-			uim.ActivateUISystem(false);
+			// IUIManager uim = uiManagerAdaptor.GetUIManager();
+			// uim.ActivateUISystem(false);
+			thisRootUIElement.ActivateRecursively(instantly: false);
 		}
 		public void SetUpWaypointEventsOnFirstWaypointCurve(){
 			IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();

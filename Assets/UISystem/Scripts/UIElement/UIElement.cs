@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UISystem{
-	public interface IUIElement: IUIInputHandler, ISelectabilityStateHandler{
-		IUIElement GetParentUIE();
-		void SetParentUIE(IUIElement uie, bool worldPositionStays);
-		List<IUIElement> GetChildUIEs();
-		Vector2 GetLocalPosition();
+	public interface IUIElement: IUISystemSceneObject, IUIInputHandler, ISelectabilityStateHandler, ISelectabilityStateImplementor{
+
+		void SetUIImage(IUIImage image);
+		void SetProximateParentScroller(IScroller scroller);
+
+		IUIElement GetParentUIElement();
+		// void SetParentUIE(IUIElement uie, bool worldPositionStays);
+		IUIElement[] GetChildUIElements();
 		void SetLocalPosition(Vector2 localPos);
 		IUIAdaptor GetUIAdaptor();
 		IUIImage GetUIImage();
 		string GetName();
-		void UpdateRect();
+
 		/* Activation */
 		void ActivateSelf(bool instantly);
 		void ActivateRecursively(bool instantly);
@@ -33,7 +36,7 @@ namespace UISystem{
 		IScroller GetTopmostScrollerInMotion();
 
 		/* Scroller */
-		T FindProximateParentTypedUIElement<T>() where T: class, IUIElement;
+		// T FindProximateParentTypedUIElement<T>() where T: class, IUIElement;
 		void CheckAndPerformStaticBoundarySnapFrom(IUIElement uieToStartCheck);
 		IScroller GetProximateParentScroller();
 		void EvaluateScrollerFocusRecursively();
@@ -48,73 +51,68 @@ namespace UISystem{
 		void TurnTo(Color color);
 		void Flash(Color color);
 	}
-	public class UIElement: IUIElement{
-		public UIElement(IUIElementConstArg arg){
-			thisUIM = arg.uim;
-			thisProcessFactory = arg.processFactory;
-			thisUIElementFactory = arg.uiElementFactory;
-			thisUIA = arg.uia;
-			thisImage = arg.image;
+	public class UIElement: UISystemSceneObject, IUIElement{
+		public UIElement(
+			IConstArg arg
+		): base(
+			arg
+		){
+
 			thisSelectabilityEngine = new SelectabilityStateEngine(
-				thisImage, 
-				thisUIM
+				this
 			);
-			if(arg.activationMode == ActivationMode.Alpha)
-				thisUIA.SetUpCanvasGroupComponent();
+
 			thisUIEActivationStateEngine = new UIEActivationStateEngine(
-				thisProcessFactory, 
+				thisUISystemProcessFactory, 
 				this,
 				arg.activationMode
 			);
-			/* move this to SetUpUIEReference */
-			thisProximateParentScroller = FindProximateParentScroller();
 		}
-		protected readonly IUIManager thisUIM;
-		public IUIManager GetUIM(){
-			return thisUIM;
+		protected IUIManager thisUIManager{
+			get{
+				return thisUISystemMonoBehaviourAdaptorManager.GetUIManager();
+			}
 		}
 		IPopUpManager thisPopUpManager{
 			get{
-				return thisUIM.GetPopUpManager();
+				return thisUIManager.GetPopUpManager();
 			}
 		}
-		protected readonly IUIAdaptor thisUIA;
+		protected IUIAdaptor thisUIAdaptor{
+			get{
+				return (IUIAdaptor)thisAdaptor;
+			}
+		}
 		public IUIAdaptor GetUIAdaptor(){
-			return thisUIA;
+			return thisUIAdaptor;
 		}
-		protected readonly IUISystemProcessFactory thisProcessFactory;
-		protected readonly IUIElementFactory thisUIElementFactory;
 		protected IUIElement thisParentUIE{
-			get{return thisUIA.GetParentUIE();}
+			get{return thisUIAdaptor.GetParentUIElement();}
 		}
-		public IUIElement GetParentUIE(){
+		public IUIElement GetParentUIElement(){
 			return thisParentUIE;
 		}
-		protected List<IUIElement> thisChildUIEs{
-			get{return thisUIA.GetChildUIEs();}
+		protected IUIElement[] thisChildUIEs{
+			get{return thisUIAdaptor.GetChildUIElements();}
 		}
-		public List<IUIElement> GetChildUIEs(){
+		public IUIElement[] GetChildUIElements(){
 			return thisChildUIEs;
 		}
-		public IUIImage GetUIImage(){
-			return thisImage;
-		}
-		protected IUIImage thisImage;
+		/* UIImage */
+			public IUIImage GetUIImage(){
+				return thisImage;
+			}
+			protected IUIImage thisImage;
+			public void SetUIImage(IUIImage image){
+				thisImage = image;
+			}
+		/*  */
 		protected string thisName{
-			get{return thisUIA.GetName();}
+			get{return thisUIAdaptor.GetName();}
 		}
 		public string GetName(){return thisName;}
 		public void SetLocalPosition(Vector2 localPos){
-			thisUIA.SetLocalPosition(localPos);
-		}
-		public Vector2 GetLocalPosition(){
-			return thisUIA.GetLocalPosition();
-		}
-		public void SetParentUIE(IUIElement newParentUIE, bool worldPositionStays){
-			thisUIA.SetParentUIE(newParentUIE, worldPositionStays);
-		}
-		public virtual void UpdateRect(){
-			
+			thisUIAdaptor.SetLocalPosition(localPos);
 		}
 
 		/* Activation */
@@ -127,7 +125,7 @@ namespace UISystem{
 				ActivateAllChildren(instantly);
 			}
 			protected void ActivateAllChildren(bool instantly){
-				foreach(IUIElement childUIE in this.GetChildUIEs()){
+				foreach(IUIElement childUIE in this.GetChildUIElements()){
 					if(childUIE != null)
 						childUIE.ActivateRecursively(instantly); 
 				}
@@ -139,7 +137,7 @@ namespace UISystem{
 			protected virtual void OnUIActivate(){}
 			public virtual void DeactivateRecursively(bool instantly){
 				thisUIEActivationStateEngine.Deactivate(instantly);
-				foreach(IUIElement childUIE in this.GetChildUIEs()){
+				foreach(IUIElement childUIE in this.GetChildUIElements()){
 					if(childUIE != null)
 						childUIE.DeactivateRecursively(instantly);
 				}
@@ -182,6 +180,18 @@ namespace UISystem{
 			public bool IsSelected(){
 				return thisSelectabilityEngine.IsSelected();
 			}
+			/* imple */
+				public void BecomeSelectableImple(){
+					if(thisUIManager.ShowsNormal())
+						thisImage.TurnToSelectableBrightness();
+				}
+				public void BecomeUnselectableImple(){
+					if(thisUIManager.ShowsNormal())
+						thisImage.TurnToUnselectableBrightness();
+				}
+				public void BecomeSelectedImple(){
+					return;
+				}
 
 
 
@@ -279,17 +289,14 @@ namespace UISystem{
 					}else
 						return null;
 				}
-				readonly protected IScroller thisProximateParentScroller;
+				protected IScroller thisProximateParentScroller;
 				public IScroller GetProximateParentScroller(){
 					return thisProximateParentScroller;
 				}
-				protected virtual IScroller FindProximateParentScroller(){
-					return FindProximateParentTypedUIElement<IScroller>();
+				public void SetProximateParentScroller(IScroller scroller){
+					thisProximateParentScroller = scroller;
 				}
-				public virtual T FindProximateParentTypedUIElement<T>() where T: class, IUIElement{
-					IProximateParentTypedUIECalculator<T> calculator = new ProximateParentTypedUIECalculator<T>(this);
-					return calculator.Calculate();
-				}
+
 				void ClearTopMostScroller(){
 					ClearAllParentScrollerVelocity();
 					if(thisTopmostScrollerInMotion != null)
@@ -380,7 +387,7 @@ namespace UISystem{
 		/*  */
 		public void EnableInput(){
 			thisIsEnabledInput = true;
-			if(thisUIM.ShowsInputability())
+			if(thisUIManager.ShowsInputability())
 				TurnTo(GetUIImage().GetDefaultColor());
 		}
 		public void EnableInputRecursively(){
@@ -390,7 +397,7 @@ namespace UISystem{
 		}
 		protected void DisableInput(){
 			thisIsEnabledInput = false;
-			if(thisUIM.ShowsInputability())
+			if(thisUIManager.ShowsInputability())
 				TurnTo(Color.red);
 		}
 		public void DisableInputRecursively(){
@@ -430,7 +437,7 @@ namespace UISystem{
 		/* Scrolller */
 			public virtual void EvaluateScrollerFocusRecursively(){
 				this.BecomeFocusedInScrollerSelf();
-				foreach(IUIElement childUIE in GetChildUIEs())
+				foreach(IUIElement childUIE in GetChildUIElements())
 					if(childUIE != null)
 						childUIE.EvaluateScrollerFocusRecursively();
 			}
@@ -445,12 +452,12 @@ namespace UISystem{
 			}
 			public virtual void BecomeFocusedInScrollerRecursively(){
 				BecomeDefocusedInScrollerSelf();
-				foreach(IUIElement child in GetChildUIEs())
+				foreach(IUIElement child in GetChildUIElements())
 					child.BecomeFocusedInScrollerRecursively();
 			}
 			public virtual void BecomeDefocusedInScrollerRecursively(){
 				BecomeDefocusedInScrollerSelf();
-				foreach(IUIElement child in GetChildUIEs())
+				foreach(IUIElement child in GetChildUIElements())
 					child.BecomeDefocusedInScrollerRecursively();
 			}
 		/* PopUp */
@@ -498,53 +505,24 @@ namespace UISystem{
 		public void Flash(Color color){
 			GetUIImage().Flash(color);
 		}
-	}
 
 
-
-
-
-
-
-	public interface IUIElementConstArg{
-		IUIManager uim{get;}
-		IUISystemProcessFactory processFactory{get;}
-		IUIElementFactory uiElementFactory{get;}
-		IUIAdaptor uia{get;}
-		IUIImage image{get;}
-		ActivationMode activationMode{get;}
-	}
-	public class UIElementConstArg: IUIElementConstArg{
-		public UIElementConstArg(
-			IUIManager uim, 
-			IUISystemProcessFactory processFactory, 
-			IUIElementFactory uiElementFactory, 
-			IUIAdaptor uia, 
-			IUIImage image,
-			ActivationMode activationMode
-
-		){
-			thisUIM = uim;
-			thisProcessFactory = processFactory;
-			thisUIElementFactory = uiElementFactory;
-			thisUIA = uia;
-			thisImage = image;
-			thisActivationMode = activationMode;
+		public new interface IConstArg: UISystemSceneObject.IConstArg{
+			ActivationMode activationMode{get;}
 		}
-		readonly IUIManager thisUIM;
-		public IUIManager uim{get{return thisUIM;}}
-		readonly IUISystemProcessFactory thisProcessFactory;
-		public IUISystemProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly IUIElementFactory thisUIElementFactory;
-		public IUIElementFactory uiElementFactory{get{return thisUIElementFactory;}}
-		readonly IUIAdaptor thisUIA;
-		public IUIAdaptor uia{get{return thisUIA;}}
-		readonly IUIImage thisImage;
-		public IUIImage image{get{return thisImage;}}
-		protected Vector2 ClampVector2ZeroToOne(Vector2 source){
-			return new Vector2(Mathf.Clamp01(source.x), Mathf.Clamp01(source.y));			
+		public new class ConstArg: UISystemSceneObject.ConstArg, IConstArg{
+			public ConstArg(
+				IUIAdaptor adaptor,
+				ActivationMode activationMode
+			): base(
+				adaptor
+			){
+				thisActivationMode = activationMode;
+			}
+			readonly ActivationMode thisActivationMode;
+			public ActivationMode activationMode{
+				get{return thisActivationMode;}
+			}
 		}
-		readonly ActivationMode thisActivationMode;
-		public ActivationMode activationMode{get{return thisActivationMode;}}
 	}
 }

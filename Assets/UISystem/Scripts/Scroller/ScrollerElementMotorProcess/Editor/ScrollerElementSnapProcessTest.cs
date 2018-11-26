@@ -15,7 +15,8 @@ public class ScrollerElementSnapProcessTest {
         IScrollerElementSnapProcessConstArg arg = CreateMockConstArg();
         IUIElement scrollerElement = Substitute.For<IUIElement>();
         arg.scrollerElement.Returns(scrollerElement);
-        scrollerElement.GetLocalPosition().Returns(initialLocalPos);
+        Vector3 initialLocalPosV3 = initialLocalPos;
+        scrollerElement.GetLocalPosition().Returns(initialLocalPosV3);
         arg.dimension.Returns(dimension);
         arg.targetElementLocalPositionOnAxis.Returns(targetLocalPosOnAxis);
         arg.processManager.GetScrollerElementSnapSpringCoefficient().Returns(5f);

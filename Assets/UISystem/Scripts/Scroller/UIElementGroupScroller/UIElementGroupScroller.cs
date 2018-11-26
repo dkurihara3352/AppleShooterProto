@@ -9,7 +9,9 @@ namespace UISystem{
 		void UpdateGroupElementLengthAndPadding();
 	}
 	public class UIElementGroupScroller : AbsScroller, IUIElementGroupScroller{
-		public UIElementGroupScroller(IUIElementGroupScrollerConstArg arg): base(arg){
+		public UIElementGroupScroller(
+			IConstArg arg
+		): base(arg){
 			thisCursorSize = MakeCursorSizeAtLeastOne(arg.cursorSize);
 			thisInitiallyCursoredGroupElementIndex = arg.initiallyCursoredGroupElementIndex;
 			thisStartSearchSpeed = MakeSureStartSearchSpeedIsGreaterThanZero(arg.startSearchSpeed);
@@ -214,7 +216,7 @@ namespace UISystem{
 									uie.ActivateRecursively(false);
 							}
 						thisCursoredElements = newCursoredElements;
-						thisNoncursoredElements = CalcNoncurosredElements();
+						thisNoncursoredElements = CalcNoncursoredElements();
 					}
 				}
 			}
@@ -234,17 +236,17 @@ namespace UISystem{
 						IUIElement[] newCursoredElements = thisUIElementGroup.GetGroupElementsWithinIndexRange(minColumnIndex, minRowIndex, maxColumnIndex, maxRowIndex);
 
 						thisCursoredElements = newCursoredElements;
-						thisNoncursoredElements = CalcNoncurosredElements();
+						thisNoncursoredElements = CalcNoncursoredElements();
 					}
 				}
 			}
 			IUIElement[] thisNoncursoredElements;
 			IUIElement[] thisGroupElements{
 				get{
-					return thisUIElementGroup.GetGroupElements().ToArray();
+					return thisUIElementGroup.GetGroupElements();
 				}
 			}
-			IUIElement[] CalcNoncurosredElements(){
+			IUIElement[] CalcNoncursoredElements(){
 				List<IUIElement> result = new List<IUIElement>();
 				foreach(IUIElement groupElement in thisGroupElements)
 					if(groupElement != null){
@@ -264,8 +266,9 @@ namespace UISystem{
 					returns, instread, bottomLeft
 				*/
 				Vector2 cursorReferencePoint = thisCursorLocalPosition + thisPadding + (thisGroupElementLength * .5f);
+				Vector2 elementGroupLocalPos = thisUIElementGroup.GetLocalPosition();
 
-				Vector2 cursorRefPInElementGroupSpace = cursorReferencePoint - thisUIElementGroup.GetLocalPosition();
+				Vector2 cursorRefPInElementGroupSpace = cursorReferencePoint - elementGroupLocalPos;
 				
 				IUIElement leastCursoredElement = thisUIElementGroup.GetGroupElementAtPositionInGroupSpace(cursorRefPInElementGroupSpace);
 
@@ -324,12 +327,6 @@ namespace UISystem{
 				if(thisSwipeToSnapNext){
 					SnapNext(swipeDeltaPos, eventData.velocity);
 				}else{
-					// if(thisIsEnabledInertia){
-					// 	StartInertialScroll(eventData.velocity);
-					// 	CheckAndPerformStaticBoundarySnapFrom(thisProximateParentScroller);
-					// }
-					// else
-					// 	CheckAndPerformStaticBoundarySnapFrom(this);
 					base.ProcessSwipe(eventData);
 				}
 			}
@@ -397,66 +394,58 @@ namespace UISystem{
 					if(cursoredElement != null)
 						cursoredElement.BecomeFocusedInScrollerRecursively();
 			}
-	}
 
 
-	
-	public interface IUIElementGroupScrollerConstArg: IScrollerConstArg{
-		int[] cursorSize{get;}
-		int initiallyCursoredGroupElementIndex{get;}
-		float startSearchSpeed{get;}
-		bool swipeToSnapNext{get;}
-		bool activatesCursoredElementsOnly{get;}
-	}
-	public class UIElementGroupScrollerConstArg: ScrollerConstArg, IUIElementGroupScrollerConstArg{
-		public UIElementGroupScrollerConstArg(
-			int initiallyCursoredElementIndex, 
-			int[] cursorSize, 
-			float startSearchSpeed, 
-			bool activatesCursoredElementsOnly,
+		/* Const */
+			public new interface IConstArg: AbsScroller.IConstArg{
+				int[] cursorSize{get;}
+				int initiallyCursoredGroupElementIndex{get;}
+				float startSearchSpeed{get;}
+				bool swipeToSnapNext{get;}
+				bool activatesCursoredElementsOnly{get;}
+			}
+			public new class ConstArg: AbsScroller.ConstArg, IConstArg{
+				public ConstArg(
+					int initiallyCursoredElementIndex, 
+					int[] cursorSize, 
+					float startSearchSpeed, 
+					bool activatesCursoredElementsOnly,
 
-			Vector2 relativeCursorPosition, 
-			ScrollerAxis scrollerAxis, 
-			Vector2 rubberBandLimitMultiplier, 
-			bool isEnabledInertia, 
-			bool swipeToSnapNext, 
-			float newScrollSpeedThreshold,
+					Vector2 relativeCursorPosition, 
+					ScrollerAxis scrollerAxis, 
+					Vector2 rubberBandLimitMultiplier, 
+					bool isEnabledInertia, 
+					bool swipeToSnapNext, 
+					float newScrollSpeedThreshold,
 
-			IUIManager uim, 
-			IUISystemProcessFactory processFactory, 
-			IUIElementFactory uieFactory, 
-			IUIElementGroupScrollerAdaptor uia, 
-			IUIImage image,
-			ActivationMode activationMode
-		): base(
-			scrollerAxis, 
-			relativeCursorPosition, 
-			rubberBandLimitMultiplier, 
-			isEnabledInertia, 
-			newScrollSpeedThreshold,
+					IUIElementGroupScrollerAdaptor adaptor, 
+					ActivationMode activationMode
+				): base(
+					scrollerAxis, 
+					relativeCursorPosition, 
+					rubberBandLimitMultiplier, 
+					isEnabledInertia, 
+					newScrollSpeedThreshold,
 
-			uim, 
-			processFactory, 
-			uieFactory, 
-			uia, 
-			image,
-			activationMode
-		){
-			thisCursorSize = cursorSize;
-			thisInitiallyCursoredElementIndex = initiallyCursoredElementIndex;
-			thisStartSearchSpeed = startSearchSpeed;
-			thisSwipeToSnapNext = swipeToSnapNext;
-			thisActivatesCursoredElementsOnly = activatesCursoredElementsOnly;
-		}
-		readonly int[] thisCursorSize;
-		public int[] cursorSize{get{return thisCursorSize;}}
-		readonly int thisInitiallyCursoredElementIndex;
-		public int initiallyCursoredGroupElementIndex{get{return thisInitiallyCursoredElementIndex;}}
-		readonly float thisStartSearchSpeed;
-		public float startSearchSpeed{get{return thisStartSearchSpeed;}}
-		readonly bool thisSwipeToSnapNext;
-		public bool swipeToSnapNext{get{return thisSwipeToSnapNext;}}
-		readonly bool thisActivatesCursoredElementsOnly;
-		public bool activatesCursoredElementsOnly{get{return thisActivatesCursoredElementsOnly;}}
+					adaptor, 
+					activationMode
+				){
+					thisCursorSize = cursorSize;
+					thisInitiallyCursoredElementIndex = initiallyCursoredElementIndex;
+					thisStartSearchSpeed = startSearchSpeed;
+					thisSwipeToSnapNext = swipeToSnapNext;
+					thisActivatesCursoredElementsOnly = activatesCursoredElementsOnly;
+				}
+				readonly int[] thisCursorSize;
+				public int[] cursorSize{get{return thisCursorSize;}}
+				readonly int thisInitiallyCursoredElementIndex;
+				public int initiallyCursoredGroupElementIndex{get{return thisInitiallyCursoredElementIndex;}}
+				readonly float thisStartSearchSpeed;
+				public float startSearchSpeed{get{return thisStartSearchSpeed;}}
+				readonly bool thisSwipeToSnapNext;
+				public bool swipeToSnapNext{get{return thisSwipeToSnapNext;}}
+				readonly bool thisActivatesCursoredElementsOnly;
+				public bool activatesCursoredElementsOnly{get{return thisActivatesCursoredElementsOnly;}}
+			}
 	}
 }

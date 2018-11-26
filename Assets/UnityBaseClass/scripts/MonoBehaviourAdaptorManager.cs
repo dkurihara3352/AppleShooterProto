@@ -26,8 +26,9 @@ namespace UnityBase{
 		public void SetUpAllMonoBehaviourAdaptors(){
 			IMonoBehaviourAdaptor[] temp = thisMonoBehaviourAdaptors.ToArray();
 			foreach(IMonoBehaviourAdaptor adaptor in temp)
-				if(adaptor.IsEnabled())
+				if(adaptor.IsEnabled()){
 					adaptor.SetUp();
+				}
 		}
 		public void SetUpAdaptorReference(){
 			IMonoBehaviourAdaptor[] temp = thisMonoBehaviourAdaptors.ToArray();

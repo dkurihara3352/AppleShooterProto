@@ -6,6 +6,7 @@ using UnityBase;
 namespace UISystem{
 	public interface IUISystemMonoBehaviourAdaptorManager: IMonoBehaviourAdaptorManager{
 		IUISystemProcessFactory GetUISystemProcessFactory();
+		IUIManager GetUIManager();
 	}
 	public class UISystemMonoBehaviourAdaptorManager : MonoBehaviourAdaptorManager, IUISystemMonoBehaviourAdaptorManager {
 
@@ -17,7 +18,7 @@ namespace UISystem{
 		IUISystemProcessFactory CreateProcessFactory(){
 			return new UISystemProcessFactory(
 				processManager,
-				uiManager
+				this
 			);
 		}
 		public IUISystemProcessFactory GetUISystemProcessFactory(){
@@ -25,6 +26,10 @@ namespace UISystem{
 		}
 		public override IUnityBaseProcessFactory GetProcessFactory(){
 			return thisProcessFactory;
+		}
+		public UIManagerAdaptor uiManagerAdaptor;
+		public IUIManager GetUIManager(){
+			return uiManagerAdaptor.GetUIManager();
 		}
 	}
 }

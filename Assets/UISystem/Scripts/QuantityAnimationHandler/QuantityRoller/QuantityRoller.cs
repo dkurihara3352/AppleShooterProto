@@ -4,36 +4,56 @@ using UnityEngine;
 
 namespace UISystem{
 	public interface IQuantityRoller: IUIElement{
+		void SetDigitPanelSets(IDigitPanelSet[] sets);
 		void SetRollerValue(float targetValue);
 		float GetRollerValue();
-
 	}
 	public class QuantityRoller: UIElement, IQuantityRoller{
-		public QuantityRoller(IQuantityRollerConstArg arg): base(arg){
-			thisAllDigitPanelSets = CreateDigitPanelSets(arg.maxQuantity, arg.panelDim, arg.padding);
-			CalcAndSetRectDimension(arg.panelDim, arg.rollerNormalizedPos, arg.padding);
+		public QuantityRoller(
+			IConstArg arg
+		): base(arg){
+			// thisAllDigitPanelSets = CreateDigitPanelSets(arg.maxQuantity, arg.panelDim, arg.padding);
+			thisPanelDim = arg.panelDim;
+			thisRollerNormalizedPos = arg.rollerNormalizedPos;
+			thisPadding = arg.padding;
 		}
-		readonly List<IDigitPanelSet> thisAllDigitPanelSets;
-		List<IDigitPanelSet> CreateDigitPanelSets(int maxQuantity, Vector2 panelDim, Vector2 padding){
-			int digitsCount = GetDigitsCountForPositiveInt(maxQuantity);
-			List<IDigitPanelSet> result = new List<IDigitPanelSet>();
-			for(int i = 0; i < digitsCount; i++){
-				IDigitPanelSet digitPanelSet = thisUIElementFactory.CreateDigitPanelSet(i, this, panelDim, padding);
-				thisAllDigitPanelSets.Add(digitPanelSet);
-			}
-			return result;
+		readonly Vector2 thisPanelDim;
+		readonly Vector2 thisRollerNormalizedPos;
+		readonly Vector2 thisPadding;
+		IDigitPanelSet[] thisAllDigitPanelSets;
+		public void SetDigitPanelSets(IDigitPanelSet[] sets){
+			thisAllDigitPanelSets = sets;
+			CalcAndSetRectDimension(
+				thisPanelDim, 
+				thisRollerNormalizedPos, 
+				thisPadding
+			);
 		}
-		void CalcAndSetRectDimension(Vector2 panelDim, Vector2 rollerNormPos, Vector2 padding){
-			int digitsCount = thisAllDigitPanelSets.Count;
-			IUIAdaptor parentUIA = this.GetParentUIE().GetUIAdaptor();
-			float parentHeight = parentUIA.GetRect().height;
-			float parentWidth = parentUIA.GetRect().width;
+		// List<IDigitPanelSet> CreateDigitPanelSets(int maxQuantity, Vector2 panelDim, Vector2 padding){
+		// 	int digitsCount = GetDigitsCountForPositiveInt(maxQuantity);
+		// 	List<IDigitPanelSet> result = new List<IDigitPanelSet>();
+		// 	for(int i = 0; i < digitsCount; i++){
+		// 		IDigitPanelSet digitPanelSet = thisUIElementFactory.CreateDigitPanelSet(i, this, panelDim, padding);
+		// 		thisAllDigitPanelSets.Add(digitPanelSet);
+		// 	}
+		// 	return result;
+		// }
+		void CalcAndSetRectDimension(
+			Vector2 panelDim, 
+			Vector2 rollerNormPos, 
+			Vector2 padding
+		){
+			int digitsCount = thisAllDigitPanelSets.Length;
+			IUIAdaptor parentUIA = this.GetParentUIElement().GetUIAdaptor();
+			Vector2 rectSize=  parentUIA.GetRectSize();
+			float parentWidth = rectSize[0];
+			float parentHeight = rectSize[1];
 
 			float rollerHeight = panelDim.y + (padding.y * 2);
 			float rollerWidth = (panelDim.x * digitsCount) + (padding.x * (digitsCount + 1));
 			float localX = rollerNormPos.x * (parentWidth - rollerWidth);
 			float localY = rollerNormPos.y * (parentHeight - rollerHeight);
-			((IQuantityRollerAdaptor)thisUIA).SetRectDimension(rollerHeight, rollerWidth, localX, localY);
+			((IQuantityRollerAdaptor)thisUIAdaptor).SetRectDimension(rollerHeight, rollerWidth, localX, localY);
 		}
 		int GetDigitsCountForPositiveInt(int sourceNumber){
 			if(sourceNumber >= 0)
@@ -41,13 +61,22 @@ namespace UISystem{
 			else
 				throw new System.ArgumentOutOfRangeException("sourceNumber must be at least zero");
 		}
+		int GetIndexOfDigitPanelSet(IDigitPanelSet set){
+			int index = 0;
+			foreach(IDigitPanelSet dps in thisAllDigitPanelSets){
+				if(dps == set)
+					return index;
+				index++;
+			}
+			return -1;
+		}
 		public void SetRollerValue(float targetValue){
 			thisCurrentRollerValue = targetValue;
 			int targetValueInt = Mathf.FloorToInt(targetValue);
 			float normalizedTransitionValue = targetValue - targetValueInt;
 			int[] digitNumbers = ConvertIntToDigitNumbers(targetValueInt);
 			foreach(IDigitPanelSet dps in thisAllDigitPanelSets){
-				int thisIndex = thisAllDigitPanelSets.IndexOf(dps);
+				int thisIndex = GetIndexOfDigitPanelSet(dps);
 				if(thisIndex == digitNumbers.Length){
 					if(PrevDPS(thisIndex).GetDigitTargetValue() > 9f){
 						dps.PerformNumberTransition(-1, 1, normalizedTransitionValue);
@@ -92,50 +121,37 @@ namespace UISystem{
 		IDigitPanelSet PrevDPS(int id){
 			return thisAllDigitPanelSets[id -1];
 		}
-	}
-	public interface IQuantityRollerConstArg: IUIElementConstArg{
-		int maxQuantity{get;}
-		IUIElementFactory uieFactory{get;}
-		Vector2 panelDim{get;}
-		Vector2 padding{get;}
-		Vector2 rollerNormalizedPos{get;}
-	}
-	public class QuantityRollerConstArg: UIElementConstArg, IQuantityRollerConstArg{
-		public QuantityRollerConstArg(
-			IUIManager uim, 
-			IUISystemProcessFactory processFactory, 
-			IUIElementFactory uiElementFactory, 
-			IQuantityRollerAdaptor quaRolAdaptor, 
-			IUIImage image,
 
-			int maxQuantity, 			
-			Vector2 panelDim, 
-			Vector2 padding, 
-			Vector2 rollerNormalizedPos
-		): base(
-			uim, 
-			processFactory, 
-			uiElementFactory, 
-			quaRolAdaptor, 
-			image,
-			ActivationMode.None
-		){
-			thisMaxQuantity = maxQuantity;
-			thisUIEFactory = uieFactory;
-			thisPanelDim = panelDim;
-			thisPadding = padding;
-			thisRollerNormalizedPos = rollerNormalizedPos;
+
+		public new interface IConstArg: UIElement.IConstArg{
+			// int maxQuantity{get;}
+			// IUIElementFactory uieFactory{get;}
+			Vector2 panelDim{get;}
+			Vector2 padding{get;}
+			Vector2 rollerNormalizedPos{get;}
 		}
-		readonly int thisMaxQuantity;
-		public int maxQuantity{get{return thisMaxQuantity;}}
-		readonly IUIElementFactory thisUIEFactory;
-		public IUIElementFactory uieFactory{get{return thisUIEFactory;}}
-		readonly Vector2 thisPanelDim;
-		public Vector2 panelDim{get{return thisPanelDim;}}
-		readonly Vector2 thisPadding;
-		public Vector2 padding{get{return thisPadding;}}
-		readonly Vector2 thisRollerNormalizedPos;
-		public Vector2 rollerNormalizedPos{get{return thisRollerNormalizedPos;}}
+		public new class ConstArg: UIElement.ConstArg, IConstArg{
+			public ConstArg(
+				IQuantityRollerAdaptor adaptor, 
 
+				Vector2 panelDim, 
+				Vector2 padding, 
+				Vector2 rollerNormalizedPos
+			): base(
+				adaptor, 
+				ActivationMode.None
+			){
+				thisPanelDim = panelDim;
+				thisPadding = padding;
+				thisRollerNormalizedPos = rollerNormalizedPos;
+			}
+			readonly Vector2 thisPanelDim;
+			public Vector2 panelDim{get{return thisPanelDim;}}
+			readonly Vector2 thisPadding;
+			public Vector2 padding{get{return thisPadding;}}
+			readonly Vector2 thisRollerNormalizedPos;
+			public Vector2 rollerNormalizedPos{get{return thisRollerNormalizedPos;}}
+
+		}
 	}
 }

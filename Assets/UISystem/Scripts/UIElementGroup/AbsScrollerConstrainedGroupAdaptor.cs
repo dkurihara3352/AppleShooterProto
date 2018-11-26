@@ -8,13 +8,13 @@ namespace UISystem{
 		public Vector2 elementToPaddingRatio = new Vector2(10f, 10f);
 		protected override void MakeSureConstraintIsProperlySet(){}
 		protected override IRectCalculationData CreateRectCalculationData(
-			List<IUIElement> groupElements
+			IUIElement[] groupElements
 		){
 			IUIAdaptor parentUIAdaptor = thisParentUIAdaptor;
 			return new ScrollerConstraintRectCalculationData(
 				elementToPaddingRatio,
 				parentUIAdaptor,
-				GetRect().size
+				GetRectSize()
 			);
 		}
 		string GetUIAName(IUIAdaptor uia){

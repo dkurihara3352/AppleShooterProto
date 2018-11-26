@@ -4,133 +4,77 @@ using UnityEngine;
 using DKUtility;
 
 namespace UISystem{
-	public interface IUIManager{
+	public interface IUIManager: IUISystemSceneObject{
+
+		void SetPopUpManager(IPopUpManager manager);
+
+
 		void SetDragWorldPosition(Vector2 dragPos);
 		Vector2 GetDragWorldPosition();
-		RectTransform GetUIElementReserveTrans();
+		float GetSwipeVelocityThreshold();
+		float GetSwipeDistanceThreshold();
+
 		int registeredID{get;}
 		bool TouchIDIsRegistered();
 		void UnregisterTouchID();
 		void RegisterTouchID(int touchID);
-		bool ShowsInputability();
-		bool ShowsNormal();
+
+
 		void SetInputHandlingScroller(IScroller scroller, UIManager.InputName inputName);
 		IScroller GetInputHandlingScroller();
+
+		bool ShowsInputability();
+		bool ShowsNormal();
 		string GetEventName();
+
+
 		IPopUpManager GetPopUpManager();
-		void GetReadyForUISystemActivation();
-		void ActivateUISystem(bool instantly);
-		void DeactivateUISystem(bool instantly);
-		// float GetUIImageDarknedBrightness();
-		// float GetUIImageDefaultBrightness();
-		float GetSwipeVelocityThreshold();
-		float GetSwipeDistanceThreshold();
+
 	}
-	public class UIManager: IUIManager {
+	public class UIManager: UISystemSceneObject, IUIManager {
 		public UIManager(
-			IProcessManager processManager,
-			IUIAdaptor rootUIAdaptor,
-			RectTransform uieReserveTrans, 
-			bool showsInputability,
+			IConstArg arg
+		): base(arg){
 
-			// float imageDarkenedBrightness,
-			// float imageDefaultBrightness,
+			thisShowsInputability = arg.showsInputability;
 
-			float swipeVelocityThreshold,
-			float swipeDistanceThreshold
-		){
-			thisProcessManager = processManager;
-			thisRootUIAdaptor = rootUIAdaptor;
-			thisUIEReserveTrans = uieReserveTrans;
-			thisShowsInputability = showsInputability;
-
-			// thisImageDarknedBrightness = imageDarkenedBrightness;
-			// thisImageDefaultBrightnes = imageDefaultBrightness;
-			thisPopUpManager = new PopUpManager();
-
-			thisSwipeVelocityThreshold = swipeVelocityThreshold;
-			thisSwipeDistanceThreshold = swipeDistanceThreshold;
+			thisSwipeVelocityThreshold = arg.swipeVelocityThreshold;
+			thisSwipeDistanceThreshold = arg.swipeDistanceThreshold;
 		}
-		readonly IUIAdaptor thisRootUIAdaptor;
-		public void GetReadyForUISystemActivation(){
-
-			IProcessFactory processFactory = CreateProcessFactory(
-				thisProcessManager
-			);
-			IUIElementFactory uiElementFactory = new UIElementFactory(this);
-
-			IUIAdaptorBaseInitializationData rootUIAdaptorBaseInitializationData = CreateRootUIEBaseConstData(
-				processFactory,
-				uiElementFactory
-			);
-			thisRootUIAdaptor.GetReadyForActivation(
-				rootUIAdaptorBaseInitializationData,
-				recursively: true
-			);
-
-			thisRootUIElement = thisRootUIAdaptor.GetUIElement();
-			thisPopUpManager.SetRootUIElement(thisRootUIElement);
+		readonly float thisSwipeVelocityThreshold;
+		public float GetSwipeVelocityThreshold(){
+			return thisSwipeVelocityThreshold;
 		}
-		public void ActivateUISystem(bool instantly){
-			thisRootUIElement.ActivateRecursively(instantly);
+		readonly float thisSwipeDistanceThreshold;
+		public float GetSwipeDistanceThreshold(){
+			return thisSwipeDistanceThreshold;
 		}
-		public void DeactivateUISystem(bool instantly){
-			thisRootUIElement.DeactivateRecursively(instantly);
-		}
-		readonly IProcessManager thisProcessManager;
-		protected virtual IProcessFactory CreateProcessFactory(IProcessManager processManager){
-			return new UISystemProcessFactory(
-				processManager, 
-				this
-			);
-		}
-		protected virtual IUIAdaptorBaseInitializationData CreateRootUIEBaseConstData(
-			IProcessFactory processFactory,
-			IUIElementFactory uiElementFactory
-		){
-			return new RootUIAActivationData(
-				this,
-				(IUISystemProcessFactory)processFactory,
-				uiElementFactory
-			);
-		}
-		IUIElement thisRootUIElement;
-		Vector2 thisDragWorldPosition;
-		IPopUpManager thisPopUpManager;
-		public IPopUpManager GetPopUpManager(){return thisPopUpManager;}
-		public void SetDragWorldPosition(Vector2 dragPos){
-			thisDragWorldPosition = dragPos;
-		}
-		public Vector2 GetDragWorldPosition(){return thisDragWorldPosition;}
-		readonly RectTransform thisUIEReserveTrans;
-		public RectTransform GetUIElementReserveTrans(){
-			return thisUIEReserveTrans;
-		}
-
+		/* Drag pos */
+			Vector2 thisDragWorldPosition;
+			public void SetDragWorldPosition(Vector2 dragPos){
+				thisDragWorldPosition = dragPos;
+			}
+			public Vector2 GetDragWorldPosition(){return thisDragWorldPosition;}
+		/* PopUpManager */
+			IPopUpManager thisPopUpManager;
+			public IPopUpManager GetPopUpManager(){return thisPopUpManager;}
+			public void SetPopUpManager(IPopUpManager manager){
+				thisPopUpManager = manager;
+			}
 
 		/* Touch management */
-		const int noFingerID = -10;
-		int thisRegisteredID = -10;
-		public int registeredID{get{return thisRegisteredID;}}
-		public bool TouchIDIsRegistered(){
-			return thisRegisteredID != noFingerID;
-		}
-		public void UnregisterTouchID(){
-			thisRegisteredID = noFingerID;
-		}
-		public void RegisterTouchID(int touchID){
-			thisRegisteredID = touchID;
-		}
-		/*  */
-		// readonly float thisImageDarknedBrightness;
-		// public float GetUIImageDarknedBrightness(){
-		// 	return thisImageDarknedBrightness;
-		// }
-		// readonly float thisImageDefaultBrightnes;
-		// public float GetUIImageDefaultBrightness(){
-		// 	return thisImageDefaultBrightnes;
-		// }
-
+			const int noFingerID = -10;
+			int thisRegisteredID = -10;
+			public int registeredID{get{return thisRegisteredID;}}
+			public bool TouchIDIsRegistered(){
+				return thisRegisteredID != noFingerID;
+			}
+			public void UnregisterTouchID(){
+				thisRegisteredID = noFingerID;
+			}
+			public void RegisterTouchID(int touchID){
+				thisRegisteredID = touchID;
+			}
 
 		/* Debug */
 			readonly bool thisShowsInputability;
@@ -145,30 +89,49 @@ namespace UISystem{
 				thisInputName = inputName;
 			}
 			InputName thisInputName = InputName.None;
+			public string GetEventName(){
+				return thisInputName.ToString();
+			}
+		/* Input handling scroller */
 			IScroller thisInputHandlingScroller;
 			public IScroller GetInputHandlingScroller(){
 				return thisInputHandlingScroller;
 			}
-			public string GetEventName(){
-				return thisInputName.ToString();
-			}
 		/*  */
-		readonly float thisSwipeVelocityThreshold;
-		public float GetSwipeVelocityThreshold(){
-			return thisSwipeVelocityThreshold;
-		}
-		readonly float thisSwipeDistanceThreshold;
-		public float GetSwipeDistanceThreshold(){
-			return thisSwipeDistanceThreshold;
-		}
-		public enum InputName{
-			None,
-			Release,
-			Tap,
-			Swipe,
-			BeginDrag,
-			Drag,
-			Touch,
-		}
+			public enum InputName{
+				None,
+				Release,
+				Tap,
+				Swipe,
+				BeginDrag,
+				Drag,
+				Touch,
+			}
+		/* Const */
+			public new interface IConstArg: UISystemSceneObject.IConstArg{
+				bool showsInputability{get;}
+				float swipeVelocityThreshold{get;}
+				float swipeDistanceThreshold{get;}
+			}
+			public new class ConstArg: UISystemSceneObject.ConstArg, IConstArg{
+				public ConstArg(
+					IUIManagerAdaptor adaptor,
+					bool showsInputability,
+					float swipeVelocityThreshold,
+					float swipeDistanceThreshold
+				): base(
+					adaptor
+				){
+					thisShowsInputability = showsInputability;
+					thisSwipeVelocityThreshold = swipeVelocityThreshold;
+					thisSwipeDistanceThreshold = swipeDistanceThreshold;
+				}
+				readonly bool thisShowsInputability;
+				public bool showsInputability{get{return thisShowsInputability;}}
+				readonly float thisSwipeVelocityThreshold;
+				public float swipeVelocityThreshold{get{return thisSwipeVelocityThreshold;}}
+				readonly float thisSwipeDistanceThreshold;
+				public float swipeDistanceThreshold{get{return thisSwipeDistanceThreshold;}}
+			}
 	}
 }
