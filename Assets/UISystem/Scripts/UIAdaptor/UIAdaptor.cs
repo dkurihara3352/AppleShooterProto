@@ -18,10 +18,15 @@ namespace UISystem{
 
 		IUIManager GetUIManager();
 
-		// string GetName();
 
 		Vector2 GetRectSize();
 		void SetRectLength(Vector2 length);
+
+		void SetIndex(int index);
+		int GetIndex();
+
+		void SetUpRecursively();
+		void SetUpReferenceRecursively();
 	}
 	
 	[RequireComponent(typeof(RectTransform))]
@@ -32,14 +37,25 @@ namespace UISystem{
 		protected override void Awake(){
 			base.Awake();
 			AdjustRect();
-			// this.enabled = false;
 		}
 		/* Rect Adjustment */
 			void AdjustRect(){
 				RectTransform rectTrans = transform.GetComponent<RectTransform>();
+				MakeSureFieldsAreInitializedProperly(rectTrans);
 				AdjustPivot(rectTrans);
 				AdjustAnchor(rectTrans);
 				AdjustSize(rectTrans);
+			}
+			void MakeSureFieldsAreInitializedProperly(RectTransform rt){
+				Vector2 pointFive = new Vector2(.5f, .5f);
+				if(
+					rt.anchorMax != pointFive ||
+					rt.anchorMin != pointFive ||
+					rt.pivot != pointFive
+				)
+					throw new System.InvalidOperationException(
+						"all the given fields of rt must be (.5, .5)"
+					);
 			}
 			void AdjustPivot(RectTransform rectTransform){
 				Vector2 targetPivot = Vector2.zero;
@@ -109,7 +125,8 @@ namespace UISystem{
 			}
 			public override void FinalizeSetUp(){
 				base.FinalizeSetUp();
-				thisUIElement.EvaluateScrollerFocusRecursively();
+				// thisUIElement.EvaluateScrollerFocusRecursively();
+				// thisUIElement.EvaluateScrollerFocus();
 			}
 		/*  */
 			IUIAdaptorInputStateEngine CreateUIAdaptorInputStateEngine(){
@@ -244,7 +261,7 @@ namespace UISystem{
 					thisCanvasGroup = canvasGroup;
 				}
 			}
-			CanvasGroup thisCanvasGroup = null;
+			protected CanvasGroup thisCanvasGroup = null;
 			public float GetGroupAlpha(){
 				return thisCanvasGroup.alpha;
 			}
@@ -325,5 +342,23 @@ namespace UISystem{
 				}
 			}
 		/*  */
+			protected int thisIndex = -1;
+			public void SetIndex(int index){
+				thisIndex = index;
+			}
+			public int GetIndex(){
+				return thisIndex;
+			}
+			public void SetUpRecursively(){
+				this.SetUp();
+				foreach(IUIAdaptor childUIAdaptor in GetChildUIAdaptors())
+					childUIAdaptor.SetUpRecursively();
+			}
+			public void SetUpReferenceRecursively(){
+				this.SetUpReference();
+				foreach(IUIAdaptor childUIAdaptor in GetChildUIAdaptors())
+					childUIAdaptor.SetUpReferenceRecursively();
+			}
+			
 	}
 }

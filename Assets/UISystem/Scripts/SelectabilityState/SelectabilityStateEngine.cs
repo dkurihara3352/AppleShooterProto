@@ -37,8 +37,7 @@ namespace UISystem{
 				stateArg
 			);
 			MakeSureStatesAreSet();
-
-			// this.SetToInitialState();
+			
 			thisCurState = selectableState;
 		}
 		protected readonly SelectableState selectableState;
@@ -50,9 +49,7 @@ namespace UISystem{
 			else
 				throw new System.InvalidOperationException("any of the states not correctly set");
 		}
-		// void SetToInitialState(){
-		// 	BecomeSelectable();
-		// }
+
 		/* SelStateHandler */
 			public void BecomeSelectable(){
 				TrySwitchState(selectableState);

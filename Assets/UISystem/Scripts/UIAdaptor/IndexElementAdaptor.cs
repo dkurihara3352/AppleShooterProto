@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace UISystem{
 	public interface IIndexElementAdaptor: IUIAdaptor{
-		void SetIndex(int index);
 	}
 	public class IndexElementAdaptor : UIAdaptor, IIndexElementAdaptor{
 		protected override IUIElement CreateUIElement(){
@@ -20,7 +19,6 @@ namespace UISystem{
 			thisText = CollectText();
 			UpdateText(thisIndex.ToString());
 		}
-		int thisIndex;
 		Text thisText;
 		Text CollectText(){
 			Transform childWithText = CollectChildWithText();
@@ -41,9 +39,6 @@ namespace UISystem{
 				if(comp is Text)
 					return true;
 			return false;
-		}
-		public void SetIndex(int index){
-			thisIndex = index;
 		}
 		void UpdateText(string text){
 			thisText.text = text;

@@ -42,10 +42,6 @@ namespace UISystem{
 			thisIsEnabledInertia = arg.isEnabledInertia;
 			thisNewScrollSpeedThreshold = arg.newScrollSpeedThreshold;
 
-			/* good here */
-			//or maybe should be moved into SetUp
-			// UpdateRect();
-			
 			/* non dependent */
 			thisRunningScrollerMotorProcess = new IScrollerElementMotorProcess[2];
 			thisElementIsScrolledToIncreaseCursorOffsetCalculator = new ElementIsScrolledToIncreaseCursorOffsetCalculator(this);
@@ -73,23 +69,14 @@ namespace UISystem{
 			protected readonly ScrollerAxis thisScrollerAxis;
 
 		/* ScrollerRect */
-			public /* override */ void UpdateRect(){
-				// base.UpdateRect();
+			public  void UpdateRect(){
 				SetUpScrollerRect();
-				// MakeSureRectIsSet(thisRect);
 				SetUpRubberBandCalculators();
 			}
-			// protected Rect thisRect;
 			protected Vector2 thisRectLength;
 			void SetUpScrollerRect(){
-				// thisRect = thisUIAdaptor.GetRect();
-				// thisRectLength = new Vector2(thisRect.width, thisRect.height);
 				thisRectLength = thisUIAdaptor.GetRectSize();
 			}
-			// protected void MakeSureRectIsSet(Rect rect){
-			// 	if(rect.width == 0f || rect.height == 0f)
-			// 		throw new System.InvalidOperationException("rect has at least one dimension not set right");
-			// }
 		/* Rubber */
 			readonly protected Vector2 thisRubberBandLimitMultiplier;
 			Vector2 thisRubberLimit;
@@ -114,9 +101,8 @@ namespace UISystem{
 
 		/* ScrollerElement */
 			public void SetUpScrollerElement(IUIElement scrollerElement){
-				//called in SetUpReference
+				//called in SetUpReference, in Finalize when this is UIElementGroupScroller
 
-				// SetTheOnlyChildAsScrollerElement();
 				thisScrollerElement = scrollerElement;
 				SetUpScrollerElementRect();
 				SetUpCursorTransform();
@@ -135,26 +121,10 @@ namespace UISystem{
 			public IUIElement GetScrollerElement(){
 				return thisScrollerElement;
 			}
-			// protected void SetTheOnlyChildAsScrollerElement(){
-			// 	// IUIElement[] childUIEs = GetChildUIElements();
-			// 	// if(childUIEs == null)
-			// 	// 	throw new System.NullReferenceException("childUIEs must not be null");
-			// 	// if(childUIEs.Length != 1)
-			// 	// 	throw new System.InvalidOperationException("Scroller must have only one UIE child as Scroller Element");
-			// 	// if(childUIEs[0] == null)
-			// 	// 	throw new System.InvalidOperationException("Scroller's only child must not be null");
-			// 	// thisScrollerElement = childUIEs[0];
-			// }
-			// protected Rect thisScrollerElementRect;
 			protected Vector2 thisScrollerElementLength;
 			protected virtual void SetUpScrollerElementRect(){
 				IUIAdaptor scrollerElementAdaptor = thisScrollerElement.GetUIAdaptor();
 				thisScrollerElementLength = scrollerElementAdaptor.GetRectSize();
-				// thisScrollerElementRect = scrollerElementAdaptor.GetRect();
-				// thisScrollerElementLength = new Vector2(
-				// 	thisScrollerElementRect.width, 
-				// 	thisScrollerElementRect.height
-				// );
 			}
 			/* Cursor Transform */
 			public void SetUpCursorTransform(){

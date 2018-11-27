@@ -200,12 +200,13 @@ namespace UISystem{
 			GUI.Label(topLeftSubRect_0, "Activation");
 			if(GUI.Button(topLeftSubRect_1, "GetReadyForA"))
 				SetUpMonoBehaviourAdaptors();
-			if(GUI.Button(topLeftSubRect_2, "Activate"))
-				thisRootUIElement.ActivateRecursively(false);
+			if(GUI.Button(topLeftSubRect_2, "Activate")){
+				thisRootUIElement.InitiateActivation(false);
+			}
 			if(GUI.Button(topLeftSubRect_3, "Deactivate"))
 				thisRootUIElement.DeactivateRecursively(false);
 			if(GUI.Button(topLeftSubRect_4, "ActivateInst"))
-				thisRootUIElement.ActivateRecursively(true);
+				thisRootUIElement.InitiateActivation(true);
 			if(GUI.Button(topLeftSubRect_5, "DeactivateInst"))
 				thisRootUIElement.DeactivateRecursively(true);
 			// if(GUI.Button(topLeftSubRect_6, "TogglePopUp"))

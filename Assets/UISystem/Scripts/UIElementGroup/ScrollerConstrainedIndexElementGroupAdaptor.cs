@@ -14,10 +14,10 @@ namespace UISystem{
 			List<IUIElement> resultList = new List<IUIElement>();
 			for(int i = 0; i < groupElementCount; i++ ){
 				GameObject go = GameObject.Instantiate(indexElementPrefab, this.GetTransform());
-				IIndexElementAdaptor adaptor = (IIndexElementAdaptor)go.GetComponent(typeof(IIndexElementAdaptor));
+				IUIAdaptor adaptor = (IUIAdaptor)go.GetComponent(typeof(IUIAdaptor));
 				adaptor.SetIndex(i);
-				adaptor.SetUp();
-				adaptor.SetUpReference();
+				adaptor.SetUpRecursively();
+				adaptor.SetUpReferenceRecursively();
 
 				IUIElement element = adaptor.GetUIElement();
 				resultList.Add(element);

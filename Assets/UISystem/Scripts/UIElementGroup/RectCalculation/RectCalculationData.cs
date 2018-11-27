@@ -94,7 +94,7 @@ namespace UISystem{
 					return;
 				}
 			}
-			// thisGroupLengthAsNonScrollerElement = groupLengthAsNonScrollerElement;
+			thisGroupLengthAsNonScrollerElement = groupLengthAsNonScrollerElement;
 		}
 		bool parentIsGroupScroller = false;
 		readonly Vector2 thisElementToPaddingRatio;

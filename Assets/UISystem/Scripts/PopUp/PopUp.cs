@@ -3,51 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UISystem{
-	public interface IPopUp: IUIElement, IPopUpEventTrigger{
+	public interface IPopUp: IUIElement, IPopUpStateHandler, IPopUpStateImplementor{
 		void SetPopUpManager(IPopUpManager manager);
 		void SetParentPopUp(IPopUp parent);
 		void AddChildPopUp(IPopUp child);
-
-		void OnHideBegin();
-		void OnShowBegin();
-		void OnHideComplete();
-		void OnShowComplete();
 
 		bool HidesOnTappingOthers();
 		void ShowHiddenProximateParentPopUpRecursively();
 		void HideShownChildPopUpsRecursively();
 
 		IPopUp GetParentPopUp();
-		// IPopUp GetProximateParentPopUp();
-		// void RegisterProximateChildPopUp(IPopUp childPopUp);
 		bool IsHidden();
 		bool IsShown();
 		bool IsAncestorOf(IPopUp other);
-		// void SetUpPopUpHierarchy();
 
+		void LogHierarchy();
 	}
 	public enum PopUpMode{
 		Alpha,
 	}
-	public class PopUp : UIElement, IPopUp {
+	public class PopUp : UIElement, IPopUp, IPopUpStateImplementor {
 		public PopUp(
 			IConstArg arg
 		): base(
 			arg
 		){
-			// thisPopUpManager = arg.popUpManager;
-
 			thisHidesOnTappingOthers = arg.hidesOnTappingOthers;
-			thisStateEngine = CreateStateEngine(arg.popUpMode);
-
-			
-			// if(arg.popUpMode == PopUpMode.Alpha)
-			// 	this.GetUIAdaptor().SetUpCanvasGroupComponent();
-			// GetPopUpAdaptor().ToggleRaycastBlock(false);
+			thisStateEngine = CreateStateEngine(
+				arg.processTime,
+				arg.popUpMode
+			);
+			thisTypedAdaptor.ToggleRaycastBlock(false);
 		}
-		// protected virtual IPopUpAdaptor GetPopUpAdaptor(){
-		// 	return (IPopUpAdaptor)GetUIAdaptor();
-		// }
 		IPopUpManager thisPopUpManager;
 		public void SetPopUpManager(IPopUpManager manager){
 			thisPopUpManager = manager;
@@ -58,14 +45,17 @@ namespace UISystem{
 		}
 		readonly bool thisHidesOnTappingOthers;
 		protected readonly IPopUpStateEngine thisStateEngine;
-		IPopUpStateEngine CreateStateEngine(PopUpMode popUpMode){
-			IPopUpStateEngineConstArg popUpStateEngineConstArg = new PopUpStateEngineConstArg(
+		IPopUpStateEngine CreateStateEngine(
+			float processTime,
+			PopUpMode popUpMode
+		){
+			
+			PopUpStateEngine.IConstArg arg = new PopUpStateEngine.ConstArg(
 				thisUISystemProcessFactory,
 				this,
-				thisPopUpManager,
-				popUpMode
+				processTime
 			);
-			return new PopUpStateEngine(popUpStateEngineConstArg);
+			return new PopUpStateEngine(arg);
 		}
 
 		IPopUp thisParentPopUp;
@@ -81,7 +71,23 @@ namespace UISystem{
 			resultList.Add(childPopUp);
 			thisChildrenPopUp = resultList.ToArray();
 		}
-
+		public void LogHierarchy(){
+			Debug.Log(
+				GetName() + "'s parentPopUp: " + GetParentPopUpName() + ", " + 
+				"children: " + GetChildPopUpNameArray()
+			);
+		}
+		string GetParentPopUpName(){
+			if(thisParentPopUp == null)
+				return "null";
+			return thisParentPopUp.GetName();
+		}
+		string GetChildPopUpNameArray(){
+			string result = "";
+			foreach(IPopUp childPopUp in thisChildrenPopUp)
+				result += childPopUp.GetName() + ", ";
+			return result;
+		}
 		public void Hide(bool instantly){
 			thisStateEngine.Hide(instantly);
 		}
@@ -94,24 +100,32 @@ namespace UISystem{
 		public bool IsShown(){
 			return thisStateEngine.IsShown();
 		}
-		public virtual void OnShowBegin(){}
-		public virtual void OnHideBegin(){}
-		public virtual void OnShowComplete(){}
-		public virtual void OnHideComplete(){}
-		// public void SetUpPopUpHierarchy(){
-		// 	thisProximateParentPopUp = FindProximateParentPopUp();
+		public virtual void OnShowBegin(){
+			thisPopUpManager.RegisterPopUp(this);
+			thisTypedAdaptor.ToggleRaycastBlock(true);
+		}
+		public virtual void OnHideBegin(){
+			thisPopUpManager.UnregisterPopUp(this);
+			thisTypedAdaptor.ToggleRaycastBlock(false);
+		}
+		public virtual void OnShowComplete(){
+			thisTypedAdaptor.ToggleRaycastBlock(true);
+		}
+		public virtual void OnHideComplete(){
+			thisTypedAdaptor.ToggleRaycastBlock(false);
+		}
+		public float GetAlpha(){
+			return thisTypedAdaptor.GetGroupAlpha();
+		}
+		public void SetAlpha(float alpha){
+			thisTypedAdaptor.SetGroupAlpha(alpha);
+		}
 
-		// 	if(thisProximateParentPopUp != null)
-		// 		thisProximateParentPopUp.RegisterProximateChildPopUp(this);
-		// 	thisProximateChildPopUps = new List<IPopUp>();
-		// }
-		// protected virtual IPopUp FindProximateParentPopUp(){
-		// 	return FindProximateParentTypedUIElement<IPopUp>();
-		// }
-		// IPopUp thisProximateParentPopUp;
-		// public IPopUp GetProximateParentPopUp(){
-		// 	return thisProximateParentPopUp;
-		// }
+		IPopUpAdaptor thisTypedAdaptor{
+			get{
+				return (IPopUpAdaptor)thisAdaptor;
+			}
+		}
 		public void ShowHiddenProximateParentPopUpRecursively(){
 			if(thisParentPopUp != null){
 				if(thisParentPopUp.IsHidden()){
@@ -120,10 +134,6 @@ namespace UISystem{
 				}
 			}
 		}
-		// List<IPopUp> thisProximateChildPopUps;
-		// public void RegisterProximateChildPopUp(IPopUp childPopUp){
-		// 	thisProximateChildPopUps.Add(childPopUp);
-		// }
 		public void HideShownChildPopUpsRecursively(){
 			foreach(IPopUp childPopUp in thisChildrenPopUp){
 				if(childPopUp.IsActivated() && childPopUp.IsShown()){
@@ -151,6 +161,7 @@ namespace UISystem{
 		public new interface IConstArg: UIElement.IConstArg{
 			bool hidesOnTappingOthers{get;}
 			PopUpMode popUpMode{get;}
+			float processTime{get;}
 		}
 		public new class ConstArg: UIElement.ConstArg, IConstArg{
 			public ConstArg(
@@ -158,7 +169,8 @@ namespace UISystem{
 				ActivationMode activationMode,
 
 				bool hidesOnTappingOthers,
-				PopUpMode popUpMode
+				PopUpMode popUpMode,
+				float processTime
 				
 			): base(
 				adaptor,
@@ -166,11 +178,14 @@ namespace UISystem{
 			){
 				thisHidesOnTappingOthers = hidesOnTappingOthers;
 				thisPopUpMode = popUpMode;
+				thisProcessTime = processTime;
 			}
 			readonly bool thisHidesOnTappingOthers;
 			public bool hidesOnTappingOthers{get{return thisHidesOnTappingOthers;}}
 			readonly PopUpMode thisPopUpMode;
 			public PopUpMode popUpMode{get{return thisPopUpMode;}}
+			readonly float thisProcessTime;
+			public float processTime{get{return thisProcessTime;}}
 
 		}
 	}

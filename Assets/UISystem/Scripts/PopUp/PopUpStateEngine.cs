@@ -4,11 +4,20 @@ using UnityEngine;
 using DKUtility;
 
 namespace UISystem{
-	public interface IPopUpEventTrigger{
+	public interface IPopUpStateHandler{
 		void Hide(bool instantly);
 		void Show(bool instantly);
 	}
-	public interface IPopUpStateEngine: IPopUpEventTrigger{
+	public interface IPopUpStateImplementor{
+		void OnHideBegin();
+		void OnHideComplete();
+		void OnShowBegin();
+		void OnShowComplete();
+
+		float GetAlpha();
+		void SetAlpha(float alpha);
+	}
+	public interface IPopUpStateEngine: IPopUpStateHandler{
 		void SwitchToHiddenState();
 		void SwitchToHidingState();
 		void SwitchToShownState();
@@ -19,42 +28,41 @@ namespace UISystem{
 		void StartNewShowProcess();
 
 		/*  */
-		void CallPopUpOnHideBegin();
-		void CallPopUpOnShowBegin();
-		void CallPopUpOnHideComplete();
-		void CallPopUpOnShowComplete();
-		/*  */
-		void RegisterPopUp();
-		void UnregisterPopUp();
-		/*  */
 		bool IsHidden();
 		bool IsShown();
-		void TogglePopUpInteractability(bool interactable);
+
+		void SetAlphaOnImplementor(float alpha);
+		float GetAphaOnImplementor();
 	}
-	public class PopUpStateEngine :AbsSwitchableStateEngine<IPopUpState>, IPopUpStateEngine, ISwitchableStateEngine<IPopUpState> {
+	public class PopUpStateEngine :AbsSwitchableStateEngine<PopUpStateEngine.IState>, IPopUpStateEngine, ISwitchableStateEngine<PopUpStateEngine.IState> {
 
-		public PopUpStateEngine(IPopUpStateEngineConstArg arg){
+		public PopUpStateEngine(
+			IConstArg arg
+		){
+
 			thisProcessFactory = arg.processFactory;
-			thisPopUp = arg.popUp;
-			thisPopUpManager = arg.popUpManager;
-
-			thisHiddenState = new PopUpHiddenState(this);
-			thisHidingState = new PopUpHidingState(this);
-			thisShownState = new PopUpShownState(this);
-			thisShowingState = new PopUpShowingState(this);
+			thisImplementor = arg.implementor;
+			thisProcessTime = arg.processTime;
+			State.IConstArg stateArg = new State.ConstArg(
+				this,
+				arg.implementor
+			);
+			thisHiddenState = new HiddenState(stateArg);
+			thisHidingState = new HidingState(stateArg);
+			thisShownState = new ShownState(stateArg);
+			thisShowingState = new ShowingState(stateArg);
 			
-			// Hide(true);
 			thisCurState = thisHiddenState;
 		}
 		readonly IUISystemProcessFactory thisProcessFactory;
-		readonly IPopUp thisPopUp;
-		readonly IPopUpManager thisPopUpManager;
 		readonly PopUpMode thisPopUpMode;
+		readonly IPopUpStateImplementor thisImplementor;
+		readonly float thisProcessTime;
 		/* states */
-		readonly IPopUpHiddenState thisHiddenState;
-		readonly IPopUpHidingState thisHidingState;
-		readonly IPopUpShownState thisShownState;
-		readonly IPopUpShowingState thisShowingState;
+		readonly IHiddenState thisHiddenState;
+		readonly IHidingState thisHidingState;
+		readonly IShownState thisShownState;
+		readonly IShowingState thisShowingState;
 		/* switch */
 		public void SwitchToHiddenState(){
 			TrySwitchState(thisHiddenState);
@@ -87,7 +95,11 @@ namespace UISystem{
 			IPopUpProcess newProcess;
 			switch(thisPopUpMode){
 				case PopUpMode.Alpha:
-					newProcess = thisProcessFactory.CreateAlphaPopUpProcess(thisPopUp, this, hides);
+					newProcess = thisProcessFactory.CreateAlphaPopUpProcess(
+						this, 
+						thisProcessTime,
+						hides
+					);
 					break;
 				default: 
 					newProcess = null;
@@ -106,19 +118,6 @@ namespace UISystem{
 			SetRunningProcess(newProcess);
 		}
 		/*  */
-		public void CallPopUpOnHideBegin(){
-			thisPopUp.OnHideBegin();
-		}
-		public void CallPopUpOnHideComplete(){
-			thisPopUp.OnHideComplete();
-		}
-		public void CallPopUpOnShowBegin(){
-			thisPopUp.OnShowBegin();
-		}
-		public void CallPopUpOnShowComplete(){
-			thisPopUp.OnShowComplete();
-		}
-		/*  */
 		public void Hide(bool instantly){
 			thisCurState.Hide(instantly);
 		}
@@ -134,42 +133,139 @@ namespace UISystem{
 				thisCurState == thisShowingState;
 		}
 		/*  */
-		public void RegisterPopUp(){
-			thisPopUpManager.RegisterPopUp(thisPopUp);
+		public void SetAlphaOnImplementor(float alpha){
+			thisImplementor.SetAlpha(alpha);
 		}
-		public void UnregisterPopUp(){
-			thisPopUpManager.UnregisterPopUp(thisPopUp);
+		public float GetAphaOnImplementor(){
+			return thisImplementor.GetAlpha();
 		}
-		/*  */
-		public void TogglePopUpInteractability(bool interactable){
-			((IPopUpAdaptor)thisPopUp.GetUIAdaptor()).ToggleRaycastBlock(interactable);
-		}
-	}
-	public interface IPopUpStateEngineConstArg{
-		IUISystemProcessFactory processFactory{get;}
-		IPopUp popUp{get;}
-		IPopUpManager popUpManager{get;}
-		PopUpMode popUpMode{get;}
-	}
-	public class PopUpStateEngineConstArg: IPopUpStateEngineConstArg{
-		public PopUpStateEngineConstArg(
-			IUISystemProcessFactory processFactory,
-			IPopUp popUp,
-			IPopUpManager popUpManager,
-			PopUpMode popUpMode
-		){
-			thisProcessFactory = processFactory;
-			thisPopUp = popUp;
-			thisPopUpManager = popUpManager;
-			thisPopUpMode = popUpMode;
-		}
-		readonly IUISystemProcessFactory thisProcessFactory;
-		public IUISystemProcessFactory processFactory{get{return thisProcessFactory;}}
-		readonly IPopUp thisPopUp;
-		public IPopUp popUp{get{return thisPopUp;}}
-		readonly IPopUpManager thisPopUpManager;
-		public IPopUpManager popUpManager{get{return thisPopUpManager;}}
-		readonly PopUpMode thisPopUpMode;
-		public PopUpMode popUpMode{get{return thisPopUpMode;}}
+
+		/* states */
+			public interface IState: ISwitchableState, IPopUpStateHandler{}
+			public abstract class State : IState {
+				public State(IConstArg arg){
+					thisEngine = arg.engine;
+					thisImplementor = arg.implementor;
+				}
+				protected readonly IPopUpStateEngine thisEngine;
+				protected readonly IPopUpStateImplementor thisImplementor;
+				public abstract void OnEnter();
+				public virtual void OnExit(){
+					return;
+				}
+				public abstract void Hide(bool instantly);
+				public abstract void Show(bool instantly);
+
+				public interface IConstArg{
+					IPopUpStateEngine engine{get;}
+					IPopUpStateImplementor implementor{get;}
+				}
+				public class ConstArg: IConstArg{
+					public ConstArg(
+						IPopUpStateEngine engine,
+						IPopUpStateImplementor implementor
+					){
+						thisEngine = engine;
+						thisImplementor = implementor;
+					}
+					readonly IPopUpStateEngine thisEngine;
+					public IPopUpStateEngine engine{get{return thisEngine;}}
+					readonly IPopUpStateImplementor thisImplementor;
+					public IPopUpStateImplementor implementor{get{return thisImplementor;}}
+
+				}
+
+			}
+			/* HiddenState */
+				public interface IHiddenState: IState{}
+				public class HiddenState: State, IHiddenState{
+					public HiddenState(State.IConstArg arg): base(arg){}
+					public override void OnEnter(){
+						thisImplementor.OnHideComplete();
+					}
+					public override void Hide(bool instantly){
+						return;
+					}
+					public override void Show(bool instantly){
+						thisEngine.SwitchToShowingState();
+						if(instantly)
+							thisEngine.ExpireCurrentProcess();
+					}
+				}
+			/* Hiding State */
+				public interface IHidingState: IState{}
+				public class HidingState: State, IHidingState{
+					public HidingState(State.IConstArg arg): base(arg){}
+					public override void OnEnter(){
+						thisImplementor.OnHideBegin();
+						thisEngine.StartNewHideProcess();
+					}
+					public override void Hide(bool instantly){
+						if(instantly)
+							thisEngine.ExpireCurrentProcess();
+					}
+					public override void Show(bool instantly){
+						thisEngine.SwitchToShowingState();
+						if(instantly)
+							thisEngine.ExpireCurrentProcess();
+					}
+				}
+			/* ShownState */
+				public interface IShownState: IState{}
+				public class ShownState: State, IShownState{
+					public ShownState(State.IConstArg arg): base(arg){}
+					public override void OnEnter(){
+						thisImplementor.OnShowComplete();
+					}
+					public override void Hide(bool instantly){
+						thisEngine.SwitchToHidingState();
+						if(instantly)
+							thisEngine.ExpireCurrentProcess();
+					}
+					public override void Show(bool instantly){
+						return;
+					}
+				}
+			/* Showing State */
+				public interface IShowingState: IState{}
+				public class ShowingState: State, IShowingState{
+					public ShowingState(State.IConstArg arg): base(arg){}
+					public override void OnEnter(){
+						thisEngine.StartNewShowProcess();
+						thisImplementor.OnShowBegin();
+					}
+					public override void Hide(bool instantly){
+						thisEngine.SwitchToHidingState();
+						if(instantly)
+							thisEngine.ExpireCurrentProcess();
+					}
+					public override void Show(bool instantly){
+						if(instantly)
+							thisEngine.ExpireCurrentProcess();
+					}
+				}
+		/* ConstArg */
+			public interface IConstArg{
+				IUISystemProcessFactory processFactory{get;}
+				IPopUpStateImplementor implementor{get;}
+				float processTime{get;}
+			}
+			public struct ConstArg: IConstArg{
+				public ConstArg(
+					IUISystemProcessFactory processFactory,
+					IPopUpStateImplementor implementor,
+					float processTime
+				){
+					thisProcessFactory = processFactory;
+					thisImplementor = implementor;
+					thisProcessTime = processTime;
+				}
+				readonly IUISystemProcessFactory thisProcessFactory;
+				public IUISystemProcessFactory processFactory{get{return thisProcessFactory;}}
+				readonly IPopUpStateImplementor thisImplementor;
+				public IPopUpStateImplementor implementor{get{return thisImplementor;}}
+				readonly float thisProcessTime;
+				public float processTime{get{return thisProcessTime;}}
+			}
 	}
 }

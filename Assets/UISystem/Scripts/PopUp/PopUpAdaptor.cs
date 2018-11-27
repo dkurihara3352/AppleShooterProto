@@ -12,10 +12,10 @@ namespace UISystem{
 		public PopUpMode popUpMode;
 
 		public override void SetUp(){
-			base.SetUp();
 			if(popUpMode == PopUpMode.Alpha)
 				SetUpCanvasGroupComponent();
 			ToggleRaycastBlock(false);
+			base.SetUp();
 		}
 		public override void SetUpReference(){
 			base.SetUpReference();
@@ -24,30 +24,41 @@ namespace UISystem{
 
 			IPopUp parentPopUp = FindProximateParentTypedUIElement<IPopUp>();
 			thisPopUp.SetParentPopUp(parentPopUp);
-
-			parentPopUp.AddChildPopUp(thisPopUp);
+			if(parentPopUp != null)
+				parentPopUp.AddChildPopUp(thisPopUp);
+			
 		}
-		public IPopUpManagerAdaptor popUpManagerAdaptor;
+		public override void FinalizeSetUp(){
+			base.FinalizeSetUp();
+			// thisPopUp.LogHierarchy();
+		}
+		public PopUpManagerAdaptor popUpManagerAdaptor;
 		IPopUpManager CreatePopUpMnager(){
 			return popUpManagerAdaptor.GetPopUpManager();
 		}
 
-		IPopUp thisPopUp;
+		IPopUp thisPopUp{
+			get{
+				return (IPopUp)thisUIElement;
+			}
+		}
 		public IPopUp GetPopUp(){
 			return thisPopUp;
 		}
+		public float processTime = .1f;
 		protected override IUIElement CreateUIElement(){
 			PopUp.IConstArg arg = new PopUp.ConstArg(
 				this,
 				activationMode,
+
 				hidesOnTappingOthers,
-				popUpMode
+				popUpMode,
+				processTime
 			);
 			return new PopUp(arg);
 		}
 		public void ToggleRaycastBlock(bool blocks){
-			CanvasGroup canvasGroup = this.transform.GetComponent<CanvasGroup>();
-			canvasGroup.blocksRaycasts = blocks;
+			thisCanvasGroup.blocksRaycasts = blocks;
 		}
 	}
 }

@@ -17,6 +17,8 @@ namespace UISystem{
 		string GetName();
 
 		/* Activation */
+		void InitiateActivation(bool instantly);
+
 		void ActivateSelf(bool instantly);
 		void ActivateRecursively(bool instantly);
 		void DeactivateRecursively(bool instantly);
@@ -36,10 +38,10 @@ namespace UISystem{
 		IScroller GetTopmostScrollerInMotion();
 
 		/* Scroller */
-		// T FindProximateParentTypedUIElement<T>() where T: class, IUIElement;
 		void CheckAndPerformStaticBoundarySnapFrom(IUIElement uieToStartCheck);
 		IScroller GetProximateParentScroller();
 		void EvaluateScrollerFocusRecursively();
+		// void EvaluateScrollerFocus();
 		void BecomeFocusedInScrollerSelf();
 		void BecomeDefocusedInScrollerSelf();
 		void BecomeFocusedInScrollerRecursively();
@@ -117,9 +119,14 @@ namespace UISystem{
 
 		/* Activation */
 			protected IUIEActivationStateEngine thisUIEActivationStateEngine;
+			public void InitiateActivation(bool instantly){
+				EvaluateScrollerFocusRecursively();
+				ActivateRecursively(instantly);
+			}
 			public void ActivateSelf(bool instantly){
 				thisUIEActivationStateEngine.Activate(instantly);
 			}
+
 			public virtual void ActivateRecursively(bool instantly){
 				ActivateSelf(instantly);
 				ActivateAllChildren(instantly);

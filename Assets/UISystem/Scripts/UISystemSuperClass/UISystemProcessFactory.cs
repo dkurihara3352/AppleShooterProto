@@ -58,8 +58,8 @@ namespace UISystem{
 			Color targetColor
 		);
 		IAlphaPopUpProcess CreateAlphaPopUpProcess(
-			IPopUp popUp,
 			IPopUpStateEngine engine,
+			float time,
 			bool hides
 		);
 	}
@@ -250,15 +250,14 @@ namespace UISystem{
 			return new GenericImageColorTurnProcess(arg);
 		}
 		public IAlphaPopUpProcess CreateAlphaPopUpProcess(
-			IPopUp popUp,
 			IPopUpStateEngine engine,
+			float time,
 			bool hides
 		){
-			IAlphaPopUpProcessConstArg arg = new AlphaPopUpProcessConstArg(
+			AlphaPopUpProcess.IConstArg arg = new AlphaPopUpProcess.ConstArg(
 				thisProcessManager,
-				thisProcessManager.GetAlphaPopUpExpireTime(),
+				time,
 				engine,
-				popUp,
 				hides
 			);
 			IAlphaPopUpProcess process = new AlphaPopUpProcess(arg);

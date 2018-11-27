@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace UISystem{
 	public interface IScrollerAdaptor: IUIAdaptor{
-		// void ShowCursorRectInGUI(Rect cursorRect);
 		void SetCursorRect(Rect rect);
 	}
 	public abstract class AbsScrollerAdaptor<T>: UIAdaptor, IScrollerAdaptor where T: class, IScroller{
@@ -13,10 +12,6 @@ namespace UISystem{
 		public Vector2 rubberBandLimitMultiplier = new Vector2(.1f ,.1f);
 		public bool isEnabledInertia = true;
 		public float locksInputAboveThisVelocity = 200f;
-		// public void ShowCursorRectInGUI(Rect cursorRect){
-		// 	thisCursorRect = cursorRect;
-		// 	cursorRectIsReady = true;
-		// }
 		Rect thisCursorRect;
 		public void SetCursorRect(Rect rect){
 			thisCursorRect = rect;
@@ -51,11 +46,6 @@ namespace UISystem{
 				);
 			return childUIElements[0];
 		}
-
-		// protected override void CompleteUIElementReferenceSetUpImple(){
-		// 	// thisScroller.UpdateGroupElementLengthAndPadding(thisElementLength, thisPadding); this is done is subclass
-		// 	thisScroller.SetUpScrollerElement();
-		// }
 		public void OnDrawGizmosSelected(){
 			if(cursorRectIsReady){
 				Gizmos.color = Color.red;
