@@ -26,10 +26,10 @@ namespace AppleShooterProto{
 			thisTarget.Deactivate();
 		}
 		/*  */
-		public interface IConstArg: IConstrainedProcessConstArg{
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
 			IDestroyedTargetAdaptor adaptor{get;}
 		}
-		public class ConstArg: ConstrainedProcessConstArg, IConstArg{
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IDestroyedTargetAdaptor adaptor,
 				IProcessManager processManager,

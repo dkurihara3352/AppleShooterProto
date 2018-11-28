@@ -136,7 +136,8 @@ namespace AppleShooterProto{
 					thisShootingManager.GetFlightDirection(),
 					thisShootingManager.GetFlightGravity(),
 					thisShootingManager.GetLauncherVelocity(),
-					thisLaunchPoint.GetPosition()
+					thisLaunchPoint.GetPosition(),
+					thisShootingManager.GetFlightTime()
 				);
 				thisFlightProcess.Run();
 			}

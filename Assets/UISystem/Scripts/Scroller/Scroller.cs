@@ -40,6 +40,7 @@ namespace UISystem{
 			thisRelativeCursorPosition = MakeSureRelativeCursorPosIsClampedZeroToOne(arg.relativeCursorPosition);
 			thisRubberBandLimitMultiplier = MakeRubberBandLimitMultiplierInRange(arg.rubberBandLimitMultiplier);
 			thisIsEnabledInertia = arg.isEnabledInertia;
+			thisInertiaDecay = arg.inertiaDecay;
 			thisNewScrollSpeedThreshold = arg.newScrollSpeedThreshold;
 
 			/* non dependent */
@@ -445,6 +446,7 @@ namespace UISystem{
 				return velocity.sqrMagnitude >= thisNewScrollSpeedThreshold * thisNewScrollSpeedThreshold;
 			}
 			readonly protected bool thisIsEnabledInertia;
+			readonly float thisInertiaDecay;
 			protected void StartInertialScrollOnAxis(
 				Vector2 velocity,
 				int axis
@@ -458,7 +460,8 @@ namespace UISystem{
 					decelerationOnAxis,
 					this,
 					thisScrollerElement,
-					axis
+					axis,
+					thisInertiaDecay
 				);
 				process.Run();
 			}
@@ -501,7 +504,8 @@ namespace UISystem{
 						1f, 
 						this, 
 						thisScrollerElement, 
-						0
+						0,
+						thisInertiaDecay
 					);
 					process.Run();
 				}else if(thisScrollerAxis == ScrollerAxis.Vertical){
@@ -510,7 +514,8 @@ namespace UISystem{
 						1f, 
 						this, 
 						thisScrollerElement, 
-						1
+						1,
+						thisInertiaDecay
 					);
 					process.Run();
 				}else{
@@ -527,7 +532,8 @@ namespace UISystem{
 						cosine, 
 						this, 
 						thisScrollerElement, 
-						0
+						0,
+						thisInertiaDecay
 					);
 					horizontalProcess.Run();
 					IInertialScrollProcess verticalProcess = thisUISystemProcessFactory.CreateInertialScrollProcess(
@@ -535,7 +541,8 @@ namespace UISystem{
 						sine, 
 						this, 
 						thisScrollerElement, 
-						1
+						1,
+						thisInertiaDecay
 					);
 					verticalProcess.Run();
 				}
@@ -710,6 +717,7 @@ namespace UISystem{
 				Vector2 relativeCursorPosition{get;}
 				Vector2 rubberBandLimitMultiplier{get;}
 				bool isEnabledInertia{get;}
+				float inertiaDecay{get;}
 				float newScrollSpeedThreshold{get;}
 			}
 			public new class ConstArg: UIElement.ConstArg, IConstArg{
@@ -718,6 +726,7 @@ namespace UISystem{
 					Vector2 relativeCursorPosition, 
 					Vector2 rubberBandLimitMultiplier, 
 					bool isEnabledInertia, 
+					float inertiaDecay,
 					float newScrollSpeedThreshold,
 
 					IScrollerAdaptor adaptor, 
@@ -730,6 +739,7 @@ namespace UISystem{
 					thisRelativeCursorPos = relativeCursorPosition;
 					thisRubberBandLimitMultiplier = rubberBandLimitMultiplier;
 					thisIsEnabledInertia = isEnabledInertia;
+					thisInertiaDecay = inertiaDecay;
 					thisNewScrollSpeedThreshold = newScrollSpeedThreshold;
 				}
 				readonly ScrollerAxis thisScrollerAxis;
@@ -742,6 +752,8 @@ namespace UISystem{
 				public Vector2 rubberBandLimitMultiplier{get{return thisRubberBandLimitMultiplier;}}
 				readonly bool thisIsEnabledInertia;
 				public bool isEnabledInertia{get{return thisIsEnabledInertia;}}
+				readonly float thisInertiaDecay;
+				public float inertiaDecay{get{return thisInertiaDecay;}}
 				readonly float thisNewScrollSpeedThreshold;
 				public float newScrollSpeedThreshold{get{return thisNewScrollSpeedThreshold;}}
 			}

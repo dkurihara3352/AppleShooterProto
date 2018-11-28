@@ -12,16 +12,14 @@ public class ScrollerElementSnapProcessTest {
 
     [Test, TestCaseSource(typeof(UpdateProcess_Demo_TestCase), "cases"), Ignore]
     public void UpdateProcess_Demo(Vector2 initialLocalPos, float targetLocalPosOnAxis, float initialVelOnAxis, int dimension, float diffThreshold, float stopVelocity){
-        IScrollerElementSnapProcessConstArg arg = CreateMockConstArg();
+        TestScrollerElementSnapProcess.IConstArg arg = CreateMockConstArg();
         IUIElement scrollerElement = Substitute.For<IUIElement>();
         arg.scrollerElement.Returns(scrollerElement);
         Vector3 initialLocalPosV3 = initialLocalPos;
         scrollerElement.GetLocalPosition().Returns(initialLocalPosV3);
         arg.dimension.Returns(dimension);
         arg.targetElementLocalPositionOnAxis.Returns(targetLocalPosOnAxis);
-        arg.processManager.GetScrollerElementSnapSpringCoefficient().Returns(5f);
         arg.initialVelocityOnAxis.Returns(initialVelOnAxis);
-        arg.stopVelocity.Returns(stopVelocity);
         TestScrollerElementSnapProcess process = new TestScrollerElementSnapProcess(arg);
 
         float deltaT = .02f;
@@ -64,13 +62,14 @@ public class ScrollerElementSnapProcessTest {
 
 
     public class TestScrollerElementSnapProcess: ScrollerElementSnapProcess{
-        public TestScrollerElementSnapProcess(IScrollerElementSnapProcessConstArg arg): base(arg){}
+        public TestScrollerElementSnapProcess(IConstArg arg): base(arg){}
         public float GetDiffThreshold_Test(){
             return thisDiffThreshold;
         }
+        public new interface IConstArg: ScrollerElementSnapProcess.IConstArg{}
     }
-    IScrollerElementSnapProcessConstArg CreateMockConstArg(){
-        IScrollerElementSnapProcessConstArg arg = Substitute.For<IScrollerElementSnapProcessConstArg>();
+    TestScrollerElementSnapProcess.IConstArg CreateMockConstArg(){
+        TestScrollerElementSnapProcess.IConstArg arg = Substitute.For<TestScrollerElementSnapProcess.IConstArg>();
         
         arg.processManager.Returns(Substitute.For<IProcessManager>());
         arg.scroller.Returns(Substitute.For<IScroller>());
@@ -79,7 +78,6 @@ public class ScrollerElementSnapProcessTest {
 
         arg.targetElementLocalPositionOnAxis.Returns(0f);
         arg.initialVelocityOnAxis.Returns(0f);
-        arg.stopVelocity.Returns(0.05f);
         
         return arg;
     }

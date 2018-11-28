@@ -29,7 +29,8 @@ namespace UISystem{
 			Transform imageTrans, 
 			float defaultBrightness, 
 			float darkenedBrightness,
-			IUISystemProcessFactory processFactory
+			IUISystemProcessFactory processFactory,
+			float changeColorTime
 
 		){
 			thisGraphicComponent = graphicComponent;
@@ -41,6 +42,7 @@ namespace UISystem{
 			thisDarkenedColor = GetColorAtBrightness(thisDarkenedBrightness);
 			SetColor(thisDefaultColor);
 			thisProcessFactory = processFactory;
+			thisChangeColorTime = changeColorTime;
 		}
 		readonly protected Graphic thisGraphicComponent;
 		Color thisOriginalColor;
@@ -96,29 +98,50 @@ namespace UISystem{
 			GetTransform().position = newWorldPosV3;
 		}
 		/*  */
-		IUISystemProcessFactory thisProcessFactory;
+		readonly IUISystemProcessFactory thisProcessFactory;
+		readonly float thisChangeColorTime;
 		public void TurnTo(Color color){
-			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(this, color);
+			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(
+				this, 
+				color,
+				thisChangeColorTime
+			);
 			process.Run();
 			SetRunningTurnColorProcess(process);
 		}
 		public void Flash(Color color){
-			IImageColorTurnProcess process = thisProcessFactory.CreateFalshColorProcess(this, color);
+			IImageColorTurnProcess process = thisProcessFactory.CreateFalshColorProcess(
+				this, 
+				color,
+				thisChangeColorTime
+			);
 			process.Run();
 			SetRunningTurnColorProcess(process);
 		}
 		public void TurnToOriginalColor(){
-			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(this, thisOriginalColor);
+			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(
+				this, 
+				thisOriginalColor,
+				thisChangeColorTime
+			);
 			process.Run();
 			SetRunningTurnColorProcess(process);
 		}
 		public void TurnToSelectableBrightness(){
-			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(this, thisDefaultColor);
+			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(
+				this, 
+				thisDefaultColor,
+				thisChangeColorTime
+			);
 			process.Run();
 			SetRunningTurnColorProcess(process);
 		}
 		public void TurnToUnselectableBrightness(){
-			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(this, thisDarkenedColor);
+			IImageColorTurnProcess process = thisProcessFactory.CreateGenericImageColorTurnProcess(
+				this, 
+				thisDarkenedColor,
+				thisChangeColorTime
+			);
 			process.Run();
 			SetRunningTurnColorProcess(process);
 		}

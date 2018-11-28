@@ -40,6 +40,7 @@ namespace AppleShooterProto{
 		Vector3 GetFlightDirection();
 		float GetFlightGravity();
 		Vector3 GetLauncherVelocity();
+		float GetFlightTime();
 
 		void SpawnLandedArrowOn(
 			IShootingTarget target,
@@ -69,6 +70,8 @@ namespace AppleShooterProto{
 				thisGlobalMaxAttack = arg.globalMaxArrowAttack;
 				thisGlobalMinFlightSpeed = arg.globalMinFlightSpeed;
 				thisGlobalMaxFlightSpeed = arg.globalMaxFlightSpeed;
+
+				thisFlightTime = arg.flightTime;
 			}
 			IShootingManagerAdaptor thisTypedAdaptor{
 				get{
@@ -185,6 +188,11 @@ namespace AppleShooterProto{
 						thisDrawStrength
 					);
 					return result;
+				}
+			/*  */
+				readonly float thisFlightTime;
+				public float GetFlightTime(){
+					return thisFlightTime;
 				}
 			/*  */
 			public void HoldDraw(){
@@ -334,6 +342,8 @@ namespace AppleShooterProto{
 				float globalMaxArrowAttack{get;}
 				float globalMinFlightSpeed{get;}
 				float globalMaxFlightSpeed{get;}
+
+				float flightTime{get;}
 			}
 			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
@@ -352,7 +362,9 @@ namespace AppleShooterProto{
 					float globalMinArrowAttack,
 					float globalMaxArrowAttack,
 					float globalMinFlightSpeed,
-					float globalMaxFlightSpeed
+					float globalMaxFlightSpeed,
+
+					float flightTime
 				): base(
 					adaptor
 				){
@@ -371,6 +383,8 @@ namespace AppleShooterProto{
 					thisGlobalMaxArrowAttack = globalMaxArrowAttack;
 					thisGlobalMinFlightSpeed = globalMinFlightSpeed;
 					thisGlobalMaxFlightSpeed = globalMaxFlightSpeed;
+
+					thisFlightTime = flightTime;
 				}
 				readonly int thisDrawProcessOrder;
 				public int drawProcessOrder{get{return thisDrawProcessOrder;}}
@@ -399,6 +413,9 @@ namespace AppleShooterProto{
 				public float globalMinFlightSpeed{get{return thisGlobalMinFlightSpeed;}}
 				readonly float thisGlobalMaxFlightSpeed;
 				public float globalMaxFlightSpeed{get{return thisGlobalMaxFlightSpeed;}}
+
+				readonly float thisFlightTime;
+				public float flightTime{get{return thisFlightTime;}}
 			}
 		/*  */
 	}

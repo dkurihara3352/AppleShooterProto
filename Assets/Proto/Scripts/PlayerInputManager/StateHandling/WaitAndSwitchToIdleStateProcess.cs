@@ -9,7 +9,7 @@ namespace AppleShooterProto{
 	}
 	public class WaitAndSwitchToIdleStateProcess: AbsConstrainedProcess, IWaitAndSwitchToIdleStateProcess{
 		public WaitAndSwitchToIdleStateProcess(
-			IWaitAndSwitchToIdleStateProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -19,26 +19,27 @@ namespace AppleShooterProto{
 		protected override void ExpireImple(){
 			thisEngine.SwitchToIdleState();
 		}
-	}
 
-	public interface IWaitAndSwitchToIdleStateProcessConstArg: IConstrainedProcessConstArg{
-		IPlayerInputStateEngine engine{get;}
-	}
-	public class WaitAndSwitchToIdleStateProcessCosntArg: ConstrainedProcessConstArg, IWaitAndSwitchToIdleStateProcessConstArg{
-		public WaitAndSwitchToIdleStateProcessCosntArg(
-			IProcessManager processManager,
-			float expireTime,
 
-			IPlayerInputStateEngine engine
-
-		): base(
-			processManager,
-			ProcessConstraint.ExpireTime,
-			expireTime
-		){
-			thisEngine = engine;
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
+			IPlayerInputStateEngine engine{get;}
 		}
-		readonly IPlayerInputStateEngine thisEngine;
-		public IPlayerInputStateEngine engine{get{return thisEngine;}}
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				float expireTime,
+
+				IPlayerInputStateEngine engine
+
+			): base(
+				processManager,
+				ProcessConstraint.ExpireTime,
+				expireTime
+			){
+				thisEngine = engine;
+			}
+			readonly IPlayerInputStateEngine thisEngine;
+			public IPlayerInputStateEngine engine{get{return thisEngine;}}
+		}
 	}
 }

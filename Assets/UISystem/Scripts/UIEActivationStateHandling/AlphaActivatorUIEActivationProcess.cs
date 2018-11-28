@@ -8,7 +8,7 @@ namespace UISystem{
 	}
 	public class AlphaActivatorUIEActivationProcess: AbsInterpolatorProcess<IGroupAlphaInterpolator>, IAlphaActivatorUIEActivationProcess{
 		public AlphaActivatorUIEActivationProcess(
-			IAlphaActivatorUIEActivationProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -48,36 +48,36 @@ namespace UISystem{
 			else
 				thisEngine.SetToDeactivationCompletedState();
 		}
-	}
-	public interface IAlphaActivatorUIEActivationProcessConstArg: IInterpolatorProcesssConstArg{
-		IUIEActivationStateEngine engine{get;}
-		IUIElement uiElement{get;}
-		bool doesActivate{get;}
-	}
-	public class AlphaActivatorUIEActivationProcessConstArg: InterpolatorProcessConstArg, IAlphaActivatorUIEActivationProcessConstArg{
-		public AlphaActivatorUIEActivationProcessConstArg(
-			IProcessManager processManager,
-			float expireTime,
-
-			IUIEActivationStateEngine engine,
-			IUIElement uiElement,
-			bool doesActivate
-		): base(
-			processManager,
-			ProcessConstraint.ExpireTime,
-			expireTime,
-			false
-		){
-			thisEngine = engine;
-			thisUIElement = uiElement;
-			thisDoesActivate = doesActivate;
+		public new interface IConstArg: AbsInterpolatorProcess<IGroupAlphaInterpolator>.IConstArg{
+			IUIEActivationStateEngine engine{get;}
+			IUIElement uiElement{get;}
+			bool doesActivate{get;}
 		}
-		readonly IUIEActivationStateEngine thisEngine;
-		public IUIEActivationStateEngine engine{get{return thisEngine;}}
-		readonly IUIElement thisUIElement;
-		public IUIElement uiElement{get{return thisUIElement;}}
-		readonly bool thisDoesActivate;
-		public bool doesActivate{get{return thisDoesActivate;}}
+		public new class ConstArg: AbsInterpolatorProcess<IGroupAlphaInterpolator>.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				float expireTime,
+
+				IUIEActivationStateEngine engine,
+				IUIElement uiElement,
+				bool doesActivate
+			): base(
+				processManager,
+				ProcessConstraint.ExpireTime,
+				expireTime,
+				false
+			){
+				thisEngine = engine;
+				thisUIElement = uiElement;
+				thisDoesActivate = doesActivate;
+			}
+			readonly IUIEActivationStateEngine thisEngine;
+			public IUIEActivationStateEngine engine{get{return thisEngine;}}
+			readonly IUIElement thisUIElement;
+			public IUIElement uiElement{get{return thisUIElement;}}
+			readonly bool thisDoesActivate;
+			public bool doesActivate{get{return thisDoesActivate;}}
+		}
 	}
 }
 

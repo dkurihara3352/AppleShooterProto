@@ -28,11 +28,11 @@ namespace AppleShooterProto{
 
 
 
-		public interface IConstArg: IConstrainedProcessConstArg{
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
 			IFollowWaypointProcess followProcess{get;}
 			AnimationCurve speedCurve{get;}
 		}
-		public class ConstArg: ConstrainedProcessConstArg, IConstArg{
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				float time,

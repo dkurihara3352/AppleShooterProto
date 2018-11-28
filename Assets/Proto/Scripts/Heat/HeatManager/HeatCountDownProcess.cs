@@ -29,23 +29,20 @@ namespace AppleShooterProto{
 			}
 		}
 
-		public interface IConstArg: IProcessConstArg{
+		public new interface IConstArg: AbsProcess.IConstArg{
 			IHeatManagerStateEngine heatManagerStateEngine{get;}
 			float heatDecayRate{get;}
 		}
-		public struct ConstArg: IConstArg{
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				IHeatManagerStateEngine heatManagerStateEngine,
 				float heatDecayRate
+			): base(
+				processManager
 			){
-				thisProcessManager = processManager;
 				thisHeatManagerStateEngine = heatManagerStateEngine;
 				thisHeatDecayRate = heatDecayRate;
-			}
-			readonly IProcessManager thisProcessManager;
-			public IProcessManager processManager{
-				get{return thisProcessManager;}
 			}
 			readonly IHeatManagerStateEngine thisHeatManagerStateEngine;
 			public IHeatManagerStateEngine heatManagerStateEngine{

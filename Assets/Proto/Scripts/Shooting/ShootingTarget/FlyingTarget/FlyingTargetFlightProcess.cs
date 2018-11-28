@@ -69,13 +69,13 @@ namespace AppleShooterProto{
 			return thisMaxSpeed * dot;
 		}
 		/*  */
-		public interface IConstArg: IProcessConstArg{
+		public new interface IConstArg: AbsProcess.IConstArg{
 			IFlyingTarget flyingTarget{get;}
 			Vector3 initialVelocity{get;}
 			float distanceThreshold{get;}
 			float speed{get;}
 		}
-		public class ConstArg: ProcessConstArg, IConstArg{
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IFlyingTarget flyingTarget,
 				Vector3 initialVelocity,

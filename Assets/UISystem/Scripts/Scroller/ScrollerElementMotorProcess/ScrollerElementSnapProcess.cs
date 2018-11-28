@@ -8,7 +8,7 @@ namespace UISystem{
 	public interface IScrollerElementSnapProcess: IScrollerElementMotorProcess{}
 	public class ScrollerElementSnapProcess: AbsScrollerElementMotorProcess, IScrollerElementSnapProcess{
 		public ScrollerElementSnapProcess(
-			IScrollerElementSnapProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -20,7 +20,7 @@ namespace UISystem{
 			float initialElementLocalPosOnAxis = scrollerElement.GetLocalPosition()[dimension];
 			thisTargetElementLocalPositionOnAxis = targetElementLocalPositionOnAxis;
 
-			float springCoefficient = thisProcessManager.GetScrollerElementSnapSpringCoefficient();
+			float springCoefficient = 10f;
 			thisSpringCalculator = new RealTimeCriticallyDampedSpringCalculator(initialElementLocalPosOnAxis, targetElementLocalPositionOnAxis, initialVelOnAxis, springCoefficient);
 			
 			prevLocalPosOnAxis = scrollerElement.GetLocalPosition()[dimension];
@@ -64,37 +64,34 @@ namespace UISystem{
 			thisScroller.SetScrollerElementLocalPosOnAxis(thisTargetElementLocalPositionOnAxis, thisDimension);
 			thisScroller.UpdateVelocity(0f, thisDimension);
 		}
-	}
-	public interface IScrollerElementSnapProcessConstArg: IScrollerElementMotorProcessConstArg{
-		float targetElementLocalPositionOnAxis{get;}
-		float initialVelocityOnAxis{get;}
-		float stopVelocity{get;}
-	}
-	public class ScrollerElementSnapProcessConstArg: ScrollerElementMotorProcessConstArg, IScrollerElementSnapProcessConstArg{
-		public ScrollerElementSnapProcessConstArg(
-			IProcessManager processManager,
-			IUIElement scrollerElement,
-			IScroller scroller,
-			int dimension,
 
-			float targetElementLocalPositionOnAxis,
-			float initialVelocityOnAxis,
-			float stopVelocity
-		): base(
-			processManager,
-			scroller,
-			scrollerElement,
-			dimension
-		){
-			thisTargetElementLocalPositionOnAxis = targetElementLocalPositionOnAxis;
-			thisInitialVelocityOnAxis = initialVelocityOnAxis;
-			thisStopVelocity = stopVelocity;
+
+		public new interface IConstArg: AbsScrollerElementMotorProcess.IConstArg{
+			float targetElementLocalPositionOnAxis{get;}
+			float initialVelocityOnAxis{get;}
 		}
-		readonly float thisTargetElementLocalPositionOnAxis;
-		public float targetElementLocalPositionOnAxis{get{return thisTargetElementLocalPositionOnAxis;}}
-		readonly float thisInitialVelocityOnAxis;
-		public float initialVelocityOnAxis{get{return thisInitialVelocityOnAxis;}}
-		readonly float thisStopVelocity;
-		public float stopVelocity{get{return thisStopVelocity;}}
+		public new class ConstArg: AbsScrollerElementMotorProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				IUIElement scrollerElement,
+				IScroller scroller,
+				int dimension,
+
+				float targetElementLocalPositionOnAxis,
+				float initialVelocityOnAxis
+			): base(
+				processManager,
+				scroller,
+				scrollerElement,
+				dimension
+			){
+				thisTargetElementLocalPositionOnAxis = targetElementLocalPositionOnAxis;
+				thisInitialVelocityOnAxis = initialVelocityOnAxis;
+			}
+			readonly float thisTargetElementLocalPositionOnAxis;
+			public float targetElementLocalPositionOnAxis{get{return thisTargetElementLocalPositionOnAxis;}}
+			readonly float thisInitialVelocityOnAxis;
+			public float initialVelocityOnAxis{get{return thisInitialVelocityOnAxis;}}
+		}
 	}
 }

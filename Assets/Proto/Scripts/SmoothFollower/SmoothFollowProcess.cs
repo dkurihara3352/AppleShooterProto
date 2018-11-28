@@ -9,7 +9,7 @@ namespace AppleShooterProto{
 	}
 	public class SmoothFollowTargetProcess : AbsProcess, ISmoothFollowTargetProcess {
 		public SmoothFollowTargetProcess(
-			ISmoothFollowTargetProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -55,39 +55,41 @@ namespace AppleShooterProto{
 		public void UpdateFollowTarget(IMonoBehaviourAdaptor newTarget){
 			thisTarget = newTarget;
 		}
-	}
 
 
-	public interface ISmoothFollowTargetProcessConstArg: IProcessConstArg{
-		ISmoothFollower smoothFollower{get;}
-		IMonoBehaviourAdaptor target{get;}
-		float smoothCoefficient{get;}
-		int processOrder{get;}
-	}
-	public class SmoothFollowTargetProcessConstArg: ProcessConstArg, ISmoothFollowTargetProcessConstArg{
-		public SmoothFollowTargetProcessConstArg(
-			IProcessManager processManager,
-
-			ISmoothFollower smoothFollower,
-			IMonoBehaviourAdaptor target,
-			float smoothCoefficient,
-			int processOrder
-
-		): base(
-			processManager
-		){
-			thisFollower = smoothFollower;
-			thisTarget = target;
-			thisSmoothCoefficient = smoothCoefficient;
-			thisProcessOrder = processOrder;
+		public new interface IConstArg: AbsProcess.IConstArg{
+			ISmoothFollower smoothFollower{get;}
+			IMonoBehaviourAdaptor target{get;}
+			float smoothCoefficient{get;}
+			int processOrder{get;}
 		}
-		readonly ISmoothFollower thisFollower;
-		public ISmoothFollower smoothFollower{get{return thisFollower;}}
-		readonly IMonoBehaviourAdaptor thisTarget;
-		public IMonoBehaviourAdaptor target{get{return thisTarget;}}
-		readonly float thisSmoothCoefficient;
-		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+
+				ISmoothFollower smoothFollower,
+				IMonoBehaviourAdaptor target,
+				float smoothCoefficient,
+				int processOrder
+
+			): base(
+				processManager
+			){
+				thisFollower = smoothFollower;
+				thisTarget = target;
+				thisSmoothCoefficient = smoothCoefficient;
+				thisProcessOrder = processOrder;
+			}
+			readonly ISmoothFollower thisFollower;
+			public ISmoothFollower smoothFollower{get{return thisFollower;}}
+			readonly IMonoBehaviourAdaptor thisTarget;
+			public IMonoBehaviourAdaptor target{get{return thisTarget;}}
+			readonly float thisSmoothCoefficient;
+			public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+		}
 	}
+
+
 }

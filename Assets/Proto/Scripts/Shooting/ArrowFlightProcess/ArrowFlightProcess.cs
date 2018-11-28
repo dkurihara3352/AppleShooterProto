@@ -8,7 +8,7 @@ namespace AppleShooterProto{
 	public class ArrowFlightProcess : AbsConstrainedProcess, IArrowFlightProcess {
 
 		public ArrowFlightProcess(
-			IArrowFlightProcessConstArg arg
+			IConstArg arg
 		): base(arg){
 			thisArrow = arg.arrow;
 			thisFlightSpeed = arg.flightSpeed;
@@ -55,51 +55,54 @@ namespace AppleShooterProto{
 		public override int GetProcessOrder(){
 			return 200;
 		}
-	}
 
 
-
-	public interface IArrowFlightProcessConstArg: IConstrainedProcessConstArg{
-		IArrow arrow{get;}
-		float flightSpeed{get;}
-		Vector3 flightDirection{get;}
-		float flightGravity{get;}
-		Vector3 launcherVelocity{get;}
-		Vector3 launchPosition{get;}
-	}
-	public class ArrowFlightProcessConstArg: ConstrainedProcessConstArg, IArrowFlightProcessConstArg{
-		public ArrowFlightProcessConstArg(
-			IArrow arrow,
-			float flightSpeed,
-			Vector3 flightDirection,
-			float flightGravity,
-			Vector3 launcherVelocity,
-			Vector3 launchPosition,
-
-			IProcessManager processManager
-		):base(
-			processManager,
-			ProcessConstraint.ExpireTime,
-			processManager.GetArrowFlightExpireTime()
-		){
-			thisArrow = arrow;
-			thisFlightSpeed = flightSpeed;
-			thisFlightDirection = flightDirection;
-			thisFlightGravity = flightGravity;
-			thisLauncherVelocity = launcherVelocity;
-			thisLaunchPosition = launchPosition;
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
+			IArrow arrow{get;}
+			float flightSpeed{get;}
+			Vector3 flightDirection{get;}
+			float flightGravity{get;}
+			Vector3 launcherVelocity{get;}
+			Vector3 launchPosition{get;}
 		}
-		readonly IArrow thisArrow;
-		public IArrow arrow{get{return thisArrow;}}
-		readonly float thisFlightSpeed;
-		public float flightSpeed{get{return thisFlightSpeed;}}
-		readonly Vector3 thisFlightDirection;
-		public Vector3 flightDirection{get{return thisFlightDirection;}}
-		readonly float thisFlightGravity;
-		public float flightGravity{get{return thisFlightGravity;}}
-		readonly Vector3 thisLauncherVelocity;
-		public Vector3 launcherVelocity{get{return thisLauncherVelocity;}}
-		readonly Vector3 thisLaunchPosition;
-		public Vector3 launchPosition{get{return thisLaunchPosition;}}
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IArrow arrow,
+				float flightSpeed,
+				Vector3 flightDirection,
+				float flightGravity,
+				Vector3 launcherVelocity,
+				Vector3 launchPosition,
+
+				IProcessManager processManager,
+				float flightTime//4
+			):base(
+				processManager,
+				ProcessConstraint.ExpireTime,
+				flightTime
+			){
+				thisArrow = arrow;
+				thisFlightSpeed = flightSpeed;
+				thisFlightDirection = flightDirection;
+				thisFlightGravity = flightGravity;
+				thisLauncherVelocity = launcherVelocity;
+				thisLaunchPosition = launchPosition;
+			}
+			readonly IArrow thisArrow;
+			public IArrow arrow{get{return thisArrow;}}
+			readonly float thisFlightSpeed;
+			public float flightSpeed{get{return thisFlightSpeed;}}
+			readonly Vector3 thisFlightDirection;
+			public Vector3 flightDirection{get{return thisFlightDirection;}}
+			readonly float thisFlightGravity;
+			public float flightGravity{get{return thisFlightGravity;}}
+			readonly Vector3 thisLauncherVelocity;
+			public Vector3 launcherVelocity{get{return thisLauncherVelocity;}}
+			readonly Vector3 thisLaunchPosition;
+			public Vector3 launchPosition{get{return thisLaunchPosition;}}
+		}
 	}
+
+
+
 }

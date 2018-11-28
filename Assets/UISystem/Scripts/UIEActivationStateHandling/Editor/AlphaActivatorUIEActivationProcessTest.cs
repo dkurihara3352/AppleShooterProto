@@ -11,7 +11,7 @@ using DKUtility;
 public class AlphaActivatorUIEActivationProcessTest{
     [Test][TestCaseSource(typeof(GetLatestInitialValueDifference_TestCase), "cases")]
     public void GetLatestInitialValueDifference_Various(float currentGroupAlpha, bool doesActivate, float expectedValueDifference){
-        IAlphaActivatorUIEActivationProcessConstArg arg = CreateMockConstArg();
+        TestAlphaActivatorUIEActivationProcess.IConstArg arg = CreateMockConstArg();
         arg.doesActivate.Returns(doesActivate);
         IUIAdaptor uia = Substitute.For<IUIAdaptor>();
         uia.GetGroupAlpha().Returns(currentGroupAlpha);
@@ -41,7 +41,7 @@ public class AlphaActivatorUIEActivationProcessTest{
     }
     public class TestAlphaActivatorUIEActivationProcess: AlphaActivatorUIEActivationProcess{
         public TestAlphaActivatorUIEActivationProcess(
-            IAlphaActivatorUIEActivationProcessConstArg arg
+            IConstArg arg
         ): base(
             arg
         ){}
@@ -49,9 +49,10 @@ public class AlphaActivatorUIEActivationProcessTest{
         public float GetLatestInitialValueDifference_Test(){
             return this.GetLatestInitialValueDifference();
         }
+        public new interface IConstArg: AlphaActivatorUIEActivationProcess.IConstArg{}
     }
-    public IAlphaActivatorUIEActivationProcessConstArg CreateMockConstArg(){
-        IAlphaActivatorUIEActivationProcessConstArg arg = Substitute.For<IAlphaActivatorUIEActivationProcessConstArg>();
+    public TestAlphaActivatorUIEActivationProcess.IConstArg CreateMockConstArg(){
+        TestAlphaActivatorUIEActivationProcess.IConstArg arg = Substitute.For<TestAlphaActivatorUIEActivationProcess.IConstArg>();
         arg.processManager.Returns(Substitute.For<IProcessManager>());
         arg.processConstraint.Returns(ProcessConstraint.ExpireTime);
         arg.constraintValue.Returns(1f);

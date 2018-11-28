@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UISystem{
 	public interface IUIAWaitForTapProcess: IUIAdaptorInputProcess{}
 	public class UIAWaitForTapProcess : AbsUIAdaptorInputProcess, IUIAWaitForTapProcess {
-		public UIAWaitForTapProcess(IUIAdaptorInputProcessConstArg arg): base(arg){
+		public UIAWaitForTapProcess(IConstArg arg): base(arg){
 
 		}
 		IWaitingForTapState typedState{
@@ -23,14 +23,14 @@ namespace UISystem{
 	}
 	public interface IUIAWaitForReleaseProcess: IUIAdaptorInputProcess{}
 	public class UIAWaitForReleaseProcess: AbsUIAdaptorInputProcess, IUIAWaitForReleaseProcess{
-		public UIAWaitForReleaseProcess(IUIAdaptorInputProcessConstArg arg): base(arg){}
+		public UIAWaitForReleaseProcess(IConstArg arg): base(arg){}
 		protected override void UpdateProcessImple(float deltaT){
 			thisEngine.HoldUIE(deltaT);
 		}
 	}
 	public interface IUIAWaitForNextTouchProcess: IUIAdaptorInputProcess{}
 	public class UIAWaitForNextTouchProcess: AbsUIAdaptorInputProcess, IUIAWaitForNextTouchProcess{
-		public UIAWaitForNextTouchProcess(IUIAdaptorInputProcessConstArg arg): base(arg){}
+		public UIAWaitForNextTouchProcess(IConstArg arg): base(arg){}
 		protected override void ExpireImple(){
 			thisEngine.WaitForFirstTouch();
 			thisEngine.DelayedReleaseUIE();

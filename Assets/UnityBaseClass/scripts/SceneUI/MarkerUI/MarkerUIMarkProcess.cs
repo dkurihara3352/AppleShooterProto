@@ -20,10 +20,10 @@ namespace UnityBase{
 		protected override void StopImple(){
 		}
 		/* constArg */
-			public interface IConstArg: IProcessConstArg{
+			public new interface IConstArg: AbsProcess.IConstArg{
 				ISceneUI sceneUI{get;}
 			}
-			public class ConstArg: ProcessConstArg, IConstArg{
+			public new class ConstArg: AbsProcess.ConstArg, IConstArg{
 				public ConstArg(
 					ISceneUI sceneUI,
 					IProcessManager processManager

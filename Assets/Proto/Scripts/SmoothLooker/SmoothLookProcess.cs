@@ -10,7 +10,7 @@ namespace AppleShooterProto{
 	}
 	public class SmoothLookProcess : AbsProcess, ISmoothLookProcess{
 		public SmoothLookProcess(
-			ISmoothLookProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -55,36 +55,39 @@ namespace AppleShooterProto{
 		public override int GetProcessOrder(){
 			return thisProcessOrder;
 		}
-	}
-	public interface ISmoothLookProcessConstArg: IProcessConstArg{
-		IMonoBehaviourAdaptor target{get;}
-		ISmoothLooker smoothLooker{get;}
-		float smoothCoefficient{get;}
-		int processOrder{get;}
-	}
-	public class SmoothLookProcessConstArg: ProcessConstArg, ISmoothLookProcessConstArg{
-		public SmoothLookProcessConstArg(
-			IProcessManager processManager,
-
-			IMonoBehaviourAdaptor target,
-			ISmoothLooker looker,
-			float smoothCoefficient,
-			int processOrder
-		): base(
-			processManager
-		){
-			thisTarget = target;
-			thisSmoothLooker = looker;
-			thisSmoothCoefficient = smoothCoefficient;
-			thisProcessOrder = processOrder;
+		public new interface IConstArg: AbsProcess.IConstArg{
+			IMonoBehaviourAdaptor target{get;}
+			ISmoothLooker smoothLooker{get;}
+			float smoothCoefficient{get;}
+			int processOrder{get;}
 		}
-		readonly IMonoBehaviourAdaptor thisTarget;
-		public IMonoBehaviourAdaptor target{get{return thisTarget;}}
-		readonly ISmoothLooker thisSmoothLooker;
-		public ISmoothLooker smoothLooker{get{return thisSmoothLooker;}}
-		readonly float thisSmoothCoefficient;
-		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+
+				IMonoBehaviourAdaptor target,
+				ISmoothLooker looker,
+				float smoothCoefficient,
+				int processOrder
+			): base(
+				processManager
+			){
+				thisTarget = target;
+				thisSmoothLooker = looker;
+				thisSmoothCoefficient = smoothCoefficient;
+				thisProcessOrder = processOrder;
+			}
+			readonly IMonoBehaviourAdaptor thisTarget;
+			public IMonoBehaviourAdaptor target{get{return thisTarget;}}
+			readonly ISmoothLooker thisSmoothLooker;
+			public ISmoothLooker smoothLooker{get{return thisSmoothLooker;}}
+			readonly float thisSmoothCoefficient;
+			public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+		}
 	}
+
+
+
 }

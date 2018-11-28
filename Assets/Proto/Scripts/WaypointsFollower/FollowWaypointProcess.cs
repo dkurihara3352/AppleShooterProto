@@ -11,7 +11,7 @@ namespace AppleShooterProto{
 	}
 	public class FollowWaypointProcess: AbsProcess, IFollowWaypointProcess{
 		public FollowWaypointProcess(
-			IFollowWaypointProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -24,8 +24,6 @@ namespace AppleShooterProto{
 				arg.initialCurve,
 				arg.initialTime
 			);
-			// if(thisCycleManager != null)
-			// 	thisWaypointEventManager.SetNewCurve(arg.initialCurve);
 		}
 		readonly IWaypointsFollower thisFollower;
 		readonly float thisSpeed;
@@ -116,54 +114,55 @@ namespace AppleShooterProto{
 		public float GetNormalizedPositionOnCurve(){
 			return thisTotalElapsedTimeOnCurrentCurve/ thisRequiredTimeForCurrentCurve;
 		}
+
+
+		public new interface IConstArg: AbsProcess.IConstArg{
+			IWaypointsFollower follower{get;}
+			float speed{get;}
+			int processOrder{get;}
+			IWaypointCurve initialCurve{get;}
+			IWaypointCurveCycleManager cycleManager{get;}
+			float initialTime{get;}
+		}
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				IWaypointsFollower follwer,
+				float speed,
+				int processOrder,
+				IWaypointCurve initialCurve,
+				IWaypointCurveCycleManager waypointsManager,
+
+				float initialTime
+			): base(
+				processManager
+			){
+				thisFollower = follwer;
+				thisSpeed = speed;
+				thisProcessOrder = processOrder;
+				thisInitialCurve = initialCurve;
+				thisWaypointsManager = waypointsManager;
+
+				thisInitialTime = initialTime;
+			}
+			readonly IWaypointsFollower thisFollower;
+			public IWaypointsFollower follower{get{return thisFollower;}}
+			readonly float thisSpeed;
+			public float speed{get{return thisSpeed;}}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+			readonly IWaypointCurve thisInitialCurve;
+			public IWaypointCurve initialCurve{
+				get{return thisInitialCurve;}
+			}
+			readonly IWaypointCurveCycleManager thisWaypointsManager;
+			public IWaypointCurveCycleManager cycleManager{get{return thisWaypointsManager;}}
+
+			readonly float thisInitialTime;
+			public float initialTime{get{return thisInitialTime;}}
+		}
 	}
 
 	
-	public interface IFollowWaypointProcessConstArg: IProcessConstArg{
-		IWaypointsFollower follower{get;}
-		float speed{get;}
-		int processOrder{get;}
-		IWaypointCurve initialCurve{get;}
-		IWaypointCurveCycleManager cycleManager{get;}
-		float initialTime{get;}
-	}
-	public struct FollowWaypointProcessConstArg: IFollowWaypointProcessConstArg{
-		public FollowWaypointProcessConstArg(
-			IProcessManager processManager,
-			IWaypointsFollower follwer,
-			float speed,
-			int processOrder,
-			IWaypointCurve initialCurve,
-			IWaypointCurveCycleManager waypointsManager,
-
-			float initialTime
-		){
-			thisProcessManager = processManager;
-			thisFollower = follwer;
-			thisSpeed = speed;
-			thisProcessOrder = processOrder;
-			thisInitialCurve = initialCurve;
-			thisWaypointsManager = waypointsManager;
-
-			thisInitialTime = initialTime;
-		}
-		readonly IProcessManager thisProcessManager;
-		public IProcessManager processManager{get{return thisProcessManager;}}
-		readonly IWaypointsFollower thisFollower;
-		public IWaypointsFollower follower{get{return thisFollower;}}
-		readonly float thisSpeed;
-		public float speed{get{return thisSpeed;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
-		readonly IWaypointCurve thisInitialCurve;
-		public IWaypointCurve initialCurve{
-			get{return thisInitialCurve;}
-		}
-		readonly IWaypointCurveCycleManager thisWaypointsManager;
-		public IWaypointCurveCycleManager cycleManager{get{return thisWaypointsManager;}}
-
-		readonly float thisInitialTime;
-		public float initialTime{get{return thisInitialTime;}}
-	}
 	
 }

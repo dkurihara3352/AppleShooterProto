@@ -48,11 +48,11 @@ namespace UISystem{
 		}
 
 
-		public interface IConstArg: IConstrainedProcessConstArg{
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
 			IPopUpStateEngine engine{get;}
 			bool hides{get;}
 		}
-		public class ConstArg: ConstrainedProcessConstArg, IConstArg{
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				float expireTime,
@@ -74,9 +74,4 @@ namespace UISystem{
 			public IPopUpStateEngine engine{get{return thisEngine;}}
 		}
 	}
-
-
-
-
-
 }

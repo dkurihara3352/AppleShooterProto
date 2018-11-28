@@ -9,7 +9,7 @@ namespace UISystem{
 	public interface INonActivatorUIEActivationProcess: IUIEActivationProcess{}
 	public class NonActivatorUIEActivationProcess: GenericWaitAndExpireProcess, INonActivatorUIEActivationProcess{
 		public NonActivatorUIEActivationProcess(
-			INonActivatorUIEActivationProcessConstArg arg
+			IConstArg arg
 		): 
 		base(
 			arg
@@ -25,28 +25,30 @@ namespace UISystem{
 			else
 				thisEngine.SetToDeactivationCompletedState();
 		}
-	}
-	public interface INonActivatorUIEActivationProcessConstArg: IGenericWaitAndExpireProcessConstArg{
-		IUIEActivationStateEngine engine{get;}
-		bool doesActivate{get;}
-	}
-	public class NonActivatorUIEActivationProcessConstArg: GenericWaitAndExpireProcessConstArg, INonActivatorUIEActivationProcessConstArg{
-		public NonActivatorUIEActivationProcessConstArg(
-			IProcessManager processManager,
-			float expireT,
 
-			IUIEActivationStateEngine engine,
-			bool doesActivate
-		): base(
-			processManager,
-			expireT
-		){
-			thisEngine = engine;
-			thisDoesActivate = doesActivate;
+		public new interface IConstArg: GenericWaitAndExpireProcess.IConstArg{
+			IUIEActivationStateEngine engine{get;}
+			bool doesActivate{get;}
 		}
-		readonly IUIEActivationStateEngine thisEngine;
-		public IUIEActivationStateEngine engine{get{return thisEngine;}}
-		readonly bool thisDoesActivate;
-		public bool doesActivate{get{return thisDoesActivate;}}
+		public new class ConstArg: GenericWaitAndExpireProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				float expireT,
+
+				IUIEActivationStateEngine engine,
+				bool doesActivate
+			): base(
+				processManager,
+				ProcessConstraint.none,
+				expireT
+			){
+				thisEngine = engine;
+				thisDoesActivate = doesActivate;
+			}
+			readonly IUIEActivationStateEngine thisEngine;
+			public IUIEActivationStateEngine engine{get{return thisEngine;}}
+			readonly bool thisDoesActivate;
+			public bool doesActivate{get{return thisDoesActivate;}}
+		}
 	}
 }

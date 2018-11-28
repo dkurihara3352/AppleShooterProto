@@ -8,7 +8,8 @@ namespace UISystem{
 	public interface IUISystemProcessFactory: IUnityBaseProcessFactory{
 		IUIAWaitForTapProcess CreateUIAWaitForTapProcess(
 			IWaitingForTapState state,
-			IUIAdaptorInputStateEngine engine
+			IUIAdaptorInputStateEngine engine,
+			float waitTime
 		);
 		IUIAWaitForReleaseProcess CreateUIAWaitForReleaseProcess(
 			IWaitingForReleaseState state,
@@ -16,24 +17,19 @@ namespace UISystem{
 		);
 		IUIAWaitForNextTouchProcess CreateUIAWaitForNextTouchProcess(
 			IWaitingForNextTouchState state,
-			IUIAdaptorInputStateEngine engine
-		);
-		IIncrementalQuantityAnimationProcess CreateIncrementalQuantityAnimationProcess(
-			IQuantityRoller quantityRoller, 
-			int targetQuantity
-		);
-		IOneshotQuantityAnimationProcess CreateOneshotQuantityAnimationProcess(
-			IQuantityRoller quantityRoller, 
-			int targetQuantity
+			IUIAdaptorInputStateEngine engine,
+			float waitTime
 		);
 		IAlphaActivatorUIEActivationProcess CreateAlphaActivatorUIEActivationProcess(
 			IUIElement uiElement, 
 			IUIEActivationStateEngine engine, 
-			bool doesActivate
+			bool doesActivate,
+			float expireTime
 		);
 		INonActivatorUIEActivationProcess CreateNonActivatorUIEActivationProcess(
 			IUIEActivationStateEngine engine, 
-			bool doesActivate
+			bool doesActivate,
+			float expireTime
 		);
 		IScrollerElementSnapProcess CreateScrollerElementSnapProcess(
 			IScroller scroller, 
@@ -47,15 +43,18 @@ namespace UISystem{
 			float decelerationOnAxis, 
 			IScroller scroller, 
 			IUIElement scrollerElement, 
-			int dimension
+			int dimension,
+			float inertiaDecay
 		);
 		IImageColorTurnProcess CreateGenericImageColorTurnProcess(
 			IUIImage uiImage, 
-			Color targetColor
+			Color targetColor,
+			float time
 		);
 		IImageColorTurnProcess CreateFalshColorProcess(
 			IUIImage uiImage, 
-			Color targetColor
+			Color targetColor,
+			float time
 		);
 		IAlphaPopUpProcess CreateAlphaPopUpProcess(
 			IPopUpStateEngine engine,
@@ -70,14 +69,9 @@ namespace UISystem{
 		): base(
 			procManager
 		){
-			// if(uim != null)
-			// 	thisUIManager = uim;
-			// else
-			// 	throw new System.ArgumentNullException("uim", "ProcessFactory does not operate without a uim");
-
+			
 			thisAdaptorManager = adaptorManager;
 		}
-		// protected readonly IUIManager thisUIManager;
 		readonly IUISystemMonoBehaviourAdaptorManager thisAdaptorManager;
 		IUIManager thisUIManager{
 			get{
@@ -87,12 +81,13 @@ namespace UISystem{
 
 		public IUIAWaitForTapProcess CreateUIAWaitForTapProcess(
 			IWaitingForTapState state,
-			IUIAdaptorInputStateEngine engine
+			IUIAdaptorInputStateEngine engine,
+			float waitTime//.5f
 		){
-			IUIAdaptorInputProcessConstArg arg = new UIADaptorInputProcessConstArg(
+			AbsUIAdaptorInputProcess.IConstArg arg = new AbsUIAdaptorInputProcess.ConstArg(
 				thisProcessManager,
 				ProcessConstraint.ExpireTime,
-				thisProcessManager.GetUIAWaitForTapProcessExpireTime(),
+				waitTime,
 				state,
 				engine
 			);
@@ -102,7 +97,7 @@ namespace UISystem{
 			IWaitingForReleaseState state,
 			IUIAdaptorInputStateEngine engine
 		){
-			IUIAdaptorInputProcessConstArg arg = new UIADaptorInputProcessConstArg(
+			UIAWaitForReleaseProcess.IConstArg arg = new UIAWaitForReleaseProcess.ConstArg(
 				thisProcessManager,
 				ProcessConstraint.none,
 				1f,
@@ -113,55 +108,28 @@ namespace UISystem{
 		}
 		public IUIAWaitForNextTouchProcess CreateUIAWaitForNextTouchProcess(
 			IWaitingForNextTouchState state,
-			IUIAdaptorInputStateEngine engine
+			IUIAdaptorInputStateEngine engine,
+			float waitTime//.5
 		){
-			IUIAdaptorInputProcessConstArg arg = new UIADaptorInputProcessConstArg(
+			AbsUIAdaptorInputProcess.IConstArg arg = new AbsUIAdaptorInputProcess.ConstArg(
 				thisProcessManager,
 				ProcessConstraint.ExpireTime,
-				thisProcessManager.GetUIAWaitForNextTouchProcessExpireTime(),
+				waitTime,
 				state,
 				engine
 			);
 			return new UIAWaitForNextTouchProcess(arg);
 		}
-		public IIncrementalQuantityAnimationProcess CreateIncrementalQuantityAnimationProcess(
-			IQuantityRoller quantityRoller, 
-			int targetQuantity
-		){
-			IQuantityAnimationProcessConstArg arg = new QuantityAnimationProcessConstArg(
-				thisProcessManager,
-				ProcessConstraint.ExpireTime,
-				thisProcessManager.GetQuantityAnimationProcessExpireTime(),
-				true,
-				targetQuantity,
-				quantityRoller
-			);
-			IncrementalQuantityAnimationProcess process = new IncrementalQuantityAnimationProcess(arg);
-			return process;
-		}
-		public IOneshotQuantityAnimationProcess CreateOneshotQuantityAnimationProcess(
-			IQuantityRoller quantityRoller, 
-			int targetQuantity
-		){
-			IQuantityAnimationProcessConstArg arg = new QuantityAnimationProcessConstArg(
-				thisProcessManager,
-				ProcessConstraint.ExpireTime,
-				thisProcessManager.GetQuantityAnimationProcessExpireTime(),
-				true,
-				targetQuantity,
-				quantityRoller
-			);
-			OneshotQuantityAnimationProcess process = new OneshotQuantityAnimationProcess(arg);
-			return process;
-		}
 		public IAlphaActivatorUIEActivationProcess CreateAlphaActivatorUIEActivationProcess(
 			IUIElement uiElement, 
 			IUIEActivationStateEngine engine, 
-			bool doesActivate
+			bool doesActivate,
+			float expireTime//.2
+
 		){
-			IAlphaActivatorUIEActivationProcessConstArg arg = new AlphaActivatorUIEActivationProcessConstArg(
+			AlphaActivatorUIEActivationProcess.IConstArg arg = new AlphaActivatorUIEActivationProcess.ConstArg(
 				thisProcessManager, 
-				thisProcessManager.GetAlphaActivatorUIEActivationProcessExpireT(), 
+				expireTime,
 
 				engine,
 				uiElement, 
@@ -174,11 +142,12 @@ namespace UISystem{
 		}
 		public INonActivatorUIEActivationProcess CreateNonActivatorUIEActivationProcess(
 			IUIEActivationStateEngine engine, 
-			bool doesActivate
+			bool doesActivate,
+			float expireTime//.2
 		){
-			INonActivatorUIEActivationProcessConstArg arg = new NonActivatorUIEActivationProcessConstArg(
+			NonActivatorUIEActivationProcess.IConstArg arg = new NonActivatorUIEActivationProcess.ConstArg(
 				thisProcessManager, 
-				thisProcessManager.GetNonActivatorUIEActivationProcessExpireT(),
+				expireTime,
 				engine,
 				doesActivate
 			);
@@ -194,16 +163,13 @@ namespace UISystem{
 			float initialVelOnAxis, 
 			int dimension
 		){
-			float diffThreshold = thisProcessManager.GetScrollerElementSnapProcessDiffThreshold();
-			float stopDelta = thisProcessManager.GetScrollerElementSnapProcessStopDelta();
-			IScrollerElementSnapProcessConstArg arg = new ScrollerElementSnapProcessConstArg(
+			ScrollerElementSnapProcess.IConstArg arg = new ScrollerElementSnapProcess.ConstArg(
 				thisProcessManager,
 				scrollerElement,
 				scroller,
 				dimension,
 				targetElementLocalPosOnAxis,
-				initialVelOnAxis,
-				stopDelta	
+				initialVelOnAxis
 			);
 			return new ScrollerElementSnapProcess(arg);
 		}
@@ -212,37 +178,42 @@ namespace UISystem{
 			float decelerationAxisFactor, 
 			IScroller scroller, 
 			IUIElement scrollerElement, 
-			int dimension
+			int dimension,
+			float inertiaDecay
 		){
-			float deceleration = thisProcessManager.GetInertialScrollDeceleration();
-			IInertialScrollProcessConstArg arg = new InertialScrollProcessConstArg(
+			InertialScrollProcess.IConstArg arg = new InertialScrollProcess.ConstArg(
 				thisProcessManager,
 				scroller,
 				scrollerElement,
 				dimension,
 				deltaPosOnAxis,
-				deceleration,
+				inertiaDecay,
 				decelerationAxisFactor
 			);
 			return new InertialScrollProcess(arg);
 		}
 		public IImageColorTurnProcess CreateGenericImageColorTurnProcess(
 			IUIImage uiImage, 
-			Color targetColor
+			Color targetColor,
+			float time//.1
 		){
-			IImageColorTurnProcessConstArg arg = new ImageColorTurnProcessConstArg(
+			GenericImageColorTurnProcess.IConstArg arg = new GenericImageColorTurnProcess.ConstArg(
 				thisProcessManager,
-				thisProcessManager.GetImageColorTurnProcessExpireTime(),
+				time,
 				uiImage,
 				targetColor,
 				false
 			);
 			return new GenericImageColorTurnProcess(arg);
 		}
-		public IImageColorTurnProcess CreateFalshColorProcess(IUIImage uiImage, Color targetColor){
-			IImageColorTurnProcessConstArg arg = new ImageColorTurnProcessConstArg(
+		public IImageColorTurnProcess CreateFalshColorProcess(
+			IUIImage uiImage, 
+			Color targetColor,
+			float time//.1
+		){
+			GenericImageColorTurnProcess.IConstArg arg = new GenericImageColorTurnProcess.ConstArg(
 				thisProcessManager,
-				thisProcessManager.GetImageColorTurnProcessExpireTime(),
+				time,
 				uiImage,
 				targetColor,
 				true

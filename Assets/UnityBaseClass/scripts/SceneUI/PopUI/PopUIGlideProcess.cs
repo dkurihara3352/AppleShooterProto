@@ -102,10 +102,9 @@ namespace UnityBase{
 			thisPopUI.Deactivate();
 		}
 		/* Const */
-			public interface IConstArg: IConstrainedProcessConstArg{
+			public new interface IConstArg: AbsConstrainedProcess.IConstArg{
 				IPopUI popUI{get;}
 				PopUIAdaptor.PopMode popMode{get;}
-				// float glideDistance{get;}
 				float minGlideDistance{get;}
 				float maxGlideDistance{get;}
 				AnimationCurve normalizedDistanceCurve{get;}
@@ -114,11 +113,10 @@ namespace UnityBase{
 				Vector2 graphicOriginalLocalPosition{get;}
 				Color graphicOriginalColor{get;}
 			}
-			public class ConstArg: ConstrainedProcessConstArg, IConstArg{
+			public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
 				public ConstArg(
 					IPopUI popUI,
 					PopUIAdaptor.PopMode popMode,
-					// float glideDistance,
 					float minGlideDistance,
 					float maxGlideDistance,
 					AnimationCurve normalizedDistanceCurve,
@@ -137,7 +135,6 @@ namespace UnityBase{
 				){
 					thisPopUI = popUI;
 					thisPopMode = popMode;
-					// thisGlideDistance = glideDistance;
 					thisMinGlideDistance = minGlideDistance;
 					thisMaxGlideDistance = maxGlideDistance;
 					thisNormalizedDistanceCurve = normalizedDistanceCurve;

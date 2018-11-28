@@ -37,6 +37,7 @@ namespace UISystem{
 		}
 		public PopUpManagerAdaptor popUpManagerAdaptor;
 		IPopUpManager CollectPopUpManager(){
+			
 			return popUpManagerAdaptor.GetPopUpManager();
 		}
 	}	

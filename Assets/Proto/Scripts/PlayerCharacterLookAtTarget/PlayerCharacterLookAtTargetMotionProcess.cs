@@ -7,7 +7,7 @@ namespace AppleShooterProto{
 	public interface IPlayerCharacterLookAtTargetMotionProcess: IProcess{}
 	public class PlayerCharacterLookAtTargetMotionProcess: AbsProcess, IPlayerCharacterLookAtTargetMotionProcess{
 		public PlayerCharacterLookAtTargetMotionProcess(
-			IPlayerCharacterLookAtTargetMotionProcessConstArg arg
+			IConstArg arg
 		):base(
 			arg
 		){
@@ -29,32 +29,32 @@ namespace AppleShooterProto{
 		public override int GetProcessOrder(){
 			return thisProcessOrder;
 		}
-	}
-	public interface IPlayerCharacterLookAtTargetMotionProcessConstArg: IProcessConstArg{
-		IPlayerCharacterLookAtTarget lookAtTarget{get;}
-		ISmoothLooker smoothLooker{get;}
-		int processOrder{get;}
-	}
-	public class PlayerCharacterLookAtTargetMotionProcessConstArg: ProcessConstArg, IPlayerCharacterLookAtTargetMotionProcessConstArg{
-		public PlayerCharacterLookAtTargetMotionProcessConstArg(
-			IProcessManager processManager,
-
-			IPlayerCharacterLookAtTarget lookAtTarget,
-			ISmoothLooker smoothLooker,
-			int processOrder
-		): base(
-			processManager
-		){
-			thisLookAtTarget = lookAtTarget;
-			thisSmoothLooker = smoothLooker;
-			thisProcessOrder = processOrder;
+		public new interface IConstArg: AbsProcess.IConstArg{
+			IPlayerCharacterLookAtTarget lookAtTarget{get;}
+			ISmoothLooker smoothLooker{get;}
+			int processOrder{get;}
 		}
-		readonly IPlayerCharacterLookAtTarget thisLookAtTarget;
-		public IPlayerCharacterLookAtTarget lookAtTarget{get{return thisLookAtTarget;}}
-		readonly ISmoothLooker thisSmoothLooker;
-		public ISmoothLooker smoothLooker{get{return thisSmoothLooker;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+
+				IPlayerCharacterLookAtTarget lookAtTarget,
+				ISmoothLooker smoothLooker,
+				int processOrder
+			): base(
+				processManager
+			){
+				thisLookAtTarget = lookAtTarget;
+				thisSmoothLooker = smoothLooker;
+				thisProcessOrder = processOrder;
+			}
+			readonly IPlayerCharacterLookAtTarget thisLookAtTarget;
+			public IPlayerCharacterLookAtTarget lookAtTarget{get{return thisLookAtTarget;}}
+			readonly ISmoothLooker thisSmoothLooker;
+			public ISmoothLooker smoothLooker{get{return thisSmoothLooker;}}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+		}
 	}
 }
 

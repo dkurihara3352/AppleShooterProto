@@ -97,14 +97,24 @@ namespace UISystem{
 				thisRunningProcess.Expire();
 		}
 		protected IUIEActivationProcess thisRunningProcess;
+		float thisActivationProcessTime = .2f;
 		IUIEActivationProcess CreateNewProcess(bool activates){
 			IUIEActivationProcess newProcess;
 			switch(thisActivationMode){
 				case ActivationMode.None: 
-					newProcess = thisProcessFactory.CreateNonActivatorUIEActivationProcess(this, activates);
+					newProcess = thisProcessFactory.CreateNonActivatorUIEActivationProcess(
+						this, 
+						activates,
+						thisActivationProcessTime
+					);
 					break;
 				case ActivationMode.Alpha:
-					newProcess = thisProcessFactory.CreateAlphaActivatorUIEActivationProcess(thisUIElement, this, activates);
+					newProcess = thisProcessFactory.CreateAlphaActivatorUIEActivationProcess(
+						thisUIElement, 
+						this, 
+						activates,
+						thisActivationProcessTime
+					);
 					break;
 				default: 
 					newProcess = null;

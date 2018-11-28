@@ -11,6 +11,7 @@ namespace UISystem{
 		public Vector2 relativeCursorPosition = new Vector2(.5f, .5f);
 		public Vector2 rubberBandLimitMultiplier = new Vector2(.1f ,.1f);
 		public bool isEnabledInertia = true;
+		public float inertiaDecay = 300f;
 		public float locksInputAboveThisVelocity = 200f;
 		Rect thisCursorRect;
 		public void SetCursorRect(Rect rect){

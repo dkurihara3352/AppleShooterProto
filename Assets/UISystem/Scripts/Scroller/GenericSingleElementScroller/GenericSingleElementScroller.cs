@@ -45,6 +45,7 @@ namespace UISystem{
 				Vector2 relativeCursorPosition, 
 				Vector2 rubberBandLimitMultiplier, 
 				bool isEnabledInertia, 
+				float inertiaDecay,
 				float newScrollSpeedThreshold,
 
 				IGenericSingleElementScrollerAdaptor adaptor, 
@@ -54,6 +55,7 @@ namespace UISystem{
 				relativeCursorPosition, 
 				rubberBandLimitMultiplier, 
 				isEnabledInertia, 
+				inertiaDecay,
 				newScrollSpeedThreshold,
 
 				adaptor,

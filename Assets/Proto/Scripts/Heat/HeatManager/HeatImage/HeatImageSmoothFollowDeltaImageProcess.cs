@@ -37,12 +37,12 @@ namespace AppleShooterProto{
 			thisHeatImage.SetFollowImageHeat(thisTargetHeat);
 			thisHeatImage.StartCountingDown();
 		}
-		public interface IConstArg: IProcessConstArg{
+		public new interface IConstArg: AbsProcess.IConstArg{
 			IHeatImage heatImage{get;}
 			float targetHeat{get;}
 			float followSmoothTime{get;}
 		}
-		public class ConstArg: ProcessConstArg, IConstArg{
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				IHeatImage heatImage,

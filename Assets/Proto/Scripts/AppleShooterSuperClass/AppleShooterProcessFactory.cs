@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 using UnityBase;
+using UISystem;
 
 namespace AppleShooterProto{
-	public interface IAppleShooterProcessFactory: IUnityBaseProcessFactory{
+	public interface IAppleShooterProcessFactory: IUISystemProcessFactory{
 		IFollowWaypointProcess CreateFollowWaypointProcess(
 			IWaypointsFollower follower,
 			float speed,
@@ -32,7 +33,8 @@ namespace AppleShooterProto{
 			int processOrder
 		);
 		IWaitAndSwitchToIdleStateProcess CreateWaitAndSwitchToIdleStateProcess(
-			IPlayerInputStateEngine engine
+			IPlayerInputStateEngine engine,
+			float waitTime
 		);
 		IDrawProcess CreateDrawProcess(
 			IShootingManager shootingManager,
@@ -52,7 +54,8 @@ namespace AppleShooterProto{
 			Vector3 worldDirection,
 			float flightGravity,
 			Vector3 launcherDeltaPosition,
-			Vector3 launchPosition
+			Vector3 launchPosition,
+			float flightTime
 		);
 		IFlyingTargetFlightProcess CreateFlyingTargetFlightProcess(
 			IFlyingTarget flyingTarget,
@@ -99,11 +102,13 @@ namespace AppleShooterProto{
 		);
 	}
 
-	public class AppleShooterProcessFactory: UnityBaseProcessFactory, IAppleShooterProcessFactory {
+	public class AppleShooterProcessFactory: UISystemProcessFactory, IAppleShooterProcessFactory {
 		public AppleShooterProcessFactory(
-			IProcessManager processManager
+			IProcessManager processManager,
+			IAppleShooterMonoBehaviourAdaptorManager adaptorManager
 		): base(
-			processManager
+			processManager,
+			adaptorManager
 		){
 		}
 		public IFollowWaypointProcess CreateFollowWaypointProcess(
@@ -114,7 +119,7 @@ namespace AppleShooterProto{
 			IWaypointCurveCycleManager waypointsManager,
 			float initialTime
 		){
-			IFollowWaypointProcessConstArg arg = new FollowWaypointProcessConstArg(
+			FollowWaypointProcess.IConstArg arg = new FollowWaypointProcess.ConstArg(
 				thisProcessManager,
 				follower,
 				speed,
@@ -134,7 +139,7 @@ namespace AppleShooterProto{
 			float smoothCoefficient,
 			int processOrder
 		){
-			ISmoothFollowTargetProcessConstArg arg = new SmoothFollowTargetProcessConstArg(
+			SmoothFollowTargetProcess.IConstArg arg = new SmoothFollowTargetProcess.ConstArg(
 				thisProcessManager,
 				smoothFollower,
 				target,
@@ -148,7 +153,7 @@ namespace AppleShooterProto{
 			ISmoothLooker smoothLooker,
 			int processOrder
 		){
-			IPlayerCharacterLookAtTargetMotionProcessConstArg arg = new PlayerCharacterLookAtTargetMotionProcessConstArg(
+			PlayerCharacterLookAtTargetMotionProcess.IConstArg arg = new PlayerCharacterLookAtTargetMotionProcess.ConstArg(
 				thisProcessManager,
 				lookAtTarget,
 				smoothLooker,
@@ -162,7 +167,7 @@ namespace AppleShooterProto{
 			float smoothCoefficient,
 			int processOrder
 		){
-			ISmoothLookProcessConstArg arg = new SmoothLookProcessConstArg(
+			SmoothLookProcess.IConstArg arg = new SmoothLookProcess.ConstArg(
 				thisProcessManager,
 				lookAtTarget,
 				smoothLooker,
@@ -172,11 +177,12 @@ namespace AppleShooterProto{
 			return new SmoothLookProcess(arg);
 		}
 		public IWaitAndSwitchToIdleStateProcess CreateWaitAndSwitchToIdleStateProcess(
-			IPlayerInputStateEngine engine
+			IPlayerInputStateEngine engine,
+			float waitTime//2f
 		){
-			IWaitAndSwitchToIdleStateProcessConstArg arg = new WaitAndSwitchToIdleStateProcessCosntArg(
+			WaitAndSwitchToIdleStateProcess.IConstArg arg = new WaitAndSwitchToIdleStateProcess.ConstArg(
 				thisProcessManager,
-				thisProcessManager.GetWaitAndSwitchToIdleStateProcessExpireTime(),
+				waitTime,
 				engine
 			);
 			return new WaitAndSwitchToIdleStateProcess(arg);
@@ -185,7 +191,7 @@ namespace AppleShooterProto{
 			IShootingManager shootingManager,
 			int processOrder
 		){
-			IDrawProcessConstArg arg = new DrawProcessConstArg(
+			DrawProcess.IConstArg arg = new DrawProcess.ConstArg(
 				thisProcessManager,
 				shootingManager,
 				processOrder
@@ -196,7 +202,7 @@ namespace AppleShooterProto{
 			IPlayerCamera playerCamera,
 			float smoothCoefficient
 		){
-			ISmoothZoomProcessConstArg arg = new SmoothZoomProcessConstArg(
+			SmoothZoomProcess.IConstArg arg = new SmoothZoomProcess.ConstArg(
 				playerCamera,
 				smoothCoefficient,
 				thisProcessManager
@@ -207,7 +213,7 @@ namespace AppleShooterProto{
 			IShootingManager shootingManager,
 			float fireRate
 		){
-			IShootingProcessConstArg arg = new ShootingProcessConstArg(
+			ShootingProcess.IConstArg arg = new ShootingProcess.ConstArg(
 				shootingManager,
 				fireRate,
 				thisProcessManager
@@ -220,9 +226,10 @@ namespace AppleShooterProto{
 			Vector3 flightDirection,
 			float flightGravity,
 			Vector3 launcherVelocity,
-			Vector3 launchPosition
+			Vector3 launchPosition,
+			float flightTime
 		){
-			IArrowFlightProcessConstArg arg = new ArrowFlightProcessConstArg(
+			ArrowFlightProcess.IConstArg arg = new ArrowFlightProcess.ConstArg(
 				arrow,
 				flightSpeed,
 				flightDirection,
@@ -230,7 +237,8 @@ namespace AppleShooterProto{
 				launcherVelocity,
 				launchPosition,
 
-				thisProcessManager
+				thisProcessManager,
+				flightTime
 			);
 			return new ArrowFlightProcess(arg);
 		}

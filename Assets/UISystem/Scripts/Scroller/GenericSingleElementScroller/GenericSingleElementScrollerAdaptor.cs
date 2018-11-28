@@ -15,6 +15,7 @@ namespace UISystem{
 				relativeCursorPosition, 
 				rubberBandLimitMultiplier, 
 				isEnabledInertia, 
+				inertiaDecay,
 				locksInputAboveThisVelocity,
 				
 				this, 

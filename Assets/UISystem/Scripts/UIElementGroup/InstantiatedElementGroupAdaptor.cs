@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UISystem{
-	public interface IScrollerConstrainedIndexElementGroupAdaptor: IUIElementGroupAdaptor{}
-	public class ScrollerConstrainedIndexElementGroupAdaptor : AbsScrollerConstrainedGroupAdaptor, IScrollerConstrainedIndexElementGroupAdaptor {
+	public interface IInstantiatedElementGroupAdaptor: IUIElementGroupAdaptor{}
+	public class InstantiatedElementGroupAdaptor : BaseGridGroupAdaptor, IInstantiatedElementGroupAdaptor {
+		
 		public int groupElementCount;
-		public GameObject indexElementPrefab;
+		public GameObject uiElementPrefab;
 		protected override IUIElement[] GetGroupElements(){
 			return CreateUIEs();
 		}
 		IUIElement[] CreateUIEs(){
 			List<IUIElement> resultList = new List<IUIElement>();
 			for(int i = 0; i < groupElementCount; i++ ){
-				GameObject go = GameObject.Instantiate(indexElementPrefab, this.GetTransform());
+				GameObject go = GameObject.Instantiate(uiElementPrefab, this.GetTransform());
 				IUIAdaptor adaptor = (IUIAdaptor)go.GetComponent(typeof(IUIAdaptor));
 				adaptor.SetIndex(i);
 				adaptor.SetUpRecursively();

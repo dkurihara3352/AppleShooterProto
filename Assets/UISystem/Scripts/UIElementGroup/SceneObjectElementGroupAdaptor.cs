@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UISystem{
 	public interface ISceneObjectElementGroupAdaptor: IUIElementGroupAdaptor{}
-	public class SceneObjectElementGroupAdaptor: AbsScrollerConstrainedGroupAdaptor, ISceneObjectElementGroupAdaptor{
+	public class SceneObjectElementGroupAdaptor: BaseGridGroupAdaptor, ISceneObjectElementGroupAdaptor{
 		protected override IUIElement[] GetGroupElements(){
 			return GetChildUIElements();
 		}

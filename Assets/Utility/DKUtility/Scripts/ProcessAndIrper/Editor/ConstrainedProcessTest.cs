@@ -15,7 +15,7 @@ public class ConstrainedProcessTest {
 		float expectedExpireT, 
 		float expectedRateOfChange
 	){
-		IConstrainedProcessConstArg arg = CreateMockArg();
+		TestConstrainedProcess.IConstArg arg = CreateMockArg();
 		arg.processConstraint.Returns(processConstraint);
 		arg.constraintValue.Returns(constraintValue);
 		TestConstrainedProcess testProcess = new TestConstrainedProcess(arg);
@@ -63,7 +63,7 @@ public class ConstrainedProcessTest {
 	/* Test Classes */
 	public class TestConstrainedProcess: AbsConstrainedProcess{
 		public TestConstrainedProcess(
-			IConstrainedProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){}
@@ -81,9 +81,22 @@ public class ConstrainedProcessTest {
 		public float GetExpireT(){
 			return thisExpireTime;
 		}
+
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{}
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				ProcessConstraint processConstraint,
+				float constraintValue
+			): base(
+				processManager,
+				processConstraint,
+				constraintValue
+			){}
+		}
 	}
-	public IConstrainedProcessConstArg CreateMockArg(){
-		IConstrainedProcessConstArg arg = Substitute.For<IConstrainedProcessConstArg>();
+	public TestConstrainedProcess.IConstArg CreateMockArg(){
+		TestConstrainedProcess.IConstArg arg = Substitute.For<TestConstrainedProcess.IConstArg>();
 		arg.processManager.Returns(Substitute.For<IProcessManager>());
 		arg.processConstraint.Returns(ProcessConstraint.ExpireTime);
 		arg.constraintValue.Returns(1f);

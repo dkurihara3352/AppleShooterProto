@@ -130,12 +130,13 @@ namespace UISystem{
 			}
 		/*  */
 			IUIAdaptorInputStateEngine CreateUIAdaptorInputStateEngine(){
-				IUIAdaptorInputStateEngineConstArg arg = new UIAdaptorInputStateEngineConstArg(
+				UIAdaptorInputStateEngine.IConstArg arg = new UIAdaptorInputStateEngine.ConstArg(
 						thisUIManager,
 						thisUIElement,
 						this, 
 						thisUISystemProcessFactory
-					);
+
+				);
 				return new UIAdaptorInputStateEngine(arg);
 			}
 			IUIManager thisUIManager{
@@ -218,6 +219,7 @@ namespace UISystem{
 				return null;
 			}
 		/* UIImage */
+			float thisChangeColorTime = .1f;
 			protected virtual IUIImage CreateUIImage(){
 				Image image;
 				Transform childWithImage = GetChildWithImage(out image);
@@ -234,7 +236,8 @@ namespace UISystem{
 					childWithImage, 
 					thisImageDefaultBrightness, 
 					thisImageDarkenedBrightness, 
-					thisUISystemProcessFactory
+					thisUISystemProcessFactory,
+					thisChangeColorTime
 				);
 				return uiImage;
 			}

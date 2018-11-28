@@ -13,7 +13,7 @@ namespace DKUtility{
 		int GetProcessOrder();
 	}
 	public abstract class AbsProcess: IProcess{
-		public AbsProcess(IProcessConstArg arg){
+		public AbsProcess(IConstArg arg){
 			if(arg.processManager == null)
 				throw new System.ArgumentException("process never works without processManager");
 			thisProcessManager = arg.processManager;
@@ -51,31 +51,33 @@ namespace DKUtility{
 		public virtual int GetProcessOrder(){//override this in order sensitive process
 			return -1;
 		}
+
+
+		public interface IConstArg{
+			IProcessManager processManager{get;}
+		}
+		public class ConstArg: IConstArg{
+			public ConstArg(
+				IProcessManager processManager
+			){
+				thisProcessManager = processManager;
+			}
+			readonly IProcessManager thisProcessManager;
+			public IProcessManager processManager{get{return thisProcessManager;}}
+		}
+		public interface IProcessComparer: IComparer<IProcess>{
+		}
+		public class ProcessComparer: IProcessComparer{
+			public int Compare(IProcess process, IProcess other){
+				return process.GetProcessOrder().CompareTo(
+					other.GetProcessOrder()
+				);
+			}
+		}
 	}
 
 
 	
-	public interface IProcessConstArg{
-		IProcessManager processManager{get;}
-	}
-	public class ProcessConstArg{
-		public ProcessConstArg(
-			IProcessManager processManager
-		){
-			thisProcessManager = processManager;
-		}
-		readonly IProcessManager thisProcessManager;
-		public IProcessManager processManager{get{return thisProcessManager;}}
-	}
 
-	public interface IProcessComparer: IComparer<IProcess>{
-	}
-	public class ProcessComparer: IProcessComparer{
-		public int Compare(IProcess process, IProcess other){
-			return process.GetProcessOrder().CompareTo(
-				other.GetProcessOrder()
-			);
-		}
-	}
 }
 

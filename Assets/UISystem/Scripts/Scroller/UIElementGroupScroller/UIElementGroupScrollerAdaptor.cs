@@ -27,6 +27,7 @@ namespace UISystem{
 				scrollerAxis, 
 				rubberBandLimitMultiplier, 
 				isEnabledInertia, 
+				inertiaDecay,
 				swipeToSnapNext, 
 				locksInputAboveThisVelocity,
 				

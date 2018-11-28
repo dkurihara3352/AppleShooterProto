@@ -101,6 +101,7 @@ namespace AppleShooterProto{
 				Vector2 rubberBandLimitMultiplier, 
 				Vector2 relativeCursorPosition, 
 				bool isEnabledInertia, 
+				float inertiaDecay,
 				float newScrollSpeedThreshold,
 
 				IGenericSingleElementScrollerAdaptor adaptor, 
@@ -112,6 +113,7 @@ namespace AppleShooterProto{
 				relativeCursorPosition, 
 				rubberBandLimitMultiplier, 
 				isEnabledInertia, 
+				inertiaDecay,
 				newScrollSpeedThreshold,
 
 				adaptor, 

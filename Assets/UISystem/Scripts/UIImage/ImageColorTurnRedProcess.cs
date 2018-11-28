@@ -7,7 +7,7 @@ namespace UISystem{
 	public interface IImageColorTurnProcess: IProcess{}
 	public class GenericImageColorTurnProcess : AbsInterpolatorProcess<IImageColorInterpolator>, IImageColorTurnProcess {
 		public GenericImageColorTurnProcess(
-			IImageColorTurnProcessConstArg arg
+			IConstArg arg
 		):base(
 			arg
 		){
@@ -24,6 +24,38 @@ namespace UISystem{
 				return new ImageColorInterpolator(thisUIImage, thisTargetColor);
 			else
 				return new ImageColorFlashInterpolator(thisUIImage, thisTargetColor);
+		}
+
+
+		public new interface IConstArg: AbsInterpolatorProcess<IImageColorInterpolator>.IConstArg{
+			IUIImage uiImage{get;}
+			Color targetColor{get;}
+			bool flashes{get;}
+		}
+		public new class ConstArg: AbsInterpolatorProcess<IImageColorInterpolator>.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				float expireTime,
+
+				IUIImage uiImage,
+				Color targetColor,
+				bool flashes
+			): base(
+				processManager,
+				ProcessConstraint.ExpireTime,
+				expireTime,
+				false
+			){
+				thisUIImage = uiImage;
+				thisTargetColor = targetColor;
+				thisFlashes = flashes;
+			}
+			readonly IUIImage thisUIImage;
+			public IUIImage uiImage{get{return thisUIImage;}}
+			readonly Color thisTargetColor;
+			public Color targetColor{get{return thisTargetColor;}}
+			readonly bool thisFlashes;
+			public bool flashes{get{return thisFlashes;}}
 		}
 	}
 	public interface IImageColorInterpolator: IInterpolator{
@@ -64,38 +96,8 @@ namespace UISystem{
 		}
 		public override void Terminate(){}
 	}
-
-
-
-	public interface IImageColorTurnProcessConstArg: IInterpolatorProcesssConstArg{
-		IUIImage uiImage{get;}
-		Color targetColor{get;}
-		bool flashes{get;}
-	}
-	public class ImageColorTurnProcessConstArg: InterpolatorProcessConstArg, IImageColorTurnProcessConstArg{
-		public ImageColorTurnProcessConstArg(
-			IProcessManager processManager,
-			float expireTime,
-
-			IUIImage uiImage,
-			Color targetColor,
-			bool flashes
-		): base(
-			processManager,
-			ProcessConstraint.ExpireTime,
-			expireTime,
-			false
-		){
-			thisUIImage = uiImage;
-			thisTargetColor = targetColor;
-			thisFlashes = flashes;
-		}
-		readonly IUIImage thisUIImage;
-		public IUIImage uiImage{get{return thisUIImage;}}
-		readonly Color thisTargetColor;
-		public Color targetColor{get{return thisTargetColor;}}
-		readonly bool thisFlashes;
-		public bool flashes{get{return thisFlashes;}}
-	}
 }
+
+
+
 

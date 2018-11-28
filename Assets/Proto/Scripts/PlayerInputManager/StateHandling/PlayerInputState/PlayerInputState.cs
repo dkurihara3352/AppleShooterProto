@@ -209,8 +209,12 @@ namespace AppleShooterProto{
 			StartCountingDownToSwitchIdleState();
 		}
 		IWaitAndSwitchToIdleStateProcess thisProcess;
+		float waitTime = 2f;
 		void StartCountingDownToSwitchIdleState(){
-			thisProcess = thisProcessFactory.CreateWaitAndSwitchToIdleStateProcess(thisEngine);
+			thisProcess = thisProcessFactory.CreateWaitAndSwitchToIdleStateProcess(
+				thisEngine,
+				waitTime
+			);
 			thisProcess.Run();
 		}
 		public override void OnTouch(int touchCount){

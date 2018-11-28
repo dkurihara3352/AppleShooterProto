@@ -10,7 +10,7 @@ namespace AppleShooterProto{
 	public class DrawProcess : AbsProcess, IDrawProcess {
 
 		public DrawProcess(
-			IDrawProcessConstArg arg
+			IConstArg arg
 		):base(
 			arg
 		){
@@ -32,26 +32,28 @@ namespace AppleShooterProto{
 		public void Hold(){
 			isHeld = true;
 		}
+
+
+		public new interface IConstArg: AbsProcess.IConstArg{
+			IShootingManager shootingManager{get;}
+			int processOrder{get;}
+		}
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				IShootingManager shootingManager,
+				int processOrder
+			): base(
+				processManager
+			){
+				thisShootingManager = shootingManager;
+				thisProcessOrder = processOrder;
+			}
+			readonly IShootingManager thisShootingManager;
+			public IShootingManager shootingManager{get{return thisShootingManager;}}
+			readonly int thisProcessOrder;
+			public int processOrder{get{return thisProcessOrder;}}
+		}
 	}
 
-	public interface IDrawProcessConstArg: IProcessConstArg{
-		IShootingManager shootingManager{get;}
-		int processOrder{get;}
-	}
-	public class DrawProcessConstArg: ProcessConstArg, IDrawProcessConstArg{
-		public DrawProcessConstArg(
-			IProcessManager processManager,
-			IShootingManager shootingManager,
-			int processOrder
-		): base(
-			processManager
-		){
-			thisShootingManager = shootingManager;
-			thisProcessOrder = processOrder;
-		}
-		readonly IShootingManager thisShootingManager;
-		public IShootingManager shootingManager{get{return thisShootingManager;}}
-		readonly int thisProcessOrder;
-		public int processOrder{get{return thisProcessOrder;}}
-	}
 }

@@ -27,10 +27,10 @@ namespace AppleShooterProto{
 			thisAdaptor.StopTwangAnimation();
 		}
 		/*  */
-		public interface IConstArg: IConstrainedProcessConstArg{
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
 			IArrowTwangAdaptor adaptor{get;}
 		}
-		public class ConstArg: ConstrainedProcessConstArg, IConstArg{
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				float twangTime,
@@ -46,18 +46,6 @@ namespace AppleShooterProto{
 			public IArrowTwangAdaptor adaptor{get{return thisAdaptor;}}
 		}
 
-		
-	}
-}
-public class ArrowTwangProcess : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
 		
 	}
 }

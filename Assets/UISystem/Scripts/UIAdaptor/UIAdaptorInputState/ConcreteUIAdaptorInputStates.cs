@@ -88,8 +88,13 @@ namespace UISystem{
 		public override void OnPointerExit(ICustomEventData eventData){
 			thisEngine.WaitForRelease();
 		}
+		float thisWaitForTapTime = .5f;
 		protected override IUIAWaitForTapProcess CreateProcess(){
-			return thisProcessFactory.CreateUIAWaitForTapProcess(this, thisEngine);
+			return thisProcessFactory.CreateUIAWaitForTapProcess(
+				this, 
+				thisEngine,
+				thisWaitForTapTime
+			);
 		}
 		public override string GetName(){
 			return "WaitingForTapState";
@@ -171,9 +176,13 @@ namespace UISystem{
 		) :base(
 			arg
 		){}
-
+		float thisWaitForNextTouchTime = .5f;
 		protected override IUIAWaitForNextTouchProcess CreateProcess(){
-			return thisProcessFactory.CreateUIAWaitForNextTouchProcess(this, thisEngine);
+			return thisProcessFactory.CreateUIAWaitForNextTouchProcess(
+				this, 
+				thisEngine,
+				thisWaitForNextTouchTime
+			);
 		}
 		public override void OnPointerDown(ICustomEventData eventData){
 			thisEngine.SetTouchPosition(eventData.position);

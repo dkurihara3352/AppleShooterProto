@@ -23,7 +23,7 @@ public class UIEActivationStateEngineTest {
 
 		IUISystemProcessFactory procFactory = arg.processFactory;
 		INonActivatorUIEActivationProcess process = Substitute.For<INonActivatorUIEActivationProcess>();
-		procFactory.CreateNonActivatorUIEActivationProcess(engine, true).Returns(process);
+		procFactory.CreateNonActivatorUIEActivationProcess(engine, true, .2f).Returns(process);
 		IUIEActivationProcess prevProcess = Substitute.For<IUIEActivationProcess>();
 		prevProcess.IsRunning().Returns(true);
 		engine.SetRunningProcess(prevProcess);
@@ -42,7 +42,7 @@ public class UIEActivationStateEngineTest {
 
 		IUISystemProcessFactory procFactory = arg.processFactory;
 		IAlphaActivatorUIEActivationProcess process = Substitute.For<IAlphaActivatorUIEActivationProcess>();
-		procFactory.CreateAlphaActivatorUIEActivationProcess(arg.uiElement, engine, true).Returns(process);
+		procFactory.CreateAlphaActivatorUIEActivationProcess(arg.uiElement, engine, true, .2f).Returns(process);
 		IUIEActivationProcess prevProcess = Substitute.For<IUIEActivationProcess>();
 		prevProcess.IsRunning().Returns(true);
 		engine.SetRunningProcess(prevProcess);

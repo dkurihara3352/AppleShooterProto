@@ -7,7 +7,7 @@ namespace AppleShooterProto{
 	public class SmoothZoomProcess : AbsProcess, ISmoothZoomProcess {
 
 		public SmoothZoomProcess(
-			ISmoothZoomProcessConstArg arg
+			IConstArg arg
 		):base(
 			arg
 		){
@@ -25,27 +25,27 @@ namespace AppleShooterProto{
 			float newFOV = currentFOV + deltaFOV;
 			thisPlayerCamera.SetFOV(newFOV);
 		}
-	}
-
-
-	public interface ISmoothZoomProcessConstArg: IProcessConstArg{
-		IPlayerCamera playerCamera{get;}
-		float smoothCoefficient{get;}
-	}
-	public class SmoothZoomProcessConstArg: ProcessConstArg, ISmoothZoomProcessConstArg{
-		public SmoothZoomProcessConstArg(
-			IPlayerCamera playerCamera,
-			float smoothCoefficient,
-			IProcessManager processManager
-		):base(
-			processManager
-		){
-			thisPlayerCamera = playerCamera;
-			thisSmoothCoefficient = smoothCoefficient;
+		public new interface IConstArg: AbsProcess.IConstArg{
+			IPlayerCamera playerCamera{get;}
+			float smoothCoefficient{get;}
 		}
-		readonly IPlayerCamera thisPlayerCamera;
-		public IPlayerCamera playerCamera{get{return thisPlayerCamera;}}
-		readonly float thisSmoothCoefficient;
-		public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IPlayerCamera playerCamera,
+				float smoothCoefficient,
+				IProcessManager processManager
+			):base(
+				processManager
+			){
+				thisPlayerCamera = playerCamera;
+				thisSmoothCoefficient = smoothCoefficient;
+			}
+			readonly IPlayerCamera thisPlayerCamera;
+			public IPlayerCamera playerCamera{get{return thisPlayerCamera;}}
+			readonly float thisSmoothCoefficient;
+			public float smoothCoefficient{get{return thisSmoothCoefficient;}}
+		}
 	}
+
+
 }

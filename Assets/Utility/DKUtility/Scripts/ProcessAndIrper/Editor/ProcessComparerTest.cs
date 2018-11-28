@@ -20,7 +20,7 @@ public class ProcessComparerTest{
 			processList.Add(process);
 		}
 
-		IProcessComparer comparer = new ProcessComparer();
+		AbsProcess.IProcessComparer comparer = new AbsProcess.ProcessComparer();
 
 		processList.Sort(comparer);
 

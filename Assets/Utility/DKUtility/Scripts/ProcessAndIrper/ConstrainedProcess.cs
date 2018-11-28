@@ -10,7 +10,7 @@ namespace DKUtility{
 	}
 	public abstract class AbsConstrainedProcess: AbsProcess{
 		public AbsConstrainedProcess(
-			IConstrainedProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -63,56 +63,56 @@ namespace DKUtility{
 			}
 			UpdateProcessImple(deltaT);
 		}
-	}
-	public interface IConstrainedProcessConstArg: IProcessConstArg{
-		ProcessConstraint processConstraint{get;}
-		float constraintValue{get;}
-	}
-	public class ConstrainedProcessConstArg: ProcessConstArg, IConstrainedProcessConstArg{
-		public ConstrainedProcessConstArg(
-			IProcessManager processManager,
-			ProcessConstraint processConstraint,
-			float constraintValue
-		): base(
-			processManager
-		){
-			thisProcessConstraint = processConstraint;
-			thisConstraintValue = constraintValue;
+		public new interface IConstArg: AbsProcess.IConstArg{
+			ProcessConstraint processConstraint{get;}
+			float constraintValue{get;}
 		}
-		readonly ProcessConstraint thisProcessConstraint;
-		public ProcessConstraint processConstraint{get{return thisProcessConstraint;}}
-		readonly float thisConstraintValue;
-		public float constraintValue{get{return thisConstraintValue;}}
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				ProcessConstraint processConstraint,
+				float constraintValue
+			): base(
+				processManager
+			){
+				thisProcessConstraint = processConstraint;
+				thisConstraintValue = constraintValue;
+			}
+			readonly ProcessConstraint thisProcessConstraint;
+			public ProcessConstraint processConstraint{get{return thisProcessConstraint;}}
+			readonly float thisConstraintValue;
+			public float constraintValue{get{return thisConstraintValue;}}
+		}
 	}
 
 	public class GenericWaitAndExpireProcess: AbsConstrainedProcess{
 		public GenericWaitAndExpireProcess(
-			IGenericWaitAndExpireProcessConstArg arg
+			IConstArg arg
 		): base(
 			arg	
 		){}
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{}
+		public class GenericWaitAndExpireProcessConstArg: AbsProcess.ConstArg, IConstArg{
+			public GenericWaitAndExpireProcessConstArg(
+				IProcessManager processManager,
+				float expireTime
+			): base(
+				processManager
+			){
+				thisExpireTime = expireTime;
+			}
+			public ProcessConstraint processConstraint{
+				get{
+					return ProcessConstraint.ExpireTime;
+				}
+			}
+			readonly float thisExpireTime;
+			public float constraintValue{
+				get{
+					return thisExpireTime;
+				}
+			}
+		} 
 	}
-	public interface IGenericWaitAndExpireProcessConstArg: IConstrainedProcessConstArg{}
-	public class GenericWaitAndExpireProcessConstArg: ProcessConstArg, IGenericWaitAndExpireProcessConstArg{
-		public GenericWaitAndExpireProcessConstArg(
-			IProcessManager processManager,
-			float expireTime
-		): base(
-			processManager
-		){
-			thisExpireTime = expireTime;
-		}
-		public ProcessConstraint processConstraint{
-			get{
-				return ProcessConstraint.ExpireTime;
-			}
-		}
-		readonly float thisExpireTime;
-		public float constraintValue{
-			get{
-				return thisExpireTime;
-			}
-		}
-	} 
 }
 

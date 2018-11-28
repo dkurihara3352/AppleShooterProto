@@ -415,6 +415,7 @@ namespace UISystem{
 					ScrollerAxis scrollerAxis, 
 					Vector2 rubberBandLimitMultiplier, 
 					bool isEnabledInertia, 
+					float inertiaDecay,
 					bool swipeToSnapNext, 
 					float newScrollSpeedThreshold,
 
@@ -425,6 +426,7 @@ namespace UISystem{
 					relativeCursorPosition, 
 					rubberBandLimitMultiplier, 
 					isEnabledInertia, 
+					inertiaDecay,
 					newScrollSpeedThreshold,
 
 					adaptor, 

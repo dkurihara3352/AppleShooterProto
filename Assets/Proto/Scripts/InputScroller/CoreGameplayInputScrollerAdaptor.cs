@@ -16,6 +16,7 @@ namespace AppleShooterProto{
 				rubberBandLimitMultiplier,
 				relativeCursorPosition,
 				isEnabledInertia,
+				inertiaDecay,
 				locksInputAboveThisVelocity,
 
 				this,

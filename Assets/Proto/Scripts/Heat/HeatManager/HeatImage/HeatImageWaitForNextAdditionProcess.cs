@@ -17,10 +17,10 @@ namespace AppleShooterProto{
 			thisHeatImage.StartSmoothFollowDeltaImageProcess();
 		}
 
-		public interface IConstArg: IConstrainedProcessConstArg{
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
 			IHeatImage heatImage{get;}
 		}
-		public class ConstArg: ConstrainedProcessConstArg, IConstArg{
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				float comboTime,

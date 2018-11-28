@@ -10,7 +10,7 @@ using DKUtility;
 public class InterpolatorProcessTest{
     [Test]
     public void Run_CallsIrperInterpolateWithZero(){
-        IInterpolatorProcesssConstArg arg = CreateMockArg();
+        TestInterpolatorProcess.IConstArg arg = CreateMockArg();
         TestInterpolatorProcess testProcess = new TestInterpolatorProcess(arg);
 
         testProcess.Run();
@@ -20,7 +20,7 @@ public class InterpolatorProcessTest{
     }
     [Test][TestCaseSource(typeof(UpdateProcess_TestCases), "cases")]
     public void UpdateProcess_CallsIrperInterpolate(float expireT){
-        IInterpolatorProcesssConstArg arg = CreateMockArg();
+        TestInterpolatorProcess.IConstArg arg = CreateMockArg();
         arg.constraintValue.Returns(expireT);
         TestInterpolatorProcess testProcess = new TestInterpolatorProcess(arg);
 
@@ -55,7 +55,7 @@ public class InterpolatorProcessTest{
     }
     public class TestInterpolatorProcess: AbsInterpolatorProcess<IInterpolator>{
         public TestInterpolatorProcess(
-            IInterpolatorProcesssConstArg arg
+            IConstArg arg
         ): base(
             arg    
         ){
@@ -68,9 +68,25 @@ public class InterpolatorProcessTest{
             return thisInterpolator;
         }
         protected override float GetLatestInitialValueDifference(){return 0f;}
+
+        public new interface IConstArg: AbsInterpolatorProcess<IInterpolator>.IConstArg{}
+        public new class ConstArg: AbsInterpolatorProcess<IInterpolator>.ConstArg, IConstArg{
+            public ConstArg(
+                IProcessManager processManager,
+                ProcessConstraint processConstraint,
+                float constraintValue,
+                bool useSpringT
+            ): base(
+                processManager,
+                processConstraint,
+                constraintValue,
+                useSpringT
+            ){
+            }
+        }
     }
-    public IInterpolatorProcesssConstArg CreateMockArg(){
-        IInterpolatorProcesssConstArg arg = Substitute.For<IInterpolatorProcesssConstArg>();
+    public TestInterpolatorProcess.IConstArg CreateMockArg(){
+        TestInterpolatorProcess.IConstArg arg = Substitute.For<TestInterpolatorProcess.IConstArg>();
         arg.processManager.Returns(Substitute.For<IProcessManager>());
         arg.processConstraint.Returns(ProcessConstraint.ExpireTime);
         arg.constraintValue.Returns(1f);

@@ -26,11 +26,11 @@ namespace AppleShooterProto{
 		protected override void StopImple(){
 			thisTrail.Deactivate();
 		}
-		public interface IConstArg: IConstrainedProcessConstArg{
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
 			IArrowTrail arrowTrail{get;}
 			float initialAlpha{get;}
 		}
-		public class ConstArg: ConstrainedProcessConstArg, IConstArg{
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				float fadeTime,

@@ -39,25 +39,24 @@ namespace AppleShooterProto{
 
 		}
 
-		public interface IConstArg: IProcessConstArg{
+		public new interface IConstArg: AbsProcess.IConstArg{
 			IHeatManager heatManager{get;}
 			float targetMaxHeat{get;}
 			float smoothTime{get;}
 		}
-		public struct ConstArg: IConstArg{
+		public new class ConstArg: AbsProcess.ConstArg, IConstArg{
 			public ConstArg(
 				IProcessManager processManager,
 				IHeatManager heatManager,
 				float targetMaxHeat,
 				float smoothTime
+			): base(
+				processManager
 			){
-				thisProcessManager = processManager;
 				thisHeatManager = heatManager;
 				thisTargetMaxHeat = targetMaxHeat;
 				thisSmoothTime = smoothTime;
 			}
-			readonly IProcessManager thisProcessManager;
-			public IProcessManager processManager{get{return thisProcessManager;}}
 			readonly IHeatManager thisHeatManager;
 			public IHeatManager heatManager{get{return thisHeatManager;}}
 			readonly float thisTargetMaxHeat;

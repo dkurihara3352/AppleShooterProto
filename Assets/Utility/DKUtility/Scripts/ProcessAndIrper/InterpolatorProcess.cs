@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DKUtility{
 	public abstract class AbsInterpolatorProcess<T>: AbsConstrainedProcess where T: class, IInterpolator{
 		public AbsInterpolatorProcess(
-			IInterpolatorProcesssConstArg arg
+			IConstArg arg
 		): base(
 			arg
 		){
@@ -39,25 +39,28 @@ namespace DKUtility{
 			thisInterpolator.Interpolate(1f);
 			ExpireImple();
 		}
-	}
-	public interface IInterpolatorProcesssConstArg: IConstrainedProcessConstArg{
-		bool useSpringT{get;}
-	}
-	public class InterpolatorProcessConstArg: ConstrainedProcessConstArg, IInterpolatorProcesssConstArg{
-		public InterpolatorProcessConstArg(
-			IProcessManager processManager,
-			ProcessConstraint processConstraint,
-			float constraintValue,
-			bool useSpringT
-		): base(
-			processManager,
-			processConstraint,
-			constraintValue
-		){
-			thisUseSpringT = useSpringT;
+
+
+
+		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
+			bool useSpringT{get;}
 		}
-		readonly bool thisUseSpringT;
-		public bool useSpringT{get{return thisUseSpringT;}}
+		public new class ConstArg: AbsConstrainedProcess.ConstArg, IConstArg{
+			public ConstArg(
+				IProcessManager processManager,
+				ProcessConstraint processConstraint,
+				float constraintValue,
+				bool useSpringT
+			): base(
+				processManager,
+				processConstraint,
+				constraintValue
+			){
+				thisUseSpringT = useSpringT;
+			}
+			readonly bool thisUseSpringT;
+			public bool useSpringT{get{return thisUseSpringT;}}
+		}
 	}
 }
 

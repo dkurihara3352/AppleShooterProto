@@ -11,7 +11,7 @@ using DKUtility;
 public class ScrollerElementMotorProcessTest {
 	[Test]
 	public void Run_CallsScrollerSetRunningMotorProcessThis(){
-		IScrollerElementMotorProcessConstArg arg = CreateMockConstArg();
+		TestScrollerElementMotorProcess.IConstArg arg = CreateMockConstArg();
 		IScroller scroller = arg.scroller;
 		TestScrollerElementMotorProcess process = new TestScrollerElementMotorProcess(arg);
 
@@ -32,11 +32,12 @@ public class ScrollerElementMotorProcessTest {
 
 
 	public class TestScrollerElementMotorProcess: AbsScrollerElementMotorProcess{
-		public TestScrollerElementMotorProcess(IScrollerElementMotorProcessConstArg arg): base(arg){}
+		public TestScrollerElementMotorProcess(IConstArg arg): base(arg){}
 		public override void UpdateProcess(float deltaT){}
+		public new interface IConstArg: AbsScrollerElementMotorProcess.IConstArg{}
 	}
-	public IScrollerElementMotorProcessConstArg CreateMockConstArg(){
-		IScrollerElementMotorProcessConstArg arg = Substitute.For<IScrollerElementMotorProcessConstArg>();
+	public TestScrollerElementMotorProcess.IConstArg CreateMockConstArg(){
+		TestScrollerElementMotorProcess.IConstArg arg = Substitute.For<TestScrollerElementMotorProcess.IConstArg>();
 		arg.scroller.Returns(Substitute.For<IScroller>());
 		arg.scrollerElement.Returns(Substitute.For<IUIElement>());
 		arg.dimension.Returns(0);

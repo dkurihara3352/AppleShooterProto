@@ -29,6 +29,7 @@ namespace AppleShooterProto{
 		public float globalMinFlightSpeed;
 		public float globalMaxFlightSpeed;
 
+		public float arrowFlightTime = 4f;
 		public override void SetUp(){
 			thisShootingManager = CreateShootingManager();
 		}
@@ -53,7 +54,9 @@ namespace AppleShooterProto{
 				globalMinArrowAttack,
 				globalMaxArrowAttack,
 				globalMinFlightSpeed,
-				globalMaxFlightSpeed
+				globalMaxFlightSpeed,
+
+				arrowFlightTime
 			);
 			return new ShootingManager(arg);
 		}
