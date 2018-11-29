@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _Radius("Radius", Range(1, 255)) = 1
+        _Radius("Radius", Range(0, 255)) = 1
 		_Color("Color", COLOR) = (1, 1, 1, 1)
     }
  

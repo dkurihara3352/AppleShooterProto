@@ -74,8 +74,8 @@ namespace AppleShooterProto{
 			public void PlaceWaypointCurves(){
 				PlaceAllWaypointCurvesAtReserve();
 				thisCurveSequence = CreateSequenceOfWaypointCurves();
-				PrintSequence();
-				PrintReserved();
+				// PrintSequence();
+				// PrintReserved();
 				ConnectWaypointCurveSequence();
 
 				if(thisFollower != null)				
@@ -86,7 +86,7 @@ namespace AppleShooterProto{
 				foreach(IWaypointCurve curve in thisCurveSequence){
 					result += curve.GetIndex().ToString();
 				}
-				DKUtility.DebugHelper.PrintInGreen(result);
+				// DKUtility.DebugHelper.PrintInGreen(result);
 			}
 			void PlaceAllWaypointCurvesAtReserve(){
 				foreach(IWaypointCurve curve in thisWaypointCurves){

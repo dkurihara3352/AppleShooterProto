@@ -14,8 +14,8 @@ namespace UISystem{
 		void OnShowBegin();
 		void OnShowComplete();
 
-		float GetAlpha();
-		void SetAlpha(float alpha);
+		float GetPopValue();
+		void SetPopValue(float value);
 	}
 	public interface IPopUpStateEngine: IPopUpStateHandler{
 		void SwitchToHiddenState();
@@ -134,10 +134,10 @@ namespace UISystem{
 		}
 		/*  */
 		public void SetAlphaOnImplementor(float alpha){
-			thisImplementor.SetAlpha(alpha);
+			thisImplementor.SetPopValue(alpha);
 		}
 		public float GetAphaOnImplementor(){
-			return thisImplementor.GetAlpha();
+			return thisImplementor.GetPopValue();
 		}
 
 		/* states */

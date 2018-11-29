@@ -21,6 +21,7 @@ namespace UISystem{
 	}
 	public enum PopUpMode{
 		Alpha,
+		Blur
 	}
 	public class PopUp : UIElement, IPopUp, IPopUpStateImplementor {
 		public PopUp(
@@ -114,11 +115,11 @@ namespace UISystem{
 		public virtual void OnHideComplete(){
 			thisTypedAdaptor.ToggleRaycastBlock(false);
 		}
-		public float GetAlpha(){
-			return thisTypedAdaptor.GetGroupAlpha();
+		public float GetPopValue(){
+			return thisTypedAdaptor.GetPopValue();
 		}
-		public void SetAlpha(float alpha){
-			thisTypedAdaptor.SetGroupAlpha(alpha);
+		public void SetPopValue(float value){
+			thisTypedAdaptor.SetPopValue(value);
 		}
 
 		IPopUpAdaptor thisTypedAdaptor{

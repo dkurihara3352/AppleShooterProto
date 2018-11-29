@@ -100,6 +100,10 @@ namespace AppleShooterProto{
 			float time,
 			AnimationCurve speedCurve
 		);
+		IGameplayUnpauseProcess CreateGameplayUnpauseProcess(
+			IGameplayPause gameplayPause,
+			float time
+		);
 	}
 
 	public class AppleShooterProcessFactory: UISystemProcessFactory, IAppleShooterProcessFactory {
@@ -352,6 +356,17 @@ namespace AppleShooterProto{
 				speedCurve
 			);
 			return new WaypointsFollowerChangeSpeedProcess(arg);
+		}
+		public IGameplayUnpauseProcess CreateGameplayUnpauseProcess(
+			IGameplayPause gameplayPause,
+			float time
+		){
+			GameplayUnpauseProcess.IConstArg arg = new GameplayUnpauseProcess.ConstArg(
+				thisProcessManager,
+				time,
+				gameplayPause
+			);
+			return new GameplayUnpauseProcess(arg);
 		}
 	}
 }

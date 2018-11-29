@@ -65,9 +65,6 @@ namespace AppleShooterProto{
 				int index = result.IndexOf(curve);
 				curve.SetIndex(index);
 			}
-			Debug.Log(
-				result.Count.ToString()
-			);
 			return result;
 		}
 	}
