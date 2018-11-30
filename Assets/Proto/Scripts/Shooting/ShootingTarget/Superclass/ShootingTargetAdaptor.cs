@@ -60,7 +60,7 @@ namespace AppleShooterProto{
 		}
 		protected IBellCurve thisHealthBellCurve;
 
-		public float heatBonus;
+		public TargetData targetData;
 
 		IGameStatsTrackerAdaptor thisGameStatsTrackerAdaptor;
 		public void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor){
@@ -110,7 +110,6 @@ namespace AppleShooterProto{
 		public void SetIndex(int index){
 			thisIndex = index;
 		}
-		public int health;
 
 		/* Collider */
 		Collider thisCollider;
@@ -135,9 +134,8 @@ namespace AppleShooterProto{
 			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
 			thisAnimator.SetTrigger(thisHitTriggerHash);
 		}
-		public int spawnValue;
 		public int GetSpawnValue(){
-			return spawnValue;
+			return targetData.spawnValue;
 		}
 	}
 }

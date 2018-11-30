@@ -17,11 +17,10 @@ namespace AppleShooterProto{
 		protected override IShootingTarget CreateShootingTarget(){
 			StaticShootingTarget.IConstArg arg = new StaticShootingTarget.ConstArg(
 				thisIndex,
-				health,
 				thisDefaultColor,
 				thisHealthBellCurve,
-				heatBonus,
-				this
+				this,
+				targetData
 			);
 			return new StaticShootingTarget(arg);
 
@@ -34,10 +33,6 @@ namespace AppleShooterProto{
 		public IStaticShootingTarget GetStaticShootingTarget(){
 			return thisStaticShootingTarget;
 		}
-		// public IStaticShootingTargetReserve reserve;
-		// public void SetTargetReserve(IStaticShootingTargetReserve reserve){
-		// 	this.reserve = reserve;
-		// }
 		IStaticShootingTargetReserveAdaptor thisReserveAdaptor;
 		public void SetStaticShootingTargetReserveAdaptor(IStaticShootingTargetReserveAdaptor adaptor){
 			thisReserveAdaptor = adaptor;

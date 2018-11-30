@@ -175,11 +175,10 @@ namespace AppleShooterProto{
 		public new class ConstArg: AbsShootingTarget.ConstArg, IConstArg{
 			public ConstArg(
 				int index,
-				int health,
 				Color defaultColor,
 				UnityBase.IBellCurve healthBellCurve,
 				IFlyingTargetAdaptor adaptor,
-				float heatBonus,
+				ITargetData targetData,
 
 				Vector3 initialVelocity,
 				float distThreshold,
@@ -187,11 +186,10 @@ namespace AppleShooterProto{
 				float speed
 			): base(
 				index,
-				health,
 				defaultColor,
 				healthBellCurve,
 				adaptor,
-				heatBonus
+				targetData
 			){	
 				thisInitialVelocity = initialVelocity;
 				thisDistThreshold = distThreshold;

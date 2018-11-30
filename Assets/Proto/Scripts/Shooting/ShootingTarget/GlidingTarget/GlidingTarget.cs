@@ -11,7 +11,7 @@ namespace AppleShooterProto{
 	}
 	public class GlidingTarget: AbsShootingTarget, IGlidingTarget{
 		public GlidingTarget(
-			AbsShootingTarget.IConstArg arg
+			IConstArg arg
 		): base(arg){}
 
 		public void ActivateAt(IGlidingTargetSpawnPoint point){
@@ -68,6 +68,23 @@ namespace AppleShooterProto{
 		}
 		public IGlidingTargetWaypointCurve GetGlidingTargetWaypointCurve(){
 			return thisWaypointCurve;
+		}
+
+		public new interface IConstArg: AbsShootingTarget.IConstArg{}
+		public new class ConstArg: AbsShootingTarget.ConstArg, IConstArg{
+			public ConstArg(
+				int index,
+				Color defaultColor,
+				UnityBase.IBellCurve healthBellCurve,
+				IGlidingTargetAdaptor adaptor,
+				ITargetData targetData
+			): base(
+				index,
+				defaultColor,
+				healthBellCurve,
+				adaptor,
+				targetData
+			){}
 		}
 	}
 }

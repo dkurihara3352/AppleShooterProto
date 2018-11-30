@@ -14,13 +14,12 @@ namespace AppleShooterProto{
 			thisWaypointsFollowerAdaptor.SetUp();
 		}
 		protected override IShootingTarget CreateShootingTarget(){
-			AbsShootingTarget.IConstArg arg = new AbsShootingTarget.ConstArg(
+			GlidingTarget.IConstArg arg = new GlidingTarget.ConstArg(
 				thisIndex,
-				health,
 				thisDefaultColor,
 				thisHealthBellCurve,
 				this,
-				heatBonus
+				targetData
 			);
 			return new GlidingTarget(arg);
 		}
