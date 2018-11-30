@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IGameStatsTracker: IAppleShooterSceneObject{
 		void SetHeatManager(IHeatManager manager);
+		void SetScoreManager(IScoreManager scoreManager);
 
 		void RegisterTargetDestroyed(IShootingTarget target);
 	}
@@ -19,10 +20,17 @@ namespace AppleShooterProto{
 		public void SetHeatManager(IHeatManager manager){
 			thisHeatManager = manager;
 		}
+		IScoreManager thisScoreManager;
+		public void SetScoreManager(IScoreManager scoreManager){
+			thisScoreManager = scoreManager;
+		}
 
 		public void RegisterTargetDestroyed(IShootingTarget target){
 			float heat = target.GetHeatBonus();
 			thisHeatManager.AddHeat(heat);
+
+			int score = target.GetDestructionScore();
+			thisScoreManager.AddScore(score);
 		}
 
 		/*  */

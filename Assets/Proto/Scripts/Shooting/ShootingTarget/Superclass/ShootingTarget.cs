@@ -25,7 +25,7 @@ namespace AppleShooterProto{
 		IDestroyedTarget GetDestroyedTarget();
 
 		float GetHeatBonus();
-
+		int GetDestructionScore();
 	}
 	public abstract class AbsShootingTarget : AppleShooterSceneObject, IShootingTarget {
 		public AbsShootingTarget(
@@ -183,6 +183,9 @@ namespace AppleShooterProto{
 			}
 			public float GetHeatBonus(){
 				return thisTargetData.heatBonus;
+			}
+			public int GetDestructionScore(){
+				return thisTargetData.destructionScore;
 			}
 		/* Misc */
 			int thisIndex;

@@ -22,9 +22,13 @@ namespace AppleShooterProto{
 			return new GameStatsTracker(arg);
 		}
 		public HeatManagerAdaptor heatManagerAdaptor;
+		public ScoreManagerAdaptor scoreManagerAdaptor;
 		public override void SetUpReference(){
 			IHeatManager heatManager = heatManagerAdaptor.GetHeatManager();
 			thisTracker.SetHeatManager(heatManager);
+
+			IScoreManager scoreManager = scoreManagerAdaptor.GetScoreManager();
+			thisTracker.SetScoreManager(scoreManager);
 		}
 	}
 }
