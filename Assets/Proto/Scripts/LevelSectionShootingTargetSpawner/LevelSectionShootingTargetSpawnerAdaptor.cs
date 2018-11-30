@@ -24,15 +24,8 @@ namespace AppleShooterProto{
 		}
 
 		public override void SetUpReference(){
-			IShootingTargetSpawnManager manager = GetManager();
-			thisSpawner.SetShootingTargetSpawnManager(manager);
-
 			thisSpawner.SetLevelSectionTargetSpawnDataInput(spawnDataInput);
 
-		}
-		public ShootingTargetSpawnManagerAdaptor managerAdaptor;
-		IShootingTargetSpawnManager GetManager(){
-			return managerAdaptor.GetManager();
 		}
 		public TargetSpawnDataInput[] spawnDataInput;
 

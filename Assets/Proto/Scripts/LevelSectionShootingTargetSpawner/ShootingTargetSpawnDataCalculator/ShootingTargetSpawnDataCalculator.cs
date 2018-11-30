@@ -10,7 +10,6 @@ namespace AppleShooterProto{
 		public ShootingTargetSpawnDataCalculator(
 			IConstArg arg
 		){
-			thisSpawnManager = arg.shootingTargetSpawnManager;
 			
 			thisSpawnValueLimit = arg.spawnValueLimit;
 		
@@ -21,7 +20,6 @@ namespace AppleShooterProto{
 
 
 		}
-		readonly protected IShootingTargetSpawnManager thisSpawnManager;
 		readonly float thisSpawnValueLimit;
 		readonly UnityBase.IPool thisIndexPool;
 		TargetSpawnDataInput[] thisDataInput;
@@ -105,17 +103,14 @@ namespace AppleShooterProto{
 			public interface IConstArg{
 				float spawnValueLimit{get;}
 				TargetSpawnDataInput[] dataInput{get;}
-				IShootingTargetSpawnManager shootingTargetSpawnManager{get;}
 			}
 			public struct ConstArg: IConstArg{
 				public ConstArg(
 					float spawnValueLimit,
-					TargetSpawnDataInput[] dataInput,
-					IShootingTargetSpawnManager shootingTargetSpawnManager
+					TargetSpawnDataInput[] dataInput
 				){
 					thisSpawnValueLimit = spawnValueLimit;
 					thisDataInput = dataInput;
-					thisShootingTargetSpawnManager = shootingTargetSpawnManager;
 				}
 					readonly float thisSpawnValueLimit;
 					public float spawnValueLimit{
@@ -125,10 +120,6 @@ namespace AppleShooterProto{
 					readonly TargetSpawnDataInput[] thisDataInput;
 					public TargetSpawnDataInput[] dataInput{
 						get{return thisDataInput;}
-					}
-					readonly IShootingTargetSpawnManager thisShootingTargetSpawnManager;
-					public IShootingTargetSpawnManager shootingTargetSpawnManager{
-						get{return thisShootingTargetSpawnManager;}
 					}
 				
 			}

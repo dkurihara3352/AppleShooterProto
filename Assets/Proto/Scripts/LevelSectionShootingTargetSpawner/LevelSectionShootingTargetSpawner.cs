@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace AppleShooterProto{
 	public interface ILevelSectionShootingTargetSpawner: IAppleShooterSceneObject{
-		void SetShootingTargetSpawnManager(IShootingTargetSpawnManager manager);
 		void SetLevelSectionTargetSpawnDataInput(
 			TargetSpawnDataInput[] input
 		);
@@ -24,10 +23,6 @@ namespace AppleShooterProto{
 		TargetSpawnDataInput[] thisSpawnDataInput;
 		public void SetLevelSectionTargetSpawnDataInput(TargetSpawnDataInput[] input){
 			thisSpawnDataInput = input;
-		}
-		IShootingTargetSpawnManager thisShootingTargetSpawnManager;
-		public void SetShootingTargetSpawnManager(IShootingTargetSpawnManager manager){
-			thisShootingTargetSpawnManager = manager;
 		}
 		public void SetUpSpawnWaypointEvents(){
 			IShootingTargetSpawnDataCalculator calculator = CreateCalculator();
@@ -87,8 +82,7 @@ namespace AppleShooterProto{
 		protected virtual IShootingTargetSpawnDataCalculator CreateCalculator(){
 			ShootingTargetSpawnDataCalculator.IConstArg arg = new ShootingTargetSpawnDataCalculator.ConstArg(
 				thisSpawnValueLimit,
-				thisSpawnDataInput,
-				thisShootingTargetSpawnManager
+				thisSpawnDataInput
 			);
 			return new ShootingTargetSpawnDataCalculator(arg);
 		}
