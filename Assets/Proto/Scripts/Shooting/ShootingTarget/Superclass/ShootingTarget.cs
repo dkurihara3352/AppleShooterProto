@@ -41,8 +41,8 @@ namespace AppleShooterProto{
 
 			thisHeatBonus = arg.heatBonus;
 		}
-		protected float thisOriginalHealth;
-		protected float thisHealth;
+		protected int thisOriginalHealth;
+		protected int thisHealth;
 
 		IShootingTargetAdaptor thisTypedAdaptor{
 			get{
@@ -61,8 +61,8 @@ namespace AppleShooterProto{
 			IBellCurve thisHealthBellCurve;
 			public virtual void ActivateImple(){
 				float randomeMult = thisHealthBellCurve.Evaluate();
-				
-				thisHealth = thisOriginalHealth *= randomeMult;
+				thisOriginalHealth = Mathf.FloorToInt(thisOriginalHealth * randomeMult);
+				thisHealth = thisOriginalHealth;
 				thisTypedAdaptor.SetColor(thisDefaultColor);
 				thisTypedAdaptor.ToggleCollider(true);
 				thisPopUIReserve.PopText(
@@ -88,7 +88,7 @@ namespace AppleShooterProto{
 				IArrow arrow
 			){
 				float attack = arrow.GetAttack();
-				thisHealth -= attack;
+				thisHealth -= Mathf.FloorToInt(attack);
 				if(thisHealth <= 0f){
 					DestroyTarget();
 				}
@@ -200,7 +200,7 @@ namespace AppleShooterProto{
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int index{get;}
-				float health{get;}
+				int health{get;}
 				Color defaultColor{get;}
 				IBellCurve healthBellCurve{get;}
 				float heatBonus{get;}
@@ -208,7 +208,7 @@ namespace AppleShooterProto{
 			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
-					float health,
+					int health,
 					Color defaultColor,
 					IBellCurve healthBellCurve,
 					IShootingTargetAdaptor adaptor,
@@ -224,8 +224,8 @@ namespace AppleShooterProto{
 				}
 				readonly int thisIndex;
 				public int index{get{return thisIndex;}}
-				readonly float thisHealth;
-				public float health{get{return thisHealth;}}
+				readonly int thisHealth;
+				public int health{get{return thisHealth;}}
 				readonly Color thisDefaultColor;
 				public Color defaultColor{get{return thisDefaultColor;}}
 				readonly IBellCurve thisHealthBellCurve;

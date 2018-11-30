@@ -110,7 +110,7 @@ namespace AppleShooterProto{
 		public void SetIndex(int index){
 			thisIndex = index;
 		}
-		public float health;
+		public int health;
 
 		/* Collider */
 		Collider thisCollider;
