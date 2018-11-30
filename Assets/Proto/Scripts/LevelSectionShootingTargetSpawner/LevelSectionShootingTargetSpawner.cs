@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 			thisSpawnValueLimit = arg.spawnValueLimit;
 		}
 
-		float thisSpawnValueLimit;
+		int thisSpawnValueLimit;
 		TargetSpawnDataInput[] thisSpawnDataInput;
 		public void SetLevelSectionTargetSpawnDataInput(TargetSpawnDataInput[] input){
 			thisSpawnDataInput = input;
@@ -106,19 +106,19 @@ namespace AppleShooterProto{
 		}
 		/*  */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
-				float spawnValueLimit{get;}
+				int spawnValueLimit{get;}
 			}
 			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					ILevelSectionShootingTargetSpawnerAdaptor adaptor,
-					float spawnValueLimit
+					int spawnValueLimit
 				): base(
 					adaptor
 				){
 					thisSpawnValueLimit = spawnValueLimit;
 				}
-				readonly float thisSpawnValueLimit;
-				public float spawnValueLimit{get{return thisSpawnValueLimit;}}
+				readonly int thisSpawnValueLimit;
+				public int spawnValueLimit{get{return thisSpawnValueLimit;}}
 			}
 	}
 	public interface ISpawnPointEventPointPair{

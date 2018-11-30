@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 		public ILevelSectionShootingTargetSpawner GetSpawner(){
 			return thisSpawner;
 		}
-		public float spawnValueLimit;
+		public int spawnValueLimit;
 		ILevelSectionShootingTargetSpawner CreateSpawner(){
 			LevelSectionShootingTargetSpawner.IConstArg arg = new LevelSectionShootingTargetSpawner.ConstArg(
 				this,
@@ -39,7 +39,7 @@ namespace AppleShooterProto{
 				return reserveAdaptor.GetReserve();
 			}
 		}
-		public float spawnValue{
+		public int spawnValue{
 			get{return reserveAdaptor.GetSpawnValue();}
 		}
 		public float relativeProbability;

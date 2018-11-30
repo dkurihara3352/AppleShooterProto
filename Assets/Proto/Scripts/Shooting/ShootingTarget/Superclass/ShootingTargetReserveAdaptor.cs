@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IShootingTargetReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingTargetReserve GetReserve();
-		float GetSpawnValue();
+		int GetSpawnValue();
 	}
 	public abstract class AbsShootingTargetReserveAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingTargetReserveAdaptor {
 		protected IShootingTargetReserve thisReserve;
@@ -15,7 +15,7 @@ namespace AppleShooterProto{
 		public float reservedSpace;
 		public GameStatsTrackerAdaptor gameStatsTrackerAdaptor;
 		public GameObject shootingTargetPrefab;
-		public float GetSpawnValue(){
+		public int GetSpawnValue(){
 			IShootingTargetAdaptor adaptor = (IShootingTargetAdaptor)shootingTargetPrefab.GetComponent(typeof(IShootingTargetAdaptor));
 			return adaptor.GetSpawnValue();
 		}

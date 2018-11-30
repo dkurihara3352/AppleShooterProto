@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
 
-		float GetSpawnValue();
+		int GetSpawnValue();
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
@@ -135,8 +135,8 @@ namespace AppleShooterProto{
 			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
 			thisAnimator.SetTrigger(thisHitTriggerHash);
 		}
-		public float spawnValue;
-		public float GetSpawnValue(){
+		public int spawnValue;
+		public int GetSpawnValue(){
 			return spawnValue;
 		}
 	}

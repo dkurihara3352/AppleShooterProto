@@ -20,7 +20,7 @@ namespace AppleShooterProto{
 
 
 		}
-		readonly float thisSpawnValueLimit;
+		readonly int thisSpawnValueLimit;
 		readonly UnityBase.IPool thisIndexPool;
 		TargetSpawnDataInput[] thisDataInput;
 		protected float[] GetTargetSpawnRelativeProbabilities(TargetSpawnDataInput[] inputs){
@@ -32,7 +32,7 @@ namespace AppleShooterProto{
 		}
 
 		public TargetSpawnData CalculateTargetSpawnDataByTargetType(){
-			float[] spawnValueByTargetType = GetSpawnValueByTargetType();
+			int[] spawnValueByTargetType = GetSpawnValueByTargetType();
 			int[] numToCreateByTargetType = GetNumberToCreateByTargetType(spawnValueByTargetType);
 			int typeIndex = 0;
 			List<TargetSpawnData.Entry> entriesList = new List<TargetSpawnData.Entry>();
@@ -69,17 +69,17 @@ namespace AppleShooterProto{
 			}
 			return pairs.ToArray();
 		}
-		protected float[] GetSpawnValueByTargetType(){
-			List<float> resultList = new List<float>();
+		protected int[] GetSpawnValueByTargetType(){
+			List<int> resultList = new List<int>();
 			foreach(TargetSpawnDataInput input in thisDataInput){
-				float spawnValue = input.spawnValue;
+				int spawnValue = input.spawnValue;
 				resultList.Add(spawnValue);
 			}
 			return resultList.ToArray();
 		}
-		protected int[] GetNumberToCreateByTargetType(float[] spawnValues){
+		protected int[] GetNumberToCreateByTargetType(int[] spawnValues){
 			int[] numToCreateArray = new int[spawnValues.Length];
-			float sumOfSpawnValue = 0f;
+			int sumOfSpawnValue = 0;
 			while(true){
 				if(sumOfSpawnValue > thisSpawnValueLimit){
 					break;
@@ -92,7 +92,7 @@ namespace AppleShooterProto{
 
 					numToCreate ++;
 					numToCreateArray[targetTypeIndex] = numToCreate;
-					float spawnValue = spawnValues[targetTypeIndex];
+					int spawnValue = spawnValues[targetTypeIndex];
 					sumOfSpawnValue += spawnValue;
 				}
 			}
@@ -101,19 +101,19 @@ namespace AppleShooterProto{
 
 		/*  */
 			public interface IConstArg{
-				float spawnValueLimit{get;}
+				int spawnValueLimit{get;}
 				TargetSpawnDataInput[] dataInput{get;}
 			}
 			public struct ConstArg: IConstArg{
 				public ConstArg(
-					float spawnValueLimit,
+					int spawnValueLimit,
 					TargetSpawnDataInput[] dataInput
 				){
 					thisSpawnValueLimit = spawnValueLimit;
 					thisDataInput = dataInput;
 				}
-					readonly float thisSpawnValueLimit;
-					public float spawnValueLimit{
+					readonly int thisSpawnValueLimit;
+					public int spawnValueLimit{
 						get{return thisSpawnValueLimit;}
 					}
 
