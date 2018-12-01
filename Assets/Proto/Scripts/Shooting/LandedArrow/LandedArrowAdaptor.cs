@@ -20,8 +20,8 @@ namespace AppleShooterProto{
 			);
 			thisLandedArrow = new LandedArrow(arg);
 
-			thisTextMesh = CollectTextMesh();
-			SetIndexOnTextMesh(thisIndex);
+			// thisTextMesh = CollectTextMesh();
+			// SetIndexOnTextMesh(thisIndex);
 			thisTwangAdaptor = CollectArrowTwangAdaptor();
 			thisTwangAdaptor.SetUp();
 		}
@@ -51,25 +51,25 @@ namespace AppleShooterProto{
 			thisLandedArrow.Deactivate();
 		}
 
-		TextMesh thisTextMesh;
-		TextMesh CollectTextMesh(){
-			Component[] childComponents = this.transform.GetComponentsInChildren(typeof(Component));
-			foreach(Component comp in childComponents){
-				if(comp is TextMesh)
-					return (TextMesh)comp;
-			}
-			throw new System.InvalidOperationException(
-				"textMesh is not set right"
-			);
-		}
+		// TextMesh thisTextMesh;
+		// TextMesh CollectTextMesh(){
+		// 	Component[] childComponents = this.transform.GetComponentsInChildren(typeof(Component));
+		// 	foreach(Component comp in childComponents){
+		// 		if(comp is TextMesh)
+		// 			return (TextMesh)comp;
+		// 	}
+		// 	throw new System.InvalidOperationException(
+		// 		"textMesh is not set right"
+		// 	);
+		// }
 		int thisIndex;
 		public void SetIndex(int index){
 			thisIndex = index;
 			// SetIndexOnTextMesh(index);
 		}
-		void SetIndexOnTextMesh(int index){
-			thisTextMesh.text = index.ToString();
-		}
+		// void SetIndexOnTextMesh(int index){
+		// 	thisTextMesh.text = index.ToString();
+		// }
 	}
 }
 
