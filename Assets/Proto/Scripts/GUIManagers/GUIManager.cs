@@ -291,8 +291,10 @@ namespace AppleShooterProto{
 					foreach(IWaypointEvent wpEvent in evnets){
 						string thisEventString = "\n";
 						thisEventString += wpEvent.GetName() + ": " + wpEvent.GetEventPoint().ToString("N2");
+						TargetType thisType = TargetType.Flyer;
 						if(wpEvent is IShootingTargetSpawnWaypointEvent){
 							IShootingTargetSpawnWaypointEvent spawnEvent = (IShootingTargetSpawnWaypointEvent)wpEvent;
+							thisType = spawnEvent.GetTargetType();
 							IShootingTargetSpawnPoint spawnPoint = spawnEvent.GetSpawnPoint();
 							thisEventString += ", sp: " + spawnPoint.GetName();
 							IShootingTarget target = spawnPoint.GetSpawnedTarget();
@@ -300,7 +302,10 @@ namespace AppleShooterProto{
 								thisEventString += ", tar: " + target.GetName();
 							else
 								thisEventString += ", tar: null";
+
 						}
+						Color col = GetStringColorForType(thisType);
+						thisEventString = DKUtility.DebugHelper.StringInColor(thisEventString, col);
 						result += thisEventString;
 						string executedString = ", ";
 						if(!wpEvent.IsExecuted())
@@ -314,7 +319,17 @@ namespace AppleShooterProto{
 						result
 					);
 				}
-				
+			}
+			Color GetStringColorForType(TargetType targetType){
+				switch(targetType){
+					case TargetType.Static:
+						return new Color(0f, .7f, .3f);
+					case TargetType.Fatty:
+						return new Color(.5f, 1f, 0f);
+					case TargetType.Glider:
+						return new Color(.3f, 1f, 1f);
+					default: return Color.white;
+				}
 			}
 		/*  */
 	}

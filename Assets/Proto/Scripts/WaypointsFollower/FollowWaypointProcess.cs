@@ -25,6 +25,18 @@ namespace AppleShooterProto{
 				arg.initialTime
 			);
 		}
+		// protected override void RunImple(){
+		// 	base.RunImple();
+		// 	Debug.Log(
+		// 		thisFollower.GetName() + "'s " + DKUtility.DebugHelper.StringInColor("run", Color.cyan) + ", " +
+		// 		"elapsedT: " + thisTotalElapsedTimeOnCurrentCurve.ToString("N2") + ", " +
+		// 		"reqT: " + thisRequiredTimeForCurrentCurve.ToString("N2")
+		// 	);
+		// }
+		// protected override void ExpireImple(){
+		// 	base.ExpireImple();
+		// 	Debug.Log(thisFollower.GetName() + "'s " +  DKUtility.DebugHelper.StringInColor("expired", Color.magenta));
+		// }
 		readonly IWaypointsFollower thisFollower;
 		readonly float thisSpeed;
 		readonly int thisProcessOrder;

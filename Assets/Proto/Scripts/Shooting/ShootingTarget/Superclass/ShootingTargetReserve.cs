@@ -33,7 +33,14 @@ namespace AppleShooterProto{
 		public void SetTargetSpawnData(TargetSpawnData data){
 			thisTargetSpawnData = data;
 		}
-		public abstract TargetType GetTargetType();
+		public TargetType GetTargetType(){
+			return thisTypedAdaptor.GetTargetType();
+		}
+		IShootingTargetReserveAdaptor thisTypedAdaptor{
+			get{
+				return (IShootingTargetReserveAdaptor)thisAdaptor;
+			}
+		}
 		public abstract void ActivateShootingTargetAt(IShootingTargetSpawnPoint point);
 		/*  */
 			public new interface IConstArg: AbsSceneObject.IConstArg{

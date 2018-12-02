@@ -22,9 +22,6 @@ namespace AppleShooterProto{
 		public IGlidingTarget[] GetGlidingTargets(){
 			return thisSceneObjects;
 		}
-		public override TargetType GetTargetType(){
-			return TargetType.Glider;
-		}
 	}
 }
 

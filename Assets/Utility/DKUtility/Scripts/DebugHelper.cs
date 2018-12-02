@@ -31,5 +31,9 @@ namespace DKUtility{
 				result += i.ToString() + ", ";
 			return result;
 		}
+		public static string StringInColor(string text, Color color){
+			string hex = ColorUtility.ToHtmlStringRGBA(color);
+			return "<color=#" + hex + ">" + text + "</color>";
+		}
 	}
 }

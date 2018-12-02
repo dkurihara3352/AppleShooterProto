@@ -21,8 +21,5 @@ namespace AppleShooterProto{
 		public IFlyingTarget[] GetFlyingTargets(){
 			return thisSceneObjects;
 		}
-		public override  TargetType GetTargetType(){
-			return TargetType.Flyer;
-		}
 	}
 }

@@ -30,6 +30,8 @@ namespace AppleShooterProto{
 			base.DeactivateImple();
 			ClearSpawnPoint();
 			StopGlide();
+			thisWaypointsFollower.ResetFollower();
+			// Debug.Log(DKUtility.DebugHelper.StringInColor(GetName() + " is deac'd", Color.red));
 		}
 		void ClearSpawnPoint(){
 			if(thisSpawnPoint != null)
@@ -39,6 +41,9 @@ namespace AppleShooterProto{
 			thisWaypointsFollower.SetWaypointCurve(null);
 		}
 		public override void ActivateImple(){
+			// Debug.Log(
+			// 	DKUtility.DebugHelper.StringInColor(GetName() + "'s ActivateImple is called", Color.green)
+			// );
 			base.ActivateImple();
 			StartGlide();
 		}

@@ -20,8 +20,5 @@ namespace AppleShooterProto{
 		public IStaticShootingTarget[] GetStaticShootingTargets(){
 			return thisSceneObjects;
 		}
-		public override TargetType GetTargetType(){
-			return TargetType.Static;
-		}
 	}
 }

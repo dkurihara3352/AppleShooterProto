@@ -25,6 +25,8 @@ namespace AppleShooterProto{
 		void SmoothStart();
 		void SmoothStop();
 		void SetElapsedTimeOnCurrentCurve(float elapsedTime);
+
+		void ResetFollower();
 	}
 	public class WaypointsFollower: AppleShooterSceneObject, IWaypointsFollower{
 		public WaypointsFollower(
@@ -135,6 +137,10 @@ namespace AppleShooterProto{
 		float thisElapsedTimeOnCurrentCurve = 0f;
 		public void SetElapsedTimeOnCurrentCurve(float elapsedTime){
 			thisElapsedTimeOnCurrentCurve = elapsedTime;
+		}
+		public void ResetFollower(){
+			StopFollowing();
+			thisElapsedTimeOnCurrentCurve = 0f;
 		}
 
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
