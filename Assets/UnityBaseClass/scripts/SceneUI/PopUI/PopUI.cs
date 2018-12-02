@@ -19,7 +19,8 @@ namespace UnityBase{
 		void SetChildGraphicLocalScale(Vector3 scale);
 		void SetChildGraphicLocalPosition(Vector3 position);
 		ISceneObject GetSceneObject();
-	
+
+		string GetDebugString();
 	}
 	public class PopUI: AbsSceneUI, IPopUI{
 		public PopUI(
@@ -47,8 +48,8 @@ namespace UnityBase{
 			Deactivate();
 			thisTargetObject = obj;
 			SetTargetSceneObject(obj);
-			SetText(text);
 			Activate();
+			SetText(text);
 		}
 		public override void ActivateImple(){
 			base.ActivateImple();
@@ -118,7 +119,15 @@ namespace UnityBase{
 		}
 		
 		public void SetText(string text){
-			thisTypedAdaptor.SetText(text);
+			
+			thisTypedAdaptor.SetText(text + "\n" + GetDebugString());
+		}
+		public string GetDebugString(){
+			Vector2 targetWorldPos = thisTypedAdaptor.GetTargetWorldPosition();
+			Vector2 uiScreenPos = GetUIPosition(targetWorldPos);
+			uiScreenPos = new Vector2(uiScreenPos.x/ Screen.width,  uiScreenPos.y/ Screen.height);
+			string debugString = uiScreenPos.ToString();
+			return debugString;
 		}
 		IPopUIReserve thisReserve;
 		public void SetPopUIReserve(IPopUIReserve reserve){

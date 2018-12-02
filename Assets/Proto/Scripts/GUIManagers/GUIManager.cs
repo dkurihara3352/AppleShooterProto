@@ -16,17 +16,21 @@ namespace AppleShooterProto{
 			sTL_5 = GetSubRect(topLeftRect,4,6);
 			sTL_6 = GetSubRect(topLeftRect,5,6);
 			topRightRect = GetGUIRect(
- 				normalizedSize: new Vector2(.3f, .5f),
-				normalizedPosition: new Vector2(1f, 0f)
+ 				normalizedSize: new Vector2(.5f, .5f),
+				normalizedPosition: new Vector2(1f, .5f)
 			);
-			sTR_1 = GetSubRect(topRightRect, 0, 4);
-			sTR_2 = GetSubRect(topRightRect, 1, 4);
-			sTR_3 = GetSubRect(topRightRect, 2, 4);
-			sTR_4 = GetSubRect(topRightRect, 3, 4);
+			sTR_1 = GetSubRect(topRightRect, 0, 1);
+			// sTR_2 = GetSubRect(topRightRect, 1, 4);
+			// sTR_3 = GetSubRect(topRightRect, 2, 4);
+			// sTR_4 = GetSubRect(topRightRect, 3, 4);
 
-			buttomLeftRect = GetGUIRect(
-				normalizedSize: new Vector2(.35f, .6f),
+			bottomLeftRect = GetGUIRect(
+				normalizedSize: new Vector2(.5f, .5f),
 				normalizedPosition: new Vector2(0f, 1f)
+			);
+			bottomRightRect = GetGUIRect(
+				normalizedSize: new Vector2(.5f, .5f),
+				normalizedPosition: new Vector2(1f, 1f)
 			);
 		}
 
@@ -38,13 +42,15 @@ namespace AppleShooterProto{
 		Rect sTL_5; 
 		Rect sTL_6;
 
-		Rect buttomLeftRect;
+		Rect bottomLeftRect;
 
 		Rect topRightRect;
 		Rect sTR_1;
 		Rect sTR_2;
 		Rect sTR_3;
 		Rect sTR_4;
+
+		Rect bottomRightRect;
 
 		public ProtoGameManager gameManager;
 		public bool drawsWaypointFollowerSetUp = true;
@@ -72,7 +78,8 @@ namespace AppleShooterProto{
 				// DrawWaypointsFollower(sTR_1);
 				// DrawCurveSequence(sTR_2);
 				// DrawSpawnIndices(sTR_4);
-				DrawShootingMetrics(sTR_3);
+				// DrawShootingMetrics(sTR_3);
+				DrawWaypointEvents(bottomRightRect);
 		}
 		/* left */
 			void DrawControl(){
@@ -122,7 +129,7 @@ namespace AppleShooterProto{
 					IArrow[] arrows = arrowReserve.GetArrows();
 					foreach(IArrow arrow in arrows){
 						Rect guiSubRect = GetSubRect(
-							buttomLeftRect, 
+							bottomLeftRect, 
 							arrow.GetIndex(), 
 							arrows.Length
 						);
@@ -268,6 +275,46 @@ namespace AppleShooterProto{
 			void SmoothStartFollower(){
 				IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 				follower.SmoothStart();
+			}
+			public WaypointCurveCycleManagerAdaptor curveCycleManagerAdaptor;
+			void DrawWaypointEvents(Rect rect){
+				if(thisSystemIsReady){
+					string result = "";
+					IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
+					float normalizedPosOnCurve = follower.GetNormalizedPositionInCurve();
+					result += "normPos: " + normalizedPosOnCurve.ToString("N2") + "\n";
+
+					IWaypointCurveCycleManager curveManager = curveCycleManagerAdaptor.GetWaypointsManager();
+					IWaypointCurve currentCurve = curveManager.GetWaypointCurvesInSequence()[0];
+					IWaypointEvent[] evnets = currentCurve.GetWaypointEvents();
+					result += "curve id: " + currentCurve.GetIndex().ToString() + "\n";
+					foreach(IWaypointEvent wpEvent in evnets){
+						string thisEventString = "\n";
+						thisEventString += wpEvent.GetName() + ": " + wpEvent.GetEventPoint().ToString("N2");
+						if(wpEvent is IShootingTargetSpawnWaypointEvent){
+							IShootingTargetSpawnWaypointEvent spawnEvent = (IShootingTargetSpawnWaypointEvent)wpEvent;
+							IShootingTargetSpawnPoint spawnPoint = spawnEvent.GetSpawnPoint();
+							thisEventString += ", sp: " + spawnPoint.GetName();
+							IShootingTarget target = spawnPoint.GetSpawnedTarget();
+							if(target != null)
+								thisEventString += ", tar: " + target.GetName();
+							else
+								thisEventString += ", tar: null";
+						}
+						result += thisEventString;
+						string executedString = ", ";
+						if(!wpEvent.IsExecuted())
+							executedString += "pending";
+						else
+							executedString += DKUtility.DebugHelper.RedString("executed");
+						result += executedString;
+					}
+					GUI.Label(
+						rect,
+						result
+					);
+				}
+				
 			}
 		/*  */
 	}

@@ -16,10 +16,13 @@ namespace AppleShooterProto{
 		public void SetPCWaypointsManager(IPCWaypointsManager pcWaypointsManager){
 			thisPCWaypointsManager = pcWaypointsManager;
 		}
-		public override void Execute(){
+		protected override void ExecuteImple(){
 			IPCWaypointCurve nextCurve = thisPCWaypointsManager.GetNextPCCurve();
 			if(nextCurve != null)
 				nextCurve.SetUpTargetSpawnEvents();
+		}
+		public override string GetName(){
+			return "SetUpEventsOnNextCurveWaypointEvent";
 		}
 	}
 }

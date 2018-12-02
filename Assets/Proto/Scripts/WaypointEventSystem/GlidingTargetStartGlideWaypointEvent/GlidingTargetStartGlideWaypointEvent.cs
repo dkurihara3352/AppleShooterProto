@@ -18,10 +18,13 @@ namespace AppleShooterProto{
 		public void SetGlidingTargetSpawnPoint(IGlidingTargetSpawnPoint point){
 			thisGlidingTargetSpawnPoint = point;
 		}
-		public override void Execute(){
+		protected override void ExecuteImple(){
 			thisGlidingTargetReserve.ActivateShootingTargetAt(
 				thisGlidingTargetSpawnPoint
 			);
+		}
+		public override string GetName(){
+			return "GlidingTargetStartGlideWPEvent";
 		}
 	}
 }

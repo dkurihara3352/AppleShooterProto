@@ -30,6 +30,9 @@ namespace AppleShooterProto{
 		protected abstract IShootingTargetSpawnPointAdaptor[] CollectSpawnPointAdaptors();
 		public override void SetUpReference(){
 			IShootingTargetSpawnPoint[] spawnPoints = GetSpawnPoints();
+			int index = 0;
+			foreach(IShootingTargetSpawnPoint spawnPoint in spawnPoints)
+				spawnPoint.SetIndex(index++);
 			thisGroup.SetSpawnPoints(spawnPoints);
 		}
 		public IShootingTargetSpawnPoint[] GetSpawnPoints(){

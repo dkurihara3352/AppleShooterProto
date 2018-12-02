@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IShootingTargetSpawnWaypointEvent: IWaypointEvent{
 		IShootingTargetSpawnPoint GetSpawnPoint();
+		TargetType GetTargetType();
 	}
 	public class ShootingTargetSpawnWaypointEvent: AbsWaypointEvent, IShootingTargetSpawnWaypointEvent{
 		public ShootingTargetSpawnWaypointEvent(
@@ -13,13 +14,19 @@ namespace AppleShooterProto{
 			thisShootingTargetReserve = arg.shootingTargetReserve;
 			thisShootingTargetSpawnPoint = arg.shootingTargetSpawnPoint;
 		}
-		public override void Execute(){
+		protected override void ExecuteImple(){
 			thisShootingTargetReserve.ActivateShootingTargetAt(thisShootingTargetSpawnPoint);
 		}
 		IShootingTargetSpawnPoint thisShootingTargetSpawnPoint;
 		IShootingTargetReserve thisShootingTargetReserve;
 		public IShootingTargetSpawnPoint GetSpawnPoint(){
 			return thisShootingTargetSpawnPoint;
+		}
+		public TargetType GetTargetType(){
+			return thisShootingTargetReserve.GetTargetType();
+		}
+		public override string GetName(){
+			return GetTargetType().ToString() + " spawn event";
 		}
 		/*  */
 			public new interface IConstArg: AbsWaypointEvent.IConstArg{

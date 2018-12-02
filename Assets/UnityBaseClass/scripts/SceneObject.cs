@@ -15,6 +15,7 @@ namespace UnityBase{
 		void ResetLocalTransform();
 		void SetParent(ISceneObject sceneObj);
 		IMonoBehaviourAdaptor GetAdaptor();
+		string GetName();
 	}
 	public abstract class AbsSceneObject: ISceneObject{
 		public AbsSceneObject(
@@ -71,6 +72,9 @@ namespace UnityBase{
 			get{
 				return thisAdaptor.GetProcessFactory();
 			}
+		}
+		public virtual string GetName(){
+			return thisAdaptor.GetName();
 		}
 		/* ConstArg */
 			public interface IConstArg{

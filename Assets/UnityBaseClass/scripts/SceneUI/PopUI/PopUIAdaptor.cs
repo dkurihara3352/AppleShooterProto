@@ -16,6 +16,7 @@ namespace UnityBase{
 		void SetChildGraphicLocalPosition(Vector3 position);
 
 		void SetText(string text);
+		string GetText();
 
 		void SetIndex(int index);
 	}
@@ -63,6 +64,14 @@ namespace UnityBase{
 			GlideUp,
 			GlideRandom	
 		}
+		// void Update(){
+		// 	if(targetTransform != null && thisPopUI != null)
+		// 		UpdateDebugText();
+		// }
+		// void UpdateDebugText(){
+		// 	string debugString = thisPopUI.GetDebugString();
+		// 	thisPopUI.SetText(debugString);
+		// }
 		public PopMode popMode;
 		IPopUIGlideProcess thisGlideProcess;
 		public float glideTime = .5f;
@@ -121,6 +130,12 @@ namespace UnityBase{
 		public void SetText(string text){
 			if(thisGraphic is Text)
 				((Text)thisGraphic).text = text;
+		}
+		public string GetText(){
+			if(thisGraphic is Text){
+				return ((Text)thisGraphic).text;
+			}
+			return "";
 		}
 		int thisIndex;
 		public void SetIndex(int index){

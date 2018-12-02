@@ -14,7 +14,6 @@ namespace UISystem{
 		void SetLocalPosition(Vector2 localPos);
 		IUIAdaptor GetUIAdaptor();
 		IUIImage GetUIImage();
-		string GetName();
 
 		/* Activation */
 		void InitiateActivation(bool instantly);
@@ -109,10 +108,6 @@ namespace UISystem{
 				thisImage = image;
 			}
 		/*  */
-		protected string thisName{
-			get{return thisUIAdaptor.GetName();}
-		}
-		public string GetName(){return thisName;}
 		public void SetLocalPosition(Vector2 localPos){
 			thisUIAdaptor.SetLocalPosition(localPos);
 		}

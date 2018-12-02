@@ -129,7 +129,7 @@ namespace AppleShooterProto{
 		Static,
 		Fatty,
 		Glider,
-		Flier
+		Flyer
 	}
 	public struct TargetSpawnData{
 		public TargetSpawnData(

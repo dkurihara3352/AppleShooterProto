@@ -73,6 +73,7 @@ namespace AppleShooterProto{
 						);
 						thisCycleManager.CycleCurve();
 						MoveFollower();
+						thisWaypointEventManager.ExecuteWaypointEventsUpTo(residualTime);
 					}else{
 						Expire();
 					}

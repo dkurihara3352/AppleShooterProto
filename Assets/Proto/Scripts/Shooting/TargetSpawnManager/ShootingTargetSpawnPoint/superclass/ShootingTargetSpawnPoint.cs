@@ -41,7 +41,6 @@ namespace AppleShooterProto{
 		public int GetIndex(){
 			return thisIndex;
 		}
-
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float eventPoint{get;}
 		}

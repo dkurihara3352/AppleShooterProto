@@ -98,6 +98,9 @@ namespace UnityBase{
 			Vector2 uiScreenPos = thisUICamera.WorldToScreenPoint(thisUIWorldPosition);
 			return uiScreenPos;
 		}
+		protected Vector2 GetUIViewportPosition(Vector3 targetWorldPosition){
+			return thisUICamera.WorldToViewportPoint(targetWorldPosition);
+		}
 		public void SetTargetSceneObject(ISceneObject obj){
 			IMonoBehaviourAdaptor adaptor = obj.GetAdaptor();
 			thisTypedAdaptor.SetTargetTransform(adaptor.GetTransform());

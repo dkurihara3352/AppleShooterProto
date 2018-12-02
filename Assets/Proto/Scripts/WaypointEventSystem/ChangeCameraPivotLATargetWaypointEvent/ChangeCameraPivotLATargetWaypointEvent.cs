@@ -20,9 +20,12 @@ namespace AppleShooterProto{
 		public void SetSmoothLooker(ISmoothLooker looker){
 			thisCameraPivotSmoothLooker = looker;
 		}
-		public override void Execute(){
+		protected override void ExecuteImple(){
 			thisCameraPivotSmoothLooker.SetSmoothCoefficient(thisSmoothCoefficient);
 			thisCameraPivotSmoothLooker.SetLookAtTarget(thisTargetMBAdaptor);
+		}
+		public override string GetName(){
+			return "ChangeCameraPivotLATargetWPEvent";
 		}
 		/* Const */
 			public new interface IConstArg: AbsWaypointEvent.IConstArg{

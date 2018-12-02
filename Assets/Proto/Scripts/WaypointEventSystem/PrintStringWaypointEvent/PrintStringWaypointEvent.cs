@@ -17,11 +17,14 @@ namespace AppleShooterProto{
 		public void SetFollower(IWaypointsFollower follower){
 			thisFollower = follower;
 		}
-		public override void Execute(){
+		protected override void ExecuteImple(){
 			Debug.Log(
 				"normPos: " + thisFollower.GetNormalizedPositionInCurve().ToString() + ", \n" +
 				thisString
 			);
+		}
+		public override string GetName(){
+			return "PrintStringWPEvent";
 		}
 		public new interface IConstArg: AbsWaypointEvent.IConstArg{
 			string stringToPrint{get;}

@@ -21,6 +21,9 @@ namespace AppleShooterProto{
 		public IFlyingTargetWaypointManager GetWaypointManager(){
 			return thisWaypointManager;
 		}
+		// public override string GetName(){
+		// 	return "flyer " + GetIndex().ToString();
+		// }
 		public new interface IConstArg: AbsShootingTargetSpawnPoint.IConstArg{}
 		public new class ConstArg: AbsShootingTargetSpawnPoint.ConstArg, IConstArg{
 			public ConstArg(

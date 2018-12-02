@@ -33,6 +33,7 @@ namespace UnityBase{
 		IUnityBaseProcessFactory GetProcessFactory();
 
 		string GetName();
+		void SetName(string name);
 	}
 	public abstract class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -150,6 +151,9 @@ namespace UnityBase{
 
 		public string GetName(){
 			return this.name;
+		}
+		public void SetName(string name){
+			this.name = name;
 		}
 	}
 }

@@ -26,6 +26,8 @@ namespace AppleShooterProto{
 
 		float GetHeatBonus();
 		int GetDestructionScore();
+
+		TargetType GetTargetType();
 	}
 	public abstract class AbsShootingTarget : AppleShooterSceneObject, IShootingTarget {
 		public AbsShootingTarget(
@@ -35,11 +37,12 @@ namespace AppleShooterProto{
 		){
 			SetIndex(arg.index);
 			thisTargetData = arg.targetData;
+			thisAdaptor.SetName(thisTargetData.targetType.ToString() + " " + thisIndex.ToString());
 			thisDefaultColor = arg.defaultColor;
 			thisActivationStateEngine = new ActivationStateEngine(this);
 			thisHealthBellCurve = arg.healthBellCurve;
 		}
-		ITargetData thisTargetData;
+		protected ITargetData thisTargetData;
 		protected int thisOriginalHealth;
 		protected int thisHealth;
 
@@ -63,18 +66,33 @@ namespace AppleShooterProto{
 				thisHealth = thisOriginalHealth;
 				thisTypedAdaptor.SetColor(thisDefaultColor);
 				thisTypedAdaptor.ToggleCollider(true);
-				thisPopUIReserve.PopText(
-					this,
-					GetHealthString()
-				);
+				// if(thisAdaptor.IsVisible())
+					thisPopUIReserve.PopText(
+						this,
+						GetActivationString()
+					);
 			}
 			int ResetHealth(){
 				float randomeMult = thisHealthBellCurve.Evaluate();
 				return Mathf.FloorToInt(thisTargetData.health * randomeMult);
 			}
+			string GetActivationString(){
+				// string result = GetHealthString();
+				// result += "\n";
+				// result += GetDistanceString();
+				// return result;
+				return GetName();
+				// return "";
+			}
 			string GetHealthString(){
 				string result = "health \n" + thisHealth.ToString();
 				return result;
+			}
+			string GetDistanceString(){
+				// float distance = GetDistanceFromPlayer();
+				// return "dist \n" + distance.ToString();
+
+				return "";
 			}
 			public void Deactivate(){
 				thisActivationStateEngine.Deactivate();
@@ -187,6 +205,9 @@ namespace AppleShooterProto{
 			public int GetDestructionScore(){
 				return thisTargetData.destructionScore;
 			}
+			public override string GetName(){
+				return thisTargetData.targetType.ToString() + " " + GetIndex().ToString();
+			}
 		/* Misc */
 			int thisIndex;
 			public virtual void SetIndex(int index){
@@ -199,6 +220,9 @@ namespace AppleShooterProto{
 				Deactivate();
 				DeactivateAllLandedArrows();
 				DeactivateDestroyedTarget();
+			}
+			public TargetType GetTargetType(){
+				return thisTargetData.targetType;
 			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{

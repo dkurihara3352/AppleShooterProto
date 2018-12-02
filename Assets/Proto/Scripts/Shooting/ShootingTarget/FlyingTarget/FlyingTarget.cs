@@ -165,6 +165,7 @@ namespace AppleShooterProto{
 		public void SetDistanceThresholdForGizmo(float thresh){
 			thisTypedAdaptor.SetDistanceThresholdForGizmo(thresh);
 		}
+
 		/*  */
 		public new interface IConstArg: AbsShootingTarget.IConstArg{
 			Vector3 initialVelocity{get;}

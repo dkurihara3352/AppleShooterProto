@@ -4,6 +4,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	
 	public interface ITargetData{
+		TargetType targetType{get;}
 		float heatBonus{get;}
 		int health{get;}
 		int spawnValue{get;}
@@ -11,6 +12,8 @@ namespace AppleShooterProto{
 	}
 	[CreateAssetMenu(menuName = "Custom/TargetData", fileName = "targetData")]
 	public class TargetData : ScriptableObject, ITargetData {
+		public TargetType _targetType;
+		public TargetType targetType{get{return _targetType;}}
 		public float _heatBonus;
 		public float heatBonus{
 			get{

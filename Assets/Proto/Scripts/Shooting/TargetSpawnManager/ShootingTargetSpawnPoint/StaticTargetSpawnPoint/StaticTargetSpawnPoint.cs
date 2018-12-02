@@ -13,5 +13,8 @@ namespace AppleShooterProto{
 			arg
 		){
 		}
+		// public override string GetName(){
+		// 	return "static " + GetIndex().ToString();
+		// }
 	}
 }
