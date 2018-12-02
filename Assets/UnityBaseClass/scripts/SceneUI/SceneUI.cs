@@ -17,6 +17,10 @@ namespace UnityBase{
 		int GetIndex();
 		void SetIndex(int index);
 		float GetNormalizedSqrDist();
+		void DisableGraphic();
+		void EnableGraphic();
+		bool IsBehind();
+		bool IsCompletelyOutOfScreenBounds();
 	}
 	public abstract class AbsSceneUI : AbsSceneObject, ISceneUI {
 		public AbsSceneUI(
@@ -58,6 +62,9 @@ namespace UnityBase{
 		public void UpdateUI(){
 			thisUIWorldPosition =  thisTypedAdaptor.GetTargetWorldPosition();
 
+			Vector2 newUISize = GetUISize(thisUIWorldPosition);
+			thisTypedAdaptor.SetUISize(newUISize);
+
 			Vector2 newUIScale = GetUIScale(thisUIWorldPosition);
 			thisTypedAdaptor.SetUIScale(newUIScale);
 
@@ -69,15 +76,16 @@ namespace UnityBase{
 			return thisNormalizedSqpDist;
 		}
 		protected Vector2 GetUISize(Vector3 targetWorldPosition){
-			float sqrDistance = (targetWorldPosition - thisUICamera.transform.position).sqrMagnitude;
-			float nearSqrDist = thisNearUIDistance * thisNearUIDistance;
-			float farSqrDist = thisFarUIDistance * thisFarUIDistance;
-			float normalizedSqrDist = (sqrDistance - nearSqrDist) / farSqrDist;
-			thisNormalizedSqpDist = normalizedSqrDist;
+			float depth = thisUICamera.WorldToScreenPoint(targetWorldPosition).z;
+			if(depth < thisNearUIDistance)
+				depth = thisNearUIDistance;
+			else if(depth > thisFarUIDistance)
+				depth = thisFarUIDistance;
+			float normalizedDepth = (depth - thisNearUIDistance) / (thisFarUIDistance - thisNearUIDistance);
 			Vector2 newUISize = Vector2.Lerp(
 				thisMaxUISize,
 				thisMinUISize,
-				normalizedSqrDist
+				normalizedDepth
 			);
 			return newUISize;
 		}
@@ -139,7 +147,18 @@ namespace UnityBase{
 		public int GetIndex(){
 			return thisIndex;
 		}
-	
+		public void DisableGraphic(){
+			thisTypedAdaptor.DisableGraphic();
+		}
+		public void EnableGraphic(){
+			thisTypedAdaptor.EnableGraphic();
+		}
+		public bool IsBehind(){
+			return thisTypedAdaptor.IsBehind();
+		}
+		public bool IsCompletelyOutOfScreenBounds(){
+			return thisTypedAdaptor.IsCompletelyOutOfScreenBounds();
+		}
 		/* ConstArg */
 			public new interface IConstArg: AbsSceneObject.IConstArg{
 				Camera uiCamera{get;}

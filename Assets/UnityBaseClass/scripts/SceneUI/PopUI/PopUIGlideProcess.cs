@@ -44,7 +44,7 @@ namespace UnityBase{
 		}
 		protected override void UpdateProcessImple(float deltaT){
 			UpdateUIPosition();
-			// CheckPositionIsValid();
+			CheckPositionIsValid();
 			UpdateUIAlpha();
 			UpdateUIScale();
 		}
@@ -72,6 +72,12 @@ namespace UnityBase{
 			float cosine = Mathf.Cos(angleInRad);
 			float sine = Mathf.Sin(angleInRad);
 			return new Vector2(cosine, sine);
+		}
+		void CheckPositionIsValid(){
+			if(thisPopUI.IsBehind())
+				thisPopUI.DisableGraphic();
+			else
+				thisPopUI.EnableGraphic();
 		}
 		void UpdateUIAlpha(){
 			float newAlpha =  thisAlphaCurve.Evaluate(thisNormalizedTime);

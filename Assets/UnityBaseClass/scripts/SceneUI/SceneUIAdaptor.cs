@@ -15,6 +15,10 @@ namespace UnityBase{
 		void BecomeChildToCanvas();
 		Vector2 GetRectSize();
 		Vector2 GetUINormalizedScreenPosition();
+		void DisableGraphic();
+		void EnableGraphic();
+		bool IsBehind();
+		bool IsCompletelyOutOfScreenBounds();
 	}
 	[RequireComponent(typeof(RectTransform))]
 	public abstract class AbsSceneUIAdaptor : MonoBehaviourAdaptor, ISceneUIAdaptor {
@@ -43,7 +47,7 @@ namespace UnityBase{
 		public override void FinalizeSetUp(){
 			thisSceneUI.Deactivate();
 		}
-		public void SetUISize(Vector2 size){
+		public virtual void SetUISize(Vector2 size){
 			thisRectTransform.sizeDelta  = size;
 		}
 		public void SetUIScale(Vector2 scale){
@@ -77,6 +81,16 @@ namespace UnityBase{
 		}
 		public Vector2 GetRectSize(){
 			return thisRectTransform.sizeDelta;
+		}
+		public virtual void DisableGraphic(){}
+		public virtual void EnableGraphic(){}
+		public bool IsBehind(){
+			Vector3 targetWorldPosition = GetTargetWorldPosition();
+			return thisCamera.WorldToScreenPoint(targetWorldPosition).z < 0f;
+			
+		}
+		public virtual bool IsCompletelyOutOfScreenBounds(){
+			return false;
 		}
 	}
 }

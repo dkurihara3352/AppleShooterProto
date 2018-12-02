@@ -19,8 +19,6 @@ namespace UnityBase{
 		void SetChildGraphicLocalScale(Vector3 scale);
 		void SetChildGraphicLocalPosition(Vector3 position);
 		ISceneObject GetSceneObject();
-
-		string GetDebugString();
 	}
 	public class PopUI: AbsSceneUI, IPopUI{
 		public PopUI(
@@ -120,7 +118,7 @@ namespace UnityBase{
 		
 		public void SetText(string text){
 			
-			thisTypedAdaptor.SetText(text + "\n" + GetDebugString());
+			thisTypedAdaptor.SetText(/* text + "\n" + GetDebugString() */text);
 		}
 		public string GetDebugString(){
 			// Vector2 targetWorldPos = thisTypedAdaptor.GetTargetWorldPosition();
@@ -147,6 +145,10 @@ namespace UnityBase{
 			}
 			public void SetChildGraphicLocalPosition(Vector3 position){
 				thisTypedAdaptor.SetChildGraphicLocalPosition(position);
+			}
+		/*  */
+			public Rect GetGraphicRect(){
+				return thisTypedAdaptor.GetGraphicRect();
 			}
 		/* Const */
 			public new interface IConstArg: AbsSceneUI.IConstArg{

@@ -13,6 +13,7 @@ namespace UnityBase{
 		Quaternion GetLocalRotation();
 		void SetLocalRotation(Quaternion localRotation);
 		void ResetLocalTransform();
+		
 		void SetParent(ISceneObject sceneObj);
 		IMonoBehaviourAdaptor GetAdaptor();
 		string GetName();
