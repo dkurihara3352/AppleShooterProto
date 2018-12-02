@@ -44,6 +44,7 @@ namespace UnityBase{
 		}
 		protected override void UpdateProcessImple(float deltaT){
 			UpdateUIPosition();
+			// CheckPositionIsValid();
 			UpdateUIAlpha();
 			UpdateUIScale();
 		}

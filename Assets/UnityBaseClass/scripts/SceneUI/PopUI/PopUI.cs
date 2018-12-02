@@ -123,11 +123,12 @@ namespace UnityBase{
 			thisTypedAdaptor.SetText(text + "\n" + GetDebugString());
 		}
 		public string GetDebugString(){
-			Vector2 targetWorldPos = thisTypedAdaptor.GetTargetWorldPosition();
-			Vector2 uiScreenPos = GetUIPosition(targetWorldPos);
-			uiScreenPos = new Vector2(uiScreenPos.x/ Screen.width,  uiScreenPos.y/ Screen.height);
-			string debugString = uiScreenPos.ToString();
-			return debugString;
+			// Vector2 targetWorldPos = thisTypedAdaptor.GetTargetWorldPosition();
+			// Vector2 uiScreenPos = GetUIPosition(targetWorldPos);
+			// uiScreenPos = new Vector2(uiScreenPos.x/ Screen.width,  uiScreenPos.y/ Screen.height);
+			// string debugString = uiScreenPos.ToString();
+			// return debugString;
+			return thisTypedAdaptor.GetUINormalizedScreenPosition().ToString();
 		}
 		IPopUIReserve thisReserve;
 		public void SetPopUIReserve(IPopUIReserve reserve){

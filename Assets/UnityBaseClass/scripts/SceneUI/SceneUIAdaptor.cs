@@ -14,6 +14,7 @@ namespace UnityBase{
 		Vector3 GetTargetWorldPosition();
 		void BecomeChildToCanvas();
 		Vector2 GetRectSize();
+		Vector2 GetUINormalizedScreenPosition();
 	}
 	[RequireComponent(typeof(RectTransform))]
 	public abstract class AbsSceneUIAdaptor : MonoBehaviourAdaptor, ISceneUIAdaptor {
@@ -58,14 +59,16 @@ namespace UnityBase{
 		public Vector3 GetTargetWorldPosition(){
 			return targetTransform.position;
 		}
+		Vector2 GetUIScreenPosition(){
+			Vector3 targetWorldPosition = GetTargetWorldPosition();
+			return thisCamera.WorldToScreenPoint(targetWorldPosition);
+		}
+		public Vector2 GetUINormalizedScreenPosition(){
+			Vector2 uiScreenPos = GetUIScreenPosition();
+			Vector2 result = new Vector2(uiScreenPos.x/ Screen.width,  uiScreenPos.y/ Screen.height);
+			return result;
+		}
 		protected Canvas thisCanvas;
-		// Canvas CollectCanvas(){
-		// 	Canvas result = this.transform.GetComponentInParent<Canvas>();
-		// 	Debug.Log(
-		// 		"canvas is null: " + (result == null).ToString()
-		// 	);
-		// 	return result;
-		// }
 		public void SetCanvas(Canvas canvas){
 			thisCanvas = canvas;
 		}
