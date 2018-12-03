@@ -38,6 +38,5 @@ namespace AppleShooterProto{
 				return _destructionScore;
 			}
 		}
-
 	}
 }
