@@ -5,7 +5,10 @@ using UnityBase;
 
 namespace AppleShooterProto{
 	public interface IShootingTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
-		void Hit(IArrow arrow);
+
+		void SetShootingManager(IShootingManager shootingManager);
+
+		void Hit(IArrow arrow, bool crit);
 		void AddLandedArrow(ILandedArrow landedArrow);
 		void RemoveLandedArrow(ILandedArrow landedArrow);
 		void DeactivateAllLandedArrows();
@@ -42,6 +45,10 @@ namespace AppleShooterProto{
 			thisActivationStateEngine = new ActivationStateEngine(this);
 			thisHealthBellCurve = arg.healthBellCurve;
 		}
+		public void SetShootingManager(IShootingManager manager){
+			thisShootingManager = manager;
+		}
+		IShootingManager thisShootingManager;
 		protected ITargetData thisTargetData;
 		protected int thisOriginalHealth;
 		protected int thisHealth;
@@ -66,33 +73,22 @@ namespace AppleShooterProto{
 				thisHealth = thisOriginalHealth;
 				thisTypedAdaptor.SetColor(thisDefaultColor);
 				thisTypedAdaptor.ToggleCollider(true);
-				// if(thisAdaptor.IsVisible())
-					thisPopUIReserve.PopText(
-						this,
-						GetActivationString()
-					);
+
+				thisPopUIReserve.PopText(
+					this,
+					GetActivationString()
+				);
 			}
 			int ResetHealth(){
 				float randomeMult = thisHealthBellCurve.Evaluate();
 				return Mathf.FloorToInt(thisTargetData.health * randomeMult);
 			}
 			string GetActivationString(){
-				// string result = GetHealthString();
-				// result += "\n";
-				// result += GetDistanceString();
-				// return result;
 				return GetName();
-				// return "";
 			}
 			string GetHealthString(){
 				string result = "health \n" + thisHealth.ToString();
 				return result;
-			}
-			string GetDistanceString(){
-				// float distance = GetDistanceFromPlayer();
-				// return "dist \n" + distance.ToString();
-
-				return "";
 			}
 			public void Deactivate(){
 				thisActivationStateEngine.Deactivate();
@@ -105,19 +101,26 @@ namespace AppleShooterProto{
 			protected abstract void ReserveSelf();
 		/* Hit & arrow interaction */
 			public void Hit(
-				IArrow arrow
+				IArrow arrow,
+				bool crit
 			){
 				float attack = arrow.GetAttack();
-				thisHealth -= Mathf.FloorToInt(attack);
+				float critBonus = 0f;
+				if(crit)
+					critBonus = attack * (thisShootingManager.GetCriticalMultiplier() - 1f);
+				thisHealth -= Mathf.FloorToInt(attack + critBonus);
 				if(thisHealth <= 0f){
 					DestroyTarget();
 				}
 				else{
 					IndicateHealth(
 						thisHealth,
-						attack
+						attack + critBonus
 					);
-					IndicateHit(attack);
+					IndicateHit(
+						attack,
+						critBonus
+					);
 				}
 			}
 			/* DestroyedTarget */
@@ -164,16 +167,24 @@ namespace AppleShooterProto{
 				thisTypedAdaptor.SetColor(newColor);
 			}
 			protected virtual void IndicateHit(
-				float delta
+				float attack,
+				float critBonus
 			){
-				float hitMagnitude = CalculateHitMagnitude(delta);
+				float totalAttack = attack + critBonus;
+				float hitMagnitude = CalculateHitMagnitude(totalAttack);
 				thisTypedAdaptor.PlayHitAnimation(hitMagnitude);
-				int deltaInt = Mathf.RoundToInt(delta);
 				thisPopUIReserve.PopText(
 					this,
-					deltaInt.ToString()
+					GetArrowAttackString(attack, critBonus)
 				);
 			}
+			string GetArrowAttackString(float attack, float critBonus){
+				string result = attack.ToString("N0");
+				if(critBonus != 0f)
+					result += " + " +critBonus.ToString("N0");
+				return result;
+			}
+			
 			float CalculateHitMagnitude(float delta){
 				return delta/thisOriginalHealth;
 			}

@@ -14,7 +14,11 @@ namespace AppleShooterProto{
 			return thisReserve;
 		}
 		public float reservedSpace;
+		public int targetCount;
 		public GameStatsTrackerAdaptor gameStatsTrackerAdaptor;
+		public ShootingManagerAdaptor shootingManagerAdaptor;
+		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
+		public UnityBase.PopUIReserveAdaptor popUIReserveAdaptor;
 		public GameObject shootingTargetPrefab;
 		public int GetSpawnValue(){
 			IShootingTargetAdaptor adaptor = (IShootingTargetAdaptor)shootingTargetPrefab.GetComponent(typeof(IShootingTargetAdaptor));

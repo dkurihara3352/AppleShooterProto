@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
 		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
 		void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor);
+		void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor);
 		void SetIndex(int index);
 		void ToggleCollider(bool on);
 		void SetColor(Color color);
@@ -66,6 +67,10 @@ namespace AppleShooterProto{
 		public void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor){
 			thisGameStatsTrackerAdaptor = adaptor;
 		}
+		IShootingManagerAdaptor thisShootingManagerAdaptor;
+		public void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor){
+			thisShootingManagerAdaptor = adaptor;
+		}
 
 		IBellCurve CreateHealthBellCurve(){
 			return new BellCurve(
@@ -92,6 +97,8 @@ namespace AppleShooterProto{
 			IGameStatsTracker tracker = thisGameStatsTrackerAdaptor.GetTracker();
 			thisShootingTarget.SetGameStatsTracker(tracker);
 
+			IShootingManager shootingManager = thisShootingManagerAdaptor.GetShootingManager();
+			thisShootingTarget.SetShootingManager(shootingManager);
 		}
 		public override void FinalizeSetUp(){
 			thisShootingTarget.Deactivate();

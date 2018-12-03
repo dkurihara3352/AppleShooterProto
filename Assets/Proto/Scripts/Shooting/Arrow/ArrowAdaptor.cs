@@ -61,6 +61,7 @@ namespace AppleShooterProto{
 
 			IShootingManager shootingManager = thisShootingManagerAdaptor.GetShootingManager();
 			thisArrow.SetShootingManager(shootingManager);
+			thisShootingManager = shootingManager;
 		}
 		public override void FinalizeSetUp(){
 			thisArrow.Deactivate();
@@ -87,7 +88,8 @@ namespace AppleShooterProto{
 		/* Collision Detection */
 			int checkPerEveryThisFrames;
 			Vector3 thisPrevPosition;
-			int layerNumber = 8;
+			int targetLayerNumber = 8;
+			int critLayerNumber = 9;
 			Vector3 prevForDebug;
 			Vector3 curForDebug;
 			int count = 0;
@@ -101,6 +103,7 @@ namespace AppleShooterProto{
 			public void StopCollisionCheck(){
 				thisChecksForCollision = false;
 			}
+			IShootingManager thisShootingManager;
 			public void FixedUpdate(){
 				if(thisChecksForCollision){
 					count ++;
@@ -112,11 +115,10 @@ namespace AppleShooterProto{
 						count = 0;
 						Vector3 position = GetPosition();
 						RaycastHit hit;
-						int layerMask = 1<<(layerNumber);
+						int layerMask = 1<<(targetLayerNumber);
 						bool hasHit = Physics.Linecast(thisPrevPosition, position, out hit, layerMask);
-						prevForDebug = thisPrevPosition;
-						curForDebug = position;
-						thisPrevPosition = position;
+						// prevForDebug = thisPrevPosition;
+						// curForDebug = position;
 						if(hasHit){
 							Transform hitTrans = hit.transform;
 							hitPosition = hit.point;
@@ -127,12 +129,23 @@ namespace AppleShooterProto{
 								);
 							Vector3 hitPos = hit.point;
 							IShootingTarget target = targetAdaptor.GetShootingTarget();
-							target.Hit(thisArrow);
+
+							RaycastHit critHit;
+							int critLayerMask = 1<<(critLayerNumber);
+							Vector3 rayDir = position - thisPrevPosition;
+							bool hasCritHit = Physics.Raycast(thisPrevPosition, rayDir, out critHit, 10f, critLayerMask);
+							if(hasCritHit){
+								thisShootingManager.Flash();
+							}
+
+							target.Hit(thisArrow, hasCritHit);
+
 							thisArrow.Land(
 								target,
 								hitPos
 							);
 						}
+						thisPrevPosition = position;
 					}
 				}
 			}

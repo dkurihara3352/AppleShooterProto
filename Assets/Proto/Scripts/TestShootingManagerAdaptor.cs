@@ -25,6 +25,7 @@ namespace AppleShooterProto{
 				0f,
 				0f,
 				0f,
+				0f,
 				0f
 			);
 			return new TestShootingManager(arg);

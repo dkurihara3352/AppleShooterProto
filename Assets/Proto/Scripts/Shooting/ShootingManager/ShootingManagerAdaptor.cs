@@ -30,6 +30,7 @@ namespace AppleShooterProto{
 		public float globalMaxFlightSpeed;
 
 		public float arrowFlightTime = 4f;
+		public float criticalMultiplier = 1.2f;
 		public override void SetUp(){
 			thisShootingManager = CreateShootingManager();
 		}
@@ -56,7 +57,8 @@ namespace AppleShooterProto{
 				globalMinFlightSpeed,
 				globalMaxFlightSpeed,
 
-				arrowFlightTime
+				arrowFlightTime,
+				criticalMultiplier
 			);
 			return new ShootingManager(arg);
 		}
@@ -66,6 +68,7 @@ namespace AppleShooterProto{
 		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		public ArrowReserveAdaptor arrowReserveAdaptor;
 		public ArrowTrailReserveAdaptor arrowTrailReserveAdaptor;
+		public CriticalFlashAdaptor criticalFlashAdaptor;
 		public float initialFlightSpeed;
 		public float GetInitialSpeed(){
 			return initialFlightSpeed;
@@ -100,6 +103,9 @@ namespace AppleShooterProto{
 
 			IArrowTrailReserve arrowTrailReserve = arrowTrailReserveAdaptor.GetArrowTrailReserve();
 			thisShootingManager.SetArrowTrailReserve(arrowTrailReserve);
+
+			ICriticalFlash flash = criticalFlashAdaptor.GetCriticalFlash();
+			thisShootingManager.SetCriticalFlash(flash);
 		}
 	}
 }

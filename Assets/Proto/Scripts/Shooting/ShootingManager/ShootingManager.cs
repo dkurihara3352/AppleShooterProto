@@ -11,6 +11,7 @@ namespace AppleShooterProto{
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
 		void SetArrowReserve(IArrowReserve reserve);
 		void SetArrowTrailReserve(IArrowTrailReserve reserve);
+		void SetCriticalFlash(ICriticalFlash flash);
 
 		void NockArrow();
 		void SetNockedArrow(IArrow arrow);
@@ -49,6 +50,9 @@ namespace AppleShooterProto{
 		);
 
 		void DeactivateArrow();
+
+		float GetCriticalMultiplier();
+		void Flash();
 	}
 	public class ShootingManager : AppleShooterSceneObject, IShootingManager {
 		/* SetUp */
@@ -72,6 +76,8 @@ namespace AppleShooterProto{
 				thisGlobalMaxFlightSpeed = arg.globalMaxFlightSpeed;
 
 				thisFlightTime = arg.flightTime;
+
+				thisCriticalMultiplier = arg.criticalMultiplier;
 			}
 			IShootingManagerAdaptor thisTypedAdaptor{
 				get{
@@ -173,6 +179,10 @@ namespace AppleShooterProto{
 						thisDrawStrength
 					);
 					return result;
+				}
+				float thisCriticalMultiplier;
+				public float GetCriticalMultiplier(){
+					return thisCriticalMultiplier;
 				}
 			/* FlightSpeed */
 				float thisFlightSpeed;			
@@ -327,6 +337,13 @@ namespace AppleShooterProto{
 			public void DeactivateArrow(){
 				thisNockedArrow.Deactivate();
 			}
+			ICriticalFlash thisFlash;
+			public void SetCriticalFlash(ICriticalFlash flash){
+				thisFlash = flash;
+			}
+			public void Flash(){
+				thisFlash.Flash();
+			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int drawProcessOrder{get;}
@@ -344,6 +361,7 @@ namespace AppleShooterProto{
 				float globalMaxFlightSpeed{get;}
 
 				float flightTime{get;}
+				float criticalMultiplier{get;}
 			}
 			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
@@ -364,7 +382,9 @@ namespace AppleShooterProto{
 					float globalMinFlightSpeed,
 					float globalMaxFlightSpeed,
 
-					float flightTime
+					float flightTime,
+					float criticalMultiplier
+
 				): base(
 					adaptor
 				){
@@ -385,6 +405,7 @@ namespace AppleShooterProto{
 					thisGlobalMaxFlightSpeed = globalMaxFlightSpeed;
 
 					thisFlightTime = flightTime;
+					thisCriticalMultiplier = criticalMultiplier;
 				}
 				readonly int thisDrawProcessOrder;
 				public int drawProcessOrder{get{return thisDrawProcessOrder;}}
@@ -416,6 +437,9 @@ namespace AppleShooterProto{
 
 				readonly float thisFlightTime;
 				public float flightTime{get{return thisFlightTime;}}
+
+				readonly float thisCriticalMultiplier;
+				public float criticalMultiplier{get{return thisCriticalMultiplier;}}
 			}
 		/*  */
 	}

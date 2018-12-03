@@ -81,10 +81,12 @@ namespace UnityBase{
 				return true;
 			return false;
 		}
+		bool debugEnabled = false;
 		void Update(){
-			if(thisPopUI != null && targetTransform != null)
-				SetDepthText();
-				// SetGraphicRectSizeText();
+			if(debugEnabled)
+				if(thisPopUI != null && targetTransform != null)
+					SetDepthText();
+					// SetGraphicRectSizeText();
 		}
 		void SetDepthText(){
 			Vector3 tarWorPos = GetTargetWorldPosition();

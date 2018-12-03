@@ -104,6 +104,11 @@ namespace AppleShooterProto{
 			IGameplayPause gameplayPause,
 			float time
 		);
+		ICriticalFlashProcess CreateCriticalFlashProcess(
+			ICriticalFlash flash,
+			AnimationCurve flashCurve,
+			float flashTime
+		);
 	}
 
 	public class AppleShooterProcessFactory: UISystemProcessFactory, IAppleShooterProcessFactory {
@@ -367,6 +372,19 @@ namespace AppleShooterProto{
 				gameplayPause
 			);
 			return new GameplayUnpauseProcess(arg);
+		}
+		public ICriticalFlashProcess CreateCriticalFlashProcess(
+			ICriticalFlash flash,
+			AnimationCurve flashCurve,
+			float flashTime
+		){
+			CriticalFlashProcess.IConstArg arg = new CriticalFlashProcess.ConstArg(
+				thisProcessManager,
+				flashTime,
+				flash,
+				flashCurve
+			);
+			return new CriticalFlashProcess(arg);
 		}
 	}
 }
