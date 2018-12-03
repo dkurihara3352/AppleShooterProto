@@ -79,7 +79,7 @@ namespace AppleShooterProto{
 				// DrawCurveSequence(sTR_2);
 				// DrawSpawnIndices(sTR_4);
 				// DrawShootingMetrics(sTR_3);
-				DrawWaypointEvents(bottomRightRect);
+				// DrawWaypointEvents(bottomRightRect);
 		}
 		/* left */
 			void DrawControl(){
