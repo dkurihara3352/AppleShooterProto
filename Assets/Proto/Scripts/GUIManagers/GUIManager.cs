@@ -99,16 +99,26 @@ namespace AppleShooterProto{
 					gameManager.WarmUp();
 					thisSystemIsReady = true;
 				}
+				// if(GUI.Button(
+				// 	sTL_3,
+				// 	"StartSpawn"
+				// ))
+				// 	gameManager.StartTargetSpawn();
+				// if(GUI.Button(
+				// 	sTL_4,
+				// 	"StopSpawn"
+				// ))
+				// 	gameManager.StopTargetSpawn();
 				if(GUI.Button(
 					sTL_3,
-					"StartSpawn"
+					"ActivateHUD"
 				))
-					gameManager.StartTargetSpawn();
+					ActivateHUD();
 				if(GUI.Button(
 					sTL_4,
-					"StopSpawn"
+					"DeactivateHUD"
 				))
-					gameManager.StopTargetSpawn();
+					DeactivateHUD();
 				// if(GUI.Button(
 				// 	sTL_3,
 				// 	"AddHeat"
@@ -374,6 +384,15 @@ namespace AppleShooterProto{
 				foreach(IShootingTargetReserve reserve in GetAllReserves()){
 					reserve.SetTier(tier);
 				}
+			}
+			public HeadUpDisplayAdaptor headUpDisplayAdaptor;
+			void ActivateHUD(){
+				IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
+				hud.Activate();
+			}
+			void DeactivateHUD(){
+				IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
+				hud.Deactivate();
 			}
 		/*  */
 	}

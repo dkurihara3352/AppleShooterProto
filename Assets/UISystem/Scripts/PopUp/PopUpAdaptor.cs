@@ -50,7 +50,7 @@ namespace UISystem{
 		public IPopUp GetPopUp(){
 			return thisPopUp;
 		}
-		public float processTime = .1f;
+		public float popUpProcessTime = .1f;
 		protected override IUIElement CreateUIElement(){
 			PopUp.IConstArg arg = new PopUp.ConstArg(
 				this,
@@ -58,7 +58,7 @@ namespace UISystem{
 
 				hidesOnTappingOthers,
 				popUpMode,
-				processTime
+				popUpProcessTime
 			);
 			return new PopUp(arg);
 		}

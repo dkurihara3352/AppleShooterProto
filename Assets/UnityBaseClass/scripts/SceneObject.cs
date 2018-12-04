@@ -74,6 +74,11 @@ namespace UnityBase{
 				return thisAdaptor.GetProcessFactory();
 			}
 		}
+		protected DKUtility.IProcessManager thisProcessManager{
+			get{
+				return thisMonoBehaviourAdaptorManager.GetProcessManager();
+			}
+		}
 		public virtual string GetName(){
 			return thisAdaptor.GetName();
 		}
