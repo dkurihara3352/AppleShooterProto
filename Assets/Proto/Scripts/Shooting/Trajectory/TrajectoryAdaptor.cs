@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 		public void DrawTrajectory(
 			Vector3[] trajectoryPoints
 		){
+			lineRenderer.enabled = true;
 			thisTrajectoryPoints = trajectoryPoints;
 			lineRenderer.numPositions = thisTrajectoryPoints.Length;
 			lineRenderer.SetPositions(thisTrajectoryPoints);
@@ -22,6 +23,7 @@ namespace AppleShooterProto{
 		public void Clear(){
 			thisTrajectoryPoints = null;
 			lineRenderer.numPositions = 0;
+			lineRenderer.enabled = false;
 		}
 		ITrajectory thisTrajectory;
 		public float maxT = 3f;
