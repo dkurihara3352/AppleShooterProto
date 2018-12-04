@@ -26,9 +26,12 @@ namespace AppleShooterProto{
 			return thisIsExecuted;
 		}
 		public void Execute(){
-			thisIsExecuted = true;
-			ExecuteImple();
+			if(this.IsExecutable()){
+				thisIsExecuted = true;
+				ExecuteImple();
+			}
 		}
+		protected virtual bool IsExecutable(){return true;}
 		protected abstract void ExecuteImple();
 		public abstract string GetName();
 		public virtual void Reset(){

@@ -28,7 +28,6 @@ namespace AppleShooterProto{
 		}
 		public int totalLandedArrowsCount;
 		public GameObject landedArrowPrefab;
-		public Camera guiCamera;
 		ILandedArrowAdaptor[] thisLandedArrowAdaptors;
 		IArrowTwangAdaptor[] thisArrowTwangAdaptors;
 		ILandedArrowAdaptor[] CreateLandedArrowAdaptors(){

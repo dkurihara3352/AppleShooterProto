@@ -8,7 +8,7 @@ namespace AppleShooterProto{
 
 		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
 		IPCWaypointsManager thisPCWaypointsManager;
-		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
+		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
 		public SmoothFollowerAdaptor camSmoothFollowerAdaptor;
 		public SmoothLookerAdaptor cameraPivotSmoothLookerAdaptor;
 		public SmoothLookerAdaptor camSmoothLookerAdaptor;
@@ -44,10 +44,12 @@ namespace AppleShooterProto{
 		}
 		IHeatManager thisHeatManager;
 		public HeatManagerAdaptor heatManagerAdaptor;
+		IPlayerCharacterWaypointsFollower thisPlayerCharacterWaypointsFollower;
 		void SetUpSceneObjectRefs(){
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			thisHeatManager = heatManagerAdaptor.GetHeatManager();
 			thisRootUIElement = GetRootUIElement();
+			thisPlayerCharacterWaypointsFollower = GetPlayerCharacterWaypointsFollower();
 		}
 
 		public void RunSystem(){
@@ -70,6 +72,17 @@ namespace AppleShooterProto{
 			//arrow flight process			200 ->
 			
 		}
+		public void WarmUp(){
+			//RunSystem minus starting heat manager
+			ActivateUISystem();
+			SetUpWaypointEventsOnFirstWaypointCurve();
+
+			StartWaypointsFollower();//		100
+			StartCameraSmoothFollow();//	140
+			StartCameraPivotSmoothLook();//	150
+			StartCameraSmoothLook();//		160
+			StartSmoothZoom();//			170
+		}
 		IUIElement thisRootUIElement;
 		public UIAdaptor rootUIAdaptor;
 		IUIElement GetRootUIElement(){
@@ -87,9 +100,7 @@ namespace AppleShooterProto{
 		}
 
 		public void StartWaypointsFollower(){
-			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
-			// follower.StartFollowing();
-			follower.SmoothStart();
+			thisPlayerCharacterWaypointsFollower.SmoothStart();
 		}
 		public void StartCameraSmoothFollow(){
 			ISmoothFollower follower = camSmoothFollowerAdaptor.GetSmoothFollower();
@@ -112,8 +123,7 @@ namespace AppleShooterProto{
 			playerCamera.StartSmoothZoom();
 		}
 		public int GetCurrentWaypointGroupIndex(){
-			IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
-			IWaypointCurve group = follower.GetCurrentWaypointCurve();
+			IWaypointCurve group = thisPlayerCharacterWaypointsFollower.GetCurrentWaypointCurve();
 			return thisPCWaypointsManager.GetWaypointCurveIndex(group);
 		}
 		public int[] GetCurrentGroupSequence(){
@@ -127,6 +137,15 @@ namespace AppleShooterProto{
 		}
 		void StartHeatManager(){
 			thisHeatManager.StartCountingDown();
+		}
+		IPlayerCharacterWaypointsFollower GetPlayerCharacterWaypointsFollower(){
+			return playerCharacterWaypointsFollowerAdaptor.GetPlayerCharacterWaypointsFollower();
+		}
+		public void StartTargetSpawn(){
+			thisPlayerCharacterWaypointsFollower.StartExecutingSpawnEvents();
+		}
+		public void StopTargetSpawn(){
+			thisPlayerCharacterWaypointsFollower.StopExecutingSpawnEvents();
 		}
 	}
 }

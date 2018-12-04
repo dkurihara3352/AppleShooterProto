@@ -94,18 +94,27 @@ namespace AppleShooterProto{
 
 				if(GUI.Button(
 					sTL_2,
-					"Run"
+					"WarmUp"
 				)){
-					gameManager.RunSystem();
+					gameManager.WarmUp();
 					thisSystemIsReady = true;
 				}
-
 				if(GUI.Button(
 					sTL_3,
-					"AddHeat"
-				)){
-					AddHeat();
-				}
+					"StartSpawn"
+				))
+					gameManager.StartTargetSpawn();
+				if(GUI.Button(
+					sTL_4,
+					"StopSpawn"
+				))
+					gameManager.StopTargetSpawn();
+				// if(GUI.Button(
+				// 	sTL_3,
+				// 	"AddHeat"
+				// )){
+				// 	AddHeat();
+				// }
 
 				// if(GUI.Button(
 				// 	sTL_4,
@@ -120,24 +129,24 @@ namespace AppleShooterProto{
 				// )){
 				// 	SmoothStartFollower();
 				// }
-				if(GUI.Button(
-					sTL_4,
-					"Tier Up"
-				)){
-					currentTier++;
-					if(currentTier > maxTier)
-						currentTier = maxTier;
-					SetTierOnAllTargetReserves(currentTier);
-				}
-				if(GUI.Button(
-					sTL_5,
-					"Tier Down"
-				)){
-					currentTier--;
-					if(currentTier < 0)
-						currentTier = 0;
-					SetTierOnAllTargetReserves(currentTier);
-				}
+				// if(GUI.Button(
+				// 	sTL_3,
+				// 	"Tier Up"
+				// )){
+				// 	currentTier++;
+				// 	if(currentTier > maxTier)
+				// 		currentTier = maxTier;
+				// 	SetTierOnAllTargetReserves(currentTier);
+				// }
+				// if(GUI.Button(
+				// 	sTL_4,
+				// 	"Tier Down"
+				// )){
+				// 	currentTier--;
+				// 	if(currentTier < 0)
+				// 		currentTier = 0;
+				// 	SetTierOnAllTargetReserves(currentTier);
+				// }
 
 			}
 			int currentTier = 0;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace AppleShooterProto{
 	public interface ILevelSectionShootingTargetSpawner: IAppleShooterSceneObject{
+		void SetPlayerCharacterWaypointsFollower(IPlayerCharacterWaypointsFollower follower);
 		void SetLevelSectionTargetSpawnDataInput(
 			TargetSpawnDataInput[] input
 		);
@@ -10,6 +11,7 @@ namespace AppleShooterProto{
 		void SetUpSpawnWaypointEvents();
 		IShootingTargetSpawnWaypointEvent[] GetSpawnWaypointEvents();
 		void Despawn();
+		bool ShouldSpawnTargets();
 	}
 	public class LevelSectionShootingTargetSpawner : AppleShooterSceneObject, ILevelSectionShootingTargetSpawner {
 
@@ -51,7 +53,8 @@ namespace AppleShooterProto{
 					ShootingTargetSpawnWaypointEvent.IConstArg eventConstArg = new ShootingTargetSpawnWaypointEvent.ConstArg(
 						reserve,
 						spawnPoint,
-						eventPoint
+						eventPoint,
+						this
 					);
 					IShootingTargetSpawnWaypointEvent spawnWaypointEvent = new ShootingTargetSpawnWaypointEvent(
 						eventConstArg
@@ -103,6 +106,13 @@ namespace AppleShooterProto{
 						spawnedTarget.Deactivate();
 				}	
 			}
+		}
+		IPlayerCharacterWaypointsFollower thisPlayerCharacterWaypointsFollower;
+		public void SetPlayerCharacterWaypointsFollower(IPlayerCharacterWaypointsFollower follower){
+			thisPlayerCharacterWaypointsFollower = follower;
+		}
+		public bool ShouldSpawnTargets(){
+			return thisPlayerCharacterWaypointsFollower.ShouldSpawnTargets();
 		}
 		/*  */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{

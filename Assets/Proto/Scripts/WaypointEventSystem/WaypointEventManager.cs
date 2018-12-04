@@ -12,7 +12,6 @@ namespace AppleShooterProto{
 	public class WaypointEventManager : IWaypointEventManager {
 		IWaypointCurve thisCurrentCurve;
 		Queue<IWaypointEvent> thisCurrentWaypontCurveEvents;
-		// IWaypointEvent[] thisCurrentWaypontCurveEvents;
 		public void SetNewCurve(IWaypointCurve curve){
 			thisInitialEventPoint = 0f;
 			thisCurrentCurve = curve;
@@ -23,7 +22,6 @@ namespace AppleShooterProto{
 				waypointEvent.Reset();
 			}
 			thisCurrentWaypontCurveEvents = result;
-			// thisCurrentWaypontCurveEvents = thisCurrentCurve.GetWaypointEvents();
 		}
 		float thisInitialEventPoint = 0f;
 		public void SetInitialEventPoint(float eventPoint){
@@ -39,7 +37,6 @@ namespace AppleShooterProto{
 			return result;
 		}
 		public void CheckForWaypointEvent(float normalizedPositionOnCurve){
-			// int index = 0;
 			while(true){
 				if(thisCurrentWaypontCurveEvents.Count != 0){
 					IWaypointEvent nextWaypontEvent = thisCurrentWaypontCurveEvents.Peek();

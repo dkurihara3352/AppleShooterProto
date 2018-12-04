@@ -20,11 +20,11 @@ namespace AppleShooterProto{
 		public override void SetUp(){
 			thisFollower = CreateFollower();
 		}
-		IWaypointsFollower thisFollower;
+		protected IWaypointsFollower thisFollower;
 		public IWaypointsFollower GetWaypointsFollower(){
 			return thisFollower;
 		}
-		IWaypointsFollower CreateFollower(){
+		protected virtual IWaypointsFollower CreateFollower(){
 			WaypointsFollower.IConstArg arg = new WaypointsFollower.ConstArg(
 				this,
 				followSpeed,

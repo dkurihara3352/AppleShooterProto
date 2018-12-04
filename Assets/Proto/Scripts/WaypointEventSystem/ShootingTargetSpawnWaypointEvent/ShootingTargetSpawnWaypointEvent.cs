@@ -13,12 +13,17 @@ namespace AppleShooterProto{
 		): base(arg){
 			thisShootingTargetReserve = arg.shootingTargetReserve;
 			thisShootingTargetSpawnPoint = arg.shootingTargetSpawnPoint;
+			thisSpawner = arg.targetSpawner;
 		}
 		protected override void ExecuteImple(){
 			thisShootingTargetReserve.ActivateShootingTargetAt(thisShootingTargetSpawnPoint);
 		}
 		IShootingTargetSpawnPoint thisShootingTargetSpawnPoint;
 		IShootingTargetReserve thisShootingTargetReserve;
+		ILevelSectionShootingTargetSpawner thisSpawner;
+		protected override bool IsExecutable(){
+			return thisSpawner.ShouldSpawnTargets();
+		}
 		public IShootingTargetSpawnPoint GetSpawnPoint(){
 			return thisShootingTargetSpawnPoint;
 		}
@@ -32,18 +37,21 @@ namespace AppleShooterProto{
 			public new interface IConstArg: AbsWaypointEvent.IConstArg{
 				IShootingTargetReserve shootingTargetReserve{get;}
 				IShootingTargetSpawnPoint shootingTargetSpawnPoint{get;}
+				ILevelSectionShootingTargetSpawner targetSpawner{get;}
 			}
 			public new class ConstArg: AbsWaypointEvent.ConstArg, IConstArg{
 				public ConstArg(
 					IShootingTargetReserve reserve,
 					IShootingTargetSpawnPoint point,
 
-					float eventPoint
+					float eventPoint,
+					ILevelSectionShootingTargetSpawner spawner
 				): base(
 					eventPoint
 				){
 					thisReserve = reserve;
 					thisPoint = point;
+					thisSapwner = spawner;
 				}
 				readonly IShootingTargetReserve thisReserve;
 				public IShootingTargetReserve shootingTargetReserve{
@@ -55,7 +63,9 @@ namespace AppleShooterProto{
 						return thisPoint;
 					}
 				}
-		}
+				readonly ILevelSectionShootingTargetSpawner thisSapwner;
+				public ILevelSectionShootingTargetSpawner targetSpawner{get{return thisSapwner;}}
+			}
 	}
 }
 

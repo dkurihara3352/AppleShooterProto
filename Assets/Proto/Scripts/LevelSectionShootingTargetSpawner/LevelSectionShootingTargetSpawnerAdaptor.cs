@@ -25,9 +25,14 @@ namespace AppleShooterProto{
 
 		public override void SetUpReference(){
 			thisSpawner.SetLevelSectionTargetSpawnDataInput(spawnDataInput);
-
+			IPlayerCharacterWaypointsFollower follower = GetFollower();
+			thisSpawner.SetPlayerCharacterWaypointsFollower(follower);
 		}
 		public TargetSpawnDataInput[] spawnDataInput;
+		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
+		IPlayerCharacterWaypointsFollower GetFollower(){
+			return playerCharacterWaypointsFollowerAdaptor.GetPlayerCharacterWaypointsFollower();
+		}
 
 	}
 	[System.Serializable]
