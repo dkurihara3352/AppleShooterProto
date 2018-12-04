@@ -42,6 +42,7 @@ namespace AppleShooterProto{
 		Rect sTL_5; 
 		Rect sTL_6;
 
+
 		Rect bottomLeftRect;
 
 		Rect topRightRect;
@@ -106,21 +107,41 @@ namespace AppleShooterProto{
 					AddHeat();
 				}
 
+				// if(GUI.Button(
+				// 	sTL_4,
+				// 	"SmoothStop"
+				// )){
+				// 	SmoothStopFollower();
+				// }
+				
+				// if(GUI.Button(
+				// 	sTL_5,
+				// 	"SmoothStart"
+				// )){
+				// 	SmoothStartFollower();
+				// }
 				if(GUI.Button(
 					sTL_4,
-					"SmoothStop"
+					"Tier Up"
 				)){
-					SmoothStopFollower();
+					currentTier++;
+					if(currentTier > maxTier)
+						currentTier = maxTier;
+					SetTierOnAllTargetReserves(currentTier);
 				}
-				
 				if(GUI.Button(
 					sTL_5,
-					"SmoothStart"
+					"Tier Down"
 				)){
-					SmoothStartFollower();
+					currentTier--;
+					if(currentTier < 0)
+						currentTier = 0;
+					SetTierOnAllTargetReserves(currentTier);
 				}
 
 			}
+			int currentTier = 0;
+			int maxTier = 1;
 			void DrawArrowsState(){
 				if(thisSystemIsReady){
 					// IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
@@ -329,6 +350,20 @@ namespace AppleShooterProto{
 					case TargetType.Glider:
 						return new Color(.3f, 1f, 1f);
 					default: return Color.white;
+				}
+			}
+			public AbsShootingTargetReserveAdaptor[] targetReserveAdaptors;
+			IShootingTargetReserve[] GetAllReserves(){
+				List<IShootingTargetReserve> resultList = new List<IShootingTargetReserve>();
+				foreach(AbsShootingTargetReserveAdaptor adaptor in targetReserveAdaptors){
+					resultList.Add(adaptor.GetReserve());
+				}
+				return resultList.ToArray();
+			}
+
+			void SetTierOnAllTargetReserves(int tier){
+				foreach(IShootingTargetReserve reserve in GetAllReserves()){
+					reserve.SetTier(tier);
 				}
 			}
 		/*  */

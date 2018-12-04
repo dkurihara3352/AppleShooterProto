@@ -28,6 +28,7 @@ namespace AppleShooterProto{
 			return thisTypedReserve;
 		}
 		public override void SetUpReference(){
+			base.SetUpReference();
 			IFlyingTarget[] targets = CreateFlyingTargets();
 			thisTypedReserve.SetSceneObjects(targets);
 		}

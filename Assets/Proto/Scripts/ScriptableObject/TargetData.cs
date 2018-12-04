@@ -7,7 +7,6 @@ namespace AppleShooterProto{
 		TargetType targetType{get;}
 		float heatBonus{get;}
 		int health{get;}
-		int spawnValue{get;}
 		int destructionScore{get;}
 	}
 	[CreateAssetMenu(menuName = "Custom/TargetData", fileName = "targetData")]
@@ -24,12 +23,6 @@ namespace AppleShooterProto{
 		public int health{
 			get{
 				return _health;
-			}
-		}
-		public int _spawnValue;
-		public int spawnValue{
-			get{
-				return _spawnValue;
 			}
 		}
 		public int _destructionScore;

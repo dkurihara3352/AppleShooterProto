@@ -29,6 +29,7 @@ namespace AppleShooterProto{
 			return thisTypedReserve;
 		}
 		public override void SetUpReference(){
+			base.SetUpReference();
 			IStaticShootingTarget[] targets = CreateStaticShootingTargets();
 			thisTypedReserve.SetSceneObjects(targets);
 		}

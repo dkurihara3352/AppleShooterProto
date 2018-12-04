@@ -6,9 +6,10 @@ using UnityBase;
 namespace AppleShooterProto{
 
 	public interface IShootingTargetReserve{
-		void SetTargetSpawnData(TargetSpawnData data);
+		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
 		TargetType GetTargetType();
 		void ActivateShootingTargetAt(IShootingTargetSpawnPoint point);
+		void SetTier(int tier);
 	}
 	public abstract class AbsShootingTargetReserve<T> : AbsSceneObjectReserve<T>, IShootingTargetReserve where T: IShootingTarget{
 		public AbsShootingTargetReserve(
@@ -29,10 +30,6 @@ namespace AppleShooterProto{
 				posX, 0f, 0f
 			);
 		}
-		protected TargetSpawnData thisTargetSpawnData;
-		public void SetTargetSpawnData(TargetSpawnData data){
-			thisTargetSpawnData = data;
-		}
 		public TargetType GetTargetType(){
 			return thisTypedAdaptor.GetTargetType();
 		}
@@ -42,6 +39,54 @@ namespace AppleShooterProto{
 			}
 		}
 		public abstract void ActivateShootingTargetAt(IShootingTargetSpawnPoint point);
+		public void SetTier(int tier){
+			Material mat = thisTypedAdaptor.GetMaterialForTier(tier);
+			TargetData targetData = thisTypedAdaptor.GetTargetDataForTier(tier);
+			TargetTierData tierData = new TargetTierData(
+				mat,
+				targetData
+			);
+			SetAllTargetTier(
+				tierData
+			);
+			SetAllDestroyedTargetTier(
+				tierData
+			);
+		}
+		void SetAllTargetTier(
+			TargetTierData tierData
+		){
+			foreach(IShootingTarget target in thisSceneObjects){
+				if(!target.IsActivated()){
+					target.SetTier(
+						tierData
+					);
+				}else{
+					target.SetTargetTierDataOnQueue(
+						tierData
+					);
+				}
+			}
+		}
+		IDestroyedTargetReserve thisDestroyedTargetReserve;
+		public void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve){
+			thisDestroyedTargetReserve = reserve;
+		}
+		void SetAllDestroyedTargetTier(
+			TargetTierData tierData
+		){
+			foreach(IDestroyedTarget target in thisDestroyedTargetReserve.GetTargets()){
+				if(!target.IsActivated()){
+					target.SetTier(
+						tierData
+					);
+				}else{
+					target.SetTargetTierDataOnQueue(
+						tierData
+					);
+				}
+			}
+		}
 		/*  */
 			public new interface IConstArg: AbsSceneObject.IConstArg{
 				float reservedSpace{get;}
@@ -61,5 +106,16 @@ namespace AppleShooterProto{
 				}
 			}
 		/*  */
+	}
+	public class TargetTierData{
+		public TargetTierData(
+			Material mat,
+			TargetData data
+		){
+			material = mat;
+			targetData = data;
+		}
+		public Material material;
+		public TargetData targetData;
 	}
 }

@@ -31,6 +31,8 @@ namespace AppleShooterProto{
 		int GetDestructionScore();
 
 		TargetType GetTargetType();
+		void SetTier(TargetTierData tierData);
+		void SetTargetTierDataOnQueue(TargetTierData tierData);
 	}
 	public abstract class AbsShootingTarget : AppleShooterSceneObject, IShootingTarget {
 		public AbsShootingTarget(
@@ -97,6 +99,10 @@ namespace AppleShooterProto{
 				DeactivateAllLandedArrows();
 				ReserveSelf();
 				thisTypedAdaptor.ToggleCollider(false);
+				if(thisTargetTierDataOnQueue != null){
+					SetTier(thisTargetTierDataOnQueue);
+					thisTargetTierDataOnQueue = null;
+				}
 			}
 			protected abstract void ReserveSelf();
 		/* Hit & arrow interaction */
@@ -234,6 +240,18 @@ namespace AppleShooterProto{
 			}
 			public TargetType GetTargetType(){
 				return thisTargetData.targetType;
+			}
+			public void SetTier(TargetTierData tierData){
+				thisTypedAdaptor.SetMaterial(tierData.material);
+				UpdateTargetData(tierData.targetData);
+			}
+			public void UpdateTargetData(TargetData data){
+				thisTargetData = data;
+				thisTypedAdaptor.SetTargetData(data);
+			}
+			TargetTierData thisTargetTierDataOnQueue;
+			public void SetTargetTierDataOnQueue(TargetTierData tierData){
+				thisTargetTierDataOnQueue = tierData;
 			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{

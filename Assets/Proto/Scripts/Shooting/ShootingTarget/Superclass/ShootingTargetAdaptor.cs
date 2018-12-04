@@ -15,7 +15,8 @@ namespace AppleShooterProto{
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
 
-		int GetSpawnValue();
+		void SetMaterial(Material mat);
+		void SetTargetData(TargetData data);
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
@@ -62,6 +63,9 @@ namespace AppleShooterProto{
 		protected IBellCurve thisHealthBellCurve;
 
 		public TargetData targetData;
+		public void SetTargetData(TargetData data){
+			targetData = data;
+		}
 
 		IGameStatsTrackerAdaptor thisGameStatsTrackerAdaptor;
 		public void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor){
@@ -141,8 +145,8 @@ namespace AppleShooterProto{
 			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
 			thisAnimator.SetTrigger(thisHitTriggerHash);
 		}
-		public int GetSpawnValue(){
-			return targetData.spawnValue;
+		public void SetMaterial(Material material){
+			modelMeshRenderer.material = material;
 		}
 	}
 }

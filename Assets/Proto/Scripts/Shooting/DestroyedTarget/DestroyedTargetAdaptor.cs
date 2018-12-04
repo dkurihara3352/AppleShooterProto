@@ -18,6 +18,7 @@ namespace AppleShooterProto{
 			void StopParticleSystem();
 		void SetIndex(int index);
 		int GetIndex();
+		void SetMaterial(Material mat);
 	}
 	public class DestroyedTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IDestroyedTargetAdaptor{
 		public override void SetUp(){
@@ -25,6 +26,7 @@ namespace AppleShooterProto{
 			thisDestroyedTarget = CreateDestroyedTarget();
 
 			thisParticleSystem = GetComponent<ParticleSystem>();
+			thisParticleSystemRenderer = GetComponent<ParticleSystemRenderer>();
 		}
 		public override void SetUpReference(){
 			IDestroyedTargetReserve destroyedTargetReserve = thisDestroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
@@ -86,6 +88,10 @@ namespace AppleShooterProto{
 			}
 			public void StopParticleSystem(){
 				thisParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+			}
+			ParticleSystemRenderer thisParticleSystemRenderer;
+			public void SetMaterial(Material mat){
+				thisParticleSystemRenderer.material = mat;
 			}
 		/* misc */
 

@@ -10,6 +10,8 @@ namespace AppleShooterProto{
 		int GetIndex();
 		IShootingTarget GetShootingTarget();
 		void StopParticleSystem();
+		void SetTier(TargetTierData data);
+		void SetTargetTierDataOnQueue(TargetTierData data);
 
 	}
 	public class DestroyedTarget : AppleShooterSceneObject, IDestroyedTarget {
@@ -78,9 +80,20 @@ namespace AppleShooterProto{
 			thisTypedAdaptor.StopDestruction();
 			// thisTypedAdaptor.StopParticleSystem();
 			thisDestroyedTargetReserve.Reserve(this);
+			if(thisTargetTierDataOnQueue != null){
+				SetTier(thisTargetTierDataOnQueue);
+				thisTargetTierDataOnQueue = null;
+			}
 		}
 		public void StopParticleSystem(){
 			thisTypedAdaptor.StopParticleSystem();
+		}
+		public void SetTier(TargetTierData data){
+			thisTypedAdaptor.SetMaterial(data.material);
+		}
+		TargetTierData thisTargetTierDataOnQueue;
+		public void SetTargetTierDataOnQueue(TargetTierData data){
+			thisTargetTierDataOnQueue = data;
 		}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{

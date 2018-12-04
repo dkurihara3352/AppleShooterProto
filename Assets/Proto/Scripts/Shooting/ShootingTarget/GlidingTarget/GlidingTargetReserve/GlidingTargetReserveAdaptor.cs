@@ -28,6 +28,7 @@ namespace AppleShooterProto{
 			return new GlidingTargetReserve(arg);
 		}
 		public override void SetUpReference(){
+			base.SetUpReference();
 			IGlidingTarget[] glidingTargets = CreateGlidingTargets();
 			thisTypedReserve.SetSceneObjects(glidingTargets);
 		}
