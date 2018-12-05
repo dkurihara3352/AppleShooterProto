@@ -365,8 +365,8 @@ namespace UISystem{
 			}
 		/* Scroller Focus Evaluation */
 			public override void EvaluateScrollerFocusRecursively(){
-				BecomeFocusedInScrollerSelf();
-				thisUIElementGroup.BecomeFocusedInScrollerSelf();
+				OnScrollerFocus();
+				thisUIElementGroup.OnScrollerFocus();
 				EvaluateCursoredGroupElementsRaw();
 				foreach(IUIElement cursoredUIE in thisCursoredElements)
 					if(cursoredUIE != null)
@@ -388,8 +388,8 @@ namespace UISystem{
 				return result;
 			}
 			public override void BecomeFocusedInScrollerRecursively(){
-				BecomeFocusedInScrollerSelf();
-				thisUIElementGroup.BecomeFocusedInScrollerSelf();
+				OnScrollerFocus();
+				thisUIElementGroup.OnScrollerFocus();
 				foreach(IUIElement cursoredElement in thisCursoredElements)
 					if(cursoredElement != null)
 						cursoredElement.BecomeFocusedInScrollerRecursively();

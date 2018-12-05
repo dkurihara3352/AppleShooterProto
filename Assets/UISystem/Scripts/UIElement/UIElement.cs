@@ -27,8 +27,9 @@ namespace UISystem{
 		void OnDeactivationComplete();
 		bool IsActivated();
 		/*  */
-		void EnableInput();
+		void EnableInputSelf();
 		void EnableInputRecursively();
+		void DisableInputSelf();
 		void DisableInputRecursively();
 		void DisableScrollInputRecursively(IScroller disablingScroller);
 		void EnableScrollInputRecursively();
@@ -41,8 +42,8 @@ namespace UISystem{
 		IScroller GetProximateParentScroller();
 		void EvaluateScrollerFocusRecursively();
 		// void EvaluateScrollerFocus();
-		void BecomeFocusedInScrollerSelf();
-		void BecomeDefocusedInScrollerSelf();
+		void OnScrollerFocus();
+		void OnScrollerDefocus();
 		void BecomeFocusedInScrollerRecursively();
 		void BecomeDefocusedInScrollerRecursively();
 		/* PopUp */
@@ -151,7 +152,7 @@ namespace UISystem{
 				return thisUIEActivationStateEngine.IsActivated();
 			}
 			public void DeactivateImple(){
-				this.BecomeDefocusedInScrollerSelf();
+				this.OnScrollerDefocus();
 				OnUIDeactivate();
 			}
 			protected virtual void OnUIDeactivate(){}
@@ -387,23 +388,23 @@ namespace UISystem{
 				}
 			/*  */
 		/*  */
-		public void EnableInput(){
+		public void EnableInputSelf(){
 			thisIsEnabledInput = true;
 			if(thisUIManager.ShowsInputability())
 				TurnTo(GetUIImage().GetDefaultColor());
 		}
 		public void EnableInputRecursively(){
-			this.EnableInput();
+			this.EnableInputSelf();
 			foreach(IUIElement child in thisChildUIEs)
 				child.EnableInputRecursively();
 		}
-		protected void DisableInput(){
+		public void DisableInputSelf(){
 			thisIsEnabledInput = false;
 			if(thisUIManager.ShowsInputability())
 				TurnTo(Color.red);
 		}
 		public void DisableInputRecursively(){
-			this.DisableInput();
+			this.DisableInputSelf();
 			foreach(IUIElement child in thisChildUIEs)
 				child.DisableInputRecursively();
 		}
@@ -412,7 +413,7 @@ namespace UISystem{
 			return thisTopmostScrollerInMotion;
 		}
 		public virtual void DisableScrollInputRecursively(IScroller disablingScroller){
-			this.DisableInput();
+			this.DisableInputSelf();
 			thisTopmostScrollerInMotion = disablingScroller;
 			foreach(IUIElement child in thisChildUIEs){
 				child.DisableScrollInputRecursively(disablingScroller);
@@ -425,7 +426,7 @@ namespace UISystem{
 			}
 		}
 		public virtual void EnableScrollInputSelf(){
-			this.EnableInput();
+			this.EnableInputSelf();
 			thisTopmostScrollerInMotion = null;
 		}
 		public virtual void CheckForScrollInputEnable(){
@@ -438,27 +439,27 @@ namespace UISystem{
 
 		/* Scrolller */
 			public virtual void EvaluateScrollerFocusRecursively(){
-				this.BecomeFocusedInScrollerSelf();
+				this.OnScrollerFocus();
 				foreach(IUIElement childUIE in GetChildUIElements())
 					if(childUIE != null)
 						childUIE.EvaluateScrollerFocusRecursively();
 			}
 			protected bool thisIsFocusedInScroller = false;
-			public virtual void BecomeFocusedInScrollerSelf(){
+			public virtual void OnScrollerFocus(){
 				thisIsFocusedInScroller = true;
 				BecomeSelectable();
 			}
-			public virtual void BecomeDefocusedInScrollerSelf(){
+			public virtual void OnScrollerDefocus(){
 				thisIsFocusedInScroller = false;
 				BecomeUnselectable();
 			}
 			public virtual void BecomeFocusedInScrollerRecursively(){
-				BecomeDefocusedInScrollerSelf();
+				OnScrollerDefocus();
 				foreach(IUIElement child in GetChildUIElements())
 					child.BecomeFocusedInScrollerRecursively();
 			}
 			public virtual void BecomeDefocusedInScrollerRecursively(){
-				BecomeDefocusedInScrollerSelf();
+				OnScrollerDefocus();
 				foreach(IUIElement child in GetChildUIElements())
 					child.BecomeDefocusedInScrollerRecursively();
 			}
@@ -471,7 +472,7 @@ namespace UISystem{
 			thisWasSelectableAtPopUpDisable = this.IsSelectable();
 			thisInputWasEnabledAtPopUpDisable = thisIsEnabledInput;
 			BecomeUnselectable();
-			DisableInput();
+			DisableInputSelf();
 		}
 		public void PopUpDisableRecursivelyDownTo(IPopUp disablingPopUp){
 			if(this.IsActivated()){
@@ -490,7 +491,7 @@ namespace UISystem{
 			if(thisWasSelectableAtPopUpDisable)
 				BecomeSelectable();
 			if(thisInputWasEnabledAtPopUpDisable)
-				EnableInput();
+				EnableInputSelf();
 		}
 		public void ReversePopUpDisableRecursively(){
 			ReverseDisableForPopUp();

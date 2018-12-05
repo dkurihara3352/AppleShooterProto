@@ -54,16 +54,12 @@ namespace AppleShooterProto{
 		Rect bottomRightRect;
 
 		public ProtoGameManager gameManager;
-		public bool drawsWaypointFollowerSetUp = true;
-		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public ShootingManagerAdaptor shootingManagerAdaptor;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
-		public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
-		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		public ArrowReserveAdaptor arrowReserveAdaptor;
 		void OnGUI(){
 			/* left */
@@ -109,16 +105,31 @@ namespace AppleShooterProto{
 				// 	"StopSpawn"
 				// ))
 				// 	gameManager.StopTargetSpawn();
+				// if(GUI.Button(
+				// 	sTL_3,
+				// 	"StartGameplay"
+				// ))
+				// 	StartGameplay();
+				// if(GUI.Button(
+				// 	sTL_4,
+				// 	"EndGameplay"
+				// ))
+				// 	EndGameplay();
 				if(GUI.Button(
 					sTL_3,
-					"StartGameplay"
+					"ActivateRootUIE"
 				))
-					StartGameplay();
+					gameManager.ActivateRootUI();
 				if(GUI.Button(
 					sTL_4,
-					"EndGameplay"
+					"Start"
 				))
-					EndGameplay();
+					gameManager.StartGameplaySequence();
+				if(GUI.Button(
+					sTL_5,
+					"End"
+				))
+					gameManager.StartEndGameplaySequence();
 				// if(GUI.Button(
 				// 	sTL_3,
 				// 	"AddHeat"
@@ -159,6 +170,7 @@ namespace AppleShooterProto{
 				// }
 
 			}
+			
 			int currentTier = 0;
 			int maxTier = 1;
 			void DrawArrowsState(){
@@ -385,29 +397,38 @@ namespace AppleShooterProto{
 					reserve.SetTier(tier);
 				}
 			}
-			void StartGameplay(){
-				gameManager.StartWaitAndStartGameplay();
-			}
-			void EndGameplay(){
-				DeactivateInputUI();
-				DeactivateHUD();
-				gameManager.StopTargetSpawn();
-			}
-			public HeadUpDisplayAdaptor headUpDisplayAdaptor;
-			void ActivateHUD(){
-				IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
-				hud.Activate();
-			}
-			void DeactivateHUD(){
-				IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
-				hud.Deactivate();
-			}
-			void ActivateInputUI(){
-				gameManager.ActivateInputUI();
-			}
-			void DeactivateInputUI(){
-				gameManager.DeactivateInputUI();
-			}
+			// void StartGameplay(){
+			// 	gameManager.StartWaitAndStartGameplay();
+			// }
+			// void EndGameplay(){
+			// 	DeactivateInputUI();
+			// 	DeactivateHUD();
+			// 	gameManager.StopTargetSpawn();
+			// }
+			// public HeadUpDisplayAdaptor headUpDisplayAdaptor;
+			// void ActivateHUD(){
+			// 	IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
+			// 	hud.Activate();
+			// }
+			// void DeactivateHUD(){
+			// 	IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
+			// 	hud.Deactivate();
+			// }
+			// void ActivateInputUI(){
+			// 	gameManager.ActivateGameplayUI();
+			// }
+			// void DeactivateInputUI(){
+			// 	gameManager.DeactivateGameplayUI();
+			// }
+			// public UnityBase.FrostGlassAdaptor frostGlassAdaptor;
+			// void Frost(){
+			// 	UnityBase.IFrostGlass glass = frostGlassAdaptor.GetFrostGlass();
+			// 	glass.Frost();
+			// }
+			// void Defrost(){
+			// 	UnityBase.IFrostGlass glass = frostGlassAdaptor.GetFrostGlass();
+			// 	glass.Defrost();
+			// }
 		/*  */
 	}
 }

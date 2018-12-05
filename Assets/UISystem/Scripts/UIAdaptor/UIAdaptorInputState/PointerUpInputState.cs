@@ -12,13 +12,20 @@ namespace UISystem{
 		){}
 
 		public override void OnPointerUp(ICustomEventData eventData){
-			throw new System.InvalidOperationException("OnPointerUp should not be called while pointer is already held up");
+			// throw new System.InvalidOperationException("OnPointerUp should not be called while pointer is already held up");
+			thisEngine.OnPointerDown(eventData);
+			thisEngine.OnPointerUp(eventData);
 		}
 		public override void OnBeginDrag(ICustomEventData eventData){
-			throw new System.InvalidOperationException("OnBeginDrag should not be called while pointer is held up");
+			// throw new System.InvalidOperationException("OnBeginDrag should not be called while pointer is held up");
+			thisEngine.OnPointerDown(eventData);
+			thisEngine.OnBeginDrag(eventData);
 		}
 		public override void OnDrag(ICustomEventData eventData){
-			throw new System.InvalidOperationException("OnDrag should be impossible when pointer is held up, something's wrong");
+			// throw new System.InvalidOperationException("OnDrag should be impossible when pointer is held up, something's wrong");
+			thisEngine.OnPointerDown(eventData);
+			thisEngine.OnBeginDrag(eventData);
+			thisEngine.OnDrag(eventData);
 		}
 		public override void OnPointerEnter(ICustomEventData eventData){return;}
 		public override void OnPointerExit(ICustomEventData eventData){return;}

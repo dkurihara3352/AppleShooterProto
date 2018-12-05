@@ -58,18 +58,29 @@ namespace AppleShooterProto{
 		public HeadUpDisplayAdaptor headUpDisplayAdaptor;
 		IGameStatsTracker thisGameStatsTracker;
 		public GameStatsTrackerAdaptor gameStatsTrackerAdaptor;
+		public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
+		IUIElementGroupScroller thisRootScroller;
+		public UnityBase.FrostGlassAdaptor rootElementFrostGlassAdaptor;
+		UnityBase.IFrostGlass thisRootElementFrostGlass;
+		public UIAdaptor rootUIAdaptor;
+		IUIElement thisRootUIElement;
 		void SetUpSceneObjectRefs(){
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			thisHeatManager = heatManagerAdaptor.GetHeatManager();
-			thisRootUIElement = GetRootUIElement();
+			thisGameplayUIElement = GetGameplayUIElement();
 			thisPlayerCharacterWaypointsFollower = GetPlayerCharacterWaypointsFollower();
 			thisHUD = headUpDisplayAdaptor.GetHeadUpDisplay();
 			thisGameStatsTracker = gameStatsTrackerAdaptor.GetTracker();
+			thisRootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
+			thisRootElementFrostGlass = rootElementFrostGlassAdaptor.GetFrostGlass();
+			thisRootUIElement = rootUIAdaptor.GetUIElement();
 		}
-
+		public void ActivateRootUI(){
+			thisRootUIElement.ActivateRecursively(false);
+		}
 		public void RunSystem(){
 
-			ActivateInputUI();
+			ActivateGameplayUI();
 			// GetTargetsReadyAtReserve();
 			SetUpWaypointEventsOnFirstWaypointCurve();
 
@@ -98,16 +109,16 @@ namespace AppleShooterProto{
 			StartCameraSmoothLook();//		160
 			StartSmoothZoom();//			170
 		}
-		IUIElement thisRootUIElement;
-		public UIAdaptor rootUIAdaptor;
-		IUIElement GetRootUIElement(){
-			return rootUIAdaptor.GetUIElement();
+		IUIElement thisGameplayUIElement;
+		public UIAdaptor gameplayUIAdaptor;
+		IUIElement GetGameplayUIElement(){
+			return gameplayUIAdaptor.GetUIElement();
 		}
-		public void ActivateInputUI(){
-			thisRootUIElement.ActivateRecursively(instantly: false);
+		public void ActivateGameplayUI(){
+			thisGameplayUIElement.ActivateRecursively(instantly: false);
 		}
-		public void DeactivateInputUI(){
-			thisRootUIElement.DeactivateRecursively(false);
+		public void DeactivateGameplayUI(){
+			thisGameplayUIElement.DeactivateRecursively(false);
 		}
 		public void SetUpWaypointEventsOnFirstWaypointCurve(){
 			IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
@@ -164,7 +175,30 @@ namespace AppleShooterProto{
 			thisPlayerCharacterWaypointsFollower.StopExecutingSpawnEvents();
 		}
 		IProcessSuite thisWaitAndStartProcessSuite;
+		public void StartGameplaySequence(){
+			StartWaitAndStartGameplay();
+			DisableRootScroller();
+			DefrostRootElement();
+		}
+		public void StartEndGameplaySequence(){
+			EndGameplay();
+			EnableRootScroller();
+			FrostRootElement();
+		}
+		void DisableRootScroller(){
+			thisRootScroller.DisableInputSelf();
+		}
+		void EnableRootScroller(){
+			thisRootScroller.EnableInputSelf();
+		}
+		void DefrostRootElement(){
+			thisRootElementFrostGlass.Defrost();
+		}
+		void FrostRootElement(){
+			thisRootElementFrostGlass.Frost();
+		}
 		public void StartWaitAndStartGameplay(){
+
 			thisWaitAndStartProcessSuite.Start();
 		}
 		void ActivateHUD(){
@@ -175,12 +209,12 @@ namespace AppleShooterProto{
 		}
 		void StartGameplay(){
 			ResetStats();
-			ActivateInputUI();
+			ActivateGameplayUI();
 			ActivateHUD();
 			StartTargetSpawn();
 		}
 		void EndGameplay(){
-			DeactivateInputUI();
+			DeactivateGameplayUI();
 			DeactivateHUD();
 			StopTargetSpawn();
 		}
