@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
+using DKUtility;
 
 namespace AppleShooterProto{
-	public class ProtoGameManager : MonoBehaviour {
+	public class ProtoGameManager : MonoBehaviour, IProcessHandler {
 
 		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
 		IPCWaypointsManager thisPCWaypointsManager;
@@ -22,9 +23,17 @@ namespace AppleShooterProto{
 		public PlayerCameraAdaptor playerCameraAdaptor;
 		public StaticShootingTargetReserveAdaptor staticShootingTargetReserveAdaptor;
 
+		public ProcessManager processManager;
+		public float startWaitTime = 1f;
 		public void SetUp(){
 			SetUpMBAdaptors();
 			SetUpSceneObjectRefs();
+			thisWaitAndStartProcessSuite = new ProcessSuite(
+				processManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				startWaitTime
+			);
 		}
 		void SetUpMBAdaptors(){
 			mbAdaptorManager.SetUpAllMonoBehaviourAdaptors();
@@ -45,16 +54,22 @@ namespace AppleShooterProto{
 		IHeatManager thisHeatManager;
 		public HeatManagerAdaptor heatManagerAdaptor;
 		IPlayerCharacterWaypointsFollower thisPlayerCharacterWaypointsFollower;
+		IHeadUpDisplay thisHUD;
+		public HeadUpDisplayAdaptor headUpDisplayAdaptor;
+		IGameStatsTracker thisGameStatsTracker;
+		public GameStatsTrackerAdaptor gameStatsTrackerAdaptor;
 		void SetUpSceneObjectRefs(){
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			thisHeatManager = heatManagerAdaptor.GetHeatManager();
 			thisRootUIElement = GetRootUIElement();
 			thisPlayerCharacterWaypointsFollower = GetPlayerCharacterWaypointsFollower();
+			thisHUD = headUpDisplayAdaptor.GetHeadUpDisplay();
+			thisGameStatsTracker = gameStatsTrackerAdaptor.GetTracker();
 		}
 
 		public void RunSystem(){
 
-			ActivateUISystem();
+			ActivateInputUI();
 			// GetTargetsReadyAtReserve();
 			SetUpWaypointEventsOnFirstWaypointCurve();
 
@@ -74,7 +89,7 @@ namespace AppleShooterProto{
 		}
 		public void WarmUp(){
 			//RunSystem minus starting heat manager
-			ActivateUISystem();
+			// ActivateUISystem();
 			SetUpWaypointEventsOnFirstWaypointCurve();
 
 			StartWaypointsFollower();//		100
@@ -88,10 +103,11 @@ namespace AppleShooterProto{
 		IUIElement GetRootUIElement(){
 			return rootUIAdaptor.GetUIElement();
 		}
-		void ActivateUISystem(){
-			// IUIManager uim = uiManagerAdaptor.GetUIManager();
-			// uim.ActivateUISystem(false);
+		public void ActivateInputUI(){
 			thisRootUIElement.ActivateRecursively(instantly: false);
+		}
+		public void DeactivateInputUI(){
+			thisRootUIElement.DeactivateRecursively(false);
 		}
 		public void SetUpWaypointEventsOnFirstWaypointCurve(){
 			IPCWaypointsManager pcWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
@@ -146,6 +162,41 @@ namespace AppleShooterProto{
 		}
 		public void StopTargetSpawn(){
 			thisPlayerCharacterWaypointsFollower.StopExecutingSpawnEvents();
+		}
+		IProcessSuite thisWaitAndStartProcessSuite;
+		public void StartWaitAndStartGameplay(){
+			thisWaitAndStartProcessSuite.Start();
+		}
+		void ActivateHUD(){
+			thisHUD.Activate();
+		}
+		void DeactivateHUD(){
+			thisHUD.Deactivate();
+		}
+		void StartGameplay(){
+			ResetStats();
+			ActivateInputUI();
+			ActivateHUD();
+			StartTargetSpawn();
+		}
+		void EndGameplay(){
+			DeactivateInputUI();
+			DeactivateHUD();
+			StopTargetSpawn();
+		}
+		void ResetStats(){
+			thisGameStatsTracker.ResetStats();
+		}
+		public void OnProcessRun(IProcessSuite suite){}
+		public void OnProcessExpire(IProcessSuite suite){
+			if(suite == thisWaitAndStartProcessSuite)
+				StartGameplay();
+		}
+		public void OnProcessUpdate(
+			float deltaTime,
+			float normalizedTime,
+			IProcessSuite suite
+		){
 		}
 	}
 }

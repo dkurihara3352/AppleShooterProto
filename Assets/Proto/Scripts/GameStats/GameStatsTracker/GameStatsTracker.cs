@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 		void SetScoreManager(IScoreManager scoreManager);
 
 		void RegisterTargetDestroyed(IShootingTarget target);
+		void ResetStats();
 	}
 	public class GameStatsTracker : AppleShooterSceneObject, IGameStatsTracker {
 
@@ -32,7 +33,10 @@ namespace AppleShooterProto{
 			int score = target.GetDestructionScore();
 			thisScoreManager.AddScore(score);
 		}
-
+		public void ResetStats(){
+			thisHeatManager.ResetHeat();
+			thisScoreManager.ClearScore();
+		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 

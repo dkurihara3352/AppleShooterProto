@@ -55,6 +55,7 @@ namespace AppleShooterProto{
 		public void OnProcessRun(IProcessSuite suite){
 		}
 		public void OnProcessExpire(IProcessSuite suite){
+			OnProcessUpdate(.1f, 1f, suite);
 		}
 		public void OnProcessUpdate(float deltaTime, float normalizedTime, IProcessSuite suite){
 			if(suite == thisActivationProcessSuite){

@@ -5,6 +5,7 @@ namespace AppleShooterProto{
 	public interface IScoreManager: IAppleShooterSceneObject{
 		void SetScoreImage(IScoreImage image);
 		void AddScore(int score);
+		void ClearScore();
 	}
 	public class ScoreManager : AppleShooterSceneObject, IScoreManager {
 
@@ -20,6 +21,10 @@ namespace AppleShooterProto{
 		int thisScore = 0;
 		public void AddScore(int score){
 			thisScore += score;
+			thisScoreImage.UpdateImage(thisScore);
+		}
+		public void ClearScore(){
+			thisScore = 0;
 			thisScoreImage.UpdateImage(thisScore);
 		}
 

@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 
 		float GetMaxHeat();
 		void SetMaxHeat(float maxHeat);
+		void ResetHeat();
 	}	
 	public class HeatManager: AppleShooterSceneObject, IHeatManager{
 		
@@ -23,19 +24,23 @@ namespace AppleShooterProto{
 		){
 			thisHeatDecayRate = arg.heatDecayRate;
 			thisStateEngine = CreateStateEngine();
-			thisHeat = arg.initialHeat;
+			thisInitialHeat = arg.initialHeat;
+			thisHeat = thisInitialHeat;
 			thisFollowSmoothTime = arg.followSmoothTime;
 
 			thisMaxComboValue = arg.maxComboValue;
 			thisMinComboTime = arg.minComboTime;
 			thisMaxComboTime = arg.maxComboTime;
 			thisComboTimeMultiplier = arg.comboTimeMultiplier;
-
-			thisMaxHeat = arg.initialMaxHeat;
+			
+			thisInitialMaxHeat = arg.initialMaxHeat;
+			thisMaxHeat = thisInitialMaxHeat;
 			thisLevelUpTime = arg.levelUpTime;
 		}
 		IHeatManagerStateEngine thisStateEngine;
 		float thisHeatDecayRate;
+		float thisInitialHeat;
+		float thisInitialMaxHeat;
 		IHeatManagerStateEngine CreateStateEngine(){
 			HeatManagerStateEngine.IConstArg stateEngineArg = new HeatManagerStateEngine.ConstArg(
 				this,
@@ -106,6 +111,11 @@ namespace AppleShooterProto{
 				thisLevelUpTime
 			);
 			process.Run();
+		}
+		public void ResetHeat(){
+			StopCountingDown();
+			thisHeat = thisInitialHeat;
+			SetMaxHeat(thisInitialMaxHeat);
 		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{

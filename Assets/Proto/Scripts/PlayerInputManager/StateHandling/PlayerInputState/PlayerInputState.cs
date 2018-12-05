@@ -66,24 +66,34 @@ namespace AppleShooterProto{
 		): base(arg){
 		}
 		public override void OnRelease(){
-			throw new System.InvalidOperationException(
-				"OnRelease: cannot happen while pointer is up"
-			);
+			// throw new System.InvalidOperationException(
+			// 	"OnRelease: cannot happen while pointer is up"
+			// );
+			OnTouch(1);
+			thisEngine.OnRelease();
+			
+			
 		}
 		public override void OnDrag(ICustomEventData eventData){
-			throw new System.InvalidOperationException(
-				"OnDrag: cannot happen while pointer is up"
-			);
+			// throw new System.InvalidOperationException(
+			// 	"OnDrag: cannot happen while pointer is up"
+			// );
+			thisEngine.OnTouch(1);
+			thisEngine.OnDrag(eventData);
 		}
 		public override void OnTap(int tapCount){
-			throw new System.InvalidOperationException(
-				"OnTap: cannot happen while pointer is up"
-			);
+			// throw new System.InvalidOperationException(
+			// 	"OnTap: cannot happen while pointer is up"
+			// );
+			thisEngine.OnTouch(1);
+			thisEngine.OnTap(tapCount);
 		}
 		public override void ProcessSwipe(ICustomEventData eventData){
-			throw new System.InvalidOperationException(
-				"OnTap: cannot happen while pointer is up"
-			);
+			// throw new System.InvalidOperationException(
+			// 	"OnTap: cannot happen while pointer is up"
+			// );
+			thisEngine.OnTouch(1);
+			thisEngine.ProcessSwipe(eventData);
 		}
 	}
 	public abstract class AbsPlayerInputPointerDownState: AbsPlayerInputState{
