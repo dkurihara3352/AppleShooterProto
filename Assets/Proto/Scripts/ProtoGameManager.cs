@@ -176,6 +176,7 @@ namespace AppleShooterProto{
 		}
 		IProcessSuite thisWaitAndStartProcessSuite;
 		public void StartGameplaySequence(){
+			StartTargetSpawn();
 			StartWaitAndStartGameplay();
 			DisableRootScroller();
 			DefrostRootElement();
@@ -198,7 +199,6 @@ namespace AppleShooterProto{
 			thisRootElementFrostGlass.Frost();
 		}
 		public void StartWaitAndStartGameplay(){
-
 			thisWaitAndStartProcessSuite.Start();
 		}
 		void ActivateHUD(){
@@ -211,7 +211,7 @@ namespace AppleShooterProto{
 			ResetStats();
 			ActivateGameplayUI();
 			ActivateHUD();
-			StartTargetSpawn();
+			// StartTargetSpawn();
 		}
 		void EndGameplay(){
 			DeactivateGameplayUI();
