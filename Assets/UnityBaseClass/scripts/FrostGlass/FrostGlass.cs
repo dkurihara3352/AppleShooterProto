@@ -47,11 +47,6 @@ namespace UnityBase{
 				thisTargetFrostValue = 1f;
 			else
 				thisTargetFrostValue = 0f;
-
-			Debug.Log(
-				"ini: " + thisInitialFrostValue.ToString() + ", " +
-				"tar: " + thisTargetFrostValue.ToString()
-			);
 		}
 		float thisInitialFrostValue;
 		float thisTargetFrostValue;

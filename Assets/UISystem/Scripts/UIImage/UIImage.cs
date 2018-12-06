@@ -21,6 +21,7 @@ namespace UISystem{
 		void TurnTo(Color color);
 		void Flash(Color color);
 		void TurnToOriginalColor();
+		void ToggleRaycastTarget(bool blocks);
 	}
 
 	public class UIImage: IUIImage{
@@ -157,6 +158,9 @@ namespace UISystem{
 		}
 		public void SetColor(Color color){
 			thisGraphicComponent.color = color;
+		}
+		public void ToggleRaycastTarget(bool isTarget){
+			thisGraphicComponent.raycastTarget = isTarget;
 		}
 	}
 }

@@ -34,7 +34,7 @@ namespace UISystem{
 				arg.processTime,
 				arg.popUpMode
 			);
-			thisTypedAdaptor.ToggleRaycastBlock(false);
+			thisTypedAdaptor.ToggleRaycastTarget(false);
 		}
 		IPopUpManager thisPopUpManager;
 		public void SetPopUpManager(IPopUpManager manager){
@@ -103,17 +103,17 @@ namespace UISystem{
 		}
 		public virtual void OnShowBegin(){
 			thisPopUpManager.RegisterPopUp(this);
-			thisTypedAdaptor.ToggleRaycastBlock(true);
+			thisTypedAdaptor.ToggleRaycastTarget(true);
 		}
 		public virtual void OnHideBegin(){
 			thisPopUpManager.UnregisterPopUp(this);
-			thisTypedAdaptor.ToggleRaycastBlock(false);
+			thisTypedAdaptor.ToggleRaycastTarget(false);
 		}
 		public virtual void OnShowComplete(){
-			thisTypedAdaptor.ToggleRaycastBlock(true);
+			thisTypedAdaptor.ToggleRaycastTarget(true);
 		}
 		public virtual void OnHideComplete(){
-			thisTypedAdaptor.ToggleRaycastBlock(false);
+			thisTypedAdaptor.ToggleRaycastTarget(false);
 		}
 		public float GetPopValue(){
 			return thisTypedAdaptor.GetPopValue();
@@ -155,6 +155,9 @@ namespace UISystem{
 		}
 		protected override void OnTapImple(int tapCount){
 			CheckAndPerformStaticBoundarySnapFrom(this);
+			return;
+		}
+		protected override void EnableRaycastOnActivation(){
 			return;
 		}
 

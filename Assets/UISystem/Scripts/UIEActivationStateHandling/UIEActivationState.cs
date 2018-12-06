@@ -34,6 +34,7 @@ namespace UISystem{
 		public UIEActivatingState(IUIEActivationStateEngine engine): base(engine){}
 		public override void OnEnter(){
 			thisEngine.StartNewActivateProcess();
+			thisEngine.CallActivateImple();
 		}
 		public override void Activate(bool instantly){
 			if(instantly)
@@ -55,6 +56,7 @@ namespace UISystem{
 		public UIEDeactivatingState(IUIEActivationStateEngine engine): base(engine){}
 		public override void OnEnter(){
 			thisEngine.StartNewDeactivateProcess();
+			thisEngine.CallDeactivateImple();
 		}
 		public override void Deactivate(bool instantly){
 			if(instantly)

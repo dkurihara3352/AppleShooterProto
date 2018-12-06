@@ -27,6 +27,8 @@ namespace UISystem{
 
 		void SetUpRecursively();
 		void SetUpReferenceRecursively();
+
+		void ToggleRaycastTarget(bool blocks);
 	}
 	
 	[RequireComponent(typeof(RectTransform))]
@@ -125,8 +127,8 @@ namespace UISystem{
 			}
 			public override void FinalizeSetUp(){
 				base.FinalizeSetUp();
-				// thisUIElement.EvaluateScrollerFocusRecursively();
-				// thisUIElement.EvaluateScrollerFocus();
+				// thisUIElement.DeactivateSelf(true);
+				thisUIElement.DeactivateImple();
 			}
 		/*  */
 			IUIAdaptorInputStateEngine CreateUIAdaptorInputStateEngine(){
@@ -362,6 +364,9 @@ namespace UISystem{
 				foreach(IUIAdaptor childUIAdaptor in GetChildUIAdaptors())
 					childUIAdaptor.SetUpReferenceRecursively();
 			}
-			
+			public virtual void ToggleRaycastTarget(bool isTarget){
+				IUIImage image = thisUIElement.GetUIImage();
+				image.ToggleRaycastTarget(isTarget);
+			}
 	}
 }

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 namespace UISystem{
 	public interface IPopUpAdaptor: IUIAdaptor{
 		IPopUp GetPopUp();
-		void ToggleRaycastBlock(bool interactable);
 
 		float GetPopValue();
 		void SetPopValue(float value);
@@ -18,7 +17,7 @@ namespace UISystem{
 		public override void SetUp(){
 			SetUpCanvasGroupComponent();
 			
-			ToggleRaycastBlock(false);
+			ToggleRaycastTarget(false);
 			base.SetUp();
 
 			SetUpBlurMatarial();
@@ -62,7 +61,7 @@ namespace UISystem{
 			);
 			return new PopUp(arg);
 		}
-		public void ToggleRaycastBlock(bool blocks){
+		public override void ToggleRaycastTarget(bool blocks){
 			thisCanvasGroup.blocksRaycasts = blocks;
 		}
 		public float GetPopValue(){

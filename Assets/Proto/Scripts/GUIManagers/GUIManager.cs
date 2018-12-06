@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UISystem;
 
 namespace AppleShooterProto{
 	public class GUIManager : AbsGUIManager {
@@ -61,6 +62,7 @@ namespace AppleShooterProto{
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;
 		public PCWaypointsManagerAdaptor pcWaypointsManagerAdaptor;
 		public ArrowReserveAdaptor arrowReserveAdaptor;
+		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		void OnGUI(){
 			/* left */
 				DrawControl();
@@ -77,6 +79,7 @@ namespace AppleShooterProto{
 				// DrawSpawnIndices(sTR_4);
 				// DrawShootingMetrics(sTR_3);
 				// DrawWaypointEvents(bottomRightRect);
+				// DrawScrollerDebug(bottomRightRect);
 		}
 		/* left */
 			void DrawControl(){
@@ -85,7 +88,7 @@ namespace AppleShooterProto{
 					"SetUp"
 				)){
 					gameManager.SetUp();
-
+					thisSystemIsReady = true;
 				}
 
 				if(GUI.Button(
@@ -93,7 +96,7 @@ namespace AppleShooterProto{
 					"WarmUp"
 				)){
 					gameManager.WarmUp();
-					thisSystemIsReady = true;
+					// thisSystemIsReady = true;
 				}
 				// if(GUI.Button(
 				// 	sTL_3,
@@ -395,6 +398,23 @@ namespace AppleShooterProto{
 			void SetTierOnAllTargetReserves(int tier){
 				foreach(IShootingTargetReserve reserve in GetAllReserves()){
 					reserve.SetTier(tier);
+				}
+			}
+			void DrawScrollerDebug(Rect rect){
+				if(thisSystemIsReady){
+					string result = "";
+					IUIManager uiManager = uiManagerAdaptor.GetUIManager();
+					result += "scroller: ";
+					IScroller handlingScroller = uiManager.GetInputHandlingScroller();
+					if(handlingScroller != null)
+						result += handlingScroller.GetName() + "\n";
+					else
+						result += "null\n";
+					result += "event: " + uiManager.GetEventName();
+					GUI.Label(
+						rect,
+						result
+					);
 				}
 			}
 			// void StartGameplay(){

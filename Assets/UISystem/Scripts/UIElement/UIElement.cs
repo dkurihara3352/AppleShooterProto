@@ -22,6 +22,7 @@ namespace UISystem{
 		void ActivateRecursively(bool instantly);
 		void DeactivateRecursively(bool instantly);
 		void ActivateImple();
+		void DeactivateSelf(bool instantly);
 		void DeactivateImple();
 		void OnActivationComplete();
 		void OnDeactivationComplete();
@@ -134,16 +135,18 @@ namespace UISystem{
 				}
 			}
 			public void ActivateImple(){
+				Debug.Log(GetName() + " is activated");
+				EnableRaycastOnActivation();
 				InitializeSelectabilityState();
 				OnUIActivate();
 			}
+			protected virtual void EnableRaycastOnActivation(){
+				thisUIAdaptor.ToggleRaycastTarget(true);
+			}
 			protected virtual void OnUIActivate(){}
 			public virtual void DeactivateRecursively(bool instantly){
-				thisUIEActivationStateEngine.Deactivate(instantly);
-				foreach(IUIElement childUIE in this.GetChildUIElements()){
-					if(childUIE != null)
-						childUIE.DeactivateRecursively(instantly);
-				}
+				DeactivateSelf(instantly);
+				DeactivateAllChildren(instantly);
 			}
 			bool IsActivationComplete(){
 				return thisUIEActivationStateEngine.IsActivationComplete();
@@ -151,7 +154,19 @@ namespace UISystem{
 			public bool IsActivated(){
 				return thisUIEActivationStateEngine.IsActivated();
 			}
+			public void DeactivateSelf(bool instantly){
+				thisUIEActivationStateEngine.Deactivate(instantly);
+			}
+			void DeactivateAllChildren(bool instantly){
+				foreach(IUIElement childUIE in this.GetChildUIElements()){
+					if(childUIE != null)
+						childUIE.DeactivateRecursively(instantly);
+				}
+			}
+
 			public void DeactivateImple(){
+				Debug.Log(GetName() + " is deactivated");
+				thisUIAdaptor.ToggleRaycastTarget(false);
 				this.OnScrollerDefocus();
 				OnUIDeactivate();
 			}
@@ -242,33 +257,53 @@ namespace UISystem{
 						PassOnReleaseUpward();
 				}
 				protected virtual void OnReleaseImple(){
+					Debug.Log(GetName() + "'s OnReleaseImple: passing");
 					PassOnReleaseUpward();
 				}
 				void PassOnReleaseUpward(){
-					if(thisParentUIE != null)
+					if(thisParentUIE != null){
+						Debug.Log(GetName() + "'s passing OnRelease to " + thisParentUIE.GetName());
 						thisParentUIE.OnRelease();
+					}
+					Debug.Log(GetName() + " terminates OnRelease");
 				}
 			/* tap */
 				public void OnTap(int tapCount){
 					if(this.IsActivated()){
-						if(thisIsDisabledForPopUp)
+						if(thisIsDisabledForPopUp){
 							thisPopUpManager.CheckAndHideActivePopUp();
+						}
 						else{
 							if(thisIsEnabledInput){
+								Debug.Log("should be here");
 								CheckAndPerformStaticBoundarySnapFrom(this);
 								OnTapImple(tapCount);
 							}
-							else
+							else{
+								Debug.Log("shouldn't pass");
 								PassOnTapUpward(tapCount);
+							}
 						}
-					}
+					}else
+						Debug.Log(GetName() + ": this shit is going on");
 				}
 				protected virtual void OnTapImple(int tapCount){
+					Debug.Log(
+						GetName() + "'s OnTapImple is called, passing"
+					);
 					PassOnTapUpward(tapCount);
 				}
 				void PassOnTapUpward(int tapCount){
-					if(thisParentUIE != null)
+					if(thisParentUIE != null){
+						Debug.Log(
+							GetName() + " is passing OnTapImple to " +
+							thisParentUIE.GetName()
+						);
 						thisParentUIE.OnTap(tapCount);
+					}
+					Debug.Log(
+						GetName() + " has terminated OnTapImple"
+					);
 				}
 			/* Scroller Helper */
 				public void CheckAndPerformStaticBoundarySnapFrom(IUIElement uieToStartCheck){

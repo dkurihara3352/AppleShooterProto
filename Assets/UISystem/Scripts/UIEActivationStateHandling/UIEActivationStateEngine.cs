@@ -22,6 +22,8 @@ namespace UISystem{
 
 		void CallUIElementOnActivationComplete();
 		void CallUIElementOnDeactivationComplete();
+		void CallActivateImple();
+		void CallDeactivateImple();
 	}
 	public enum ActivationMode{
 		None,
@@ -128,6 +130,12 @@ namespace UISystem{
 		}
 		public void CallUIElementOnDeactivationComplete(){
 			thisUIElement.OnDeactivationComplete();
+		}
+		public void CallActivateImple(){
+			thisUIElement.ActivateImple();
+		}
+		public void CallDeactivateImple(){
+			thisUIElement.DeactivateImple();
 		}
 	}
 }
