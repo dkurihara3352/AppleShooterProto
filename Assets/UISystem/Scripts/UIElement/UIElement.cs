@@ -135,7 +135,6 @@ namespace UISystem{
 				}
 			}
 			public void ActivateImple(){
-				Debug.Log(GetName() + " is activated");
 				EnableRaycastOnActivation();
 				InitializeSelectabilityState();
 				OnUIActivate();
@@ -165,7 +164,6 @@ namespace UISystem{
 			}
 
 			public void DeactivateImple(){
-				Debug.Log(GetName() + " is deactivated");
 				thisUIAdaptor.ToggleRaycastTarget(false);
 				this.OnScrollerDefocus();
 				OnUIDeactivate();
@@ -257,15 +255,12 @@ namespace UISystem{
 						PassOnReleaseUpward();
 				}
 				protected virtual void OnReleaseImple(){
-					Debug.Log(GetName() + "'s OnReleaseImple: passing");
 					PassOnReleaseUpward();
 				}
 				void PassOnReleaseUpward(){
 					if(thisParentUIE != null){
-						Debug.Log(GetName() + "'s passing OnRelease to " + thisParentUIE.GetName());
 						thisParentUIE.OnRelease();
 					}
-					Debug.Log(GetName() + " terminates OnRelease");
 				}
 			/* tap */
 				public void OnTap(int tapCount){
@@ -275,35 +270,22 @@ namespace UISystem{
 						}
 						else{
 							if(thisIsEnabledInput){
-								Debug.Log("should be here");
 								CheckAndPerformStaticBoundarySnapFrom(this);
 								OnTapImple(tapCount);
 							}
 							else{
-								Debug.Log("shouldn't pass");
 								PassOnTapUpward(tapCount);
 							}
 						}
-					}else
-						Debug.Log(GetName() + ": this shit is going on");
+					}
 				}
 				protected virtual void OnTapImple(int tapCount){
-					Debug.Log(
-						GetName() + "'s OnTapImple is called, passing"
-					);
 					PassOnTapUpward(tapCount);
 				}
 				void PassOnTapUpward(int tapCount){
 					if(thisParentUIE != null){
-						Debug.Log(
-							GetName() + " is passing OnTapImple to " +
-							thisParentUIE.GetName()
-						);
 						thisParentUIE.OnTap(tapCount);
 					}
-					Debug.Log(
-						GetName() + " has terminated OnTapImple"
-					);
 				}
 			/* Scroller Helper */
 				public void CheckAndPerformStaticBoundarySnapFrom(IUIElement uieToStartCheck){
