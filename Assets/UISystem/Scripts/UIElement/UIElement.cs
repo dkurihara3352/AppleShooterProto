@@ -526,7 +526,6 @@ namespace UISystem{
 			GetUIImage().Flash(color);
 		}
 
-
 		public new interface IConstArg: UISystemSceneObject.IConstArg{
 			ActivationMode activationMode{get;}
 		}

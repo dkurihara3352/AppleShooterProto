@@ -51,7 +51,12 @@ namespace UISystem{
 			if(cursorRectIsReady){
 				Gizmos.color = Color.red;
 				float planeZ = -1f;
-				Vector3 bottomLeft = new Vector3(thisCursorRect.x + transform.position.x, thisCursorRect.y + transform.position.y, planeZ);
+				Vector2 pivotOffset = GetPivotOffset();
+				Vector3 bottomLeft = new Vector3(
+					thisCursorRect.x + transform.position.x - pivotOffset.x, 
+					thisCursorRect.y + transform.position.y - pivotOffset.y, 
+					planeZ
+				);
 				Vector3 bottomRight = bottomLeft + Vector3.right * thisCursorRect.width;
 				Vector3 topLeft = bottomLeft + Vector3.up * thisCursorRect.height;
 				Vector3 topRight = topLeft + Vector3.right * thisCursorRect.width;

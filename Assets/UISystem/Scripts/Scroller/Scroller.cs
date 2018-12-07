@@ -159,6 +159,8 @@ namespace UISystem{
 						localPos = thisRelativeCursorPosition[i] * diffL;
 					result[i] = localPos;
 				}
+				// Vector2 pivotOffset = thisUIAdaptor.GetPivotOffset();
+				// result -= pivotOffset;
 				return result;
 			}
 			/*  */
@@ -170,6 +172,7 @@ namespace UISystem{
 			public void SetScrollerElementLocalPosOnAxis(float localPosOnAxis, int dimension){
 				Vector2 newScrollerElementLocalPos = thisScrollerElement.GetLocalPosition();
 				newScrollerElementLocalPos[dimension] = localPosOnAxis;
+				
 				thisScrollerElement.SetLocalPosition(newScrollerElementLocalPos);
 				float normalizedCursoredPositionOnAxis = GetNormalizedCursoredPositionOnAxis(localPosOnAxis, dimension);
 				OnScrollerElementDisplace(

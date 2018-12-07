@@ -29,85 +29,16 @@ namespace UISystem{
 		void SetUpReferenceRecursively();
 
 		void ToggleRaycastTarget(bool blocks);
+
+		Vector2 GetPivotOffset();
 	}
 	
 	[RequireComponent(typeof(RectTransform))]
 	public class UIAdaptor: UISystemMonoBehaviourAdaptor, IUIAdaptor, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler{
-		/* take these sizes away to subclass */
-		public bool resizeRelativeToScreenSize = false;
-		public Vector2 sizeRelativeToScreenLength = Vector2.one;
-		protected override void Awake(){
-			base.Awake();
-			AdjustRect();
-		}
-		/* Rect Adjustment */
-			void AdjustRect(){
-				RectTransform rectTrans = transform.GetComponent<RectTransform>();
-				MakeSureFieldsAreInitializedProperly(rectTrans);
-				AdjustPivot(rectTrans);
-				AdjustAnchor(rectTrans);
-				AdjustSize(rectTrans);
-			}
-			void MakeSureFieldsAreInitializedProperly(RectTransform rt){
-				Vector2 pointFive = new Vector2(.5f, .5f);
-				if(
-					rt.anchorMax != pointFive ||
-					rt.anchorMin != pointFive ||
-					rt.pivot != pointFive
-				)
-					throw new System.InvalidOperationException(
-						"all the given fields of rt must be (.5, .5)"
-					);
-			}
-			void AdjustPivot(RectTransform rectTransform){
-				Vector2 targetPivot = Vector2.zero;
-				Vector2 currentPivot = rectTransform.pivot;
-				Vector2 pivotOffset = new Vector2(
-					targetPivot.x - currentPivot.x,
-					targetPivot.y - currentPivot.y
-				);
-				Vector2 localPosAdjutment = new Vector2(
-					rectTransform.sizeDelta.x * pivotOffset.x,
-					rectTransform.sizeDelta.y * pivotOffset.y
-				);
-				rectTransform.pivot = targetPivot;
-				rectTransform.anchoredPosition = new Vector2(
-					rectTransform.anchoredPosition.x + localPosAdjutment.x,
-					rectTransform.anchoredPosition.y + localPosAdjutment.y
-				);
-			}
-			void AdjustAnchor(RectTransform rectTrans){
-				Vector2 targetAnchor = Vector2.zero;
-				Vector2 currentAnchor = rectTrans.anchorMin;
-				Vector2 anchorDiff = targetAnchor - currentAnchor;
-				Vector2 parentRectLength = ((RectTransform)rectTrans.parent).sizeDelta;
-				Vector2 anchorDisplacement = new Vector2(
-					parentRectLength.x * anchorDiff.x,
-					parentRectLength.y * anchorDiff.y
-				);
-
-				rectTrans.anchorMin = targetAnchor;
-				rectTrans.anchorMax = targetAnchor;
-
-				rectTrans.anchoredPosition = new Vector2(
-					rectTrans.anchoredPosition.x - anchorDisplacement.x,
-					rectTrans.anchoredPosition.y - anchorDisplacement.y
-				);
-			}	
-			void AdjustSize(RectTransform rectTrans){
-				if(resizeRelativeToScreenSize){
-					Vector2 newSize = new Vector2();
-					Vector2 screenRect = new Vector2(Screen.width, Screen.height);
-					for(int i = 0; i < 2; i ++){
-						float newLength = screenRect[i] * sizeRelativeToScreenLength[i];
-						newSize[i] = newLength;
-					}
-					rectTrans.sizeDelta = newSize;
-				}
-			}
+		RectTransform thisRectTransform;
 		/* SetUp */
 			public override void SetUp(){
-
+				thisRectTransform = GetComponent<RectTransform>();
 				thisUIElement = CreateUIElement();
 
 				if(activationMode == ActivationMode.Alpha)
@@ -127,7 +58,6 @@ namespace UISystem{
 			}
 			public override void FinalizeSetUp(){
 				base.FinalizeSetUp();
-				// thisUIElement.DeactivateSelf(true);
 				thisUIElement.DeactivateImple();
 			}
 		/*  */
@@ -225,14 +155,14 @@ namespace UISystem{
 			protected virtual IUIImage CreateUIImage(){
 				Image image;
 				Transform childWithImage = GetChildWithImage(out image);
-				RectTransform imageRectTrans = childWithImage.GetComponent<RectTransform>();
-				if(imageRectTrans == null)
-					throw new System.InvalidOperationException("image transform must have RectTransform component");
-				imageRectTrans.pivot = new Vector2(0f, 0f);
-				imageRectTrans.anchorMin = new Vector2(0f, 0f);
-				imageRectTrans.anchorMax = new Vector2(1f, 1f);
-				imageRectTrans.sizeDelta = Vector2.zero;
-				imageRectTrans.anchoredPosition = Vector3.zero;
+				// RectTransform imageRectTrans = childWithImage.GetComponent<RectTransform>();
+				// if(imageRectTrans == null)
+				// 	throw new System.InvalidOperationException("image transform must have RectTransform component");
+				// imageRectTrans.pivot = new Vector2(0f, 0f);
+				// imageRectTrans.anchorMin = new Vector2(0f, 0f);
+				// imageRectTrans.anchorMax = new Vector2(1f, 1f);
+				// imageRectTrans.sizeDelta = Vector2.zero;
+				// imageRectTrans.anchoredPosition = Vector3.zero;
 				IUIImage uiImage = new UIImage(
 					image, 
 					childWithImage, 
@@ -280,10 +210,41 @@ namespace UISystem{
 			}
 			public void SetRectLength(Vector2 length){
 				RectTransform rt = (RectTransform)this.transform;
-				rt.sizeDelta = length;
+				// rt.sizeDelta = length;
+				rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, length.x);
+				rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, length.y);
 			}
-			public void SetLocalPosition(Vector2 pos){
-				this.transform.localPosition = new Vector3(pos.x, pos.y, 0f);
+			public override void SetLocalPosition(Vector3 pos){
+				SetBottomLeftLocalPosition(pos);
+			}
+			void SetBottomLeftLocalPosition(Vector2 position){
+				Vector2 result = position + GetPivotOffset() - GetParentPivotOffset();
+				// SetLocalPosition(result);
+				thisRectTransform.localPosition = result;
+			}
+			Vector2 GetParentPivotOffset(){
+				RectTransform parentRT = (RectTransform)transform.parent;
+				Vector2 rectSize = parentRT.rect.size;
+				Vector2 pivot = parentRT.pivot;
+				return new Vector2(
+					(rectSize.x * pivot.x),
+					(rectSize.y * pivot.y)
+				);
+			}
+			public override Vector3 GetLocalPosition(){
+				return GetBottomLeftLocalPosition();
+			}
+			Vector2 GetBottomLeftLocalPosition(){
+				Vector2 actualLocalPos = this.transform.localPosition;
+				return GetParentPivotOffset() + actualLocalPos - GetPivotOffset();
+			}
+			public Vector2 GetPivotOffset(){
+				Vector2 rectSize = GetRectSize();
+				Vector2 pivot = thisRectTransform.pivot;
+				return new Vector2(
+					(rectSize.x * pivot.x),
+					(rectSize.y * pivot.y)
+				);
 			}
 			public void SetParentUIA(IUIAdaptor parentUIA, bool worldPositionStays){
 				this.transform.SetParent(parentUIA.GetTransform(), worldPositionStays);

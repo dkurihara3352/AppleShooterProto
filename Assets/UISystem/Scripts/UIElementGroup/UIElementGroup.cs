@@ -272,6 +272,7 @@ namespace UISystem{
 					float localPosY = (arrayIndex[1] * (thisElementLength.y + thisPadding.y)) + thisPadding.y;
 					Vector2 newLocalPos = new Vector2(localPosX, localPosY);
 					element.SetLocalPosition(newLocalPos);
+					// element.SetBottomLeftLocalPosition(newLocalPos);
 				}
 			}
 		/* Const */

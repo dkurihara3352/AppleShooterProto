@@ -143,7 +143,7 @@ namespace UISystem{
 					float multiplier = thisElementToPaddingRatio[i] / denominator;
 					result[i] = referenceLength[i] * multiplier;
 				}else{
-					result[i] = referenceLength[i];
+					result[i] = referenceLength[i]/ thisElementsArrayCount[i];
 				}
 			}
 			return result;

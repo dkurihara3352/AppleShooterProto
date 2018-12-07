@@ -83,10 +83,10 @@ namespace UnityBase{
 		public void SetRotation(Quaternion rotation){
 			this.transform.rotation = rotation;
 		}
-		public Vector3 GetLocalPosition(){
+		public virtual Vector3 GetLocalPosition(){
 			return this.transform.localPosition;
 		}
-		public void SetLocalPosition(Vector3 localPosition){
+		public virtual void SetLocalPosition(Vector3 localPosition){
 			this.transform.localPosition  =localPosition;
 		}
 		public Quaternion GetLocalRotation(){

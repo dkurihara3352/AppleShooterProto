@@ -209,8 +209,20 @@ namespace UISystem{
 				thisRootUIElement.InitiateActivation(true);
 			if(GUI.Button(topLeftSubRect_5, "DeactivateInst"))
 				thisRootUIElement.DeactivateRecursively(true);
-			// if(GUI.Button(topLeftSubRect_6, "TogglePopUp"))
-			// 	testUIManagerAdaptor.TogglePopUp();
+			if(GUI.Button(topLeftSubRect_6, "RecalculateUIRect"))
+				thisUIEToRecalc.RecalculateRect();
+		}
+		IUIElement thisUIEToRecalc{
+			get{
+				if(_thisUIEToRecalc == null)
+					_thisUIEToRecalc = GetUIElementToRecalc();
+				return _thisUIEToRecalc;
+			}
+		}
+		IUIElement _thisUIEToRecalc;
+		public UIAdaptor uiAdaptorToRecalculate;
+		IUIElement GetUIElementToRecalc(){
+			return uiAdaptorToRecalculate.GetUIElement();
 		}
 		void SetUpMonoBehaviourAdaptors(){
 			adaptorManager.SetUpAllMonoBehaviourAdaptors();
@@ -218,31 +230,33 @@ namespace UISystem{
 			adaptorManager.FinalizeSetUp();
 		}	
 		void DrawTopRight(){
-			GUI.Label(
-				topRightSub_0, 
-				GetInputHandlingScrollerString()
-			);
-			GUI.Label(
-				topRightSub_1, 
-				GetEventHandledString()
-			);
-			GUI.Label(
-				topRightSub_2, 
-				GetCursoredElementsText()
-			);
-			GUI.Label(
-				topRightSub_3, 
-				// GetTopMostScrollerInMotionString()
-				GetCursorOffsetString()
-			);
-			GUI.Label(
-				topRightSub_4, 
-				GetHandlingScrollerVelocityString()
-			);
-			GUI.Label(
-				topRightSub_5, 
-				GetScrollerProximateParentScrollerString()
-			);
+			// GUI.Label(
+			// 	topRightSub_0, 
+			// 	GetInputHandlingScrollerString()
+			// );
+			// GUI.Label(
+			// 	topRightSub_1, 
+			// 	GetEventHandledString()
+			// );
+			// GUI.Label(
+			// 	topRightSub_2, 
+			// 	GetCursoredElementsText()
+			// );
+			// GUI.Label(
+			// 	topRightSub_3, 
+			// 	// GetTopMostScrollerInMotionString()
+			// 	GetCursorOffsetString()
+			// );
+			// GUI.Label(
+			// 	topRightSub_4, 
+			// 	GetHandlingScrollerVelocityString()
+			// );
+			// GUI.Label(
+			// 	topRightSub_5, 
+			// 	GetScrollerProximateParentScrollerString()
+			// );
+			// DrawRectTransDebug(topRightSub_0);
 		}
+	
 	}
 }
