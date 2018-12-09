@@ -6,7 +6,7 @@ namespace UISystem{
 	public interface IUIElementGroupScroller: IScroller{
 		IUIElement[] GetCursoredElements();
 		int GetGroupElementIndex(IUIElement groupElement);
-		void UpdateGroupElementLengthAndPadding();
+		// void UpdateGroupElementLengthAndPadding();
 	}
 	public class UIElementGroupScroller : AbsScroller, IUIElementGroupScroller{
 		public UIElementGroupScroller(
@@ -55,8 +55,16 @@ namespace UISystem{
 				return source;
 			}
 			protected readonly int[] thisCursorSize;
-			protected Vector2 thisPadding;
-			protected Vector2 thisGroupElementLength;
+			protected Vector2 thisPadding{
+				get{
+					return thisUIElementGroup.GetPadding();
+				}
+			}
+			protected Vector2 thisGroupElementSize{
+				get{
+					return thisUIElementGroup.GetGroupElementSize();
+				}
+			}
 			protected IUIElementGroup thisUIElementGroup{
 				get{
 					return (IUIElementGroup)thisScrollerElement;
@@ -73,12 +81,12 @@ namespace UISystem{
 			float marginOfError = .01f;
 			protected override bool[] thisShouldApplyRubberBand{get{return new bool[2]{true, true};}}
 			protected override Vector2 CalcCursorLength(){
-				float cursorWidth = thisCursorSize[0] * (thisGroupElementLength.x + thisPadding.x) + thisPadding.x;
-				float cursorHeight = thisCursorSize[1] * (thisGroupElementLength.y + thisPadding.y) + thisPadding.y;
+				float cursorWidth = thisCursorSize[0] * (thisGroupElementSize.x + thisPadding.x) + thisPadding.x;
+				float cursorHeight = thisCursorSize[1] * (thisGroupElementSize.y + thisPadding.y) + thisPadding.y;
 				Vector2 newCursorLength = new Vector2(cursorWidth, cursorHeight);
 				if(
-					newCursorLength[0] <= thisRectLength[0] + marginOfError && 
-					newCursorLength[1] <= thisRectLength[1] + marginOfError
+					newCursorLength[0] <= GetRectSize()[0] + marginOfError && 
+					newCursorLength[1] <= GetRectSize()[1] + marginOfError
 				)
 					return newCursorLength;
 				else{
@@ -86,7 +94,7 @@ namespace UISystem{
 						"cursorLengh: " +
 						newCursorLength.ToString() +
 						", rectLength: " +
-						thisRectLength.ToString()
+						GetRectSize().ToString()
 					);
 					throw new System.InvalidOperationException("cursorLength cannot exceed this rect length. provide lesser cursor size");
 					// thisUIElementGroup.UpdateGroupElementLength();
@@ -104,7 +112,7 @@ namespace UISystem{
 				);
 				thisElementGroupOffsetCalculator = new ElementGroupOffsetCalculator(
 					thisUIElementGroup, 
-					thisGroupElementLength, 
+					thisGroupElementSize, 
 					thisPadding, 
 					thisCursorLocalPosition
 				);
@@ -115,14 +123,14 @@ namespace UISystem{
 						thisScrollerAxis
 					);
 			}
-			protected override void SetUpScrollerElementRect(){
-				base.SetUpScrollerElementRect();
-				UpdateGroupElementLengthAndPadding();
-			}
-			public void UpdateGroupElementLengthAndPadding(){
-				thisGroupElementLength = thisUIElementGroup.GetGroupElementLength();
-				thisPadding = thisUIElementGroup.GetPadding();
-			}
+			// protected override void SetUpScrollerElementRect(){
+			// 	base.SetUpScrollerElementRect();
+			// 	UpdateGroupElementLengthAndPadding();
+			// }
+			// public void UpdateGroupElementLengthAndPadding(){
+			// 	thisGroupElementSize = thisUIElementGroup.GetGroupElementSize();
+			// 	thisPadding = thisUIElementGroup.GetPadding();
+			// }
 		/* Initially Cursored Element */
 			readonly int thisInitiallyCursoredGroupElementIndex;
 			protected override Vector2 GetInitialNormalizedCursoredPosition(){
@@ -276,7 +284,7 @@ namespace UISystem{
 				/*  returns the top left => NG
 					returns, instread, bottomLeft
 				*/
-				Vector2 cursorReferencePoint = thisCursorLocalPosition + thisPadding + (thisGroupElementLength * .5f);
+				Vector2 cursorReferencePoint = thisCursorLocalPosition + thisPadding + (thisGroupElementSize * .5f);
 				Vector2 elementGroupLocalPos = thisUIElementGroup.GetLocalPosition();
 
 				Vector2 cursorRefPInElementGroupSpace = cursorReferencePoint - elementGroupLocalPos;

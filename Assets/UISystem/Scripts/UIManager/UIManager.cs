@@ -9,8 +9,8 @@ namespace UISystem{
 		void SetPopUpManager(IPopUpManager manager);
 
 
-		void SetDragWorldPosition(Vector2 dragPos);
-		Vector2 GetDragWorldPosition();
+		// void SetDragWorldPosition(Vector2 dragPos);
+		// Vector2 GetDragWorldPosition();
 		float GetSwipeVelocityThreshold();
 		float GetSwipeDistanceThreshold();
 
@@ -30,6 +30,8 @@ namespace UISystem{
 
 		IPopUpManager GetPopUpManager();
 
+		Canvas GetCanvas();
+		float GetMaxSwipeVelocity();
 	}
 	public class UIManager: UISystemSceneObject, IUIManager {
 		public UIManager(
@@ -40,21 +42,30 @@ namespace UISystem{
 
 			thisSwipeVelocityThreshold = arg.swipeVelocityThreshold;
 			thisSwipeDistanceThreshold = arg.swipeDistanceThreshold;
+			thisMaxSwipeVelocity = arg.maxSwipeVelocity;
+		}
+		float GetScaledThreshold(float nonscaledThreshold){
+			return nonscaledThreshold * GetCanvas().transform.localScale.x;
 		}
 		readonly float thisSwipeVelocityThreshold;
 		public float GetSwipeVelocityThreshold(){
-			return thisSwipeVelocityThreshold;
+			return /* thisSwipeVelocityThreshold */GetScaledThreshold(thisSwipeVelocityThreshold);
 		}
 		readonly float thisSwipeDistanceThreshold;
 		public float GetSwipeDistanceThreshold(){
-			return thisSwipeDistanceThreshold;
+			return /* thisSwipeDistanceThreshold */GetScaledThreshold(thisSwipeDistanceThreshold);
 		}
-		/* Drag pos */
-			Vector2 thisDragWorldPosition;
-			public void SetDragWorldPosition(Vector2 dragPos){
-				thisDragWorldPosition = dragPos;
-			}
-			public Vector2 GetDragWorldPosition(){return thisDragWorldPosition;}
+		readonly float thisMaxSwipeVelocity;
+		public float GetMaxSwipeVelocity(){
+			return GetScaledThreshold(thisMaxSwipeVelocity);
+			// return thisMaxSwipeVelocity;
+		}
+		// /* Drag pos */
+		// 	Vector2 thisDragWorldPosition;
+		// 	public void SetDragWorldPosition(Vector2 dragPos){
+		// 		thisDragWorldPosition = dragPos;
+		// 	}
+		// 	public Vector2 GetDragWorldPosition(){return thisDragWorldPosition;}
 		/* PopUpManager */
 			IPopUpManager thisPopUpManager;
 			public IPopUpManager GetPopUpManager(){return thisPopUpManager;}
@@ -97,6 +108,15 @@ namespace UISystem{
 			public IScroller GetInputHandlingScroller(){
 				return thisInputHandlingScroller;
 			}
+		
+		public Canvas GetCanvas(){
+			return thisTypedAdaptor.GetCanvas();
+		}
+		IUIManagerAdaptor thisTypedAdaptor{
+			get{
+				return (IUIManagerAdaptor)thisAdaptor;
+			}
+		}
 		/*  */
 			public enum InputName{
 				None,
@@ -112,19 +132,22 @@ namespace UISystem{
 				bool showsInputability{get;}
 				float swipeVelocityThreshold{get;}
 				float swipeDistanceThreshold{get;}
+				float maxSwipeVelocity{get;}
 			}
 			public new class ConstArg: UISystemSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IUIManagerAdaptor adaptor,
 					bool showsInputability,
 					float swipeVelocityThreshold,
-					float swipeDistanceThreshold
+					float swipeDistanceThreshold,
+					float maxSwipeVelocity
 				): base(
 					adaptor
 				){
 					thisShowsInputability = showsInputability;
 					thisSwipeVelocityThreshold = swipeVelocityThreshold;
 					thisSwipeDistanceThreshold = swipeDistanceThreshold;
+					thisMaxSwipeVelocity = maxSwipeVelocity;
 				}
 				readonly bool thisShowsInputability;
 				public bool showsInputability{get{return thisShowsInputability;}}
@@ -132,6 +155,12 @@ namespace UISystem{
 				public float swipeVelocityThreshold{get{return thisSwipeVelocityThreshold;}}
 				readonly float thisSwipeDistanceThreshold;
 				public float swipeDistanceThreshold{get{return thisSwipeDistanceThreshold;}}
+				readonly float thisMaxSwipeVelocity;
+				public float maxSwipeVelocity{
+					get{
+						return thisMaxSwipeVelocity;
+					}
+				}
 			}
 	}
 }

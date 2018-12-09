@@ -21,7 +21,7 @@ namespace UISystem{
 
 
 		Vector2 GetRectSize();
-		void SetRectSize(Vector2 length);
+		void SetRectSize(Vector2 size);
 
 		void SetIndex(int index);
 		int GetIndex();
@@ -58,6 +58,12 @@ namespace UISystem{
 		
 		/* SetUp */
 			RectTransform thisRectTransform;
+			Canvas thisCanvas{
+				get{
+					return thisUIManager.GetCanvas();
+				}
+			}
+		
 			public virtual void SetUp(){
 				thisRectTransform = GetComponent<RectTransform>();
 				thisUIElement = CreateUIElement();
@@ -268,18 +274,65 @@ namespace UISystem{
 					this.name = name;
 				}
 			/* Rect */
+				protected Vector2 GetScaledSize(Vector2 nonscaledSize){
+					return new Vector2(
+						nonscaledSize.x * thisCanvasLocalScale.x,
+						nonscaledSize.y * thisCanvasLocalScale.y
+					);
+				}
+				protected Vector2 GetNonscaledSize(Vector2 scaledSize){
+					return new Vector2(
+						scaledSize.x / thisCanvasLocalScale.x,
+						scaledSize.y / thisCanvasLocalScale.y
+					);
+				}
 				public Rect GetRect(){
 					return thisRectTransform.rect;
-				}
-				public void SetRectSize(Vector2 length){
-					RectTransform rt = (RectTransform)this.transform;
-					rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, length.x);
-					rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, length.y);
 				}
 				public Vector2 GetRectSize(){
 					return GetRect().size;
 				}
+				Vector2 GetPixelRectSize(){
+					Vector2 scaledRectSize = GetRectSize();
+					return GetScaledSize(scaledRectSize);
+				}
+				public void SetRectSize(Vector2 length){
+					RectTransform rt = (RectTransform)this.transform;
+					rt.SetSizeWithCurrentAnchors(
+						RectTransform.Axis.Horizontal, 
+						length.x
+					);
+					rt.SetSizeWithCurrentAnchors(
+						RectTransform.Axis.Vertical, 
+						length.y
+					);
+				}
+				void SetPixelRectSize(Vector2 pixelSize){
+					Vector2 nonscaledSize = GetNonscaledSize(pixelSize);
+					SetRectSize(nonscaledSize);
+				}
+
+			/* Canvas */
+				protected Vector3 thisCanvasLocalScale{
+					get{
+						return thisCanvas.transform.localScale;
+					}
+				}
 			/* position */
+				protected Vector3 GetScaledPosition(Vector3 nonscaledPosition){
+					return new Vector3(
+						nonscaledPosition.x * thisCanvasLocalScale.x,
+						nonscaledPosition.y * thisCanvasLocalScale.y,
+						nonscaledPosition.z * thisCanvasLocalScale.z
+					);
+				}
+				protected Vector3 GetNonscaledPosition(Vector3 pixelPosition){
+					return new Vector3(
+						pixelPosition.x / thisCanvasLocalScale.x,
+						pixelPosition.y / thisCanvasLocalScale.y,
+						pixelPosition.z / thisCanvasLocalScale.z
+					);
+				}
 				public Vector3 GetPosition(){
 					return this.transform.position;
 				}
@@ -289,9 +342,17 @@ namespace UISystem{
 				public void SetLocalPosition(Vector3 pos){
 					SetBottomLeftLocalPosition(pos);
 				}
+				void SetPixelLocalPosition(Vector3 position){
+					Vector3 unscaledPosition = GetNonscaledPosition(position);
+					SetLocalPosition(unscaledPosition);
+				}
+				Vector2 GetPixelLocalPosition(){
+					return GetScaledPosition(
+						GetLocalPosition()
+					);
+				}
 				void SetBottomLeftLocalPosition(Vector2 position){
 					Vector2 result = position + GetPivotOffset() - GetParentPivotOffset();
-					// SetLocalPosition(result);
 					thisRectTransform.localPosition = result;
 				}
 				Vector2 GetParentPivotOffset(){
@@ -368,13 +429,6 @@ namespace UISystem{
 						this.transform.up
 					);
 				}
-			/* scale */
-				public Vector3 thisCanvasScale{
-					get{
-						Canvas canvas = GetComponentInParent<Canvas>();
-						return canvas.transform.localScale;
-					}
-				}
 		/* Event System Imple */
 			IUIAdaptorInputStateEngine thisInputStateEngine;
 			bool PointerIDMatchesTheRegistered(int pointerId){
@@ -384,7 +438,11 @@ namespace UISystem{
 				if(thisUIManager != null)
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
-						ICustomEventData customEventData = new CustomEventData(eventData, Time.deltaTime);
+						ICustomEventData customEventData = new CustomEventData(
+							eventData, 
+							Time.deltaTime,
+							thisUIManager
+						);
 						thisInputStateEngine.OnPointerEnter(customEventData);
 					}
 				}
@@ -393,7 +451,11 @@ namespace UISystem{
 				if(thisUIManager != null)
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
-						ICustomEventData customEventData = new CustomEventData(eventData, Time.deltaTime);
+						ICustomEventData customEventData = new CustomEventData(
+							eventData, 
+							Time.deltaTime,
+							thisUIManager
+						);
 						thisInputStateEngine.OnPointerExit(customEventData);
 					}
 				}
@@ -401,14 +463,22 @@ namespace UISystem{
 			public void OnPointerDown(PointerEventData eventData){
 				if(!thisUIManager.TouchIDIsRegistered()){
 					thisUIManager.RegisterTouchID(eventData.pointerId);
-					ICustomEventData customEventData = new CustomEventData(eventData, Time.deltaTime);
+					ICustomEventData customEventData = new CustomEventData(
+						eventData, 
+						Time.deltaTime,
+						thisUIManager
+					);
 					thisInputStateEngine.OnPointerDown(customEventData);
 				}
 			}
 			public void OnPointerUp(PointerEventData eventData){
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
-						ICustomEventData customEventData = new CustomEventData(eventData, Time.deltaTime);
+						ICustomEventData customEventData = new CustomEventData(
+							eventData, 
+							Time.deltaTime,
+							thisUIManager
+						);
 						thisInputStateEngine.OnPointerUp(customEventData);
 						thisUIManager.UnregisterTouchID();
 					}
@@ -417,7 +487,11 @@ namespace UISystem{
 			public void OnBeginDrag(PointerEventData eventData){
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
-						ICustomEventData customEventData = new CustomEventData(eventData, Time.deltaTime);
+						ICustomEventData customEventData = new CustomEventData(
+							eventData, 
+							Time.deltaTime,
+							thisUIManager
+						);
 						thisInputStateEngine.OnBeginDrag(customEventData);
 					}
 				}
@@ -425,7 +499,11 @@ namespace UISystem{
 			public void OnDrag(PointerEventData eventData){
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
-						ICustomEventData customEventData = new CustomEventData(eventData, Time.deltaTime);
+						ICustomEventData customEventData = new CustomEventData(
+							eventData, 
+							Time.deltaTime,
+							thisUIManager
+						);
 						thisInputStateEngine.OnDrag(customEventData);
 					}
 				}

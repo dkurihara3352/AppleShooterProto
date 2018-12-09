@@ -11,8 +11,8 @@ namespace UISystem{
 		int GetColumnCount();
 		int GetRowCount();
 		void CalculateRects();
-		Vector2 groupLength{get;}
-		Vector2 elementLength{get;}
+		Vector2 groupSize{get;}
+		Vector2 elementSize{get;}
 		Vector2 padding{get;}
 		void SetGroupLength(Vector2 groupLength);
 		void SetElementLength(Vector2 elementLength);
@@ -39,12 +39,12 @@ namespace UISystem{
 		public void SetGroupLength(Vector2 groupLength){
 			thisGroupLength = groupLength;
 		}
-		public Vector2 groupLength{get{return thisGroupLength;}}
+		public Vector2 groupSize{get{return thisGroupLength;}}
 		Vector2 thisElementLength;
 		public void SetElementLength(Vector2 elementLength){
 			thisElementLength = elementLength;
 		}
-		public Vector2 elementLength{get{return thisElementLength;}}
+		public Vector2 elementSize{get{return thisElementLength;}}
 		Vector2 thisPadding;
 		public void SetPadding(Vector2 padding){
 			thisPadding = padding;

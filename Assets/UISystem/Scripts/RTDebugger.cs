@@ -69,6 +69,7 @@ public class RTDebugger : MonoBehaviour {
 		){
 			Vector2 canvasScale = canvas.transform.localScale;
 			result += "localPos: " + rectTransformToDebug.localPosition.ToString() ;
+			result += "worldPos(valid): " + rectTransformToDebug.position.ToString();
 			result += "size: " + rectTransformToDebug.sizeDelta.ToString() ;
 			result += "rect: " + rectTransformToDebug.rect.ToString();
 			result += "achoredPos: " + rectTransformToDebug.anchoredPosition.ToString() ;
@@ -76,11 +77,11 @@ public class RTDebugger : MonoBehaviour {
 				rectTransformToDebug.rect.size.x * canvasScale.x,
 				rectTransformToDebug.rect.size.y * canvasScale.y
 			).ToString();
-			result += "pixelWorPos: " + new Vector2(
+			result += "pixelWorPos(invalid): " + new Vector2(
 				rectTransformToDebug.position.x * canvasScale.x,
 				rectTransformToDebug.position.y * canvasScale.y
 			).ToString();
-			result += "pixelLocalPos: " + new Vector2(
+			result += "pixelLocalPos(valid): " + new Vector2(
 				rectTransformToDebug.localPosition.x * canvasScale.x,
 				rectTransformToDebug.localPosition.y * canvasScale.y
 			);

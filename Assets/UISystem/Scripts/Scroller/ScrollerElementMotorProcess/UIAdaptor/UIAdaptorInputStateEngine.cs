@@ -51,8 +51,8 @@ namespace UISystem{
 				this,
 				thisUIManager,
 				thisVelocityStackSize,
-				thisUIManager.GetSwipeVelocityThreshold(),
-				thisUIManager.GetSwipeDistanceThreshold(),
+				// thisUIManager.GetSwipeVelocityThreshold(),
+				// thisUIManager.GetSwipeDistanceThreshold(),
 				procFac
 			);
 			thisWaitingForTapState = new WaitingForTapState(

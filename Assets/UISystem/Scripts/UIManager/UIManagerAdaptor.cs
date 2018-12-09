@@ -6,6 +6,7 @@ using DKUtility;
 namespace UISystem{
 	public interface IUIManagerAdaptor: IUISystemMonoBehaviourAdaptor{
 		IUIManager GetUIManager();
+		Canvas GetCanvas();
 	}
 	public class UIManagerAdaptor: UISystemMonoBehaviourAdaptor, IUIManagerAdaptor{
 		public override void SetUp(){
@@ -20,13 +21,20 @@ namespace UISystem{
 		public bool showsInputability;
 		public float swipeVelocityThreshold = 400f;
 		public float swipeDistanceThreshold = 20f;
+		public float maxSwipeVelovity = 1000f;
+		public Canvas canvas;
+		public Canvas GetCanvas(){
+			return canvas;
+		}
+		
 
 		IUIManager CreateUIManager(){
 			UIManager.IConstArg arg = new UIManager.ConstArg(
 				this,
 				showsInputability,
 				swipeVelocityThreshold,
-				swipeDistanceThreshold
+				swipeDistanceThreshold,
+				maxSwipeVelovity
 			);
 			return new UIManager(arg);
 		}

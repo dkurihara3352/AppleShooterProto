@@ -19,7 +19,7 @@ namespace UISystem{
 		void SetUpElements(IUIElement[] elements);
 
 		
-		Vector2 GetGroupElementLength();
+		Vector2 GetGroupElementSize();
 		Vector2 GetPadding();
 		void SetUpRects(IRectCalculationData rectCalculationData);
 		void PlaceElements();
@@ -209,28 +209,35 @@ namespace UISystem{
 			IRectCalculationData thisRectCalculationData;
 			void CalculateAndSetRects(IRectCalculationData data){
 				data.CalculateRects();
-				SetUpGroupLength(data.groupLength);
-				SetUpElementLength(data.elementLength);
-				SetUpPadding(data.padding);
+				// SetUpGroupSize(data.groupLength);
+				thisUIAdaptor.SetRectSize(data.groupSize);
+				// SetUpElementSize(data.elementSize);
+				foreach(IUIElement ele in thisGroupElements)
+					ele.SetRectSize(data.elementSize);
+				thisPadding = data.padding;
 			}
-			protected void SetUpGroupLength(Vector2 groupLength){
-				thisGroupLength = groupLength;
-				thisUIAdaptor.SetRectSize(groupLength);
-			}
-			protected void SetUpElementLength(Vector2 elementLength){
-				thisElementLength = elementLength;
-				foreach(IUIElement element in thisGroupElements){
-					IUIAdaptor elementUIA = element.GetUIAdaptor();
-					elementUIA.SetRectSize(elementLength);
+			// protected void SetUpGroupSize(Vector2 groupSize){
+			// 	thisGroupSize = groupSize;
+			// 	thisUIAdaptor.SetRectSize(groupSize);
+			// }
+			// protected void SetUpElementSize(Vector2 elementSize){
+			// 	thisElementSize = elementSize;
+			// 	foreach(IUIElement element in thisGroupElements){
+			// 		IUIAdaptor elementUIA = element.GetUIAdaptor();
+			// 		elementUIA.SetRectSize(elementSize);
+			// 	}
+			// }
+			// protected void SetUpPadding(Vector2 padding){
+			// 	thisPadding = padding;
+			// }
+			Vector2 thisGroupSize;
+			Vector2 thisElementSize{
+				get{
+					return thisGroupElements[0].GetRectSize();
 				}
 			}
-			protected void SetUpPadding(Vector2 padding){
-				thisPadding = padding;
-			}
-			Vector2 thisGroupLength;
-			Vector2 thisElementLength;
-			public Vector2 GetGroupElementLength(){
-				return thisElementLength;
+			public Vector2 GetGroupElementSize(){
+				return thisElementSize;
 			}
 			Vector2 thisPadding;
 			public Vector2 GetPadding(){
@@ -258,7 +265,7 @@ namespace UISystem{
 			protected virtual void SetRectsDependentCalculators(){
 				thisGroupElementAtPositionInGroupSpaceCalculator = new GroupElementAtPositionInGroupSpaceCalculator(
 					thisElementsArray, 
-					thisElementLength, 
+					thisElementSize, 
 					thisPadding, 
 					thisUIAdaptor.GetRectSize(),
 					GetName()
@@ -268,8 +275,8 @@ namespace UISystem{
 			public void PlaceElements(){
 				foreach(T element in thisGroupElements){
 					int[] arrayIndex = GetGroupElementArrayIndex(element);
-					float localPosX = (arrayIndex[0] * (thisElementLength.x + thisPadding.x)) + thisPadding.x;
-					float localPosY = (arrayIndex[1] * (thisElementLength.y + thisPadding.y)) + thisPadding.y;
+					float localPosX = (arrayIndex[0] * (thisElementSize.x + thisPadding.x)) + thisPadding.x;
+					float localPosY = (arrayIndex[1] * (thisElementSize.y + thisPadding.y)) + thisPadding.y;
 					Vector2 newLocalPos = new Vector2(localPosX, localPosY);
 					element.SetLocalPosition(newLocalPos);
 				}

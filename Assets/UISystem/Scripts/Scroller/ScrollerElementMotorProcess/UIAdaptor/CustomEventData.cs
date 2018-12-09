@@ -13,51 +13,69 @@ namespace UISystem{
 	public struct CustomEventData: ICustomEventData{
 		public CustomEventData(
 			PointerEventData sourceData, 
-			float deltaTime
+			float deltaTime,
+			IUIManager uiManager
 		){
 			/* do some conversion here */
 			thisDeltaPosition = sourceData.delta;
 			thisPosition = sourceData.position;
 			Vector2 sourceVel = thisDeltaPosition/ deltaTime;
-			if(sourceVel.sqrMagnitude > thisMaxVelocity * thisMaxVelocity)
-				thisVelocity = Vector2.ClampMagnitude(sourceVel, thisMaxVelocity);
-			else
-				thisVelocity = sourceVel;
+			thisVelocity = CalculateVelocity(uiManager, sourceVel);
 		}
 		public CustomEventData(
 			Vector2 position, 
 			Vector2 deltaP, 
-			float deltaTime
+			float deltaTime,
+			IUIManager uiManager
 		){
 			thisPosition = position;
 			thisDeltaPosition = deltaP;
 			Vector2 sourceVel = thisDeltaPosition/ deltaTime;
-			if(sourceVel.sqrMagnitude > thisMaxVelocity * thisMaxVelocity)
-				thisVelocity = Vector2.ClampMagnitude(sourceVel, thisMaxVelocity);
-			else
-				thisVelocity = sourceVel;
+			thisVelocity = CalculateVelocity(uiManager, sourceVel);
+			// float maxVelocity = uiManager.GetMaxSwipeVelocity();
+			// if(sourceVel.sqrMagnitude > maxVelocity * maxVelocity)
+			// 	thisVelocity = Vector2.ClampMagnitude(sourceVel, maxVelocity);
+			// else
+			// 	thisVelocity = sourceVel;
 		}
 		public CustomEventData(
 			Vector2 position,
 			Vector2 deltaPosition,
-			Vector2 velocity
+			Vector2 velocity,
+			IUIManager uiManager
 		){
+
 			thisPosition = position;
 			thisDeltaPosition = deltaPosition;
-			thisVelocity = velocity;
+			thisVelocity = CalculateVelocity(uiManager, velocity);
 		}
-		float MakeVelocityWithinLimit(float source){
-			if(source > thisMaxVelocity)
-				return thisMaxVelocity;
-			return source;
+		static Vector2 CalculateVelocity(IUIManager uiManager, Vector2 sourceVel){
+			float maxVelocity = uiManager.GetMaxSwipeVelocity();
+			if(sourceVel.sqrMagnitude > maxVelocity * maxVelocity)
+				return Vector2.ClampMagnitude(sourceVel, maxVelocity);
+			else
+				return sourceVel;
 		}
-		const float thisMaxVelocity = 1000f;
+		// float MakeVelocityWithinLimit(float source){
+		// 	if(source > thisMaxVelocity)
+		// 		return thisMaxVelocity;
+		// 	return source;
+		// }
+		// float thisMaxVelocity{
+		// 	get{
+		// 		return thisUIManager.GetMaxSwipeVelocity();
+		// 	}
+		// }
+		// readonly IUIManager thisUIManager;
 		public Vector2 deltaPos{get{return thisDeltaPosition;}}
 		Vector2 thisDeltaPosition;
+
 		public Vector2 position{get{return thisPosition;}}
 		Vector2 thisPosition;
+
 		public Vector2 velocity{get{return thisVelocity;}}
 		Vector2 thisVelocity;
+		
 		public void SetVelocity(Vector2 velocity){
 			thisVelocity = velocity;
 		}

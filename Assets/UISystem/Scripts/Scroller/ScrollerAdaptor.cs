@@ -57,14 +57,20 @@ namespace UISystem{
 				Gizmos.color = Color.red;
 				float planeZ = -1f;
 				Vector2 pivotOffset = GetPivotOffset();
+				Vector2 pivotOffsetInPixel = GetScaledSize(pivotOffset);
+				
+				Vector2 cursorLocalPosInPixel = GetScaledPosition(thisCursorRect.position);
+
+				Vector2 cursorSizeInPixel =  GetScaledSize(thisCursorRect.size);
+
 				Vector3 bottomLeft = new Vector3(
-					thisCursorRect.x + transform.position.x - pivotOffset.x, 
-					thisCursorRect.y + transform.position.y - pivotOffset.y, 
+					cursorLocalPosInPixel.x + GetPosition().x - pivotOffsetInPixel.x,
+					cursorLocalPosInPixel.y + GetPosition().y - pivotOffsetInPixel.y,
 					planeZ
 				);
-				Vector3 bottomRight = bottomLeft + (Vector3.right * thisCursorRect.width) * thisCanvasScale.x;
-				Vector3 topLeft = bottomLeft + Vector3.up * thisCursorRect.height;
-				Vector3 topRight = topLeft + Vector3.right * thisCursorRect.width;
+				Vector3 bottomRight = bottomLeft + (Vector3.right * cursorSizeInPixel.x);
+				Vector3 topLeft = bottomLeft + Vector3.up * cursorSizeInPixel.y;
+				Vector3 topRight = topLeft + Vector3.right * cursorSizeInPixel.x;
 				Gizmos.DrawLine(topLeft, topRight);
 				Gizmos.color = Color.blue;
 				Gizmos.DrawLine(topRight, bottomRight);

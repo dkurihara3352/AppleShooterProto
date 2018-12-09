@@ -53,6 +53,9 @@ namespace UISystem{
 		/* Debug */
 		void TurnTo(Color color);
 		void Flash(Color color);
+
+		Vector2 GetRectSize();
+		void SetRectSize(Vector2 size);
 	}
 	public class UIElement: UISystemSceneObject, IUIElement{
 		public UIElement(
@@ -100,6 +103,12 @@ namespace UISystem{
 		}
 		public IUIElement[] GetChildUIElements(){
 			return thisChildUIEs;
+		}
+		public void SetRectSize(Vector2 size){
+			thisUIAdaptor.SetRectSize(size);
+		}
+		public Vector2 GetRectSize(){
+			return thisUIAdaptor.GetRectSize();
 		}
 		/* UIImage */
 			public IUIImage GetUIImage(){

@@ -32,12 +32,12 @@ namespace UISystem{
 		protected ITwoConstraintsRectCalculationData thisRectCalculationData;
 		protected Vector2 thisGroupLength{
 			get{
-				return thisRectCalculationData.groupLength;
+				return thisRectCalculationData.groupSize;
 			}
 		}
 		protected Vector2 thisElementLength{
 			get{
-				return thisRectCalculationData.elementLength;
+				return thisRectCalculationData.elementSize;
 			}
 		}
 		protected Vector2 thisPadding{

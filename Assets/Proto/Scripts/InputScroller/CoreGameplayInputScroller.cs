@@ -55,7 +55,8 @@ namespace AppleShooterProto{
 			return new CustomEventData(
 				source.position,
 				adjustedDeltaPosition,
-				adjustedVelocity
+				adjustedVelocity,
+				thisUIManager
 			);
 		}
 		protected override void DisplaceScrollerElement(Vector2 deltaPosition){

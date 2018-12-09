@@ -30,8 +30,8 @@ namespace UISystem{
 		}
 		protected override Vector2 CalcCursorLength(){
 			Vector2 relativeCursorLength = thisRelativeCursorLength;
-			float cursorWidth = thisRectLength[0] * relativeCursorLength.x;
-			float cursorHeight = thisRectLength[1] * relativeCursorLength.y;
+			float cursorWidth = GetRectSize()[0] * relativeCursorLength.x;
+			float cursorHeight = GetRectSize()[1] * relativeCursorLength.y;
 			Vector2 result = new Vector2(cursorWidth, cursorHeight);
 			return result;
 		}

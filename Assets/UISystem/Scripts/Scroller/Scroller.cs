@@ -68,15 +68,12 @@ namespace UISystem{
 				return result;
 			}
 			protected readonly ScrollerAxis thisScrollerAxis;
-
+		/*  */
+			
 		/* ScrollerRect */
 			public  void UpdateRect(){
-				SetUpScrollerRect();
+				// SetUpScrollerRect();
 				SetUpRubberBandCalculators();
-			}
-			protected Vector2 thisRectLength;
-			void SetUpScrollerRect(){
-				thisRectLength = thisUIAdaptor.GetRectSize();
 			}
 		/* Rubber */
 			readonly protected Vector2 thisRubberBandLimitMultiplier;
@@ -93,7 +90,7 @@ namespace UISystem{
 				RubberBandCalculator[] result = new RubberBandCalculator[2];
 				thisRubberLimit = new Vector2();
 				for(int i = 0; i < 2; i++){
-					float rubberLimit =  thisRubberBandLimitMultiplier[i] * thisRectLength[i];
+					float rubberLimit =  thisRubberBandLimitMultiplier[i] * GetRectSize()[i];
 					thisRubberLimit[i] = rubberLimit;
 					result[i] = new RubberBandCalculator(1f, rubberLimit);
 				}
@@ -105,7 +102,7 @@ namespace UISystem{
 				//called in SetUpReference, in Finalize when this is UIElementGroupScroller
 
 				thisScrollerElement = scrollerElement;
-				SetUpScrollerElementRect();
+				// SetUpScrollerElementRect();
 				SetUpCursorTransform();
 				OnRectsSetUpComplete();
 				PlaceScrollerElementAtInitialCursorValue();
@@ -115,18 +112,22 @@ namespace UISystem{
 					this,
 					thisCursorLength,
 					thisCursorLocalPosition,
-					thisScrollerElementLength
+					thisScrollerElementSize
 				);
 			}
 			protected IUIElement thisScrollerElement;
 			public IUIElement GetScrollerElement(){
 				return thisScrollerElement;
 			}
-			protected Vector2 thisScrollerElementLength;
-			protected virtual void SetUpScrollerElementRect(){
-				IUIAdaptor scrollerElementAdaptor = thisScrollerElement.GetUIAdaptor();
-				thisScrollerElementLength = scrollerElementAdaptor.GetRectSize();
+			protected Vector2 thisScrollerElementSize{
+				get{
+					return thisScrollerElement.GetRectSize();
+				}
 			}
+			// protected virtual void SetUpScrollerElementRect(){
+			// 	IUIAdaptor scrollerElementAdaptor = thisScrollerElement.GetUIAdaptor();
+			// 	thisScrollerElementLength = scrollerElementAdaptor.GetRectSize();
+			// }
 			/* Cursor Transform */
 			public void SetUpCursorTransform(){
 				thisCursorLength = CalcCursorLength();
@@ -142,14 +143,14 @@ namespace UISystem{
 			protected abstract Vector2 CalcCursorLength();
 			void ClampCursorLengthToThisRect(){
 				for(int i = 0; i < 2; i ++){
-					if(thisCursorLength[i] > thisRectLength[i])
-						thisCursorLength[i] = thisRectLength[i];
+					if(thisCursorLength[i] > GetRectSize()[i])
+						thisCursorLength[i] = GetRectSize()[i];
 				}
 			}
 			protected virtual Vector2 CalcCursorLocalPos(){
 				Vector2 result = new Vector2();
 				for(int i = 0; i < 2; i ++){
-					float scrollerRectLength = thisRectLength[i];
+					float scrollerRectLength = GetRectSize()[i];
 					float cursorLength = thisCursorLength[i];
 					float diffL = scrollerRectLength - cursorLength;
 					float localPos;
@@ -196,16 +197,16 @@ namespace UISystem{
 				thisIsEvaluatedDrag = false;
 				ClearTouchPositionCache();
 			}
-			protected Vector2 thisTouchPosition;
+			// protected Vector2 thisTouchPosition;
 			protected Vector2 thisElementLocalPositionAtTouch;
 			Vector2 noTouchPosition = new Vector2(10000f, 10000f);
 			public void ClearTouchPositionCache(){
-				thisTouchPosition = noTouchPosition;
+				// thisTouchPosition = noTouchPosition;
 				thisElementLocalPositionAtTouch = noTouchPosition;
 				thisElementDisplacementSinceLastTouch = Vector2.zero;
 			}
 			void CacheTouchPosition(Vector2 touchPosition){
-				thisTouchPosition = touchPosition;
+				// thisTouchPosition = touchPosition;
 				thisElementLocalPositionAtTouch = thisScrollerElement.GetLocalPosition();
 
 			}
@@ -280,10 +281,18 @@ namespace UISystem{
 						base.OnDragImple(eventData);
 					}
 				}
+				Vector2 GetNonscaledDeltaPosition(Vector2 deltaPosition){
+					Canvas canvas = thisUIManager.GetCanvas();
+					Vector2 canvasLocalScale = canvas.transform.localScale;
+					return new Vector2(
+						deltaPosition.x / canvasLocalScale.x,
+						deltaPosition.y / canvasLocalScale.y
+					);
+				}
 				protected virtual void DisplaceScrollerElement(
 					Vector2 deltaPosition
 				){
-
+					deltaPosition = GetNonscaledDeltaPosition(deltaPosition);
 					thisElementDisplacementSinceLastTouch += deltaPosition;
 					Vector2 displacement = CalcDragDeltaSinceTouch(
 						thisElementDisplacementSinceLastTouch
@@ -339,7 +348,7 @@ namespace UISystem{
 			/*  */
 		/* Rect calculation */
 			public bool ScrollerElementIsUndersizedTo(Vector2 referenceLength, int dimension){
-				return thisScrollerElementLength[dimension] <= referenceLength[dimension];
+				return thisScrollerElementSize[dimension] <= referenceLength[dimension];
 			}
 			protected float GetNormalizedPosition(float scrollerElementLocalPosOnAxis, Vector2 referenceLength, Vector2 referenceMin, int dimension){
 				/*  (0f, 0f) if cursor rests on top left corner of the element
@@ -351,7 +360,7 @@ namespace UISystem{
 				}else{
 					float referenceLengthOnAxis = referenceLength[dimension];
 					float referenceMinOnAxis = referenceMin[dimension];
-					return (referenceMinOnAxis - scrollerElementLocalPosOnAxis)/ (thisScrollerElementLength[dimension] - referenceLengthOnAxis);
+					return (referenceMinOnAxis - scrollerElementLocalPosOnAxis)/ (thisScrollerElementSize[dimension] - referenceLengthOnAxis);
 
 				}
 			}
@@ -359,7 +368,7 @@ namespace UISystem{
 				return GetNormalizedPosition(scrollerElementLocalPosOnAxis, thisCursorLength, thisCursorLocalPosition, dimension);
 			}
 			protected float GetNormalizedScrollerPosition(float scrollerElementLocalPosOnAxis, int dimension){
-				return GetNormalizedPosition(scrollerElementLocalPosOnAxis, thisRectLength, Vector2.zero, dimension);
+				return GetNormalizedPosition(scrollerElementLocalPosOnAxis, GetRectSize(), Vector2.zero, dimension);
 			}
 
 			/* ElementCursorOffsetInPixel calculation */
@@ -387,7 +396,7 @@ namespace UISystem{
 				if(ScrollerElementIsUndersizedTo(thisCursorLength, dimension))
 					return thisCursorLocalPosition[dimension];
 				else{
-					float scrollerElementLocalPosOnAxis = thisCursorLocalPosition[dimension] - (normalizedCursoredPositionOnAxis * (thisScrollerElementLength[dimension] - thisCursorLength[dimension]));
+					float scrollerElementLocalPosOnAxis = thisCursorLocalPosition[dimension] - (normalizedCursoredPositionOnAxis * (thisScrollerElementSize[dimension] - thisCursorLength[dimension]));
 					return scrollerElementLocalPosOnAxis;
 				}
 			}
@@ -425,16 +434,17 @@ namespace UISystem{
 			}
 			protected virtual void ProcessSwipe(ICustomEventData eventData){
 				if(thisIsEnabledInertia){
+					Vector2 nonscaledVelocity = GetNonscaledDeltaPosition(eventData.velocity);
 
 					ResetDrag();
 
-					if(InitialVelocityIsOverThreshold(eventData.velocity))
+					if(InitialVelocityIsOverThreshold(/* eventData.velocity */nonscaledVelocity))
 						DisableScrollInputRecursively(this);
 
 					for(int i = 0; i < 2; i ++){
 						if(!this.IsOutOfBounds(i)){
 							StartInertialScrollOnAxis(
-								eventData.velocity,
+								/* eventData.velocity */nonscaledVelocity,
 								i
 							);
 						}else{
