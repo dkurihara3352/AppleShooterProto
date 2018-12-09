@@ -5,6 +5,7 @@ using UnityEngine;
 namespace UISystem{
 	public interface IUIElementGroupAdaptor: IUIAdaptor{
 		IUIElementGroup GetUIElementGroup();
+		void Fuck();
 	}
 	public abstract class AbsUIElementGroupAdaptor: UIAdaptor, IUIElementGroupAdaptor{
 		public int columnCountConstraint;
@@ -30,10 +31,13 @@ namespace UISystem{
 
 		public override void SetUpReference(){
 			base.SetUpReference();
+			SetUpElements();
+		}
+		void SetUpElements(){
 			IUIElement[] groupElements = GetGroupElements();
 			IRectCalculationData rectCalculationData = CreateRectCalculationData(groupElements);
 
-			IUIElementGroup uieGroup = (IUIElementGroup)this.GetUIElement();
+			IUIElementGroup uieGroup = thisUIElementGroup;
 			
 			uieGroup.SetUpElements(groupElements);
 			uieGroup.SetUpRects(rectCalculationData);
@@ -41,7 +45,26 @@ namespace UISystem{
 		}
 		protected abstract IUIElement[] GetGroupElements();
 		protected abstract IRectCalculationData CreateRectCalculationData(IUIElement[] groupElements);
-
+		bool thisIsScrollerElement{
+			get{
+				IUIElement parent = GetParentUIElement();
+				if(parent != null){
+					if(parent is IScroller)
+						return true;
+				}
+				return false;
+			}
+		}
+		public override void RecalculateRect(){
+			base.RecalculateRect();
+			if(thisIsScrollerElement)
+				return;
+			else
+				SetUpElements();
+		}
+		public void Fuck(){
+			SetUpElements();
+		}
 	}
 }
 

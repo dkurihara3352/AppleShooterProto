@@ -76,7 +76,10 @@ namespace UISystem{
 				float cursorWidth = thisCursorSize[0] * (thisGroupElementLength.x + thisPadding.x) + thisPadding.x;
 				float cursorHeight = thisCursorSize[1] * (thisGroupElementLength.y + thisPadding.y) + thisPadding.y;
 				Vector2 newCursorLength = new Vector2(cursorWidth, cursorHeight);
-				if(newCursorLength[0] <= thisRectLength[0] + marginOfError && newCursorLength[1] <= thisRectLength[1] + marginOfError)
+				if(
+					newCursorLength[0] <= thisRectLength[0] + marginOfError && 
+					newCursorLength[1] <= thisRectLength[1] + marginOfError
+				)
 					return newCursorLength;
 				else{
 					Debug.Log(
@@ -86,6 +89,8 @@ namespace UISystem{
 						thisRectLength.ToString()
 					);
 					throw new System.InvalidOperationException("cursorLength cannot exceed this rect length. provide lesser cursor size");
+					// thisUIElementGroup.UpdateGroupElementLength();
+					// UpdateGroupElementLengthAndPadding();
 				}
 			}
 			protected override void OnScrollerElementDisplace(float normalizedCursoredPositionOnAxis, int dimension){
@@ -121,9 +126,15 @@ namespace UISystem{
 		/* Initially Cursored Element */
 			readonly int thisInitiallyCursoredGroupElementIndex;
 			protected override Vector2 GetInitialNormalizedCursoredPosition(){
-				int correctedInitiallyCursoredGroupElementIndex = GetCursoredGroupElementIndexCorrectedForBounds(thisInitiallyCursoredGroupElementIndex);
-				IUIElement initiallyCursoredGroupElement = thisUIElementGroup.GetGroupElement(correctedInitiallyCursoredGroupElementIndex);
-				return GetNormalizedCursoredPositionFromGroupElementToCursor(initiallyCursoredGroupElement);
+				IUIElement[] cursoredElements = GetCursoredElements();
+				if(cursoredElements == null){// not inited yet
+					int correctedInitiallyCursoredGroupElementIndex = GetCursoredGroupElementIndexCorrectedForBounds(thisInitiallyCursoredGroupElementIndex);
+					IUIElement initiallyCursoredGroupElement = thisUIElementGroup.GetGroupElement(correctedInitiallyCursoredGroupElementIndex);
+					Vector2 result = GetNormalizedCursoredPositionFromGroupElementToCursor(initiallyCursoredGroupElement);
+					thisCursoredValue = result;
+					return result;
+				}else// use cached value otherwise
+					return thisCursoredValue;
 			}
 			ICorrectedCursoredElementIndexCalculator thisCorrectedCursoredElementIndexCalculator;
 			int GetCursoredGroupElementIndexCorrectedForBounds(int source){

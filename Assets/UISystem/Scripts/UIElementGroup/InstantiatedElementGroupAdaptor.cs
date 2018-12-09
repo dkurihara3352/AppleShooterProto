@@ -8,8 +8,11 @@ namespace UISystem{
 		
 		public int groupElementCount;
 		public GameObject uiElementPrefab;
+		IUIElement[] thisGroupElements;
 		protected override IUIElement[] GetGroupElements(){
-			return CreateUIEs();
+			if(thisGroupElements == null)
+				thisGroupElements = CreateUIEs();
+			return thisGroupElements;
 		}
 		IUIElement[] CreateUIEs(){
 			List<IUIElement> resultList = new List<IUIElement>();

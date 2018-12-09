@@ -210,15 +210,15 @@ namespace UISystem{
 			if(GUI.Button(topLeftSubRect_5, "DeactivateInst"))
 				thisRootUIElement.DeactivateRecursively(true);
 			if(GUI.Button(topLeftSubRect_6, "RecalculateUIRect"))
-				thisUIEToRecalc.RecalculateRect();
+				uiAdaptorToRecalculate.RecalculateRect();
 		}
-		IUIElement thisUIEToRecalc{
-			get{
-				if(_thisUIEToRecalc == null)
-					_thisUIEToRecalc = GetUIElementToRecalc();
-				return _thisUIEToRecalc;
-			}
-		}
+		// IUIElement thisUIEToRecalc{
+		// 	get{
+		// 		if(_thisUIEToRecalc == null)
+		// 			_thisUIEToRecalc = GetUIElementToRecalc();
+		// 		return _thisUIEToRecalc;
+		// 	}
+		// }
 		IUIElement _thisUIEToRecalc;
 		public UIAdaptor uiAdaptorToRecalculate;
 		IUIElement GetUIElementToRecalc(){

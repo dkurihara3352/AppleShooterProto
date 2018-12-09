@@ -5,7 +5,7 @@ using DKUtility.CurveUtility;
 using DKUtility;
 namespace UISystem{
 	public interface IScroller: IUIElement{
-		void SetUpScrollerElement(IUIElement element);
+		void SetUpScrollerElementAndCursor(IUIElement element);
 		void UpdateRect();
 
 
@@ -101,7 +101,7 @@ namespace UISystem{
 			}
 
 		/* ScrollerElement */
-			public void SetUpScrollerElement(IUIElement scrollerElement){
+			public void SetUpScrollerElementAndCursor(IUIElement scrollerElement){
 				//called in SetUpReference, in Finalize when this is UIElementGroupScroller
 
 				thisScrollerElement = scrollerElement;
@@ -159,11 +159,10 @@ namespace UISystem{
 						localPos = thisRelativeCursorPosition[i] * diffL;
 					result[i] = localPos;
 				}
-				// Vector2 pivotOffset = thisUIAdaptor.GetPivotOffset();
-				// result -= pivotOffset;
 				return result;
 			}
 			/*  */
+			protected Vector2 thisCursoredValue;
 			protected void PlaceScrollerElementAtInitialCursorValue(){
 				Vector2 initialCursorValue = GetInitialNormalizedCursoredPosition();
 				PlaceScrollerElement(initialCursorValue);
@@ -175,6 +174,7 @@ namespace UISystem{
 				
 				thisScrollerElement.SetLocalPosition(newScrollerElementLocalPos);
 				float normalizedCursoredPositionOnAxis = GetNormalizedCursoredPositionOnAxis(localPosOnAxis, dimension);
+				thisCursoredValue[dimension] = normalizedCursoredPositionOnAxis;
 				OnScrollerElementDisplace(
 					normalizedCursoredPositionOnAxis,
 					dimension

@@ -40,120 +40,122 @@ namespace UnityBase{
 			thisMonoBehaviourAdaptorManager = FindAndSetMonoBehaviourAdaptor();
 			thisMonoBehaviourAdaptorManager.AddAdaptor(this);
 		}
-		protected IMonoBehaviourAdaptorManager thisMonoBehaviourAdaptorManager;
-		public IMonoBehaviourAdaptorManager FindAndSetMonoBehaviourAdaptor(){
-			IMonoBehaviourAdaptorManager result = (IMonoBehaviourAdaptorManager)GameObject.Find("MonoBehaviourAdaptorManagerGO").GetComponent(typeof(IMonoBehaviourAdaptorManager));
-			if(result == null)
-				throw new System.InvalidOperationException(
-					"MonoBehaviourManager is not found"
-				);
-			return result;
-		}
-		public IMonoBehaviourAdaptorManager GetMonoBehaviourAdaptorManager(){
-			return thisMonoBehaviourAdaptorManager;
-		}
-		protected IProcessManager processManager{
-			get{
-				return thisMonoBehaviourAdaptorManager.GetProcessManager();
-			}
-		}
-		protected IUnityBaseProcessFactory thisProcessFactory{
-			get{
-				return thisMonoBehaviourAdaptorManager.GetProcessFactory();
-			}
-		}
-		public IUnityBaseProcessFactory GetProcessFactory(){
-
-			return thisProcessFactory;
-		}
-
 		public virtual void SetUp(){}
 		public virtual void SetUpReference(){}
 		public virtual void FinalizeSetUp(){}
-		
-		public Vector3 GetPosition(){
-			return this.transform.position;
-		}
-		public void SetPosition(Vector3 position){
-			this.transform.position = position;
-		}
-		public Quaternion GetRotation(){
-			return this.transform.rotation;
-		}
-		public void SetRotation(Quaternion rotation){
-			this.transform.rotation = rotation;
-		}
-		public virtual Vector3 GetLocalPosition(){
-			return this.transform.localPosition;
-		}
-		public virtual void SetLocalPosition(Vector3 localPosition){
-			this.transform.localPosition  =localPosition;
-		}
-		public Quaternion GetLocalRotation(){
-			return this.transform.localRotation;
-		}
-		public void SetLocalRotation(Quaternion localRotation){
-			this.transform.localRotation = localRotation;
-		}
-		public void Rotate(Vector3 euler){
-			this.transform.localEulerAngles = euler;
-		}
-		public void Rotate(
-			float angleOnAxis,
-			int axis
-		){
-			Vector3 original = this.transform.localEulerAngles;
-			if(axis == 0)
-				this.transform.localEulerAngles = new Vector3(
-					angleOnAxis,
-					original.y,
-					original.z					
-				);
-			if(axis == 1)
-				this.transform.localEulerAngles = new Vector3(
-					original.x,
-					angleOnAxis,
-					original.z
-				);
-		}
-		public void SetLookRotation(
-			Vector3 forward,
-			Vector3 up
-		){
-			if(forward != Vector3.zero)
-				this.transform.rotation = Quaternion.LookRotation(
-					forward,
-					up
-				);
-		}
-		public void SetLookRotation(Vector3 forward){
-			this.SetLookRotation(
-				forward,
-				this.transform.up
-			);
-		}
-		public Transform GetTransform(){
-			return this.transform;
-		}
-		public void SetParent(Transform parent){
-			this.transform.SetParent(parent, true);
-		}
-		public void ResetLocalTransform(){
-			this.transform.localPosition = Vector3.zero;
-			this.transform.localRotation = Quaternion.identity;
-		}
-		public Vector3 GetForwardDirection(){
-			return this.transform.forward;
-		}
-		public bool IsEnabled(){
-			return this.enabled;
-		}
+		/* managers */
+			protected IMonoBehaviourAdaptorManager thisMonoBehaviourAdaptorManager;
+			public IMonoBehaviourAdaptorManager FindAndSetMonoBehaviourAdaptor(){
+				IMonoBehaviourAdaptorManager result = (IMonoBehaviourAdaptorManager)GameObject.Find("MonoBehaviourAdaptorManagerGO").GetComponent(typeof(IMonoBehaviourAdaptorManager));
+				if(result == null)
+					throw new System.InvalidOperationException(
+						"MonoBehaviourManager is not found"
+					);
+				return result;
+			}
+			public IMonoBehaviourAdaptorManager GetMonoBehaviourAdaptorManager(){
+				return thisMonoBehaviourAdaptorManager;
+			}
+			protected IProcessManager processManager{
+				get{
+					return thisMonoBehaviourAdaptorManager.GetProcessManager();
+				}
+			}
+			protected IUnityBaseProcessFactory thisProcessFactory{
+				get{
+					return thisMonoBehaviourAdaptorManager.GetProcessFactory();
+				}
+			}
+			public IUnityBaseProcessFactory GetProcessFactory(){
 
-		public string GetName(){
-			return this.name;
-		}
-		public void SetName(string name){
-			this.name = name;
-		}
+				return thisProcessFactory;
+			}		
+		/* general */
+			public Transform GetTransform(){
+				return this.transform;
+			}
+			public void SetParent(Transform parent){
+				this.transform.SetParent(parent, true);
+			}
+			public void ResetLocalTransform(){
+				this.transform.localPosition = Vector3.zero;
+				this.transform.localRotation = Quaternion.identity;
+			}
+			public Vector3 GetForwardDirection(){
+				return this.transform.forward;
+			}
+			public bool IsEnabled(){
+				return this.enabled;
+			}
+
+			public string GetName(){
+				return this.name;
+			}
+			public void SetName(string name){
+				this.name = name;
+			}
+		/* position */
+			public Vector3 GetPosition(){
+				return this.transform.position;
+			}
+			public void SetPosition(Vector3 position){
+				this.transform.position = position;
+			}
+			public virtual Vector3 GetLocalPosition(){
+				return this.transform.localPosition;
+			}
+			public virtual void SetLocalPosition(Vector3 localPosition){
+				this.transform.localPosition  =localPosition;
+			}
+		/* rotation */
+			public Quaternion GetRotation(){
+				return this.transform.rotation;
+			}
+			public void SetRotation(Quaternion rotation){
+				this.transform.rotation = rotation;
+			}
+			public Quaternion GetLocalRotation(){
+				return this.transform.localRotation;
+			}
+			public void SetLocalRotation(Quaternion localRotation){
+				this.transform.localRotation = localRotation;
+			}
+			public void Rotate(Vector3 euler){
+				this.transform.localEulerAngles = euler;
+			}
+			public void Rotate(
+				float angleOnAxis,
+				int axis
+			){
+				Vector3 original = this.transform.localEulerAngles;
+				if(axis == 0)
+					this.transform.localEulerAngles = new Vector3(
+						angleOnAxis,
+						original.y,
+						original.z					
+					);
+				if(axis == 1)
+					this.transform.localEulerAngles = new Vector3(
+						original.x,
+						angleOnAxis,
+						original.z
+					);
+			}
+			public void SetLookRotation(
+				Vector3 forward,
+				Vector3 up
+			){
+				if(forward != Vector3.zero)
+					this.transform.rotation = Quaternion.LookRotation(
+						forward,
+						up
+					);
+			}
+			public void SetLookRotation(Vector3 forward){
+				this.SetLookRotation(
+					forward,
+					this.transform.up
+				);
+			}
 	}
 }

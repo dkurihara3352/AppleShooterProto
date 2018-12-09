@@ -39,9 +39,20 @@ namespace UISystem{
 		protected override void SetUpScrollerReference(){
 			return;
 		}
+		public override void RecalculateRect(){
+			thisScroller.UpdateRect();
+			IUIElementGroup thisUIElementGroup = GetUIElementGroup();
+			IUIElementGroupAdaptor adaptor = (IUIElementGroupAdaptor)thisUIElementGroup.GetUIAdaptor();
+			adaptor.Fuck();
+			SetUpScrollerElementAndCursor();
+		}
+		IUIElementGroup GetUIElementGroup(){
+			return (IUIElementGroup)GetScrollerElement();
+		}
 		public override void FinalizeSetUp(){
-			SetUpScrollerElement();
+			SetUpScrollerElementAndCursor();
 			base.FinalizeSetUp();
 		}
+
 	}
 }

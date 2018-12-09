@@ -18,7 +18,7 @@ namespace UISystem{
 			thisCursorRect = rect;
 		}
 		bool cursorRectIsReady = false;
-		IScroller thisScroller{
+		protected IScroller thisScroller{
 			get{
 				return (IScroller)GetUIElement();
 			}
@@ -32,20 +32,25 @@ namespace UISystem{
 			SetUpScrollerReference();
 		}
 		protected virtual void SetUpScrollerReference(){
-			SetUpScrollerElement();
+			SetUpScrollerElementAndCursor();
 		}
-		protected void SetUpScrollerElement(){
+		protected void SetUpScrollerElementAndCursor(){
 			IUIElement element = GetScrollerElement();
-			thisScroller.SetUpScrollerElement(element);
+			thisScroller.SetUpScrollerElementAndCursor(element);
 			cursorRectIsReady = true;
 		}
-		IUIElement GetScrollerElement(){
+		protected IUIElement GetScrollerElement(){
 			IUIElement[] childUIElements = GetChildUIElements();
 			if(childUIElements.Length != 1)
 				throw new System.InvalidOperationException(
 					"childUIElement's count must be exactly one"
 				);
 			return childUIElements[0];
+		}
+		public override void RecalculateRect(){
+			base.RecalculateRect();
+			thisScroller.UpdateRect();
+			SetUpScrollerElementAndCursor();
 		}
 		public void OnDrawGizmosSelected(){
 			if(cursorRectIsReady){
@@ -57,7 +62,7 @@ namespace UISystem{
 					thisCursorRect.y + transform.position.y - pivotOffset.y, 
 					planeZ
 				);
-				Vector3 bottomRight = bottomLeft + Vector3.right * thisCursorRect.width;
+				Vector3 bottomRight = bottomLeft + (Vector3.right * thisCursorRect.width) * thisCanvasScale.x;
 				Vector3 topLeft = bottomLeft + Vector3.up * thisCursorRect.height;
 				Vector3 topRight = topLeft + Vector3.right * thisCursorRect.width;
 				Gizmos.DrawLine(topLeft, topRight);
@@ -65,6 +70,7 @@ namespace UISystem{
 				Gizmos.DrawLine(topRight, bottomRight);
 				Gizmos.DrawLine(topLeft, bottomLeft);
 				Gizmos.DrawLine(bottomLeft, bottomRight);
+
 			}
 		}
 	}

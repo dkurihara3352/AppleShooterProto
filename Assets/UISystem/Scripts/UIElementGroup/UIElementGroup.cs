@@ -215,13 +215,13 @@ namespace UISystem{
 			}
 			protected void SetUpGroupLength(Vector2 groupLength){
 				thisGroupLength = groupLength;
-				thisUIAdaptor.SetRectLength(groupLength);
+				thisUIAdaptor.SetRectSize(groupLength);
 			}
 			protected void SetUpElementLength(Vector2 elementLength){
 				thisElementLength = elementLength;
 				foreach(IUIElement element in thisGroupElements){
 					IUIAdaptor elementUIA = element.GetUIAdaptor();
-					elementUIA.SetRectLength(elementLength);
+					elementUIA.SetRectSize(elementLength);
 				}
 			}
 			protected void SetUpPadding(Vector2 padding){
@@ -272,7 +272,6 @@ namespace UISystem{
 					float localPosY = (arrayIndex[1] * (thisElementLength.y + thisPadding.y)) + thisPadding.y;
 					Vector2 newLocalPos = new Vector2(localPosX, localPosY);
 					element.SetLocalPosition(newLocalPos);
-					// element.SetBottomLeftLocalPosition(newLocalPos);
 				}
 			}
 		/* Const */

@@ -4,7 +4,10 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class RTDebugger : MonoBehaviour {
-
+	void Update(){
+		if(Input.GetKeyDown("space"))
+			DebugRectTransform();
+	}
 	void OnGUI(){
 		CalcRects();
 		DrawBottomRightRect();
@@ -54,6 +57,40 @@ public class RTDebugger : MonoBehaviour {
 		}
 		GUI.Label(
 			rect,
+			result
+		);
+	}
+	public Canvas canvas;
+	void DebugRectTransform(){
+		string result = "";
+		if(
+			rectTransformToDebug != null && 
+			canvas != null
+		){
+			Vector2 canvasScale = canvas.transform.localScale;
+			result += "localPos: " + rectTransformToDebug.localPosition.ToString() ;
+			result += "size: " + rectTransformToDebug.sizeDelta.ToString() ;
+			result += "rect: " + rectTransformToDebug.rect.ToString();
+			result += "achoredPos: " + rectTransformToDebug.anchoredPosition.ToString() ;
+			result += "pixelSize: " + new Vector2(
+				rectTransformToDebug.rect.size.x * canvasScale.x,
+				rectTransformToDebug.rect.size.y * canvasScale.y
+			).ToString();
+			result += "pixelWorPos: " + new Vector2(
+				rectTransformToDebug.position.x * canvasScale.x,
+				rectTransformToDebug.position.y * canvasScale.y
+			).ToString();
+			result += "pixelLocalPos: " + new Vector2(
+				rectTransformToDebug.localPosition.x * canvasScale.x,
+				rectTransformToDebug.localPosition.y * canvasScale.y
+			);
+			result += "screen: " + new Vector2(
+				Screen.width,
+				Screen.height
+
+			).ToString();
+		}
+		Debug.Log(
 			result
 		);
 	}

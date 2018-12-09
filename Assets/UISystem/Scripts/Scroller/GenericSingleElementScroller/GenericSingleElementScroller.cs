@@ -25,13 +25,15 @@ namespace UISystem{
 			get{return new bool[]{true, true};}
 		}
 		protected override Vector2 GetInitialNormalizedCursoredPosition(){
-			return Vector2.zero;
+			// return Vector2.zero;
+			return thisCursoredValue;
 		}
 		protected override Vector2 CalcCursorLength(){
 			Vector2 relativeCursorLength = thisRelativeCursorLength;
 			float cursorWidth = thisRectLength[0] * relativeCursorLength.x;
 			float cursorHeight = thisRectLength[1] * relativeCursorLength.y;
-			return new Vector2(cursorWidth, cursorHeight);
+			Vector2 result = new Vector2(cursorWidth, cursorHeight);
+			return result;
 		}
 
 		public new interface IConstArg: AbsScroller.IConstArg{
