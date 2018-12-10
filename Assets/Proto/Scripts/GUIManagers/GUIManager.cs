@@ -6,6 +6,12 @@ using UISystem;
 namespace AppleShooterProto{
 	public class GUIManager : AbsGUIManager {
 		void Awake(){
+			CalcRects();
+		}
+		void Update(){
+			CalcRects();
+		}
+		void CalcRects(){
 			topLeftRect = GetGUIRect(
 				normalizedSize: new Vector2(.2f, .4f),
 				normalizedPosition: new Vector2(0f ,0f)

@@ -45,6 +45,7 @@ namespace AppleShooterProto{
 			thisArrow.SetPosition(newPosition);
 			Vector3 movingDirection = newPosition - thisPrevPosition;
 			thisArrow.SetLookRotation(movingDirection);
+			thisPrevPosition = newPosition;
 		}
 		protected override void ExpireImple(){
 			thisArrow.Deactivate();
