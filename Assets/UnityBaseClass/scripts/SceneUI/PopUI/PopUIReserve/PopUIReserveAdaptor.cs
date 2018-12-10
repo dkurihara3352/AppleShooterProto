@@ -44,6 +44,7 @@ namespace UnityBase{
 				GameObject popUIGO = GameObject.Instantiate(
 					popUIPrefab
 				);
+				popUIGO.transform.localScale = thisCanvas.transform.localScale;
 				IPopUIAdaptor popUIAdaptor = (IPopUIAdaptor)popUIGO.GetComponent(typeof(IPopUIAdaptor));
 				if(popUIAdaptor == null)
 					throw new System.InvalidOperationException(

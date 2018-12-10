@@ -29,6 +29,20 @@ namespace AppleShooterProto{
 			IPlayerInputManager inputManager = GetInputManager();
 			thisInputScroller.SetPlayerInputManager(inputManager);
 		}
+		protected override void SetUpScrollerReference(){
+			SetScrollerElementSize();
+			SetUpScrollerElementAndCursor();
+		}
+		void SetScrollerElementSize(){
+			IUIElement element = GetScrollerElement();
+			element.SetRectSize(CalculateScrollerElementRectLength());
+		}
+		public override void RecalculateRect(){
+			// base.RecalculateRect();
+			thisInputScroller.UpdateRect();
+			SetScrollerElementSize();
+			SetUpScrollerElementAndCursor();
+		}
 		public PlayerInputManagerAdaptor inputManagerAdaptor;
 		IPlayerInputManager GetInputManager(){
 			return inputManagerAdaptor.GetInputManager();
@@ -48,9 +62,10 @@ namespace AppleShooterProto{
 			Vector2 bothFOVs = playerCameraAdaptor.GetDefaultFOVs();
 			Vector2 result = new Vector2();
 			for(int i = 0; i < 2; i++){
-				float degreePerPixel = bothFOVs[i]/ thisScreenLength[i];
+				float scaledScreenLength = thisScreenLength[i]/ thisCanvasLocalScale[i];
+				float degreePerPixel = bothFOVs[i]/ /* thisScreenLength[i] */scaledScreenLength;
 				float multipliedDPP = degreePerPixel * panAngleMultiplier[i];
-				result[i] = (maxPanAngle[i] / multipliedDPP) +thisScreenLength[i];
+				result[i] = (maxPanAngle[i] / multipliedDPP) + /* thisScreenLength[i] */scaledScreenLength;
 			}
 			return result;
 		}

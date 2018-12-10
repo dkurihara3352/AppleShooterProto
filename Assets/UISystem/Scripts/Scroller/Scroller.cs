@@ -71,7 +71,7 @@ namespace UISystem{
 		/*  */
 			
 		/* ScrollerRect */
-			public  void UpdateRect(){
+			public void UpdateRect(){
 				// SetUpScrollerRect();
 				SetUpRubberBandCalculators();
 			}
