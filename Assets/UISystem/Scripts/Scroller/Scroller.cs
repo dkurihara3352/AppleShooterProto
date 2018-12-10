@@ -100,7 +100,6 @@ namespace UISystem{
 		/* ScrollerElement */
 			public void SetUpScrollerElementAndCursor(IUIElement scrollerElement){
 				//called in SetUpReference, in Finalize when this is UIElementGroupScroller
-
 				thisScrollerElement = scrollerElement;
 				// SetUpScrollerElementRect();
 				SetUpCursorTransform();

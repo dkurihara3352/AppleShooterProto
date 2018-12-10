@@ -41,15 +41,19 @@ namespace UISystem{
 		}
 		public override void RecalculateRect(){
 			thisScroller.UpdateRect();
-			IUIElementGroup thisUIElementGroup = GetUIElementGroup();
-			IUIElementGroupAdaptor adaptor = (IUIElementGroupAdaptor)thisUIElementGroup.GetUIAdaptor();
-			adaptor.Fuck();
+			IUIElementGroup uieGroup = GetUIElementGroup();
+			IUIElementGroupAdaptor adaptor = (IUIElementGroupAdaptor)uieGroup.GetUIAdaptor();
+			adaptor.SetUpElements();
 			SetUpScrollerElementAndCursor();
 		}
 		IUIElementGroup GetUIElementGroup(){
 			return (IUIElementGroup)GetScrollerElement();
 		}
 		public override void FinalizeSetUp(){
+			Debug.Log(
+				GetName() + DKUtility.DebugHelper.StringInColor(" pre-fin", Color.cyan)
+			);
+			GetUIElementGroup().SetUpElements();
 			SetUpScrollerElementAndCursor();
 			base.FinalizeSetUp();
 		}

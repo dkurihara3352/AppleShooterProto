@@ -91,6 +91,7 @@ namespace UISystem{
 					return newCursorLength;
 				else{
 					Debug.Log(
+						GetName() + " " +
 						"cursorLengh: " +
 						newCursorLength.ToString() +
 						", rectLength: " +

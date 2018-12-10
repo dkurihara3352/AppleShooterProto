@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UISystem{
 	public interface IUIElementGroupAdaptor: IUIAdaptor{
 		IUIElementGroup GetUIElementGroup();
-		void Fuck();
+		void SetUpElements();
 	}
 	public abstract class AbsUIElementGroupAdaptor: UIAdaptor, IUIElementGroupAdaptor{
 		public int columnCountConstraint;
@@ -33,7 +33,7 @@ namespace UISystem{
 			base.SetUpReference();
 			SetUpElements();
 		}
-		void SetUpElements(){
+		public void SetUpElements(){
 			IUIElement[] groupElements = GetGroupElements();
 			IRectCalculationData rectCalculationData = CreateRectCalculationData(groupElements);
 
@@ -61,9 +61,6 @@ namespace UISystem{
 				return;
 			else
 				SetUpElements();
-		}
-		public void Fuck(){
-			SetUpElements();
 		}
 	}
 }

@@ -23,6 +23,7 @@ namespace UISystem{
 		Vector2 GetPadding();
 		void SetUpRects(IRectCalculationData rectCalculationData);
 		void PlaceElements();
+		void SetUpElements();
 	}
 	public abstract class AbsUIElementGroup<T> : UIElement, IUIElementGroup where T: class, IUIElement{
 		public AbsUIElementGroup(
@@ -209,27 +210,11 @@ namespace UISystem{
 			IRectCalculationData thisRectCalculationData;
 			void CalculateAndSetRects(IRectCalculationData data){
 				data.CalculateRects();
-				// SetUpGroupSize(data.groupLength);
 				thisUIAdaptor.SetRectSize(data.groupSize);
-				// SetUpElementSize(data.elementSize);
 				foreach(IUIElement ele in thisGroupElements)
 					ele.SetRectSize(data.elementSize);
 				thisPadding = data.padding;
 			}
-			// protected void SetUpGroupSize(Vector2 groupSize){
-			// 	thisGroupSize = groupSize;
-			// 	thisUIAdaptor.SetRectSize(groupSize);
-			// }
-			// protected void SetUpElementSize(Vector2 elementSize){
-			// 	thisElementSize = elementSize;
-			// 	foreach(IUIElement element in thisGroupElements){
-			// 		IUIAdaptor elementUIA = element.GetUIAdaptor();
-			// 		elementUIA.SetRectSize(elementSize);
-			// 	}
-			// }
-			// protected void SetUpPadding(Vector2 padding){
-			// 	thisPadding = padding;
-			// }
 			Vector2 thisGroupSize;
 			Vector2 thisElementSize{
 				get{
@@ -281,6 +266,15 @@ namespace UISystem{
 					element.SetLocalPosition(newLocalPos);
 				}
 			}
+		IUIElementGroupAdaptor thisUIElementGroupAdaptor{
+			get{
+				return (IUIElementGroupAdaptor)thisUIAdaptor;
+			}
+		}
+		
+		public void SetUpElements(){
+			thisUIElementGroupAdaptor.SetUpElements();
+		}
 		/* Const */
 			public new interface IConstArg: UIElement.IConstArg{
 				int columnCountConstraint{get;}
