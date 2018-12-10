@@ -50,9 +50,9 @@ namespace UISystem{
 			return (IUIElementGroup)GetScrollerElement();
 		}
 		public override void FinalizeSetUp(){
-			Debug.Log(
-				GetName() + DKUtility.DebugHelper.StringInColor(" pre-fin", Color.cyan)
-			);
+			// Debug.Log(
+			// 	GetName() + DKUtility.DebugHelper.StringInColor(" pre-fin", Color.cyan)
+			// );
 			GetUIElementGroup().SetUpElements();
 			SetUpScrollerElementAndCursor();
 			base.FinalizeSetUp();

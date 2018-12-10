@@ -65,7 +65,7 @@ namespace UISystem{
 			}
 		
 			public virtual void SetUp(){
-				Debug.Log(GetName() + DKUtility.DebugHelper.StringInColor(" SetUp", Color.red));
+				// Debug.Log(GetName() + DKUtility.DebugHelper.StringInColor(" SetUp", Color.red));
 				thisRectTransform = GetComponent<RectTransform>();
 				thisUIElement = CreateUIElement();
 
@@ -74,7 +74,7 @@ namespace UISystem{
 				
 			}
 			public virtual void SetUpReference(){
-				Debug.Log(GetName() + DKUtility.DebugHelper.StringInColor(" SetUpRef", Color.green));
+				// Debug.Log(GetName() + DKUtility.DebugHelper.StringInColor(" SetUpRef", Color.green));
 
 				IUIImage uiImage = CreateUIImage();
 				thisUIElement.SetUIImage(uiImage);
@@ -86,7 +86,7 @@ namespace UISystem{
 				thisSetUpRefIsDone = true;
 			}
 			public virtual void FinalizeSetUp(){
-				Debug.Log(GetName() + DKUtility.DebugHelper.StringInColor(" Fin", Color.blue));
+				// Debug.Log(GetName() + DKUtility.DebugHelper.StringInColor(" Fin", Color.blue));
 				thisUIElement.DeactivateImple();
 				thisIsSetUp = true;
 			}
@@ -516,9 +516,9 @@ namespace UISystem{
 			protected override void OnRectTransformDimensionsChange(){
 				base.OnRectTransformDimensionsChange();
 				if(thisSetUpRefIsDone){
-					Debug.Log(
-						GetName() + " is recalculating"
-					);
+					// Debug.Log(
+					// 	GetName() + " is recalculating"
+					// );
 					RecalculateRect();
 				}
 			}
