@@ -259,12 +259,14 @@ namespace AppleShooterProto{
 
 				never returns 0
 			*/
-			if(thisCurvePoints != null)
-				for(int i = 0; i < thisCurvePoints.Length; i ++){
-					if(thisCurvePoints[i].GetDistanceUpToPointOnCurve() > totalDistInCurve){
-						return i;
-					}
+
+			if(thisCurvePoints == null)
+				UpdateCurve();
+			for(int i = 0; i < thisCurvePoints.Length; i ++){
+				if(thisCurvePoints[i].GetDistanceUpToPointOnCurve() > totalDistInCurve){
+					return i;
 				}
+			}
 			return -1;
 		}
 		float GetNormalizedPositionBetweenPoints(
@@ -275,8 +277,6 @@ namespace AppleShooterProto{
 				return 0f;
 			else{
 				int floorIndex = ceilingIndex -1;
-				if(thisCurvePoints == null)
-					UpdateCurve();
 				float distToFloor = thisCurvePoints[floorIndex].GetDistanceUpToPointOnCurve();
 				float residualDist = totalDistanceCoveredInCurve - distToFloor;
 				float lengthBetweenPoints = thisCurvePoints[ceilingIndex].GetDelta();

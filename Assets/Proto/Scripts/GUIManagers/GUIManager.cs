@@ -16,12 +16,13 @@ namespace AppleShooterProto{
 				normalizedSize: new Vector2(.2f, .4f),
 				normalizedPosition: new Vector2(0f ,0f)
 			);
-			sTL_1 = GetSubRect(topLeftRect,0,6);
-			sTL_2 = GetSubRect(topLeftRect,1,6);
-			sTL_3 = GetSubRect(topLeftRect,2,6);
-			sTL_4 = GetSubRect(topLeftRect,3,6);
-			sTL_5 = GetSubRect(topLeftRect,4,6);
-			sTL_6 = GetSubRect(topLeftRect,5,6);
+			sTL_1 = GetSubRect(topLeftRect,0,7);
+			sTL_2 = GetSubRect(topLeftRect,1,7);
+			sTL_3 = GetSubRect(topLeftRect,2,7);
+			sTL_4 = GetSubRect(topLeftRect,3,7);
+			sTL_5 = GetSubRect(topLeftRect,4,7);
+			sTL_6 = GetSubRect(topLeftRect,5,7);
+			sTL_7 = GetSubRect(topLeftRect,6,7);
 			topRightRect = GetGUIRect(
  				normalizedSize: new Vector2(.5f, .5f),
 				normalizedPosition: new Vector2(1f, .5f)
@@ -48,6 +49,7 @@ namespace AppleShooterProto{
 		Rect sTL_4; 
 		Rect sTL_5; 
 		Rect sTL_6;
+		Rect sTL_7;
 
 
 		Rect bottomLeftRect;
@@ -139,6 +141,16 @@ namespace AppleShooterProto{
 					"End"
 				))
 					gameManager.StartEndGameplaySequence();
+				if((GUI.Button(
+					sTL_6,
+					"Load High Score"
+				)))
+					gameManager.LoadHighScore();
+				if((GUI.Button(
+					sTL_7,
+					"Save High Score"
+				)))
+					gameManager.SaveHighScore();
 				// if(GUI.Button(
 				// 	sTL_3,
 				// 	"AddHeat"

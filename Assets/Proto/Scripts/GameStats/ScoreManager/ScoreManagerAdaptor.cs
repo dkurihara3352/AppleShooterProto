@@ -26,7 +26,10 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			IScoreImage scoreImage = scoreImageAdaptor.GetScoreImage();
 			thisScoreManager.SetScoreImage(scoreImage);
+			IScoreImage highScoreImage = highScoreImageAdaptor.GetScoreImage();
+			thisScoreManager.SetHighScoreImage(highScoreImage);
 		}
 		public ScoreImageAdaptor scoreImageAdaptor;
+		public ScoreImageAdaptor highScoreImageAdaptor;
 	}
 }

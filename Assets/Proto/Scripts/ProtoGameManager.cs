@@ -64,6 +64,10 @@ namespace AppleShooterProto{
 		UnityBase.IFrostGlass thisRootElementFrostGlass;
 		public UIAdaptor rootUIAdaptor;
 		IUIElement thisRootUIElement;
+		public ScoreManagerAdaptor scoreManagerAdaptor;
+		IScoreManager thisScoreManager;
+		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+		IPlayerDataManager thisPlayerDataManager;
 		void SetUpSceneObjectRefs(){
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			thisHeatManager = heatManagerAdaptor.GetHeatManager();
@@ -74,6 +78,8 @@ namespace AppleShooterProto{
 			thisRootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
 			thisRootElementFrostGlass = rootElementFrostGlassAdaptor.GetFrostGlass();
 			thisRootUIElement = rootUIAdaptor.GetUIElement();
+			thisScoreManager = scoreManagerAdaptor.GetScoreManager();
+			thisPlayerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 		}
 		public void ActivateRootUI(){
 			thisRootUIElement.ActivateRecursively(false);
@@ -210,6 +216,7 @@ namespace AppleShooterProto{
 		void StartGameplay(){
 			ResetStats();
 			ActivateGameplayUI();
+			// LoadHighScore();
 			ActivateHUD();
 			// StartTargetSpawn();
 		}
@@ -217,6 +224,7 @@ namespace AppleShooterProto{
 			DeactivateGameplayUI();
 			DeactivateHUD();
 			StopTargetSpawn();
+			// SaveHighScore();
 		}
 		void ResetStats(){
 			thisGameStatsTracker.ResetStats();
@@ -231,6 +239,24 @@ namespace AppleShooterProto{
 			float normalizedTime,
 			IProcessSuite suite
 		){
+		}
+		public void LoadHighScore(){
+			thisPlayerDataManager.Load();
+			int highScore = thisPlayerDataManager.GetHighScore();
+			thisScoreManager.SetHighScore(highScore);
+		}
+		public void SaveHighScore(){
+			int score = thisScoreManager.GetScore();
+
+			int highScore = thisScoreManager.GetHighScore();
+			if(
+				highScore == 0 ||
+				score > highScore
+			){
+				thisPlayerDataManager.SetHighScore(score);
+				thisPlayerDataManager.Save();
+			}
+
 		}
 	}
 }
