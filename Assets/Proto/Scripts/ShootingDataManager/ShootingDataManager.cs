@@ -25,8 +25,6 @@ namespace AppleShooterProto{
 			}
 		}
 		public void CalculateShootingData(){
-			thisMaxScaledLevel = CalculateMaxScaledLevel();
-
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
 			IBowConfigData bowConfigData = thisPlayerDataManager.GetBowConfigDataArray()[equippedBowIndex];
 			int[] attributeLevelArray = bowConfigData.GetAttributeLevelArray();
@@ -37,40 +35,10 @@ namespace AppleShooterProto{
 			thisCritMultiplier = CalculateCriticalMultiplier(attributeLevelArray[2]);
 		}
 		/*  */
-			int thisTierSteps{
+			int thisMaxScaledLevel{
 				get{
-					return thisShootingDataManagerAdaptor.GetTierSteps();
+					return thisPlayerDataManager.GetMaxScaledLevel();
 				}
-			}
-			int thisTierCount{
-				get{
-					return thisShootingDataManagerAdaptor.GetTierCount();
-				}
-			}
-			int thisMaxLevel{
-				get{
-					return thisTierSteps * thisTierCount;
-				}
-			}
-			int[] thisTierMultipliers{
-				get{
-					return thisShootingDataManagerAdaptor.GetTierLevelMultipliers();
-				}
-			}
-			protected int GetLevelTier(int sourceLevel){
-				return (sourceLevel - 1) / thisTierSteps;
-			}
-			protected int GetScaledLevel(int sourceLevel){
-				int result = 0;
-				for(int i = 1; i <= sourceLevel; i ++){
-					int tier = GetLevelTier(i);
-					result += thisTierMultipliers[tier];
-				}
-				return result;
-			}
-			int thisMaxScaledLevel;
-			protected int CalculateMaxScaledLevel(){
-				return GetScaledLevel(thisMaxLevel);
 			}
 
 			protected float GetNormalizedScaledLevel(int scaledLevel, int maxScaledLevel){
@@ -88,9 +56,8 @@ namespace AppleShooterProto{
 					return thisShootingDataManagerAdaptor.GetGlobalMinDrawStrengthLimit();
 				}
 			}
-			float CalculateMinDrawStrength(int strengthLevel/* or quickness?? */){
-				int scaledLevel = GetScaledLevel(strengthLevel);
-				float normalizedScaledLevel = GetNormalizedScaledLevel(scaledLevel, thisMaxScaledLevel);
+			float CalculateMinDrawStrength(int strengthLevel){
+				float normalizedScaledLevel = GetNormalizedScaledLevel(strengthLevel, thisMaxScaledLevel);
 				return Mathf.Lerp(
 					thisGlobalMinDrawStrengthLimit[0],
 					thisGlobalMinDrawStrengthLimit[1],
@@ -107,8 +74,7 @@ namespace AppleShooterProto{
 				}
 			}
 			float CalculateMaxDrawStrength(int strengthLevel){
-				int scaledLevel = GetScaledLevel(strengthLevel);
-				float normalizedScaledLevel = GetNormalizedScaledLevel(scaledLevel, thisMaxScaledLevel);
+				float normalizedScaledLevel = GetNormalizedScaledLevel(strengthLevel, thisMaxScaledLevel);
 				return Mathf.Lerp(
 					thisGlobalMaxDrawStrengthLimit[0],
 					thisGlobalMaxDrawStrengthLimit[1],
@@ -126,8 +92,7 @@ namespace AppleShooterProto{
 				}
 			}
 			float CalculateFireRate(int quicknessLevel){
-				int scaledLevel = GetScaledLevel(quicknessLevel);
-				float normalizedScaledLevel = GetNormalizedScaledLevel(scaledLevel, thisMaxScaledLevel);
+				float normalizedScaledLevel = GetNormalizedScaledLevel(quicknessLevel, thisMaxScaledLevel);
 				return Mathf.Lerp(
 					thisGlobalFireRateLimit[0],
 					thisGlobalFireRateLimit[1],
@@ -145,8 +110,7 @@ namespace AppleShooterProto{
 				}
 			}
 			float CalculateDrawTime(int quicknessLevel){
-				int scaledLevel = GetScaledLevel(quicknessLevel);
-				float normalizedScaledLevel = GetNormalizedScaledLevel(scaledLevel, thisMaxScaledLevel);
+				float normalizedScaledLevel = GetNormalizedScaledLevel(quicknessLevel, thisMaxScaledLevel);
 				return Mathf.Lerp(
 					thisGlobalDrawTimeLimit[0],
 					thisGlobalDrawTimeLimit[1],
@@ -165,8 +129,7 @@ namespace AppleShooterProto{
 				}
 			}
 			float CalculateCriticalMultiplier(int criticalLevel){
-				int scaledLevel = GetScaledLevel(criticalLevel);
-				float normalizedScaledLevel = GetNormalizedScaledLevel(scaledLevel, thisMaxScaledLevel);
+				float normalizedScaledLevel = GetNormalizedScaledLevel(criticalLevel, thisMaxScaledLevel);
 				return Mathf.Lerp(
 					thisGlobalCriticalLimit[0],
 					thisGlobalCriticalLimit[1],

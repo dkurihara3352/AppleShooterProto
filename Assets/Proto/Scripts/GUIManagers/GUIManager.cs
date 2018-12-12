@@ -164,7 +164,7 @@ namespace AppleShooterProto{
 				DrawFileManagement(sTL_2);
 				DrawEquippedBowSwitch(sTL_3);
 				DrawAttributeSwitch(sTL_4);
-				DrawAttributeControl(sTL_5);
+				DrawAttributeSwitchContd(sTL_5);
 			}
 			void DrawFileManagement(Rect rect){
 				Rect sub_0 = GetHorizontalSubRect(
@@ -230,37 +230,37 @@ namespace AppleShooterProto{
 				Rect sub_2 = GetHorizontalSubRect(rect, 2, 4);
 				Rect sub_3 = GetHorizontalSubRect(rect, 3, 4);
 
-				GUI.Label(sub_0, "attr: " + thisAttributeToModIndex.ToString());
+				GUI.Label(sub_0, "attr");
 				if(GUI.Button(sub_1, "0"))
-					thisAttributeToModIndex = 0;
+					IncrementBowLevelAt(0);
 				if(GUI.Button(sub_2, "1"))
-					thisAttributeToModIndex = 1;
+					IncrementBowLevelAt(1);
 				if(GUI.Button(sub_3, "2"))
-					thisAttributeToModIndex = 2;
+					IncrementBowLevelAt(2);
 			}
-			void DrawAttributeControl(Rect rect){
-				Rect sub_0 = GetHorizontalSubRect(rect, 0, 3);
-				Rect sub_1 = GetHorizontalSubRect(rect, 1, 3);
-				Rect sub_2 = GetHorizontalSubRect(rect, 2, 3);
-				if(GUI.Button(sub_0, "Up"))
-					ModifyAttributeLevel(true);
-				if((GUI.Button(sub_1, "Down")))
-					ModifyAttributeLevel(false);
-				if(GUI.Button(sub_2, "Calc"))
-					CalculateShootingData();
-			}
-			void ModifyAttributeLevel(bool increment){
-				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
-				int equippedBowIndex = manager.GetEquippedBowIndex();
-				IBowConfigData data = manager.GetBowConfigDataArray()[equippedBowIndex];
-				int[] newAttributeLevelArray = data.GetAttributeLevelArray();
-				newAttributeLevelArray[thisAttributeToModIndex] = newAttributeLevelArray[thisAttributeToModIndex] + (increment?1: -1);
+			void DrawAttributeSwitchContd(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);
+				Rect sub_1 = GetHorizontalSubRect(rect, 1, 2);
 
-				data.SetAttributeLevelArray(newAttributeLevelArray);
+				if(GUI.Button(sub_0, "Clear"))
+					ClearAllBowConfigData();
+				if(GUI.Button(sub_1, "Calc"))
+					CalculateShootingData();
+
 			}
-			int thisAttributeToModIndex;
-			int currentTier = 0;
-			int maxTier = 1;
+			void IncrementBowLevelAt(int attributeIndex){
+				IPlayerDataManager dataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+				int equippedBowIndex = dataManager.GetEquippedBowIndex();
+				dataManager.IncrementBowLevel(equippedBowIndex, attributeIndex);
+			}
+			void ClearAllBowConfigData(){
+				IPlayerDataManager dataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+				IBowConfigData[] configData = dataManager.GetBowConfigDataArray();
+				int arrayLength = configData.Length;
+				for(int i = 0; i < arrayLength; i ++){
+					dataManager.ClearBowConfigData(i);
+				}
+			}
 			public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
 			void CalculateShootingData(){
 				IShootingDataManager shootingDataManager = shootingDataManagerAdaptor.GetShootingDataManager();

@@ -12,12 +12,22 @@ namespace AppleShooterProto{
 		void Save();
 		int GetHighScore();
 		void SetHighScore(int highScore);
-		string GetDebugString();
 		void SwitchEquippedBow(int index);
 		int GetEquippedBowIndex();
 		void SetEquippedBow(int index);
 		bool PlayerDataIsLoaded();
 		IBowConfigData[] GetBowConfigDataArray();
+
+
+		int GetTierSteps();
+		int GetTierCount();
+		int[] GetTierLevelMultipliers();
+
+		void IncrementBowLevel(int bowIndex, int attributeIndex);
+		void ClearBowConfigData(int bowIndex);
+		
+		string GetDebugString();
+		int GetMaxScaledLevel();
 	}
 	public class PlayerDataManager : AppleShooterSceneObject, IPlayerDataManager {
 		public PlayerDataManager(
@@ -41,6 +51,11 @@ namespace AppleShooterProto{
 				"file saved: " + 
 				UnityEngine.Application.persistentDataPath
 			);
+		}
+		IPlayerDataManagerAdaptor thisPlayerDataManagerAdaptor{
+			get{
+				return (IPlayerDataManagerAdaptor)thisAdaptor;
+			}
 		}
 		IPlayerData thisPlayerData;
 		public bool PlayerDataIsLoaded(){
@@ -122,6 +137,7 @@ namespace AppleShooterProto{
 				foreach(IBowConfigData data in array){
 					result += "\t";
 					result += "unlocked: " + data.IsUnlocked().ToString() + ", ";
+					result += "bowLevel: " + data.GetBowLevel().ToString() + ", ";
 					result += "attLevel: " + DKUtility.DebugHelper.GetIndicesString(data.GetAttributeLevelArray());
 					result += "\n";
 				}
@@ -160,7 +176,59 @@ namespace AppleShooterProto{
 			);
 		}
 		/*  */
+		public int GetTierSteps(){
+			return thisPlayerDataManagerAdaptor.GetTierSteps();
+		}
+		public int GetTierCount(){
+			return thisPlayerDataManagerAdaptor.GetTierCount();
+		}
+		public int[] GetTierLevelMultipliers(){
+			return thisPlayerDataManagerAdaptor.GetTierLevelMultipliers();
+		}
+		/*  */
+		public void IncrementBowLevel(int bowIndex, int attributeIndex){
+			
+			IBowConfigData data = GetBowConfigDataArray()[bowIndex];
+			int currentLevel = data.GetBowLevel();
+			if(currentLevel < thisBowMaxLevel){
+				int deltaAttributeLevel = GetDeltaScaledLevel(currentLevel + 1);
 
+				int[] newAttributeLevelArray = data.GetAttributeLevelArray();
+				newAttributeLevelArray[attributeIndex] += deltaAttributeLevel;
+
+				data.SetAttributeLevelArray(newAttributeLevelArray);
+				data.SetBowLevel(currentLevel + 1);
+			}
+		}
+		public void ClearBowConfigData(int bowIndex){
+			IBowConfigData newData = new BowConfigData();
+			
+			GetBowConfigDataArray()[bowIndex] = newData;
+		}
+		int thisBowMaxLevel{
+			get{
+				return GetTierSteps() * GetTierCount();
+			}
+		}
+		protected int GetLevelTier(int sourceLevel){
+			return (sourceLevel - 1) / GetTierSteps();
+		}
+		protected int GetScaledLevel(int sourceLevel){
+			int result = 0;
+			for(int i = 1; i <= sourceLevel; i ++){
+				int tier = GetLevelTier(i);
+				result += GetTierLevelMultipliers()[tier];
+			}
+			return result;
+		}
+		public int GetMaxScaledLevel(){
+			return GetScaledLevel(thisBowMaxLevel);
+		}
+		public int GetDeltaScaledLevel(int level){
+			int tier = GetLevelTier(level);
+			return GetTierLevelMultipliers()[tier];
+		}
+		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 
 		}

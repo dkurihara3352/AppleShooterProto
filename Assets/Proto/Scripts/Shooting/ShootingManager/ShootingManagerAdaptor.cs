@@ -9,7 +9,6 @@ namespace AppleShooterProto{
 		float GetInitialSpeed();
 		float GetMaxFlightSpeed();
 		float GetGravity();
-		float GetMaxDrawTime();
 	}
 	public class ShootingManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingManagerAdaptor{
 
@@ -67,10 +66,6 @@ namespace AppleShooterProto{
 		public float maxFlightSpeed;
 		public float GetMaxFlightSpeed(){
 			return maxFlightSpeed;
-		}
-		public float maxDrawTime;
-		public float GetMaxDrawTime(){
-			return maxDrawTime;
 		}
 		public float shotGravity;
 		public float GetGravity(){

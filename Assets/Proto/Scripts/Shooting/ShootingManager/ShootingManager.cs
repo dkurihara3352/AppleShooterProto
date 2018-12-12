@@ -353,13 +353,34 @@ namespace AppleShooterProto{
 			public void Flash(){
 				thisFlash.Flash();
 			}
+			float thisAssumedCritRate = .3f;
 			public string GetDebugString(){
 				string result = "";
+				float fireRate = thisShootingDataManager.GetFireRate();
+				float drawTime = thisShootingDataManager.GetDrawTime();
+
+				result += "fireRate: " + fireRate.ToString() + "\n";
+
+				float critical = thisShootingDataManager.GetCriticalMultiplier();
+
+				result += "critMult: " + critical.ToString() + "\n";
+				
 				float minDrawStrength = thisShootingDataManager.GetMinDrawStrength();
 				float minAttack = CalculateArrowAttack(minDrawStrength);
 				float maxDrawStrength = thisShootingDataManager.GetMaxDrawStrength();
 				float maxAttack = CalculateArrowAttack(maxDrawStrength);
-				result += "atk: " + minAttack.ToString("N0") + " to " + maxAttack.ToString("N0");
+				result += "atk: " + minAttack.ToString("N0") + " to " + maxAttack.ToString("N0") + " ";
+				result += "(dps: " + (minAttack * 1f/fireRate).ToString("N0") + " to " + (maxAttack * 1f/(fireRate + drawTime)).ToString("N0") + ")\n";
+				float critMin = minAttack * critical;
+				float critMax = maxAttack * critical;
+				result += "crit: " + critMin.ToString("N0") + " to " + critMax.ToString("N0") + " ";
+				result += "(dps: " + (critMin * 1f/fireRate).ToString("N0") + " to " + (critMax * 1f/(fireRate + drawTime)).ToString("N0") + ")\n";
+				result += "assumedCritRate: " + thisAssumedCritRate.ToString("N2") + "\n ";
+				float assumedNormalRate = 1f - thisAssumedCritRate;
+				float minCor = (assumedNormalRate * minAttack) + (thisAssumedCritRate * critMin);
+				float maxCor = (assumedNormalRate * maxAttack) + (thisAssumedCritRate * critMax);
+				result += "corrected atk: " + minCor.ToString("N0") + " to " + maxCor.ToString("N0") + " ";
+				result += "(dps: " + (minCor * 1f/fireRate).ToString("N0") + " to " + (maxCor * 1f/(fireRate + drawTime)).ToString("N0") + ")\n";
 				return result;
 			}
 		/* Const */

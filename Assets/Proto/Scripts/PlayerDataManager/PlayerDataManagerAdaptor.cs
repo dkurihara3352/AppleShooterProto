@@ -5,6 +5,10 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IPlayerDataManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IPlayerDataManager GetPlayerDataManager();
+
+		int GetTierSteps();
+		int GetTierCount();
+		int[] GetTierLevelMultipliers();
 	}
 	public class PlayerDataManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IPlayerDataManagerAdaptor {
 
@@ -20,6 +24,18 @@ namespace AppleShooterProto{
 				this
 			);
 			return new PlayerDataManager(arg);
+		}
+		public int tierSteps = 4;
+		public int GetTierSteps(){
+			return tierSteps;
+		}
+		public int tierCount = 3;
+		public int GetTierCount(){
+			return tierCount;
+		}
+		public int[] tierLevelMultipliers = new int[3]{1, 2, 4};
+		public int[] GetTierLevelMultipliers(){
+			return tierLevelMultipliers;
 		}
 	}
 }

@@ -42,6 +42,8 @@ namespace AppleShooterProto{
 	public interface IBowConfigData{
 		bool IsUnlocked();
 		void Unlock();
+		int GetBowLevel();
+		void SetBowLevel(int level);
 		int[] GetAttributeLevelArray();
 		void SetAttributeLevelArray(int[] array);
 	}
@@ -54,7 +56,14 @@ namespace AppleShooterProto{
 		public void Unlock(){
 			thisIsUnlocked = true;
 		}
-		int[] thisAttributeLevelsArray;
+		int thisBowLevel = 0;
+		public int GetBowLevel(){
+			return thisBowLevel;
+		}
+		public void SetBowLevel(int level){
+			thisBowLevel = level;
+		}
+		int[] thisAttributeLevelsArray = new int[3]{0, 0, 0};
 		public int[] GetAttributeLevelArray(){
 			return thisAttributeLevelsArray;
 		}

@@ -6,10 +6,6 @@ namespace AppleShooterProto{
 	public interface IShootingDataManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingDataManager GetShootingDataManager();
 
-		int GetTierSteps();
-		int GetTierCount();
-		int[] GetTierLevelMultipliers();
-
 		float[] GetGlobalMinDrawStrengthLimit();
 		float[] GetGlobalMaxDrawStrengthLimit();
 		float[] GetGlobalFireRateLimit();
@@ -45,19 +41,6 @@ namespace AppleShooterProto{
 
 
 		/*  */
-		public int tierSteps = 4;
-		public int GetTierSteps(){
-			return tierSteps;
-		}
-		public int tierCount = 3;
-		public int GetTierCount(){
-			return tierCount;
-		}
-		public int[] tierLevelMultipliers = new int[3]{1, 2, 4};
-		public int[] GetTierLevelMultipliers(){
-			return tierLevelMultipliers;
-		}
-
 		public float[] globalMinDrawStrengthLimit = new float[2]{0f, .2f};
 		public float[] GetGlobalMinDrawStrengthLimit(){
 			return globalMinDrawStrengthLimit;

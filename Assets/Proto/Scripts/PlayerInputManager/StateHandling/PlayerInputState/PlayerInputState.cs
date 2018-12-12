@@ -113,6 +113,7 @@ namespace AppleShooterProto{
 			thisEngine.ResetCameraPan();
 		}
 		public override void OnTouch(int touchCount){
+			thisEngine.ClearShotBuffer();
 			thisEngine.Nock();
 			thisEngine.SwitchToDrawingState();
 		}
@@ -145,8 +146,6 @@ namespace AppleShooterProto{
 		}
 		public override void ProcessSwipe(ICustomEventData eventData){
 			thisEngine.HoldDraw();
-			// thisEngine.StopDraw();
-			// thisEngine.TryResetArrow();
 			thisEngine.DeactivateArrow();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}
@@ -184,17 +183,15 @@ namespace AppleShooterProto{
 			}
 		}
 		public override void ProcessSwipe(ICustomEventData eventData){
-			// thisEngine.StopDraw();
-			// thisEngine.TryResetArrow();
 			thisEngine.DeactivateArrow();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}
 		public override void OnRelease(){
-			thisEngine.Release();
+			// thisEngine.Release();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}
 		public override void OnTap(int tapCount){
-			thisEngine.Release();
+			// thisEngine.Release();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}
 		public override void OnScrollerElementDisplace(
@@ -228,6 +225,7 @@ namespace AppleShooterProto{
 			thisProcess.Run();
 		}
 		public override void OnTouch(int touchCount){
+			thisEngine.ClearShotBuffer();
 			thisEngine.Nock();
 			thisEngine.SwitchToDrawingState();
 			StopWaitAndSwitchToIdleStateProcess();

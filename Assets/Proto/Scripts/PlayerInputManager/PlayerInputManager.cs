@@ -23,6 +23,7 @@ namespace AppleShooterProto{
 		void Release();
 		// void TryResetArrow();
 		void DeactivateArrow();
+		void ClearShotBuffer();
 
 		IPlayerInputState GetCurrentState();
 		float GetMaxZoom();
@@ -135,6 +136,9 @@ namespace AppleShooterProto{
 			}
 			public void DeactivateArrow(){
 				thisShootingManager.DeactivateArrow();
+			}
+			public void ClearShotBuffer(){
+				thisShootingManager.ClearShotBuffer();
 			}
 		/*  */
 			ISmoothFollower thisCameraPivotSmoothFollower;
