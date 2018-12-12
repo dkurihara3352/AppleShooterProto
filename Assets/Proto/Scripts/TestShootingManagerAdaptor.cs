@@ -12,16 +12,12 @@ namespace AppleShooterProto{
 			TestShootingManager.IConstArg arg = new TestShootingManager.ConstArg(
 				this,
 				0,
-				1,
 
 				null,
-				0f,
-				0f,
 
 				0f,
 				0f,
 				
-				0f,
 				0f,
 				0f,
 				0f,

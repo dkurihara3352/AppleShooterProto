@@ -17,6 +17,10 @@ namespace AppleShooterProto{
 				normalizedPosition: new Vector2(0f ,0f)
 			);
 			sTL_1 = GetSubRect(topLeftRect,0,7);
+				sTL_1_0 = GetHorizontalSubRect(sTL_1, 0, 4);
+				sTL_1_1 = GetHorizontalSubRect(sTL_1, 1, 4);
+				sTL_1_2 = GetHorizontalSubRect(sTL_1, 2, 4);
+				sTL_1_3 = GetHorizontalSubRect(sTL_1, 3, 4);
 			sTL_2 = GetSubRect(topLeftRect,1,7);
 			sTL_3 = GetSubRect(topLeftRect,2,7);
 			sTL_4 = GetSubRect(topLeftRect,3,7);
@@ -44,6 +48,10 @@ namespace AppleShooterProto{
 
 		Rect topLeftRect; 
 		Rect sTL_1; 
+			Rect sTL_1_0; 
+			Rect sTL_1_1; 
+			Rect sTL_1_2; 
+			Rect sTL_1_3; 
 		Rect sTL_2; 
 		Rect sTL_3; 
 		Rect sTL_4; 
@@ -74,9 +82,6 @@ namespace AppleShooterProto{
 		void OnGUI(){
 			/* left */
 				DrawControl();
-				// DrawArrowsState();
-				// DrawSpawnedShootingTargets();
-				// DrawLandedArrows();
 			/* right */
 				// DrawCurrentState(sTR_1);
 				// DrawScrollMultiplier();
@@ -88,112 +93,179 @@ namespace AppleShooterProto{
 				// DrawShootingMetrics(sTR_3);
 				// DrawWaypointEvents(bottomRightRect);
 				// DrawScrollerDebug(bottomRightRect);
+				DrawBottomRight();
 		}
 		/* left */
+			int thisControlContext = 0;
 			void DrawControl(){
+				DrawControlContexSwitch();	
+				if(thisControlContext == 0)
+					DrawContexZero();
+				if(thisControlContext == 1)
+					DrawContextOne();
+			}
+			void DrawControlContexSwitch(){
 				if(GUI.Button(
-					sTL_1,
+					sTL_1_0,
+					"0"
+				)){
+					thisControlContext = 0;
+				}
+				if(GUI.Button(
+					sTL_1_1,
+					"1"
+				)){
+					thisControlContext = 1;
+				}
+				if(GUI.Button(
+					sTL_1_2,
+					"2"
+				)){
+					thisControlContext = 2;
+				}
+				if(GUI.Button(
+					sTL_1_3,
+					"3"
+				)){
+					thisControlContext = 3;
+				}
+			}
+			void DrawContexZero(){
+				if(GUI.Button(
+					sTL_2,
 					"SetUp"
 				)){
 					gameManager.SetUp();
 					thisSystemIsReady = true;
 				}
-
 				if(GUI.Button(
-					sTL_2,
+					sTL_3,
 					"WarmUp"
 				)){
 					gameManager.WarmUp();
-					// thisSystemIsReady = true;
 				}
-				// if(GUI.Button(
-				// 	sTL_3,
-				// 	"StartSpawn"
-				// ))
-				// 	gameManager.StartTargetSpawn();
-				// if(GUI.Button(
-				// 	sTL_4,
-				// 	"StopSpawn"
-				// ))
-				// 	gameManager.StopTargetSpawn();
-				// if(GUI.Button(
-				// 	sTL_3,
-				// 	"StartGameplay"
-				// ))
-				// 	StartGameplay();
-				// if(GUI.Button(
-				// 	sTL_4,
-				// 	"EndGameplay"
-				// ))
-				// 	EndGameplay();
 				if(GUI.Button(
-					sTL_3,
+					sTL_4,
 					"ActivateRootUIE"
 				))
 					gameManager.ActivateRootUI();
 				if(GUI.Button(
-					sTL_4,
+					sTL_5,
 					"Start"
 				))
 					gameManager.StartGameplaySequence();
 				if(GUI.Button(
-					sTL_5,
+					sTL_6,
 					"End"
 				))
 					gameManager.StartEndGameplaySequence();
-				if((GUI.Button(
-					sTL_6,
-					"Load High Score"
-				)))
-					gameManager.LoadHighScore();
-				if((GUI.Button(
-					sTL_7,
-					"Save High Score"
-				)))
-					gameManager.SaveHighScore();
-				// if(GUI.Button(
-				// 	sTL_3,
-				// 	"AddHeat"
-				// )){
-				// 	AddHeat();
-				// }
-
-				// if(GUI.Button(
-				// 	sTL_4,
-				// 	"SmoothStop"
-				// )){
-				// 	SmoothStopFollower();
-				// }
-				
-				// if(GUI.Button(
-				// 	sTL_5,
-				// 	"SmoothStart"
-				// )){
-				// 	SmoothStartFollower();
-				// }
-				// if(GUI.Button(
-				// 	sTL_3,
-				// 	"Tier Up"
-				// )){
-				// 	currentTier++;
-				// 	if(currentTier > maxTier)
-				// 		currentTier = maxTier;
-				// 	SetTierOnAllTargetReserves(currentTier);
-				// }
-				// if(GUI.Button(
-				// 	sTL_4,
-				// 	"Tier Down"
-				// )){
-				// 	currentTier--;
-				// 	if(currentTier < 0)
-				// 		currentTier = 0;
-				// 	SetTierOnAllTargetReserves(currentTier);
-				// }
-
 			}
-			
+			void DrawContextOne(){
+				DrawFileManagement(sTL_2);
+				DrawEquippedBowSwitch(sTL_3);
+				DrawAttributeSwitch(sTL_4);
+				DrawAttributeControl(sTL_5);
+			}
+			void DrawFileManagement(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(
+					rect, 0, 3
+				);
+				Rect sub_1 = GetHorizontalSubRect(
+					rect, 1, 3
+				);
+				Rect sub_2 = GetHorizontalSubRect(
+					rect, 2, 3
+				);
+				if((GUI.Button(
+					sub_0,
+					"Initialize"
+				)))
+					InitializePlayerData();
+				if((GUI.Button(
+					sub_1,
+					"Load"
+				)))
+					LoadPlayerData();
+				if((GUI.Button(
+					sub_2,
+					"Save"
+				)))
+					SavePlayerData();
+			}
+			void DrawEquippedBowSwitch(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 4);
+				Rect sub_1 = GetHorizontalSubRect(rect, 1, 4);
+				Rect sub_2 = GetHorizontalSubRect(rect, 2, 4);
+				Rect sub_3 = GetHorizontalSubRect(rect, 3, 4);
+				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				GUI.Label(
+					sub_0,
+					"eqpBow: " + GetEquippedBowIndexString(manager)
+				);
+				if(GUI.Button(
+					sub_1,
+					"0"
+				))
+					manager.SetEquippedBow(0);
+				if(GUI.Button(
+					sub_2,
+					"1"
+				))
+					manager.SetEquippedBow(1);
+				if(GUI.Button(
+					sub_3,
+					"2"
+				))
+					manager.SetEquippedBow(2);
+			}
+			string GetEquippedBowIndexString(IPlayerDataManager manager){
+				if(manager.PlayerDataIsLoaded())
+					return manager.GetEquippedBowIndex().ToString();
+				else
+					return "not loaded";
+			}
+			void DrawAttributeSwitch(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 4);
+				Rect sub_1 = GetHorizontalSubRect(rect, 1, 4);
+				Rect sub_2 = GetHorizontalSubRect(rect, 2, 4);
+				Rect sub_3 = GetHorizontalSubRect(rect, 3, 4);
+
+				GUI.Label(sub_0, "attr: " + thisAttributeToModIndex.ToString());
+				if(GUI.Button(sub_1, "0"))
+					thisAttributeToModIndex = 0;
+				if(GUI.Button(sub_2, "1"))
+					thisAttributeToModIndex = 1;
+				if(GUI.Button(sub_3, "2"))
+					thisAttributeToModIndex = 2;
+			}
+			void DrawAttributeControl(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 3);
+				Rect sub_1 = GetHorizontalSubRect(rect, 1, 3);
+				Rect sub_2 = GetHorizontalSubRect(rect, 2, 3);
+				if(GUI.Button(sub_0, "Up"))
+					ModifyAttributeLevel(true);
+				if((GUI.Button(sub_1, "Down")))
+					ModifyAttributeLevel(false);
+				if(GUI.Button(sub_2, "Calc"))
+					CalculateShootingData();
+			}
+			void ModifyAttributeLevel(bool increment){
+				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				int equippedBowIndex = manager.GetEquippedBowIndex();
+				IBowConfigData data = manager.GetBowConfigDataArray()[equippedBowIndex];
+				int[] newAttributeLevelArray = data.GetAttributeLevelArray();
+				newAttributeLevelArray[thisAttributeToModIndex] = newAttributeLevelArray[thisAttributeToModIndex] + (increment?1: -1);
+
+				data.SetAttributeLevelArray(newAttributeLevelArray);
+			}
+			int thisAttributeToModIndex;
 			int currentTier = 0;
 			int maxTier = 1;
+			public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
+			void CalculateShootingData(){
+				IShootingDataManager shootingDataManager = shootingDataManagerAdaptor.GetShootingDataManager();
+				shootingDataManager.CalculateShootingData();
+			}
 			void DrawArrowsState(){
 				if(thisSystemIsReady){
 					// IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
@@ -228,7 +300,18 @@ namespace AppleShooterProto{
 				}
 				return result;
 			}
-
+			void InitializePlayerData(){
+				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				manager.InitializePlayerData();
+			}
+			void LoadPlayerData(){
+				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				manager.Load();
+			}
+			void SavePlayerData(){
+				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				manager.Save();
+			}
 		/* right */
 			bool thisGroupSequenceIsReady = false;
 			void DrawCurveSequence(Rect rect){
@@ -435,38 +518,33 @@ namespace AppleShooterProto{
 					);
 				}
 			}
-			// void StartGameplay(){
-			// 	gameManager.StartWaitAndStartGameplay();
-			// }
-			// void EndGameplay(){
-			// 	DeactivateInputUI();
-			// 	DeactivateHUD();
-			// 	gameManager.StopTargetSpawn();
-			// }
-			// public HeadUpDisplayAdaptor headUpDisplayAdaptor;
-			// void ActivateHUD(){
-			// 	IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
-			// 	hud.Activate();
-			// }
-			// void DeactivateHUD(){
-			// 	IHeadUpDisplay hud = headUpDisplayAdaptor.GetHeadUpDisplay();
-			// 	hud.Deactivate();
-			// }
-			// void ActivateInputUI(){
-			// 	gameManager.ActivateGameplayUI();
-			// }
-			// void DeactivateInputUI(){
-			// 	gameManager.DeactivateGameplayUI();
-			// }
-			// public UnityBase.FrostGlassAdaptor frostGlassAdaptor;
-			// void Frost(){
-			// 	UnityBase.IFrostGlass glass = frostGlassAdaptor.GetFrostGlass();
-			// 	glass.Frost();
-			// }
-			// void Defrost(){
-			// 	UnityBase.IFrostGlass glass = frostGlassAdaptor.GetFrostGlass();
-			// 	glass.Defrost();
-			// }
+			public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+			void DrawPlayerData(Rect rect){
+				if(thisSystemIsReady){
+					IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+					GUI.Label(
+						rect,
+						manager.GetDebugString()
+					);
+				}
+			}
+			void DrawBottomRight(){
+				Rect sub_0 = GetHorizontalSubRect(bottomRightRect, 0, 2);
+				Rect sub_1 = GetHorizontalSubRect(bottomRightRect, 1, 2);
+				DrawPlayerData(sub_0);
+				DrawBowData(sub_1);
+			}
+			void DrawBowData(Rect rect){
+				if(thisSystemIsReady){
+					IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
+					string result = shootingManager.GetDebugString();
+					GUI.Label(
+						rect,
+						result
+					);
+				}
+			}
+
 		/*  */
 	}
 }

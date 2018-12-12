@@ -14,12 +14,8 @@ namespace AppleShooterProto{
 	public class ShootingManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingManagerAdaptor{
 
 		public int drawProcessOrder;
-		public float fireRate = 1f;
 
 		public AnimationCurve bowDrawProfileCurve;
-		public float bowMinDrawStrength;
-		public float bowMaxDrawStrength;
-
 
 		public float globalMinDrawStrength;
 		public float globalMaxDrawStrength;
@@ -30,7 +26,6 @@ namespace AppleShooterProto{
 		public float globalMaxFlightSpeed;
 
 		public float arrowFlightTime = 4f;
-		public float criticalMultiplier = 1.2f;
 		public override void SetUp(){
 			thisShootingManager = CreateShootingManager();
 		}
@@ -42,12 +37,8 @@ namespace AppleShooterProto{
 			ShootingManager.IConstArg arg = new ShootingManager.ConstArg(
 				this,
 				drawProcessOrder,
-				fireRate,
 
 				bowDrawProfileCurve,
-				bowMinDrawStrength,
-				bowMaxDrawStrength,
-
 				
 				globalMinDrawStrength,
 				globalMaxDrawStrength,
@@ -57,8 +48,7 @@ namespace AppleShooterProto{
 				globalMinFlightSpeed,
 				globalMaxFlightSpeed,
 
-				arrowFlightTime,
-				criticalMultiplier
+				arrowFlightTime
 			);
 			return new ShootingManager(arg);
 		}
@@ -69,6 +59,7 @@ namespace AppleShooterProto{
 		public ArrowReserveAdaptor arrowReserveAdaptor;
 		public ArrowTrailReserveAdaptor arrowTrailReserveAdaptor;
 		public CriticalFlashAdaptor criticalFlashAdaptor;
+		public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
 		public float initialFlightSpeed;
 		public float GetInitialSpeed(){
 			return initialFlightSpeed;
@@ -106,6 +97,9 @@ namespace AppleShooterProto{
 
 			ICriticalFlash flash = criticalFlashAdaptor.GetCriticalFlash();
 			thisShootingManager.SetCriticalFlash(flash);
+
+			IShootingDataManager shootingDataManager = shootingDataManagerAdaptor.GetShootingDataManager();
+			thisShootingManager.SetShootingDataManager(shootingDataManager);
 		}
 	}
 }

@@ -6,6 +6,11 @@ namespace AppleShooterProto{
 	public interface IPlayerData{
 		int GetHighScore();
 		void SetHighScore(int score);
+
+		int GetEquippedBowIndex();
+		void SetEquippedBowIndex(int index);
+		IBowConfigData[] GetBowConfigDataArray();
+		void SetBowConfigDataArray(IBowConfigData[] array);
 	}
 	[System.Serializable]
 	public class PlayerData : IPlayerData {
@@ -15,6 +20,46 @@ namespace AppleShooterProto{
 		}
 		public void SetHighScore(int score){
 			thisHighScore = score;
+		}
+		
+		int thisEquippedBowIndex;
+		public int GetEquippedBowIndex(){
+			return thisEquippedBowIndex;
+		}
+		public void SetEquippedBowIndex(int index){
+			thisEquippedBowIndex = index;
+		}
+
+		IBowConfigData[] thisBowConfigDataArray;
+		public IBowConfigData[] GetBowConfigDataArray(){
+			return thisBowConfigDataArray;
+		}
+		public void SetBowConfigDataArray(IBowConfigData[] array){
+			thisBowConfigDataArray = array;
+		}
+	}
+
+	public interface IBowConfigData{
+		bool IsUnlocked();
+		void Unlock();
+		int[] GetAttributeLevelArray();
+		void SetAttributeLevelArray(int[] array);
+	}
+	[System.Serializable]
+	public class BowConfigData: IBowConfigData{
+		bool thisIsUnlocked = false;
+		public bool IsUnlocked(){
+			return thisIsUnlocked;
+		}
+		public void Unlock(){
+			thisIsUnlocked = true;
+		}
+		int[] thisAttributeLevelsArray;
+		public int[] GetAttributeLevelArray(){
+			return thisAttributeLevelsArray;
+		}
+		public void SetAttributeLevelArray(int[] array){
+			thisAttributeLevelsArray = array;
 		}
 	}
 }

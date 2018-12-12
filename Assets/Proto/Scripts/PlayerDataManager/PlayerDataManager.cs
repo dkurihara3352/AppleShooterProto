@@ -7,10 +7,17 @@ using System.IO;
 
 namespace AppleShooterProto{
 	public interface IPlayerDataManager: IAppleShooterSceneObject{
+		void InitializePlayerData();
 		void Load();
 		void Save();
 		int GetHighScore();
 		void SetHighScore(int highScore);
+		string GetDebugString();
+		void SwitchEquippedBow(int index);
+		int GetEquippedBowIndex();
+		void SetEquippedBow(int index);
+		bool PlayerDataIsLoaded();
+		IBowConfigData[] GetBowConfigDataArray();
 	}
 	public class PlayerDataManager : AppleShooterSceneObject, IPlayerDataManager {
 		public PlayerDataManager(
@@ -24,8 +31,9 @@ namespace AppleShooterProto{
 			System.IO.FileStream file = System.IO.File.Create(
 				thisFilePath
 			);
-			if(thisPlayerData == null)
-				thisPlayerData = new PlayerData();
+			if(thisPlayerData == null){
+				InitializePlayerData();
+			}
 			bf.Serialize(file, thisPlayerData);
 			thisPlayerData = null;
 			file.Close();
@@ -35,6 +43,9 @@ namespace AppleShooterProto{
 			);
 		}
 		IPlayerData thisPlayerData;
+		public bool PlayerDataIsLoaded(){
+			return thisPlayerData != null;
+		}
 		public void Load(){
 			if(System.IO.File.Exists(
 				thisFilePath
@@ -70,7 +81,86 @@ namespace AppleShooterProto{
 				new System.InvalidOperationException(
 					"load first"
 				);
-		}	
+		}
+		public void InitializePlayerData(){
+			IPlayerData data = new PlayerData();
+			data.SetHighScore(0);
+			data.SetEquippedBowIndex(0);
+			IBowConfigData[] bowConfigDataArray = CreateInitializedBowCofigDataArray();
+			data.SetBowConfigDataArray(bowConfigDataArray);
+			thisPlayerData = data;
+		}
+		int thisBowCount = 3;
+		IBowConfigData[] CreateInitializedBowCofigDataArray(){
+			IBowConfigData[] result = new IBowConfigData[thisBowCount];
+			for(int i = 0; i < thisBowCount; i ++){
+				IBowConfigData configData = new BowConfigData();
+				int[] attributeLevelArray = new int[]{0, 0, 0};
+				configData.SetAttributeLevelArray(attributeLevelArray);
+
+				result[i] = configData;
+			}
+			result[0].Unlock();
+			return result;
+
+		}
+		public string GetDebugString(){
+			string result = "";
+			if(thisPlayerData != null){
+				result += "HighScore: " + thisPlayerData.GetHighScore().ToString()+ "\n";
+				result += "EqpBow: "+ thisPlayerData.GetEquippedBowIndex().ToString() + "\n";
+				result += GetBowConfigDataArrayString(thisPlayerData.GetBowConfigDataArray());
+			}else{
+				result += "data is null";
+			}
+			return result;
+		}
+		string GetBowConfigDataArrayString(IBowConfigData[] array){
+			string result = "";
+			if(array != null){
+				result += "bowConfigData: " + "\n";
+				foreach(IBowConfigData data in array){
+					result += "\t";
+					result += "unlocked: " + data.IsUnlocked().ToString() + ", ";
+					result += "attLevel: " + DKUtility.DebugHelper.GetIndicesString(data.GetAttributeLevelArray());
+					result += "\n";
+				}
+
+			}else{
+				result += "array is null";
+			}
+			return result;
+		}
+		public void SwitchEquippedBow(int index){
+			if(thisPlayerData != null){
+				thisPlayerData.SetEquippedBowIndex(index);
+			}
+		}
+		public int GetEquippedBowIndex(){
+			if(thisPlayerData != null){
+				return thisPlayerData.GetEquippedBowIndex();
+			}else
+				throw new System.InvalidOperationException(
+					"there's no player data"
+				);
+		}
+		public void SetEquippedBow(int index){
+			if(thisPlayerData != null)
+				thisPlayerData.SetEquippedBowIndex(index);
+			else
+				throw new System.InvalidOperationException(
+					"no player data"
+				);
+		}
+		public IBowConfigData[] GetBowConfigDataArray(){
+			if(thisPlayerData != null)
+				return thisPlayerData.GetBowConfigDataArray();
+			throw new System.InvalidOperationException(
+				"no player data"
+			);
+		}
+		/*  */
+
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 
 		}
