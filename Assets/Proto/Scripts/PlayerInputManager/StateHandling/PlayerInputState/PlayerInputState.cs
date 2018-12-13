@@ -113,7 +113,7 @@ namespace AppleShooterProto{
 			thisEngine.ResetCameraPan();
 		}
 		public override void OnTouch(int touchCount){
-			thisEngine.ClearShotBuffer();
+			thisEngine.ClearAndDeactivateShotInBuffer();
 			thisEngine.Nock();
 			thisEngine.SwitchToDrawingState();
 		}
@@ -225,7 +225,7 @@ namespace AppleShooterProto{
 			thisProcess.Run();
 		}
 		public override void OnTouch(int touchCount){
-			thisEngine.ClearShotBuffer();
+			thisEngine.ClearAndDeactivateShotInBuffer();
 			thisEngine.Nock();
 			thisEngine.SwitchToDrawingState();
 			StopWaitAndSwitchToIdleStateProcess();

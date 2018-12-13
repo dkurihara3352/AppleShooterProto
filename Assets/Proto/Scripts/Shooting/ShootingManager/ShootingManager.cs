@@ -35,6 +35,7 @@ namespace AppleShooterProto{
 
 		IShot GetShotInBuffer();
 		void ClearShotBuffer();
+		void ClearAndDeactivateShotInBuffer();
 		void ClearShootingProcess();
 
 
@@ -323,6 +324,13 @@ namespace AppleShooterProto{
 			}
 			public void ClearShotBuffer(){
 				thisShotInBuffer = null;
+			}
+			public void ClearAndDeactivateShotInBuffer(){
+				if(thisShotInBuffer != null){
+					IArrow arrow = thisShotInBuffer.GetArrow();
+					arrow.Deactivate();
+					thisShotInBuffer = null;
+				}
 			}
 			public void ClearShootingProcess(){
 				thisShootingProcess = null;

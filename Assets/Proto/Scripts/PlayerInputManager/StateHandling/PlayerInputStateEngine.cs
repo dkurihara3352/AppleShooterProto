@@ -35,7 +35,7 @@ namespace AppleShooterProto{
 		);
 		// void TryResetArrow();
 		void DeactivateArrow();
-		void ClearShotBuffer();
+		void ClearAndDeactivateShotInBuffer();
 	}
 	public class PlayerInputStateEngine : AbsSwitchableStateEngine<IPlayerInputState>, IPlayerInputStateEngine {
 
@@ -141,8 +141,8 @@ namespace AppleShooterProto{
 				thisPlayerInputManager.DeactivateArrow();
 			}
 		/*  */
-			public void ClearShotBuffer(){
-				thisPlayerInputManager.ClearShotBuffer();
+			public void ClearAndDeactivateShotInBuffer(){
+				thisPlayerInputManager.ClearAndDeactivateShotInBuffer();
 			}
 	}
 
