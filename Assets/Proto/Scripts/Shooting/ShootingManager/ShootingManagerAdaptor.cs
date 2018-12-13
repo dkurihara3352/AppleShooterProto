@@ -6,23 +6,50 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface IShootingManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingManager GetShootingManager();
-		float GetInitialSpeed();
-		float GetMaxFlightSpeed();
 		float GetGravity();
+		AnimationCurve GetBowDrawProfileCurve();
+		float GetGlobalMinDrawStrength();
+		float GetGlobalMaxDrawStrength();
+		float GetGlobalMinAttack();
+		float GetGlobalMaxAttack();
+		float GetGlobalMinFlightSpeed();
+		float GetGlobalMaxFlightSpeed();
 	}
 	public class ShootingManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingManagerAdaptor{
 
 		public int drawProcessOrder;
 
 		public AnimationCurve bowDrawProfileCurve;
+		public AnimationCurve GetBowDrawProfileCurve(){
+			return bowDrawProfileCurve;
+		}
 
 		public float globalMinDrawStrength;
+		public float GetGlobalMinDrawStrength(){
+			return globalMinDrawStrength;
+		}
+
 		public float globalMaxDrawStrength;
+		public float GetGlobalMaxDrawStrength(){
+			return globalMaxDrawStrength;
+		}
 
 		public float globalMinArrowAttack;
+		public float GetGlobalMinAttack(){
+			return globalMinArrowAttack;
+		}
 		public float globalMaxArrowAttack;
+		public float GetGlobalMaxAttack(){
+			return globalMaxArrowAttack;
+		}
 		public float globalMinFlightSpeed;
+		public float GetGlobalMinFlightSpeed(){
+			return globalMinFlightSpeed;
+		}
 		public float globalMaxFlightSpeed;
+		public float GetGlobalMaxFlightSpeed(){
+			return globalMaxFlightSpeed;
+		}
 
 		public float arrowFlightTime = 4f;
 		public override void SetUp(){
@@ -59,14 +86,14 @@ namespace AppleShooterProto{
 		public ArrowTrailReserveAdaptor arrowTrailReserveAdaptor;
 		public CriticalFlashAdaptor criticalFlashAdaptor;
 		public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
-		public float initialFlightSpeed;
-		public float GetInitialSpeed(){
-			return initialFlightSpeed;
-		}
-		public float maxFlightSpeed;
-		public float GetMaxFlightSpeed(){
-			return maxFlightSpeed;
-		}
+		// public float initialFlightSpeed;
+		// public float GetInitialSpeed(){
+		// 	return initialFlightSpeed;
+		// }
+		// public float maxFlightSpeed;
+		// public float GetMaxFlightSpeed(){
+		// 	return maxFlightSpeed;
+		// }
 		public float shotGravity;
 		public float GetGravity(){
 			return shotGravity;

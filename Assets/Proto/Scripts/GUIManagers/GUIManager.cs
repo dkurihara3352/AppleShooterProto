@@ -105,30 +105,18 @@ namespace AppleShooterProto{
 					DrawContextOne();
 			}
 			void DrawControlContexSwitch(){
-				if(GUI.Button(
-					sTL_1_0,
-					"0"
-				)){
-					thisControlContext = 0;
-				}
-				if(GUI.Button(
-					sTL_1_1,
-					"1"
-				)){
-					thisControlContext = 1;
-				}
-				if(GUI.Button(
-					sTL_1_2,
-					"2"
-				)){
-					thisControlContext = 2;
-				}
-				if(GUI.Button(
-					sTL_1_3,
-					"3"
-				)){
-					thisControlContext = 3;
-				}
+				string[] textArray = new string[]{
+					"cont0",
+					"cont1",
+					"cont2",
+					"cont3"
+				};
+				thisControlContext = GUI.SelectionGrid(
+					sTL_1,
+					thisControlContext,
+					textArray,
+					4
+				);
 			}
 			void DrawContexZero(){
 				if(GUI.Button(
@@ -161,11 +149,23 @@ namespace AppleShooterProto{
 					gameManager.StartEndGameplaySequence();
 			}
 			void DrawContextOne(){
-				DrawFileManagement(sTL_2);
-				DrawEquippedBowSwitch(sTL_3);
-				DrawAttributeSwitch(sTL_4);
-				DrawAttributeSwitchContd(sTL_5);
+				DrawFileSwitch(sTL_2);
+				DrawFileManagement(sTL_3);
+				DrawEquippedBowSwitch(sTL_4);
+				DrawAttributeSwitch(sTL_5);
+				// DrawAttributeSwitchContd(sTL_6);
 			}
+			void DrawFileSwitch(Rect rect){
+				string[] textArray = new string[]{
+					"file0", 
+					"file1", 
+					"file2", 
+					"file3", 
+					"file4"
+				};
+				thisFileIndex = GUI.SelectionGrid(rect, thisFileIndex, textArray, 5);
+			}
+			int thisFileIndex = 0;
 			void DrawFileManagement(Rect rect){
 				Rect sub_0 = GetHorizontalSubRect(
 					rect, 0, 3
@@ -205,18 +205,24 @@ namespace AppleShooterProto{
 				if(GUI.Button(
 					sub_1,
 					"0"
-				))
+				)){
 					manager.SetEquippedBow(0);
+					CalculateShootingData();
+				}
 				if(GUI.Button(
 					sub_2,
 					"1"
-				))
+				)){
 					manager.SetEquippedBow(1);
+					CalculateShootingData();
+				}
 				if(GUI.Button(
 					sub_3,
 					"2"
-				))
+				)){
 					manager.SetEquippedBow(2);
+					CalculateShootingData();
+				}
 			}
 			string GetEquippedBowIndexString(IPlayerDataManager manager){
 				if(manager.PlayerDataIsLoaded())
@@ -225,10 +231,11 @@ namespace AppleShooterProto{
 					return "not loaded";
 			}
 			void DrawAttributeSwitch(Rect rect){
-				Rect sub_0 = GetHorizontalSubRect(rect, 0, 4);
-				Rect sub_1 = GetHorizontalSubRect(rect, 1, 4);
-				Rect sub_2 = GetHorizontalSubRect(rect, 2, 4);
-				Rect sub_3 = GetHorizontalSubRect(rect, 3, 4);
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 5);
+				Rect sub_1 = GetHorizontalSubRect(rect, 1, 5);
+				Rect sub_2 = GetHorizontalSubRect(rect, 2, 5);
+				Rect sub_3 = GetHorizontalSubRect(rect, 3, 5);
+				Rect sub_4 = GetHorizontalSubRect(rect, 4, 5);
 
 				GUI.Label(sub_0, "attr");
 				if(GUI.Button(sub_1, "0"))
@@ -237,21 +244,24 @@ namespace AppleShooterProto{
 					IncrementBowLevelAt(1);
 				if(GUI.Button(sub_3, "2"))
 					IncrementBowLevelAt(2);
-			}
-			void DrawAttributeSwitchContd(Rect rect){
-				Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);
-				Rect sub_1 = GetHorizontalSubRect(rect, 1, 2);
-
-				if(GUI.Button(sub_0, "Clear"))
+				if(GUI.Button(sub_4, "Clear"))
 					ClearAllBowConfigData();
-				if(GUI.Button(sub_1, "Calc"))
-					CalculateShootingData();
-
 			}
+			// void DrawAttributeSwitchContd(Rect rect){
+			// 	Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);
+			// 	Rect sub_1 = GetHorizontalSubRect(rect, 1, 2);
+
+			// 	if(GUI.Button(sub_0, "Clear"))
+			// 		ClearAllBowConfigData();
+			// 	if(GUI.Button(sub_1, "Calc"))
+			// 		CalculateShootingData();
+
+			// }
 			void IncrementBowLevelAt(int attributeIndex){
 				IPlayerDataManager dataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 				int equippedBowIndex = dataManager.GetEquippedBowIndex();
 				dataManager.IncrementBowLevel(equippedBowIndex, attributeIndex);
+				CalculateShootingData();
 			}
 			void ClearAllBowConfigData(){
 				IPlayerDataManager dataManager = playerDataManagerAdaptor.GetPlayerDataManager();
@@ -260,6 +270,7 @@ namespace AppleShooterProto{
 				for(int i = 0; i < arrayLength; i ++){
 					dataManager.ClearBowConfigData(i);
 				}
+				CalculateShootingData();
 			}
 			public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
 			void CalculateShootingData(){
@@ -302,14 +313,19 @@ namespace AppleShooterProto{
 			}
 			void InitializePlayerData(){
 				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				manager.SetFileIndex(thisFileIndex);
 				manager.InitializePlayerData();
+				CalculateShootingData();
 			}
 			void LoadPlayerData(){
 				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				manager.SetFileIndex(thisFileIndex);
 				manager.Load();
+				CalculateShootingData();
 			}
 			void SavePlayerData(){
 				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
+				manager.SetFileIndex(thisFileIndex);
 				manager.Save();
 			}
 		/* right */

@@ -7,6 +7,7 @@ using System.IO;
 
 namespace AppleShooterProto{
 	public interface IPlayerDataManager: IAppleShooterSceneObject{
+		void SetFileIndex(int fileIndex);
 		void InitializePlayerData();
 		void Load();
 		void Save();
@@ -35,7 +36,15 @@ namespace AppleShooterProto{
 		): base(arg){
 
 		}
-		string thisFilePath = UnityEngine.Application.persistentDataPath + "/playerData.dat";
+		public void SetFileIndex(int index){
+			thisFileIndex = index;
+		}
+		int thisFileIndex = 0;
+		string thisFilePath{
+			get{
+				return UnityEngine.Application.persistentDataPath + "/playerData" + thisFileIndex.ToString() + ".dat";
+			}
+		}
 		public void Save(){
 			System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new BinaryFormatter();
 			System.IO.FileStream file = System.IO.File.Create(
@@ -47,10 +56,10 @@ namespace AppleShooterProto{
 			bf.Serialize(file, thisPlayerData);
 			thisPlayerData = null;
 			file.Close();
-			Debug.Log(
-				"file saved: " + 
-				UnityEngine.Application.persistentDataPath
-			);
+			// Debug.Log(
+			// 	"file saved: " + 
+			// 	UnityEngine.Application.persistentDataPath
+			// );
 		}
 		IPlayerDataManagerAdaptor thisPlayerDataManagerAdaptor{
 			get{
@@ -76,10 +85,10 @@ namespace AppleShooterProto{
 				throw new System.InvalidOperationException(
 					"no file by the path exists, need to save first"
 				);
-			Debug.Log(
-				"file loaded: " + 
-				UnityEngine.Application.persistentDataPath
-			);
+			// Debug.Log(
+			// 	"file loaded: " + 
+			// 	UnityEngine.Application.persistentDataPath
+			// );
 		}
 		public int GetHighScore(){
 			if(thisPlayerData != null)
