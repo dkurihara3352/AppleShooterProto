@@ -16,7 +16,7 @@ namespace AppleShooterProto{
 		protected override IShootingTarget CreateShootingTarget(){
 			GlidingTarget.IConstArg arg = new GlidingTarget.ConstArg(
 				thisIndex,
-				thisDefaultColor,
+				// thisDefaultColor,
 				thisHealthBellCurve,
 				this,
 				targetData

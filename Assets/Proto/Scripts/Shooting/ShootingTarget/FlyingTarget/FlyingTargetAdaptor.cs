@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 		protected override IShootingTarget CreateShootingTarget(){
 			FlyingTarget.IConstArg arg = new FlyingTarget.ConstArg(
 				thisIndex,
-				thisDefaultColor,
+				// thisDefaultColor,
 				thisHealthBellCurve,
 				this,
 				targetData,

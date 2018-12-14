@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
+using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IShootingTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
+	public interface IShootingTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
 
 		void SetShootingManager(IShootingManager shootingManager);
 
@@ -43,9 +44,16 @@ namespace AppleShooterProto{
 			SetIndex(arg.index);
 			thisTargetData = arg.targetData;
 			thisAdaptor.SetName(thisTargetData.targetType.ToString() + " " + thisIndex.ToString());
-			thisDefaultColor = arg.defaultColor;
+			// thisDefaultColor = arg.defaultColor;
 			thisActivationStateEngine = new ActivationStateEngine(this);
 			thisHealthBellCurve = arg.healthBellCurve;
+
+			thisHitFlashProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisTypedAdaptor.GetFlashProcessTime()
+			);
 		}
 		public void SetShootingManager(IShootingManager manager){
 			thisShootingManager = manager;
@@ -103,6 +111,7 @@ namespace AppleShooterProto{
 					SetTier(thisTargetTierDataOnQueue);
 					thisTargetTierDataOnQueue = null;
 				}
+				StopHitFlashProcess();
 			}
 			protected abstract void ReserveSelf();
 		/* Hit & arrow interaction */
@@ -159,18 +168,23 @@ namespace AppleShooterProto{
 						thisDestroyedTarget.Deactivate();
 				}
 			/*  */
-			readonly Color thisDefaultColor;
+			Color thisDefaultColor{
+				get{
+					return thisTypedAdaptor.GetDefaultColor();
+				}
+			}
 			protected virtual void IndicateHealth(
 				int health,
 				float delta
 			){
 				float normalizedHealth = (health * 1f)/ thisOriginalHealth;
-				Color newColor = Color.Lerp(
+				Color flashColor = Color.Lerp(
 					Color.red,
 					thisDefaultColor,
 					normalizedHealth
 				);
-				thisTypedAdaptor.SetColor(newColor);
+				// thisTypedAdaptor.SetColor(newColor);
+				StartHitFlashProcess(flashColor);
 			}
 			protected virtual void IndicateHit(
 				float attack,
@@ -243,6 +257,7 @@ namespace AppleShooterProto{
 			}
 			public void SetTier(TargetTierData tierData){
 				thisTypedAdaptor.SetMaterial(tierData.material);
+				thisTypedAdaptor.UpdateDefaultColor();
 				UpdateTargetData(tierData.targetData);
 			}
 			public void UpdateTargetData(TargetData data){
@@ -253,17 +268,51 @@ namespace AppleShooterProto{
 			public void SetTargetTierDataOnQueue(TargetTierData tierData){
 				thisTargetTierDataOnQueue = tierData;
 			}
+		/* hitFlashProcess */
+			Color thisFlashTargetColor;
+			void StartHitFlashProcess(Color flashColor){
+				thisFlashTargetColor = flashColor;
+				thisHitFlashProcessSuite.Start();
+			}
+			void StopHitFlashProcess(){
+				thisHitFlashProcessSuite.Stop();
+				OnProcessExpire(thisHitFlashProcessSuite);
+			}
+			
+			IProcessSuite thisHitFlashProcessSuite;
+			public void OnProcessRun(IProcessSuite suite){
+			}
+			public void OnProcessUpdate(
+				float deltaTime,
+				float normalizedTime,
+				IProcessSuite suite
+			){
+				if(suite == thisHitFlashProcessSuite){
+					AnimationCurve flashColorValueCurve = thisTypedAdaptor.GetFlashColorValueCurve();
+					float colorValue = flashColorValueCurve.Evaluate(normalizedTime);
+					//0 => default, 1f => flashColor
+					Color newColor = Color.Lerp(
+						thisDefaultColor,
+						thisFlashTargetColor,
+						colorValue
+					);
+					thisTypedAdaptor.SetColor(newColor);
+				}
+			}
+			public void OnProcessExpire(IProcessSuite suite){
+				thisTypedAdaptor.SetColor(thisDefaultColor);	
+			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int index{get;}
-				Color defaultColor{get;}
+				// Color defaultColor{get;}
 				IBellCurve healthBellCurve{get;}
 				ITargetData targetData{get;}
 			}
 			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
-					Color defaultColor,
+					// Color defaultColor,
 					IBellCurve healthBellCurve,
 					IShootingTargetAdaptor adaptor,
 					ITargetData targetData
@@ -271,14 +320,14 @@ namespace AppleShooterProto{
 					adaptor
 				){
 					thisIndex = index;
-					thisDefaultColor = defaultColor;
+					// thisDefaultColor = defaultColor;
 					thisHealthBellCurve = healthBellCurve;
 					thisTargetData = targetData;
 				}
 				readonly int thisIndex;
 				public int index{get{return thisIndex;}}
-				readonly Color thisDefaultColor;
-				public Color defaultColor{get{return thisDefaultColor;}}
+				// readonly Color thisDefaultColor;
+				// public Color defaultColor{get{return thisDefaultColor;}}
 				readonly IBellCurve thisHealthBellCurve;
 				public IBellCurve healthBellCurve{
 					get{return thisHealthBellCurve;}

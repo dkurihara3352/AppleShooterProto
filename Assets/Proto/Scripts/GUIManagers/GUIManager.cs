@@ -104,6 +104,8 @@ namespace AppleShooterProto{
 					DrawContexZero();
 				if(thisControlContext == 1)
 					DrawContextOne();
+				if(thisControlContext == 2)
+					DrawContextTwo();
 			}
 			void DrawControlContexSwitch(){
 				string[] textArray = new string[]{
@@ -154,7 +156,10 @@ namespace AppleShooterProto{
 				DrawFileManagement(sTL_3);
 				DrawEquippedBowSwitch(sTL_4);
 				DrawAttributeSwitch(sTL_5);
-				DrawAddHeatButton(sTL_6);
+			}
+			void DrawContextTwo(){
+				DrawAddHeatButton(sTL_2);
+				DrawTargetTierControl(sTL_3);
 			}
 			void DrawFileSwitch(Rect rect){
 				string[] textArray = new string[]{
@@ -321,6 +326,15 @@ namespace AppleShooterProto{
 					"add heat"
 				))
 					AddHeat();
+			}
+			int thisTargetTier;
+			void DrawTargetTierControl(Rect rect){
+				string[] texts = new string[]{"tier0", "tier1", "tier2"};
+				int prevTier = thisTargetTier;
+				thisTargetTier = GUI.SelectionGrid(rect, thisTargetTier, texts, 3);
+				if(thisTargetTier != prevTier)
+					SetTierOnAllTargetReserves(thisTargetTier);
+				
 			}
 		/* Bottom Left */
 			void DrawBottomLeft(){

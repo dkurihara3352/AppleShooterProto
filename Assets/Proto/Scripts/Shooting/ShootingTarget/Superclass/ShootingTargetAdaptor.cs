@@ -17,13 +17,19 @@ namespace AppleShooterProto{
 
 		void SetMaterial(Material mat);
 		void SetTargetData(TargetData data);
+		void UpdateDefaultColor();
+
+		float GetFlashProcessTime();
+		AnimationCurve GetFlashColorValueCurve();
+		Color GetDefaultColor();
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
 		public override void SetUp(){
-			MeshRenderer meshRenderer = CollectMeshRenderer();
-			thisMaterial = meshRenderer.material;
-			thisDefaultColor = thisMaterial.color;
+
+			thisColorHash = Shader.PropertyToID("_Color");
+			thisDefaultColor = GetColor();
+
 			thisHealthBellCurve = CreateHealthBellCurve();
 			
 			thisShootingTarget = CreateShootingTarget();
@@ -35,10 +41,8 @@ namespace AppleShooterProto{
 			thisHitTriggerHash = Animator.StringToHash("Hit");
 			thisHitMagnitudeHash = Animator.StringToHash("HitMagnitude");
 		}
+		int thisColorHash;
 		public MeshRenderer modelMeshRenderer;
-		MeshRenderer CollectMeshRenderer(){
-			return modelMeshRenderer;
-		}
 		BoxCollider CollectCollider(){
 			return GetComponentInChildren<BoxCollider>();
 		}
@@ -128,13 +132,18 @@ namespace AppleShooterProto{
 			thisCollider.enabled = on;
 		}
 		/* Color */
-		Material thisMaterial;
 		protected Color thisDefaultColor;
+		public Color GetDefaultColor(){
+			return thisDefaultColor;
+		}
 		public void SetColor(Color color){
-			thisMaterial.color = color;
+			Material mat = modelMeshRenderer.material;
+			mat.SetColor(thisColorHash, color);
+
 		}
 		Color GetColor(){
-			return thisMaterial.color;
+			Material mat = modelMeshRenderer.material;
+			return mat.GetColor(thisColorHash);
 		}
 
 		/* Animator */
@@ -147,6 +156,18 @@ namespace AppleShooterProto{
 		}
 		public void SetMaterial(Material material){
 			modelMeshRenderer.material = material;
+		}
+		public void UpdateDefaultColor(){
+			thisDefaultColor = GetColor();
+		}
+		/*  */
+		public float flashProcessTime = .5f;
+		public float GetFlashProcessTime(){
+			return flashProcessTime;
+		}
+		public AnimationCurve flashColorValueCurve;//0 => default, 1 => flashColor
+		public AnimationCurve GetFlashColorValueCurve(){
+			return flashColorValueCurve;
 		}
 	}
 }
