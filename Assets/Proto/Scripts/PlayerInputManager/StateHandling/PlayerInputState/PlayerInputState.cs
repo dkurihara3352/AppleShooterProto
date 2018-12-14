@@ -188,10 +188,12 @@ namespace AppleShooterProto{
 		}
 		public override void OnRelease(){
 			// thisEngine.Release();
+			thisEngine.DeactivateArrow();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}
 		public override void OnTap(int tapCount){
 			// thisEngine.Release();
+			thisEngine.DeactivateArrow();
 			thisEngine.SwitchToWaitingForNextTouchState();
 		}
 		public override void OnScrollerElementDisplace(

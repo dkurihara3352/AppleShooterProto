@@ -81,10 +81,10 @@ namespace AppleShooterProto{
 			float followTime,
 			float targetHeat
 		);
-		IHeatImageWaitForNextAdditionProcess CreateHeatImageWaitForNextAdditionProcess(
-			IHeatImage heatImage,
-			float comboTime
-		);
+		// IHeatImageWaitForNextAdditionProcess CreateHeatImageWaitForNextAdditionProcess(
+		// 	IHeatImage heatImage,
+		// 	float comboTime
+		// );
 		IHeatLevelUpProcess CreateHeatLevelUpProcess(
 			IHeatManager heatManager,
 			float targetMaxHeat,
@@ -312,17 +312,17 @@ namespace AppleShooterProto{
 			);
 			return new HeatImageSmoothFollowDeltaImageProcess(arg);
 		}
-		public IHeatImageWaitForNextAdditionProcess CreateHeatImageWaitForNextAdditionProcess(
-			IHeatImage heatImage,
-			float comboTime
-		){
-			HeatImageWaitForNextAdditionProcess.IConstArg arg = new HeatImageWaitForNextAdditionProcess.ConstArg(
-				thisProcessManager,
-				comboTime,
-				heatImage
-			);
-			return new HeatImageWaitForNextAdditionProcess(arg);
-		}
+		// public IHeatImageWaitForNextAdditionProcess CreateHeatImageWaitForNextAdditionProcess(
+		// 	IHeatImage heatImage,
+		// 	float comboTime
+		// ){
+		// 	HeatImageWaitForNextAdditionProcess.IConstArg arg = new HeatImageWaitForNextAdditionProcess.ConstArg(
+		// 		thisProcessManager,
+		// 		comboTime,
+		// 		heatImage
+		// 	);
+		// 	return new HeatImageWaitForNextAdditionProcess(arg);
+		// }
 		public IHeatLevelUpProcess CreateHeatLevelUpProcess(
 			IHeatManager heatManager,
 			float targetMaxHeat,

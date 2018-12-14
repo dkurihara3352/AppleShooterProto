@@ -36,7 +36,7 @@ namespace AppleShooterProto{
 			thisHeatManager.SetMaxHeat(newMaxHeat);
 		}
 		protected override void ExpireImple(){
-
+			thisHeatManager.OnLevelUpExpire();
 		}
 
 		public new interface IConstArg: AbsProcess.IConstArg{

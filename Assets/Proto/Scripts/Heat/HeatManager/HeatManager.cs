@@ -5,15 +5,18 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface IHeatManager: IAppleShooterSceneObject, IHeatManagerStateHandler{
+		void SetHeatLevelText(IHeatLevelText text);
+		void InitializeHeat();
 		void SetHeatImage(IHeatImage heatImage);
 		void TickAwayHeat(float delta);
 		void AddHeat(float delta);
 		float GetFollowSmoothTime();
-		float GetComboWindowTime();
+		float GetComboTime(float normalizedComboValue);
 
 		float GetMaxHeat();
 		void SetMaxHeat(float maxHeat);
 		void ResetHeat();
+		void OnLevelUpExpire();
 	}	
 	public class HeatManager: AppleShooterSceneObject, IHeatManager{
 		
@@ -27,15 +30,15 @@ namespace AppleShooterProto{
 			thisInitialHeat = arg.initialHeat;
 			thisHeat = thisInitialHeat;
 			thisFollowSmoothTime = arg.followSmoothTime;
-
-			thisMaxComboValue = arg.maxComboValue;
-			thisMinComboTime = arg.minComboTime;
-			thisMaxComboTime = arg.maxComboTime;
-			thisComboTimeMultiplier = arg.comboTimeMultiplier;
 			
 			thisInitialMaxHeat = arg.initialMaxHeat;
 			thisMaxHeat = thisInitialMaxHeat;
 			thisLevelUpTime = arg.levelUpTime;
+		}
+		IHeatManagerAdaptor thisHeatManagerAdaptor{
+			get{
+				return (IHeatManagerAdaptor)thisAdaptor;
+			}
 		}
 		IHeatManagerStateEngine thisStateEngine;
 		float thisHeatDecayRate;
@@ -58,7 +61,10 @@ namespace AppleShooterProto{
 		public void SetHeatImage(IHeatImage image){
 			thisHeatImage = image;
 			image.SetHeatManager(this);
-			thisHeatImage.UpdateHeat(thisHeat);
+		}
+		public void InitializeHeat(){
+			// thisHeatImage.UpdateHeat(thisHeat);
+			ResetHeat();
 		}
 		public void TickAwayHeat(float delta){
 			thisHeat -= delta;
@@ -81,52 +87,91 @@ namespace AppleShooterProto{
 		float thisMaxHeat;
 		public void SetMaxHeat(float maxHeat){
 			thisMaxHeat = maxHeat;
-			thisHeatImage.UpdateHeat(thisHeat);
+			if(!thisHeatImage.IsInCombo())
+				thisHeatImage.UpdateHeat(thisHeat);
 		}
 		public float GetMaxHeat(){
 			return thisMaxHeat;
 		}
+		float thisStandardComboTime{//combo time at minComboValue
+			get{
+				return thisHeatManagerAdaptor.GetStandardComboTime();
+			}
+		}
+		float thisMaxComboTimeMultiplier{
+			get{
+				return thisHeatManagerAdaptor.GetMaxComboTimeMultiplier();
+			}
+		}
+		float thisMaxComboValue{//0 to 1, 1 at full circle
+			get{
+				return thisHeatManagerAdaptor.GetMaxComboValue();
+			}
+		}
+		float thisMinComboValue{
+			get{
+				return thisHeatManagerAdaptor.GetMinComboValue();
+			}
+		}
+		float thisBowComboTimeMultiplier = 1f;
 
-		float thisMaxComboValue;
-		float thisMinComboTime;
-		float thisMaxComboTime;
-		float thisComboTimeMultiplier;
-		public float GetComboWindowTime(){
-			float comboValue = thisHeatImage.GetComboValue();
-			float normalizedComboValue = comboValue / thisMaxComboValue;
-			float result = Mathf.Lerp(
-				thisMinComboTime,
-				thisMaxComboTime,
-				normalizedComboValue
-			);
-			result *= thisComboTimeMultiplier;
+		public float GetComboTime(float normalizedComboValue){
+			float comboTimeMultiplier = CalcComboTimeMultiplier(normalizedComboValue);
+			float comboValueRelativeToMin = normalizedComboValue/ thisMinComboValue;
+				// 1 when min, multiple of min otherwise
+			float result = comboValueRelativeToMin * thisStandardComboTime * comboTimeMultiplier;
+			result *= thisBowComboTimeMultiplier;
 			return result;
 		}
+		float CalcComboTimeMultiplier(float normalizedComboValue){
+			float correctedComboValue = (normalizedComboValue - thisMinComboValue)/ thisMaxComboValue;
+			return Mathf.Lerp(
+				1f,
+				thisMaxComboTimeMultiplier,
+				correctedComboValue
+			);
+		}
 		readonly float thisLevelUpTime;
+		float thisLevelUpMultiplier{
+			get{
+				return thisHeatManagerAdaptor.GetLevelUpMultiplier();
+			}
+		}
+		IHeatLevelText thisHeatLevelText;
+		public void SetHeatLevelText(IHeatLevelText heatLevelText){
+			thisHeatLevelText = heatLevelText;
+		}
 		void LevelUpHeat(){
-			float targetMaxHeat = thisMaxHeat * 2f;
+			thisHeatLevel ++;
+			StartHeatLevelUpProcess();
+			thisHeatLevelText.StartLevelUpTo(thisHeatLevel);
+		}
+		int thisHeatLevel = 1;
+		int thisInitHeatLevel = 1;
+		void StartHeatLevelUpProcess(){
+			float targetMaxHeat = thisMaxHeat * thisLevelUpMultiplier;
 			IHeatLevelUpProcess process = thisAppleShooterProcessFactory.CreateHeatLevelUpProcess(
 				this,
 				targetMaxHeat,
 				thisLevelUpTime
 			);
 			process.Run();
+
+		}
+		public void OnLevelUpExpire(){
 		}
 		public void ResetHeat(){
 			StopCountingDown();
 			thisHeat = thisInitialHeat;
 			SetMaxHeat(thisInitialMaxHeat);
+			thisHeatLevel = thisInitHeatLevel;
+			thisHeatLevelText.SetHeatLevelText(thisHeatLevel);
 		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float initialHeat{get;}
 			float heatDecayRate{get;}
 			float followSmoothTime{get;}
-
-			float maxComboValue{get;}
-			float minComboTime{get;}
-			float maxComboTime{get;}
-			float comboTimeMultiplier{get;}
 
 			float initialMaxHeat{get;}
 			float levelUpTime{get;}
@@ -138,11 +183,6 @@ namespace AppleShooterProto{
 				float heatDecayRate,
 				float followSmoothTime,
 
-				float maxComboValue,
-				float minComboTime,
-				float maxComboTime,
-				float comboTimeMultiplier,
-
 				float initialMaxHeat,
 				float levelUpTime
 			): base(
@@ -151,10 +191,6 @@ namespace AppleShooterProto{
 				thisInitialHeat = initialHeat;
 				thisHeatDecayRate = heatDecayRate;
 				thisFollowSmoothTime = followSmoothTime;
-				thisMaxComboValue = maxComboValue;
-				thisMinComboTime = minComboTime;
-				thisMaxComboTime = maxComboTime;
-				thisComboTimeMultiplier = comboTimeMultiplier;
 
 				thisInitialMaxHeat = initialMaxHeat;
 				thisLevelUpTime = levelUpTime;
@@ -169,14 +205,7 @@ namespace AppleShooterProto{
 			public float initialHeat{get{return thisInitialHeat;}}
 			readonly float thisFollowSmoothTime;
 			public float followSmoothTime{get{return thisFollowSmoothTime;}}
-			readonly float thisMaxComboValue;
-			public float maxComboValue{get{return thisMaxComboValue;}}
-			readonly float thisMinComboTime;
-			public float minComboTime{get{return thisMinComboTime;}}
-			readonly float thisMaxComboTime;
-			public float maxComboTime{get{return thisMaxComboTime;}}
-			readonly float thisComboTimeMultiplier;
-			public float comboTimeMultiplier{get{return thisComboTimeMultiplier;}}
+
 			readonly float thisInitialMaxHeat;
 			public float initialMaxHeat{get{return thisInitialMaxHeat;}}
 			readonly float thisLevelUpTime;

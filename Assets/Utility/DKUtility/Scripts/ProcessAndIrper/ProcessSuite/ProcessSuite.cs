@@ -6,6 +6,7 @@ namespace DKUtility{
 	public interface IProcessSuite{
 		void Start();
 		void Stop();
+		void SetConstraintValue(float value);
 	}
 	public class ProcessSuite: IProcessSuite{
 		public ProcessSuite(
@@ -22,7 +23,10 @@ namespace DKUtility{
 		readonly IProcessManager thisProcessManager;
 		readonly IProcessHandler thisHandler;
 		readonly ProcessConstraint thisProcessConstraint;
-		readonly float thisValue;
+		float thisValue;
+		public void SetConstraintValue(float value){
+			thisValue = value;
+		}
 
 		public void Start(){
 			Stop();

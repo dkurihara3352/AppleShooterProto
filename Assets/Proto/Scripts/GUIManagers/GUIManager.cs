@@ -82,6 +82,7 @@ namespace AppleShooterProto{
 		void OnGUI(){
 			/* left */
 				DrawControl();
+				DrawBottomLeft();
 			/* right */
 				// DrawCurrentState(sTR_1);
 				// DrawScrollMultiplier();
@@ -153,7 +154,7 @@ namespace AppleShooterProto{
 				DrawFileManagement(sTL_3);
 				DrawEquippedBowSwitch(sTL_4);
 				DrawAttributeSwitch(sTL_5);
-				// DrawAttributeSwitchContd(sTL_6);
+				DrawAddHeatButton(sTL_6);
 			}
 			void DrawFileSwitch(Rect rect){
 				string[] textArray = new string[]{
@@ -247,16 +248,6 @@ namespace AppleShooterProto{
 				if(GUI.Button(sub_4, "Clear"))
 					ClearAllBowConfigData();
 			}
-			// void DrawAttributeSwitchContd(Rect rect){
-			// 	Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);
-			// 	Rect sub_1 = GetHorizontalSubRect(rect, 1, 2);
-
-			// 	if(GUI.Button(sub_0, "Clear"))
-			// 		ClearAllBowConfigData();
-			// 	if(GUI.Button(sub_1, "Calc"))
-			// 		CalculateShootingData();
-
-			// }
 			void IncrementBowLevelAt(int attributeIndex){
 				IPlayerDataManager dataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 				int equippedBowIndex = dataManager.GetEquippedBowIndex();
@@ -277,26 +268,22 @@ namespace AppleShooterProto{
 				IShootingDataManager shootingDataManager = shootingDataManagerAdaptor.GetShootingDataManager();
 				shootingDataManager.CalculateShootingData();
 			}
-			void DrawArrowsState(){
+			void DrawArrowsState(Rect rect){
 				if(thisSystemIsReady){
-					// IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
-					// IArrow[] arrows = shootingManager.GetAllArrows();
 					IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
 					IArrow[] arrows = arrowReserve.GetArrows();
+					string result = "";
 					foreach(IArrow arrow in arrows){
-						Rect guiSubRect = GetSubRect(
-							bottomLeftRect, 
-							arrow.GetIndex(), 
-							arrows.Length
-						);
-						GUI.Label(
-							guiSubRect,
+						result += 
 							"id: " + arrow.GetIndex() + ", " +
 							"state: " + GetArrowStateString(arrow) + ", " +
 							"position: " + arrow.GetPosition().ToString() + ", " +
-							"parent : " + arrow.GetParentName()
-						);
+							"parent : " + arrow.GetParentName() + "\n";
 					}
+					GUI.Label(
+						rect,
+						result
+					);
 				}
 			}
 			string GetArrowStateString(IArrow arrow){
@@ -327,6 +314,17 @@ namespace AppleShooterProto{
 				IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
 				manager.SetFileIndex(thisFileIndex);
 				manager.Save();
+			}
+			void DrawAddHeatButton(Rect rect){
+				if(GUI.Button(
+					rect,
+					"add heat"
+				))
+					AddHeat();
+			}
+		/* Bottom Left */
+			void DrawBottomLeft(){
+				// DrawArrowsState(bottomLeftRect);
 			}
 		/* right */
 			bool thisGroupSequenceIsReady = false;

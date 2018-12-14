@@ -5,6 +5,11 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IHeatManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IHeatManager GetHeatManager();
+		float GetStandardComboTime();
+		float GetMaxComboTimeMultiplier();
+		float GetMinComboValue();
+		float GetMaxComboValue();
+		float GetLevelUpMultiplier();
 	}
 	public class HeatManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IHeatManagerAdaptor {
 
@@ -19,24 +24,35 @@ namespace AppleShooterProto{
 		public float heatDecayRate;
 		public float followSmoothTime;
 
-		public float maxComboValue;
-		public float minComboTime;
-		public float maxComboTime;
-		public float comboTimeMultiplier;
+		public float standardComboTime = .5f;
+		public float GetStandardComboTime(){
+			return standardComboTime;
+		}
+		public float maxComboTimeMultiplier = 3f;
+		public float GetMaxComboTimeMultiplier(){
+			return maxComboTimeMultiplier;
+		}
+		public float minComboValue = .05f;
+		public float GetMinComboValue(){
+			return minComboValue;
+		}
+		public float maxComboValue = .5f;
+		public float GetMaxComboValue(){
+			return maxComboValue;
+		}
+		public float levelUpMultiplier = 4f;
+		public float GetLevelUpMultiplier(){
+			return levelUpMultiplier;
+		}
+
 		public float initialMaxHeat;
 		public float levelUpTime;
 		IHeatManager CreateHeatManager(){
-			float scaledInitialHeat = initialHeat * initialMaxHeat;
 			HeatManager.IConstArg arg = new HeatManager.ConstArg(
 				this,
-				scaledInitialHeat,
+				initialHeat,
 				heatDecayRate,
 				followSmoothTime,
-
-				maxComboValue,
-				minComboTime,
-				maxComboTime,
-				comboTimeMultiplier,
 
 				initialMaxHeat,
 				levelUpTime
@@ -44,9 +60,16 @@ namespace AppleShooterProto{
 			return new HeatManager(arg);
 		}
 		public HeatImageAdaptor heatImageAdaptor;
+		public HeatLevelTextAdaptor heatLevelTextAdaptor;
 		public override void SetUpReference(){
 			IHeatImage heatImage = heatImageAdaptor.GetHeatImage();
 			thisHeatManager.SetHeatImage(heatImage);
+
+			IHeatLevelText heatLevelText = heatLevelTextAdaptor.GetHeatLevelText();
+			thisHeatManager.SetHeatLevelText(heatLevelText);
+		}
+		public override void FinalizeSetUp(){
+			thisHeatManager.InitializeHeat();
 		}
 	}
 }
