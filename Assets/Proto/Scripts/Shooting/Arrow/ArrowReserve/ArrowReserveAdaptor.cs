@@ -24,7 +24,7 @@ namespace AppleShooterProto{
 		IArrowAdaptor[] thisArrowAdaptors;
 		public int arrowCounts;
 		public GameObject arrowPrefab;
-		public int collisionDetectionIntervalFrameCount = 3;
+		public int collisionDetectionIntervalFrameCount = 1;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public ShootingManagerAdaptor shootingManagerAdaptor;
 		IArrowAdaptor[] CreateArrowAdaptors(){
