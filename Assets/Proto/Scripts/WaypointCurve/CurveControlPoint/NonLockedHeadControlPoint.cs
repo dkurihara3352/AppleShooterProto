@@ -6,7 +6,7 @@ namespace AppleShooterProto{
 	public class NonLockedHeadControlPoint : HeadCurveControlPoint {
 
 		protected override void LockTransform(){
-			LockHandle(handle);
+			LockHandle(GetHandle());
 		}
 	}
 }

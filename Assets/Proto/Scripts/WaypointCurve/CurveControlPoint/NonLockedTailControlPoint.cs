@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{	
 	public class NonLockedTailControlPoint : TailCurveControlPoint {
 		protected override void LockTransform(){
-			LockHandle(handle);
+			LockHandle(GetHandle());
 			LockPositionAtOrigin();
 		}
 	}

@@ -32,6 +32,7 @@ namespace AppleShooterProto{
 				DrawSelf();
 			}
 			public void Update(){
+				InitializeHandles();
 				if(!UnityEditor.EditorApplication.isPlaying){
 					LockTransform();
 					if(thisWaypointCurveAdaptor != null)
@@ -67,16 +68,17 @@ namespace AppleShooterProto{
 		}
 	}
 	public abstract class SingleHandleCurveControlPoint: AbsCurveControlPoint{
-		protected Transform handle;
+		// protected Transform handle;
+		protected abstract Transform GetHandle();
 		protected override void DrawHandles(){
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawLine(
 				this.transform.position,
-				handle.position
+				GetHandle().position
 			);
 		}
 		protected override void LockTransform(){
-			LockHandle(handle);
+			LockHandle(GetHandle());
 			LockRotation();
 		}
 		protected virtual void LockRotation(){

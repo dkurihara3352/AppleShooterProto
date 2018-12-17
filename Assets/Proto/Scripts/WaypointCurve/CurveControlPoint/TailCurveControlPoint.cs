@@ -5,13 +5,17 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public class TailCurveControlPoint : SingleHandleCurveControlPoint{
 		public override Transform GetForeHandle(){
-			return handle;
+			// return handle;
+			return transform.GetChild(0);
 		}
 		public override Transform GetBackHandle(){
 			return null;
 		}
 		protected override void InitializeHandles(){
-			handle = this.transform.GetChild(0);
+			// handle = this.transform.GetChild(0);
+		}
+		protected override Transform GetHandle(){
+			return GetForeHandle();
 		}
 		protected override void LockTransform(){
 			base.LockTransform();

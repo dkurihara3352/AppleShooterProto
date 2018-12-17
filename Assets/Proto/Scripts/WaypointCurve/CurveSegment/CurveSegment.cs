@@ -38,7 +38,10 @@ namespace AppleShooterProto{
 			get{return tailControlPoint.GetForeHandle();}
 		}
 		Transform backHandle{
-			get{return headControlPoint.GetBackHandle();}
+			get{
+				Transform result = headControlPoint.GetBackHandle();
+				return result;
+			}
 		}
 		/* CurvePoints */
 		ICurvePoint[] thisCurvePoints;
@@ -124,5 +127,6 @@ namespace AppleShooterProto{
 			ICurvePoint lastCurvePoint = thisCurvePoints[thisCurvePoints.Length - 1];
 			return lastCurvePoint.GetPrevPointPosition();
 		}
+
 	}
 }
