@@ -154,11 +154,12 @@ namespace AppleShooterProto{
 				Vector3 hitPosition
 			){
 				// if(detector.IsActivated())
-				thisShootingManager.SpawnLandedArrowOn(
-					detector,
-					hitPosition,
-					thisAdaptor.GetRotation()
-				);
+				if(detector.ShouldSpawnLandedArrow())
+					thisShootingManager.SpawnLandedArrowOn(
+						detector,
+						hitPosition,
+						thisAdaptor.GetRotation()
+					);
 				Deactivate();
 			}
 			public void StartCollisionCheck(){

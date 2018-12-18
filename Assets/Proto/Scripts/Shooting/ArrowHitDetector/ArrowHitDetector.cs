@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void DeactivateAllLandedArrows();
 		ILandedArrow[] GetLandedArrows();
 		void ToggleCollider(bool toggle);
+		bool ShouldSpawnLandedArrow();
 	}
 	public abstract class ArrowHitDetector : AppleShooterSceneObject, IArrowHitDetector {
 		public ArrowHitDetector(IConstArg arg): base(arg){}
@@ -43,6 +44,9 @@ namespace AppleShooterProto{
 		}
 		public void ToggleCollider(bool toggle){
 			thisArrowHitDetectorAdaptor.ToggleCollider(toggle);
+		}
+		public virtual bool ShouldSpawnLandedArrow(){
+			return true;
 		}
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{}
 		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{

@@ -16,5 +16,8 @@ namespace AppleShooterProto{
 		public override void Hit(IArrow arrow){
 			thisShootingTarget.Hit(arrow, false);
 		}
+		public override bool ShouldSpawnLandedArrow(){
+			return thisShootingTarget.IsActivated();
+		}
 	}
 }
