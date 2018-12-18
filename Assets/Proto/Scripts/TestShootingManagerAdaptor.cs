@@ -56,12 +56,12 @@ namespace AppleShooterProto{
 		public override Vector3 GetLauncherVelocity(){
 			return Vector3.zero;
 		}
-		public override void SpawnLandedArrowOn(
-			IShootingTarget target,
-			Vector3 hitPosition,
-			Quaternion rotation
-		){
+		// public override void SpawnLandedArrowOn(
+		// 	IShootingTarget target,
+		// 	Vector3 hitPosition,
+		// 	Quaternion rotation
+		// ){
 
-		}
+		// }
 	}
 }

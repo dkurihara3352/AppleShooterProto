@@ -6,12 +6,12 @@ namespace AppleShooterProto{
 	public interface ILandedArrow: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
 		void ActivateAt(
-			IShootingTarget target,
+			IArrowHitDetector detector,
 			Vector3 position,
 			Quaternion rotation
 		);
 
-		IShootingTarget GetShootingTarget();
+		IArrowHitDetector GetHitDetector();
 		int GetIndex();
 		void SetArrowTwang(IArrowTwang twang);
 	}
@@ -34,43 +34,43 @@ namespace AppleShooterProto{
 			thisReserve = reserve;
 		}
 		public void ActivateAt(
-			IShootingTarget target,
+			IArrowHitDetector detector,
 			Vector3 position,
 			Quaternion rotation
 		){
 			
-			SetShootingTarget(
-				target,
+			SetHitDetector(
+				detector,
 				position,
 				rotation
 			);
 			Activate();
 		}
-		IShootingTarget thisTarget;
-		void SetShootingTarget(
-			IShootingTarget target,
+		IArrowHitDetector thisDetector;
+		void SetHitDetector(
+			IArrowHitDetector detector,
 			Vector3 position,
 			Quaternion rotation
 		){
-			RemoveSelfFromCurrentTarget();
-			thisTarget = target;
-			AddSelfToCurrentTarget();
+			RemoveSelfFromCurrentDetector();
+			thisDetector = detector;
+			AddSelfToCurrentDetector();
 
-			SetParent(target);
+			SetParent(detector);
 			ResetLocalTransform();
 			SetPosition(position);
 			SetRotation(rotation);
 		}
-		void RemoveSelfFromCurrentTarget(){
-			if(thisTarget != null)
-				thisTarget.RemoveLandedArrow(this);
+		void RemoveSelfFromCurrentDetector(){
+			if(thisDetector != null)
+				thisDetector.RemoveLandedArrow(this);
 		}
-		void AddSelfToCurrentTarget(){
-			if(thisTarget != null)
-				thisTarget.AddLandedArrow(this);
+		void AddSelfToCurrentDetector(){
+			if(thisDetector != null)
+				thisDetector.AddLandedArrow(this);
 		}
-		public IShootingTarget GetShootingTarget(){
-			return thisTarget;
+		public IArrowHitDetector GetHitDetector(){
+			return thisDetector;
 		}
 		int thisIndex;
 		public int GetIndex(){
@@ -96,7 +96,7 @@ namespace AppleShooterProto{
 			}
 			public void DeactivateImple(){
 				thisArrowTwang.StopTwang();
-				RemoveSelfFromCurrentTarget();
+				RemoveSelfFromCurrentDetector();
 				thisReserve.Reserve(this);
 			}
 		/* Const */

@@ -49,7 +49,7 @@ namespace AppleShooterProto{
 				thisIndex,
 				this
 			);
-			thisIsReadyForGizmo = true;
+			// thisIsReadyForGizmo = true;
 			return new Arrow(arg);
 		}
 		public override void SetUpReference(){
@@ -67,17 +67,17 @@ namespace AppleShooterProto{
 			thisArrow.Deactivate();
 		}
 		/* Debug */
-		bool thisIsReadyForGizmo = false;
-		public void OnDrawGizmos(){
-			if(thisIsReadyForGizmo){
-				if(thisChecksForCollision){
-					Gizmos.color = Color.red;
-					Gizmos.DrawLine(prevForDebug, curForDebug);
-				}
-				Gizmos.color = Color.magenta;
-				Gizmos.DrawWireSphere(hitPosition, 2f);
-			}
-		}
+		// bool thisIsReadyForGizmo = false;
+		// public void OnDrawGizmos(){
+		// 	if(thisIsReadyForGizmo){
+		// 		if(thisChecksForCollision){
+		// 			Gizmos.color = Color.red;
+		// 			Gizmos.DrawLine(prevForDebug, curForDebug);
+		// 		}
+		// 		Gizmos.color = Color.magenta;
+		// 		Gizmos.DrawWireSphere(hitPosition, 2f);
+		// 	}
+		// }
 		public string GetParentName(){
 			return this.transform.parent.ToString();
 		}
@@ -93,7 +93,7 @@ namespace AppleShooterProto{
 			Vector3 prevForDebug;
 			Vector3 curForDebug;
 			int count = 0;
-			Vector3 hitPosition = Vector3.zero;
+			// Vector3 hitPosition = Vector3.zero;
 			bool thisChecksForCollision = false;
 			public void StartCollisionCheck(){
 				count = 0;
@@ -114,35 +114,39 @@ namespace AppleShooterProto{
 					if(count == checkPerEveryThisFrames){
 						count = 0;
 						Vector3 position = GetPosition();
-						RaycastHit hit;
+						RaycastHit critHit;
 						int layerMask = 1<<(targetLayerNumber);
-						bool hasHit = Physics.Linecast(thisPrevPosition, position, out hit, layerMask);
-						// prevForDebug = thisPrevPosition;
-						// curForDebug = position;
-						if(hasHit){
-							Transform hitTrans = hit.transform;
-							hitPosition = hit.point;
-							IShootingTargetAdaptor targetAdaptor = hitTrans.GetComponentInParent(typeof(IShootingTargetAdaptor)) as IShootingTargetAdaptor;
-							if(targetAdaptor == null)
+						bool hasCritHit = Physics.Linecast(thisPrevPosition, position, out critHit, layerMask);
+
+						if(hasCritHit){
+							Transform hitTrans = critHit.transform;
+							// IShootingTargetAdaptor targetAdaptor = hitTrans.GetComponentInParent(typeof(IShootingTargetAdaptor)) as IShootingTargetAdaptor;
+							// if(targetAdaptor == null)
+							// 	throw new System.InvalidOperationException(
+							// 		"hitTrans seems not to have IShootingTargetAdaptor"
+							// 	);
+							// IShootingTarget target = targetAdaptor.GetShootingTarget();
+							IArrowHitDetectorAdaptor detectorAdaptor =  hitTrans.GetComponentInParent(typeof(IArrowHitDetectorAdaptor)) as IArrowHitDetectorAdaptor;
+							if(detectorAdaptor == null)
 								throw new System.InvalidOperationException(
-									"hitTrans seems not to have IShootingTargetAdaptor"
+									"there's no IArrowHitDetectorAdaptor assigned to the hit transform"
 								);
-							Vector3 hitPos = hit.point;
-							IShootingTarget target = targetAdaptor.GetShootingTarget();
+							IArrowHitDetector detector = detectorAdaptor.GetArrowHitDetector();
+							
+							detector.Hit(thisArrow);
+							// RaycastHit critHit;
+							// int critLayerMask = 1<<(critLayerNumber);
+							// Vector3 rayDir = position - thisPrevPosition;
+							// bool hasCritHit = Physics.Raycast(thisPrevPosition, rayDir, out critHit, 10f, critLayerMask);
+							// if(hasCritHit){
+							// 	thisShootingManager.Flash();
+							// }
 
-							RaycastHit critHit;
-							int critLayerMask = 1<<(critLayerNumber);
-							Vector3 rayDir = position - thisPrevPosition;
-							bool hasCritHit = Physics.Raycast(thisPrevPosition, rayDir, out critHit, 10f, critLayerMask);
-							if(hasCritHit){
-								thisShootingManager.Flash();
-							}
-
-							target.Hit(thisArrow, hasCritHit);
+							// target.Hit(thisArrow, hasCritHit);
 
 							thisArrow.Land(
-								target,
-								hitPos
+								detector,
+								critHit.point
 							);
 						}
 						thisPrevPosition = position;

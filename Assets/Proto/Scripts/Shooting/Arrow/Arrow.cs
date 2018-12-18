@@ -13,7 +13,8 @@ namespace AppleShooterProto{
 		bool IsInReserve();
 		void BecomeChildToReserve();
 		void Land(
-			IShootingTarget target,
+			// IShootingTarget target,
+			IArrowHitDetector detector,
 			Vector3 hitPosition
 		);
 		void StartFlight();
@@ -148,15 +149,16 @@ namespace AppleShooterProto{
 				thisFlightProcess = null;
 			}
 			public void Land(
-				IShootingTarget target,
+				// IShootingTarget target,
+				IArrowHitDetector detector,
 				Vector3 hitPosition
 			){
-				if(target.IsActivated())
-					thisShootingManager.SpawnLandedArrowOn(
-						target,
-						hitPosition,
-						thisAdaptor.GetRotation()
-					);
+				// if(detector.IsActivated())
+				thisShootingManager.SpawnLandedArrowOn(
+					detector,
+					hitPosition,
+					thisAdaptor.GetRotation()
+				);
 				Deactivate();
 			}
 			public void StartCollisionCheck(){

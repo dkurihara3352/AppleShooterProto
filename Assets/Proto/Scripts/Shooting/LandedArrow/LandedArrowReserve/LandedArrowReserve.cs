@@ -6,7 +6,8 @@ using UnityBase;
 namespace AppleShooterProto{
 	public interface ILandedArrowReserve: ISceneObjectReserve<ILandedArrow>{
 		void ActivateLandedArrowAt(
-			IShootingTarget target,
+			// IShootingTarget target,
+			IArrowHitDetector detector,
 			Vector3 position,
 			Quaternion rotation
 		);
@@ -41,14 +42,14 @@ namespace AppleShooterProto{
 		}
 
 		public void ActivateLandedArrowAt(
-			IShootingTarget target,
+			IArrowHitDetector detector, 
 			Vector3 position,
 			Quaternion rotation
 		){
 			ILandedArrow nextLandedArrow = GetNext();
 			nextLandedArrow.Deactivate();
 			nextLandedArrow.ActivateAt(
-				target,
+				detector,
 				position,
 				rotation
 			);

@@ -5,13 +5,15 @@ using UnityBase;
 
 namespace AppleShooterProto{
 	public interface IShootingTargetAdaptor: IAppleShooterMonoBehaviourAdaptor{
+		void SetUpDetectorAdaptors();
+
 		IShootingTarget GetShootingTarget();
 		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
 		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
 		void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor);
 		void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor);
 		void SetIndex(int index);
-		void ToggleCollider(bool on);
+		// void ToggleCollider(bool on);
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
 
@@ -34,7 +36,7 @@ namespace AppleShooterProto{
 			
 			thisShootingTarget = CreateShootingTarget();
 
-			thisCollider = CollectCollider();
+			// thisCollider = CollectCollider();
 
 			thisAnimator = CollectAnimator();
 
@@ -43,9 +45,9 @@ namespace AppleShooterProto{
 		}
 		int thisColorHash;
 		public MeshRenderer modelMeshRenderer;
-		BoxCollider CollectCollider(){
-			return GetComponentInChildren<BoxCollider>();
-		}
+		// BoxCollider CollectCollider(){
+		// 	return GetComponentInChildren<BoxCollider>();
+		// }
 		Animator CollectAnimator(){
 			return GetComponent<Animator>();
 		}
@@ -89,6 +91,12 @@ namespace AppleShooterProto{
 				30
 			);
 		}
+		public ShootingTargetNormalHitDetectorAdaptor thisNormalHitDetectorAdaptor;
+		public ShootingTargetCriticalHitDetectorAdaptor thisCriticalHitDetectorAdaptor;
+		public void SetUpDetectorAdaptors(){
+			thisNormalHitDetectorAdaptor.SetUp();
+			thisCriticalHitDetectorAdaptor.SetUp();
+		}
 		public override void SetUpReference(){
 
 			if(destroyedTargetReserveAdaptor != null)
@@ -107,6 +115,14 @@ namespace AppleShooterProto{
 
 			IShootingManager shootingManager = thisShootingManagerAdaptor.GetShootingManager();
 			thisShootingTarget.SetShootingManager(shootingManager);
+
+			IShootingTargetNormalHitDetector normalHitDetector = thisNormalHitDetectorAdaptor.GetShootingTargetNormalHitDetector();
+			thisShootingTarget.SetShootingTargetNormalHitDetector(normalHitDetector);
+			normalHitDetector.SetShootingTarget(thisShootingTarget);
+
+			IShootingTargetCriticalHitDetector criticalHitDetector = thisCriticalHitDetectorAdaptor.GetShootingTargetCriticalHitDetector();
+			thisShootingTarget.SetShootingTargetCriticalHitDetector(criticalHitDetector);
+			criticalHitDetector.SetShootingTarget(thisShootingTarget);
 		}
 		public override void FinalizeSetUp(){
 			thisShootingTarget.Deactivate();
@@ -127,10 +143,10 @@ namespace AppleShooterProto{
 		}
 
 		/* Collider */
-		Collider thisCollider;
-		public void ToggleCollider( bool on){
-			thisCollider.enabled = on;
-		}
+		// Collider thisCollider;
+		// public void ToggleCollider( bool on){
+		// 	thisCollider.enabled = on;
+		// }
 		/* Color */
 		protected Color thisDefaultColor;
 		public Color GetDefaultColor(){

@@ -436,29 +436,29 @@ namespace AppleShooterProto{
 			}
 			ILandedArrowReserve thisLandedArrowReserve;
 			public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
-			void ActivateLandedArrowAtDrawnShootingTarget(){
-				if(!thisStaticTargetsAreSet)
-					SetStaticShootingTargetsAtSpawnPoints();
-				if(!thisIndexPoolIsSet)
-					SetIndexPool();
+			// void ActivateLandedArrowAtDrawnShootingTarget(){
+			// 	if(!thisStaticTargetsAreSet)
+			// 		SetStaticShootingTargetsAtSpawnPoints();
+			// 	if(!thisIndexPoolIsSet)
+			// 		SetIndexPool();
 				
-				IStaticShootingTarget[] targets = thisStaticShootingTargetReserve.GetStaticShootingTargets();
-				int index = thisIndexPool.Draw();
-				IStaticShootingTarget target = targets[index];
-				Vector3 spawnPos = target.GetPosition() + (Vector3.forward * -1f);
+			// 	IStaticShootingTarget[] targets = thisStaticShootingTargetReserve.GetStaticShootingTargets();
+			// 	int index = thisIndexPool.Draw();
+			// 	IStaticShootingTarget target = targets[index];
+			// 	Vector3 spawnPos = target.GetPosition() + (Vector3.forward * -1f);
 
-				thisLandedArrowReserve.ActivateLandedArrowAt(
-					target,
-					spawnPos,
-					Quaternion.identity
-				);
-			}
+			// 	thisLandedArrowReserve.ActivateLandedArrowAt(
+			// 		target,
+			// 		spawnPos,
+			// 		Quaternion.identity
+			// 	);
+			// }
 			void DrawLandedArrowSpawnStatus(Rect rect){
 				if(thisSystemIsReady){
 					Rect subTop = GetSubRect(rect, 0, 2);
 					Rect subBtm = GetSubRect(rect, 1, 2);
 					DrawArrowByTarget(subTop);
-					DrawTargetbyArrow(subBtm);
+					// DrawTargetbyArrow(subBtm);
 				}
 			}
 			void DrawArrowByTarget(Rect rect){
@@ -485,23 +485,23 @@ namespace AppleShooterProto{
 				}
 				return result;
 			}
-			void DrawTargetbyArrow(Rect rect){
-				ILandedArrow[] arrows = thisLandedArrowReserve.GetLandedArrows();
-				string result = "";
-				foreach(ILandedArrow arrow in arrows){
-					result += "arrow #" + arrow.GetIndex().ToString() + ", ";
-					IShootingTarget target = arrow.GetShootingTarget();
-					if(target == null)
-						result += "null";
-					else
-						result += target.GetIndex().ToString();
-					result += "\n";
-				}
-				GUI.Label(
-					rect,
-					result
-				);
-			}
+			// void DrawTargetbyArrow(Rect rect){
+			// 	ILandedArrow[] arrows = thisLandedArrowReserve.GetLandedArrows();
+			// 	string result = "";
+			// 	foreach(ILandedArrow arrow in arrows){
+			// 		result += "arrow #" + arrow.GetIndex().ToString() + ", ";
+			// 		IShootingTarget target = arrow.GetHitDetector();
+			// 		if(target == null)
+			// 			result += "null";
+			// 		else
+			// 			result += target.GetIndex().ToString();
+			// 		result += "\n";
+			// 	}
+			// 	GUI.Label(
+			// 		rect,
+			// 		result
+			// 	);
+			// }
 		/* Right */
 			string GetIndicesString(int[] indices){
 				string result = "";

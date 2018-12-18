@@ -46,7 +46,8 @@ namespace AppleShooterProto{
 		float GetFlightTime();
 
 		void SpawnLandedArrowOn(
-			IShootingTarget target,
+			// IShootingTarget target,
+			IArrowHitDetector detector,
 			Vector3 position,
 			Quaternion rotation
 		);
@@ -263,12 +264,7 @@ namespace AppleShooterProto{
 			}
 			IDrawProcess thisDrawProcess;
 		/* flight & trajectory */
-			// public float initialSpeed{
-			// 	get{return thisShootingManagerAdaptor.GetInitialSpeed();}
-			// }
-			// public float maxFlightSpeed{
-			// 	get{return thisShootingManagerAdaptor.GetMaxFlightSpeed();}
-			// }
+
 			public float gravity{
 				get{return thisShootingManagerAdaptor.GetGravity();}
 			}
@@ -358,12 +354,13 @@ namespace AppleShooterProto{
 			}
 		/* Spawn Landed Arrow */
 			public virtual void SpawnLandedArrowOn(
-				IShootingTarget target,
+				// IShootingTarget target,
+				IArrowHitDetector detector,
 				Vector3 position,
 				Quaternion rotation
 			){
 				thisLandedArrowReserve.ActivateLandedArrowAt(
-					target,
+					detector,
 					position,
 					rotation
 				);

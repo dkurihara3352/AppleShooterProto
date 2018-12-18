@@ -6,12 +6,15 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface IShootingTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
-
+		
+		void SetShootingTargetNormalHitDetector(IShootingTargetNormalHitDetector detector);
+		void SetShootingTargetCriticalHitDetector(IShootingTargetCriticalHitDetector detector);
+		
 		void SetShootingManager(IShootingManager shootingManager);
 
 		void Hit(IArrow arrow, bool crit);
-		void AddLandedArrow(ILandedArrow landedArrow);
-		void RemoveLandedArrow(ILandedArrow landedArrow);
+		// void AddLandedArrow(ILandedArrow landedArrow);
+		// void RemoveLandedArrow(ILandedArrow landedArrow);
 		void DeactivateAllLandedArrows();
 		ILandedArrow[] GetLandedArrows();
 
@@ -82,7 +85,7 @@ namespace AppleShooterProto{
 				thisOriginalHealth = ResetHealth();
 				thisHealth = thisOriginalHealth;
 				thisTypedAdaptor.SetColor(thisDefaultColor);
-				thisTypedAdaptor.ToggleCollider(true);
+				/* thisTypedAdaptor. */ToggleCollider(true);
 
 				thisPopUIReserve.PopText(
 					this,
@@ -106,7 +109,7 @@ namespace AppleShooterProto{
 			public virtual void DeactivateImple(){
 				DeactivateAllLandedArrows();
 				ReserveSelf();
-				thisTypedAdaptor.ToggleCollider(false);
+				/* thisTypedAdaptor. */ToggleCollider(false);
 				if(thisTargetTierDataOnQueue != null){
 					SetTier(thisTargetTierDataOnQueue);
 					thisTargetTierDataOnQueue = null;
@@ -137,6 +140,8 @@ namespace AppleShooterProto{
 						critBonus
 					);
 				}
+				if(crit)
+					thisShootingManager.Flash();
 			}
 			/* DestroyedTarget */
 				IDestroyedTargetReserve thisDestroyedTargetReserve;
@@ -209,22 +214,27 @@ namespace AppleShooterProto{
 				return delta/thisOriginalHealth;
 			}
 			/* Landed Arrows */
-			List<ILandedArrow> thisLandedArrows = new List<ILandedArrow>();
+			IShootingTargetNormalHitDetector thisNormalHitDetector;
+			public void SetShootingTargetNormalHitDetector(IShootingTargetNormalHitDetector detector){
+				thisNormalHitDetector = detector;
+			}
+			IShootingTargetCriticalHitDetector thisCriticalHitDetector;
+			public void SetShootingTargetCriticalHitDetector(IShootingTargetCriticalHitDetector detector){
+				thisCriticalHitDetector = detector;
+			}
+			void ToggleCollider(bool toggle){
+				thisNormalHitDetector.ToggleCollider(toggle);
+				thisCriticalHitDetector.ToggleCollider(toggle);
+			}
 			public ILandedArrow[] GetLandedArrows(){
-				return thisLandedArrows.ToArray();
-			}
-			public void AddLandedArrow(ILandedArrow arrow){
-				thisLandedArrows.Add(arrow);
-			}
-			public void RemoveLandedArrow(ILandedArrow arrow){
-				if(thisLandedArrows.Contains(arrow))
-					thisLandedArrows.Remove(arrow);
+				List<ILandedArrow> resultList = new List<ILandedArrow>();
+				resultList.AddRange(thisNormalHitDetector.GetLandedArrows());
+				resultList.AddRange(thisCriticalHitDetector.GetLandedArrows());
+				return resultList.ToArray();
 			}
 			public void DeactivateAllLandedArrows(){
-				List<ILandedArrow> temp = new List<ILandedArrow>(thisLandedArrows);
-				foreach(ILandedArrow arrow in temp)
-					if(arrow != null)
-						arrow.Deactivate();
+				thisNormalHitDetector.DeactivateAllLandedArrows();
+				thisCriticalHitDetector.DeactivateAllLandedArrows();
 			}
 			protected IPopUIReserve thisPopUIReserve;
 			public void SetPopUIReserve(IPopUIReserve reserve){

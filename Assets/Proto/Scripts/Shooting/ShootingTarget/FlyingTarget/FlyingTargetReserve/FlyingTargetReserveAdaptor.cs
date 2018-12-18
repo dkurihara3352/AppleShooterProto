@@ -51,6 +51,7 @@ namespace AppleShooterProto{
 				targetAdaptor.SetShootingManagerAdaptor(shootingManagerAdaptor);
 				
 				targetAdaptor.SetUp();
+				targetAdaptor.SetUpDetectorAdaptors();
 
 				resultList.Add(targetAdaptor);
 			}
