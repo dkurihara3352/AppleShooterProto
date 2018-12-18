@@ -32,7 +32,7 @@ namespace AppleShooterProto{
 				normalizedPosition: new Vector2(1f, .5f)
 			);
 			sTR_1 = GetSubRect(topRightRect, 0, 1);
-			// sTR_2 = GetSubRect(topRightRect, 1, 4);
+			sTR_2 = GetSubRect(topRightRect, 1, 4);
 			// sTR_3 = GetSubRect(topRightRect, 2, 4);
 			// sTR_4 = GetSubRect(topRightRect, 3, 4);
 
@@ -89,7 +89,7 @@ namespace AppleShooterProto{
 				// DrawLaunchAngle();
 				// DrawFlightSpeed();
 				// DrawWaypointsFollower(sTR_1);
-				// DrawCurveSequence(sTR_2);
+				DrawCurveSequence(sTR_2);
 				// DrawSpawnIndices(sTR_4);
 				// DrawShootingMetrics(sTR_3);
 				// DrawWaypointEvents(bottomRightRect);

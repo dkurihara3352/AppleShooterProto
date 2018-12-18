@@ -24,6 +24,8 @@ namespace AppleShooterProto{
 		/* Debug */
 		int[] GetReservedCurvesIDs();
 		int GetCurrentCurveIDInSequence();
+
+		void RemoveWaypointCurveToReserve(IWaypointCurve curve);
 	}
 
 	public class WaypointCurveCycleManager : AppleShooterSceneObject, IWaypointCurveCycleManager{
@@ -74,8 +76,6 @@ namespace AppleShooterProto{
 			public void PlaceWaypointCurves(){
 				PlaceAllWaypointCurvesAtReserve();
 				thisCurveSequence = CreateSequenceOfWaypointCurves();
-				// PrintSequence();
-				// PrintReserved();
 				ConnectWaypointCurveSequence();
 
 				if(thisFollower != null)				
@@ -86,7 +86,6 @@ namespace AppleShooterProto{
 				foreach(IWaypointCurve curve in thisCurveSequence){
 					result += curve.GetIndex().ToString();
 				}
-				// DKUtility.DebugHelper.PrintInGreen(result);
 			}
 			void PlaceAllWaypointCurvesAtReserve(){
 				foreach(IWaypointCurve curve in thisWaypointCurves){
@@ -139,10 +138,6 @@ namespace AppleShooterProto{
 				return this.GetNextCurve(currentCurve);
 			}
 			List<IWaypointCurve> CreateSequenceOfWaypointCurves(){
-				// Debug.Log(
-				// 	"thisCurveCountInSequence: " + thisCurveCountInSequence.ToString() + ", " +
-				// 	"allCurveIDs" + DKUtility.DebugHelper.GetIndicesString(GetAllCurveIDs())// nothing in the array!
-				// );
 				int[] indexes = DKUtility.Calculator.GetRandomIntegers(
 					thisCurveCountInSequence,
 					GetAllCurveIDs()
@@ -193,11 +188,12 @@ namespace AppleShooterProto{
 					get random one from reserve and place it
 				*/
 				if(ShouldCycle()){
-					IWaypointCurve lastWaypointCurve = thisCurveSequence[thisCurveSequence.Count - 1];
-					IWaypointCurve newCurveToAdd = GetNewWaypointCurveToAddToSequence();
 					RemoveFirstWaypointCurveToReserve();
-					newCurveToAdd.Connect(lastWaypointCurve);
-					AddCurveToSequence(newCurveToAdd);
+					// IWaypointCurve lastWaypointCurve = thisCurveSequence[thisCurveSequence.Count - 1];
+					IWaypointCurve newCurveToAdd = GetNewWaypointCurveToAddToSequence();
+					// newCurveToAdd.Connect(lastWaypointCurve);
+					// AddCurveToSequence(newCurveToAdd);
+					AppendWaypointCurveToSequence(newCurveToAdd);
 				}
 			}
 			bool thisCycleHasStarted = false;
@@ -216,12 +212,23 @@ namespace AppleShooterProto{
 			}
 			void RemoveFirstWaypointCurveToReserve(){
 				IWaypointCurve firstCurveInSequence = thisCurveSequence[0];
-				firstCurveInSequence.SetPosition(thisReservePosition);
-				List<IWaypointCurve> reducedSequence = new List<IWaypointCurve>(thisCurveSequence);
-				reducedSequence.Remove(firstCurveInSequence);
-				ReserveCurve(firstCurveInSequence);
-			
-				thisCurveSequence = reducedSequence;
+				RemoveWaypointCurveToReserve(firstCurveInSequence);
+			}
+			public void RemoveWaypointCurveToReserve(IWaypointCurve curve){
+				if(thisCurveSequence.Contains(curve)){
+					curve.SetPosition(thisReservePosition);
+					List<IWaypointCurve> reducedSequence = new List<IWaypointCurve>(thisCurveSequence);
+					reducedSequence.Remove(curve);
+					ReserveCurve(curve);
+				
+					thisCurveSequence = reducedSequence;
+				}
+			}
+			public void AppendWaypointCurveToSequence(IWaypointCurve curve){
+				IWaypointCurve lastWaypointCurve = thisCurveSequence[thisCurveSequence.Count - 1];
+				// IWaypointCurve newCurveToAdd = GetNewWaypointCurveToAddToSequence();
+				curve.Connect(lastWaypointCurve);
+				AddCurveToSequence(curve);
 			}
 			IWaypointCurve GetNewWaypointCurveToAddToSequence(){
 				int randomIndex = Random.Range(0, thisReservedCurves.Count);
