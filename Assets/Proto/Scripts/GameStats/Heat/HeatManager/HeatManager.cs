@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 		void AddHeat(float delta);
 		float GetFollowSmoothTime();
 		float GetComboTime(float normalizedComboValue);
+		void ResetCurrentMaxComboMultiplier();
 
 		float GetMaxHeat();
 		void SetMaxHeat(float maxHeat);
@@ -114,12 +115,18 @@ namespace AppleShooterProto{
 			}
 		}
 		float thisBowComboTimeMultiplier = 1f;
-
+		
+		float thisCurrentMaxComboMultiplier = 0f;
+		public void ResetCurrentMaxComboMultiplier(){
+			thisCurrentMaxComboMultiplier = 0f;
+		}
 		public float GetComboTime(float normalizedComboValue){
 			float comboTimeMultiplier = CalcComboTimeMultiplier(normalizedComboValue);
+			if(comboTimeMultiplier > thisCurrentMaxComboMultiplier)
+				thisCurrentMaxComboMultiplier = comboTimeMultiplier;
 			float comboValueRelativeToMin = normalizedComboValue/ thisMinComboValue;
 				// 1 when min, multiple of min otherwise
-			float result = comboValueRelativeToMin * thisStandardComboTime * comboTimeMultiplier;
+			float result = comboValueRelativeToMin * thisStandardComboTime * thisCurrentMaxComboMultiplier;
 			result *= thisBowComboTimeMultiplier;
 			return result;
 		}
@@ -142,6 +149,7 @@ namespace AppleShooterProto{
 			thisHeatLevelText = heatLevelText;
 		}
 		void LevelUpHeat(){
+			ResetCurrentMaxComboMultiplier();
 			thisHeatLevel ++;
 			StartHeatLevelUpProcess();
 			thisHeatLevelText.StartLevelUpTo(thisHeatLevel);
@@ -159,6 +167,7 @@ namespace AppleShooterProto{
 
 		}
 		public void OnLevelUpExpire(){
+			AddHeat(0f);
 		}
 		public void ResetHeat(){
 			StopCountingDown();

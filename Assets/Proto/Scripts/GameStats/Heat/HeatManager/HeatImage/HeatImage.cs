@@ -64,7 +64,6 @@ namespace AppleShooterProto{
 		public void AddHeat(float delta){
 			thisInitFollowHeat = thisFollowHeat;
 			thisHeat += delta;
-			// thisTypedAdaptor.UpdateDeltaHeatImageFill(thisHeat);
 			SetDeltaImageHeat(thisHeat);
 			thisTargetFollowHeat = thisHeat;
 			StartComboProcess();
@@ -102,6 +101,7 @@ namespace AppleShooterProto{
 			public void OnProcessExpire(IProcessSuite suite){
 				thisIsInCombo = false;
 				StartCountingDown();
+				thisHeatManager.ResetCurrentMaxComboMultiplier();
 			}
 		/*  */
 		IHeatManager thisHeatManager;
