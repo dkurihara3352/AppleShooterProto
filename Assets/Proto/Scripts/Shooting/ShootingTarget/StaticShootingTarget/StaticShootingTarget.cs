@@ -62,13 +62,11 @@ namespace AppleShooterProto{
 			public new class ConstArg: AbsShootingTarget.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
-					// Color defaultColor,
 					UnityBase.IBellCurve healthBellCurve,
 					IStaticShootingTargetAdaptor adaptor,
 					ITargetData targetData
 				): base(
 					index,
-					// defaultColor,
 					healthBellCurve,
 					adaptor,
 					targetData

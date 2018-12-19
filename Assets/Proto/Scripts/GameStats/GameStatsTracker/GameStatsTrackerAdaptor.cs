@@ -23,12 +23,16 @@ namespace AppleShooterProto{
 		}
 		public HeatManagerAdaptor heatManagerAdaptor;
 		public ScoreManagerAdaptor scoreManagerAdaptor;
+		public CurrencyManagerAdaptor currencyManagerAdaptor;
 		public override void SetUpReference(){
 			IHeatManager heatManager = heatManagerAdaptor.GetHeatManager();
 			thisTracker.SetHeatManager(heatManager);
 
 			IScoreManager scoreManager = scoreManagerAdaptor.GetScoreManager();
 			thisTracker.SetScoreManager(scoreManager);
+
+			ICurrencyManager currencyManager = currencyManagerAdaptor.GetCurrencyManager();
+			thisTracker.SetCurrencyManager(currencyManager);
 		}
 	}
 }

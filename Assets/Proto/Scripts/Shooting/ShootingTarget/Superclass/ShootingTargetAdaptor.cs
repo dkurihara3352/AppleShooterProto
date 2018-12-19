@@ -13,7 +13,6 @@ namespace AppleShooterProto{
 		void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor);
 		void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor);
 		void SetIndex(int index);
-		// void ToggleCollider(bool on);
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
 
@@ -24,6 +23,8 @@ namespace AppleShooterProto{
 		float GetFlashProcessTime();
 		AnimationCurve GetFlashColorValueCurve();
 		Color GetDefaultColor();
+
+		bool IsRare();
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
@@ -36,8 +37,6 @@ namespace AppleShooterProto{
 			
 			thisShootingTarget = CreateShootingTarget();
 
-			// thisCollider = CollectCollider();
-
 			thisAnimator = CollectAnimator();
 
 			thisHitTriggerHash = Animator.StringToHash("Hit");
@@ -45,9 +44,6 @@ namespace AppleShooterProto{
 		}
 		int thisColorHash;
 		public MeshRenderer modelMeshRenderer;
-		// BoxCollider CollectCollider(){
-		// 	return GetComponentInChildren<BoxCollider>();
-		// }
 		Animator CollectAnimator(){
 			return GetComponent<Animator>();
 		}
@@ -142,40 +138,36 @@ namespace AppleShooterProto{
 			thisIndex = index;
 		}
 
-		/* Collider */
-		// Collider thisCollider;
-		// public void ToggleCollider( bool on){
-		// 	thisCollider.enabled = on;
-		// }
-		/* Color */
-		protected Color thisDefaultColor;
-		public Color GetDefaultColor(){
-			return thisDefaultColor;
-		}
-		public void SetColor(Color color){
-			Material mat = modelMeshRenderer.material;
-			mat.SetColor(thisColorHash, color);
 
-		}
-		Color GetColor(){
-			Material mat = modelMeshRenderer.material;
-			return mat.GetColor(thisColorHash);
-		}
+		/* Color */
+			protected Color thisDefaultColor;
+			public Color GetDefaultColor(){
+				return thisDefaultColor;
+			}
+			public void SetColor(Color color){
+				Material mat = modelMeshRenderer.material;
+				mat.SetColor(thisColorHash, color);
+
+			}
+			Color GetColor(){
+				Material mat = modelMeshRenderer.material;
+				return mat.GetColor(thisColorHash);
+			}
 
 		/* Animator */
-		Animator thisAnimator;
-		int thisHitTriggerHash;
-		int thisHitMagnitudeHash;
-		public void PlayHitAnimation(float magnitude){
-			thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
-			thisAnimator.SetTrigger(thisHitTriggerHash);
-		}
-		public void SetMaterial(Material material){
-			modelMeshRenderer.material = material;
-		}
-		public void UpdateDefaultColor(){
-			thisDefaultColor = GetColor();
-		}
+			Animator thisAnimator;
+			int thisHitTriggerHash;
+			int thisHitMagnitudeHash;
+			public void PlayHitAnimation(float magnitude){
+				thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
+				thisAnimator.SetTrigger(thisHitTriggerHash);
+			}
+			public void SetMaterial(Material material){
+				modelMeshRenderer.material = material;
+			}
+			public void UpdateDefaultColor(){
+				thisDefaultColor = GetColor();
+			}
 		/*  */
 		public float flashProcessTime = .5f;
 		public float GetFlashProcessTime(){
@@ -184,6 +176,10 @@ namespace AppleShooterProto{
 		public AnimationCurve flashColorValueCurve;//0 => default, 1 => flashColor
 		public AnimationCurve GetFlashColorValueCurve(){
 			return flashColorValueCurve;
+		}
+		public bool isRare = false;
+		public bool IsRare(){
+			return isRare;
 		}
 	}
 }

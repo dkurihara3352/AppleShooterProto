@@ -6,8 +6,9 @@ namespace AppleShooterProto{
 	public interface IGameStatsTracker: IAppleShooterSceneObject{
 		void SetHeatManager(IHeatManager manager);
 		void SetScoreManager(IScoreManager scoreManager);
+		void SetCurrencyManager(ICurrencyManager currencyManager);
 
-		void RegisterTargetDestroyed(IShootingTarget target);
+		void RegisterTargetDestroyed(IShootingTarget target, bool isRare);
 		void ResetStats();
 	}
 	public class GameStatsTracker : AppleShooterSceneObject, IGameStatsTracker {
@@ -26,16 +27,28 @@ namespace AppleShooterProto{
 			thisScoreManager = scoreManager;
 		}
 
-		public void RegisterTargetDestroyed(IShootingTarget target){
+		ICurrencyManager thisCurrencyManager;
+		public void SetCurrencyManager(ICurrencyManager manager){
+			thisCurrencyManager = manager;
+		}
+
+		public void RegisterTargetDestroyed(IShootingTarget target, bool isRare){
 			float heat = target.GetHeatBonus();
 			thisHeatManager.AddHeat(heat);
 
 			int score = target.GetDestructionScore();
 			thisScoreManager.AddScore(score);
+
+			if(isRare){
+				int targetTier = target.GetTier();
+				int currencyGained = /* thisRareDestructionCurrencyBonusCalculator.Calculate(targetTier) */100;
+				thisCurrencyManager.AddGainedCurrency(currencyGained);
+			}
 		}
 		public void ResetStats(){
 			thisHeatManager.ResetHeat();
 			thisScoreManager.ClearScore();
+			thisCurrencyManager.ClearGainedCurrency();
 		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{

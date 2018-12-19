@@ -78,7 +78,6 @@ namespace AppleShooterProto{
 				thisTarget.CheckAndClearDestroyedTarget(this);
 			thisTarget = null;
 			thisTypedAdaptor.StopDestruction();
-			// thisTypedAdaptor.StopParticleSystem();
 			thisDestroyedTargetReserve.Reserve(this);
 			if(thisTargetTierDataOnQueue != null){
 				SetTier(thisTargetTierDataOnQueue);

@@ -11,10 +11,8 @@ namespace AppleShooterProto{
 		void SetShootingTargetCriticalHitDetector(IShootingTargetCriticalHitDetector detector);
 		
 		void SetShootingManager(IShootingManager shootingManager);
-
 		void Hit(IArrow arrow, bool crit);
-		// void AddLandedArrow(ILandedArrow landedArrow);
-		// void RemoveLandedArrow(ILandedArrow landedArrow);
+
 		void DeactivateAllLandedArrows();
 		ILandedArrow[] GetLandedArrows();
 
@@ -36,6 +34,7 @@ namespace AppleShooterProto{
 
 		TargetType GetTargetType();
 		void SetTier(TargetTierData tierData);
+		int GetTier();
 		void SetTargetTierDataOnQueue(TargetTierData tierData);
 	}
 	public abstract class AbsShootingTarget : AppleShooterSceneObject, IShootingTarget {
@@ -47,7 +46,7 @@ namespace AppleShooterProto{
 			SetIndex(arg.index);
 			thisTargetData = arg.targetData;
 			thisAdaptor.SetName(thisTargetData.targetType.ToString() + " " + thisIndex.ToString());
-			// thisDefaultColor = arg.defaultColor;
+
 			thisActivationStateEngine = new ActivationStateEngine(this);
 			thisHealthBellCurve = arg.healthBellCurve;
 
@@ -55,7 +54,7 @@ namespace AppleShooterProto{
 				thisProcessManager,
 				this,
 				ProcessConstraint.ExpireTime,
-				thisTypedAdaptor.GetFlashProcessTime()
+				thisShootingTargetAdaptor.GetFlashProcessTime()
 			);
 		}
 		public void SetShootingManager(IShootingManager manager){
@@ -66,12 +65,16 @@ namespace AppleShooterProto{
 		protected int thisOriginalHealth;
 		protected int thisHealth;
 
-		IShootingTargetAdaptor thisTypedAdaptor{
+		IShootingTargetAdaptor thisShootingTargetAdaptor{
 			get{
 				return (IShootingTargetAdaptor)thisAdaptor;
 			}
 		}
-		public IMarkerUIReserve thisMarkerUIReserve;
+		protected bool thisIsRare{
+			get{
+				return thisShootingTargetAdaptor.IsRare();
+			}
+		}
 		/* Activation */
 			IActivationStateEngine thisActivationStateEngine;
 			public bool IsActivated(){
@@ -84,8 +87,8 @@ namespace AppleShooterProto{
 			public virtual void ActivateImple(){
 				thisOriginalHealth = ResetHealth();
 				thisHealth = thisOriginalHealth;
-				thisTypedAdaptor.SetColor(thisDefaultColor);
-				/* thisTypedAdaptor. */ToggleCollider(true);
+				thisShootingTargetAdaptor.SetColor(thisDefaultColor);
+				ToggleCollider(true);
 
 				thisPopUIReserve.PopText(
 					this,
@@ -99,17 +102,14 @@ namespace AppleShooterProto{
 			string GetActivationString(){
 				return GetName();
 			}
-			string GetHealthString(){
-				string result = "health \n" + thisHealth.ToString();
-				return result;
-			}
+
 			public void Deactivate(){
 				thisActivationStateEngine.Deactivate();
 			}
 			public virtual void DeactivateImple(){
 				DeactivateAllLandedArrows();
 				ReserveSelf();
-				/* thisTypedAdaptor. */ToggleCollider(false);
+				ToggleCollider(false);
 				if(thisTargetTierDataOnQueue != null){
 					SetTier(thisTargetTierDataOnQueue);
 					thisTargetTierDataOnQueue = null;
@@ -155,7 +155,7 @@ namespace AppleShooterProto{
 				protected virtual void DestroyTarget(){
 					thisDestroyedTargetReserve.ActivateDestoryedTargetAt(this);
 					Deactivate();
-					thisGameStatsTracker.RegisterTargetDestroyed(this);
+					thisGameStatsTracker.RegisterTargetDestroyed(this, thisIsRare);
 				}
 				IDestroyedTarget thisDestroyedTarget;
 				public void SetDestroyedTarget(IDestroyedTarget target){
@@ -175,7 +175,7 @@ namespace AppleShooterProto{
 			/*  */
 			Color thisDefaultColor{
 				get{
-					return thisTypedAdaptor.GetDefaultColor();
+					return thisShootingTargetAdaptor.GetDefaultColor();
 				}
 			}
 			protected virtual void IndicateHealth(
@@ -188,7 +188,6 @@ namespace AppleShooterProto{
 					thisDefaultColor,
 					normalizedHealth
 				);
-				// thisTypedAdaptor.SetColor(newColor);
 				StartHitFlashProcess(flashColor);
 			}
 			protected virtual void IndicateHit(
@@ -197,7 +196,7 @@ namespace AppleShooterProto{
 			){
 				float totalAttack = attack + critBonus;
 				float hitMagnitude = CalculateHitMagnitude(totalAttack);
-				thisTypedAdaptor.PlayHitAnimation(hitMagnitude);
+				thisShootingTargetAdaptor.PlayHitAnimation(hitMagnitude);
 				thisPopUIReserve.PopText(
 					this,
 					GetArrowAttackString(attack, critBonus)
@@ -214,28 +213,29 @@ namespace AppleShooterProto{
 				return delta/thisOriginalHealth;
 			}
 			/* Landed Arrows */
-			IShootingTargetNormalHitDetector thisNormalHitDetector;
-			public void SetShootingTargetNormalHitDetector(IShootingTargetNormalHitDetector detector){
-				thisNormalHitDetector = detector;
-			}
-			IShootingTargetCriticalHitDetector thisCriticalHitDetector;
-			public void SetShootingTargetCriticalHitDetector(IShootingTargetCriticalHitDetector detector){
-				thisCriticalHitDetector = detector;
-			}
-			void ToggleCollider(bool toggle){
-				thisNormalHitDetector.ToggleCollider(toggle);
-				thisCriticalHitDetector.ToggleCollider(toggle);
-			}
-			public ILandedArrow[] GetLandedArrows(){
-				List<ILandedArrow> resultList = new List<ILandedArrow>();
-				resultList.AddRange(thisNormalHitDetector.GetLandedArrows());
-				resultList.AddRange(thisCriticalHitDetector.GetLandedArrows());
-				return resultList.ToArray();
-			}
-			public void DeactivateAllLandedArrows(){
-				thisNormalHitDetector.DeactivateAllLandedArrows();
-				thisCriticalHitDetector.DeactivateAllLandedArrows();
-			}
+				IShootingTargetNormalHitDetector thisNormalHitDetector;
+				public void SetShootingTargetNormalHitDetector(IShootingTargetNormalHitDetector detector){
+					thisNormalHitDetector = detector;
+				}
+				IShootingTargetCriticalHitDetector thisCriticalHitDetector;
+				public void SetShootingTargetCriticalHitDetector(IShootingTargetCriticalHitDetector detector){
+					thisCriticalHitDetector = detector;
+				}
+				void ToggleCollider(bool toggle){
+					thisNormalHitDetector.ToggleCollider(toggle);
+					thisCriticalHitDetector.ToggleCollider(toggle);
+				}
+				public ILandedArrow[] GetLandedArrows(){
+					List<ILandedArrow> resultList = new List<ILandedArrow>();
+					resultList.AddRange(thisNormalHitDetector.GetLandedArrows());
+					resultList.AddRange(thisCriticalHitDetector.GetLandedArrows());
+					return resultList.ToArray();
+				}
+				public void DeactivateAllLandedArrows(){
+					thisNormalHitDetector.DeactivateAllLandedArrows();
+					thisCriticalHitDetector.DeactivateAllLandedArrows();
+				}
+			/*  */
 			protected IPopUIReserve thisPopUIReserve;
 			public void SetPopUIReserve(IPopUIReserve reserve){
 				thisPopUIReserve = reserve;
@@ -266,13 +266,16 @@ namespace AppleShooterProto{
 				return thisTargetData.targetType;
 			}
 			public void SetTier(TargetTierData tierData){
-				thisTypedAdaptor.SetMaterial(tierData.material);
-				thisTypedAdaptor.UpdateDefaultColor();
+				thisShootingTargetAdaptor.SetMaterial(tierData.material);
+				thisShootingTargetAdaptor.UpdateDefaultColor();
 				UpdateTargetData(tierData.targetData);
+			}
+			public int GetTier(){
+				return thisTargetData.tier;
 			}
 			public void UpdateTargetData(TargetData data){
 				thisTargetData = data;
-				thisTypedAdaptor.SetTargetData(data);
+				thisShootingTargetAdaptor.SetTargetData(data);
 			}
 			TargetTierData thisTargetTierDataOnQueue;
 			public void SetTargetTierDataOnQueue(TargetTierData tierData){
@@ -298,7 +301,7 @@ namespace AppleShooterProto{
 				IProcessSuite suite
 			){
 				if(suite == thisHitFlashProcessSuite){
-					AnimationCurve flashColorValueCurve = thisTypedAdaptor.GetFlashColorValueCurve();
+					AnimationCurve flashColorValueCurve = thisShootingTargetAdaptor.GetFlashColorValueCurve();
 					float colorValue = flashColorValueCurve.Evaluate(normalizedTime);
 					//0 => default, 1f => flashColor
 					Color newColor = Color.Lerp(
@@ -306,23 +309,21 @@ namespace AppleShooterProto{
 						thisFlashTargetColor,
 						colorValue
 					);
-					thisTypedAdaptor.SetColor(newColor);
+					thisShootingTargetAdaptor.SetColor(newColor);
 				}
 			}
 			public void OnProcessExpire(IProcessSuite suite){
-				thisTypedAdaptor.SetColor(thisDefaultColor);	
+				thisShootingTargetAdaptor.SetColor(thisDefaultColor);	
 			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 				int index{get;}
-				// Color defaultColor{get;}
 				IBellCurve healthBellCurve{get;}
 				ITargetData targetData{get;}
 			}
 			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
-					// Color defaultColor,
 					IBellCurve healthBellCurve,
 					IShootingTargetAdaptor adaptor,
 					ITargetData targetData
@@ -330,14 +331,11 @@ namespace AppleShooterProto{
 					adaptor
 				){
 					thisIndex = index;
-					// thisDefaultColor = defaultColor;
 					thisHealthBellCurve = healthBellCurve;
 					thisTargetData = targetData;
 				}
 				readonly int thisIndex;
 				public int index{get{return thisIndex;}}
-				// readonly Color thisDefaultColor;
-				// public Color defaultColor{get{return thisDefaultColor;}}
 				readonly IBellCurve thisHealthBellCurve;
 				public IBellCurve healthBellCurve{
 					get{return thisHealthBellCurve;}

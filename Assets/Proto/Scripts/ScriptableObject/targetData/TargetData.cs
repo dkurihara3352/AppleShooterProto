@@ -5,6 +5,7 @@ namespace AppleShooterProto{
 	
 	public interface ITargetData{
 		TargetType targetType{get;}
+		int tier{get;}
 		float heatBonus{get;}
 		int health{get;}
 		int destructionScore{get;}
@@ -13,6 +14,8 @@ namespace AppleShooterProto{
 	public class TargetData : ScriptableObject, ITargetData {
 		public TargetType _targetType;
 		public TargetType targetType{get{return _targetType;}}
+		public int _tier;
+		public int tier{get{return _tier;}}
 		public float _heatBonus;
 		public float heatBonus{
 			get{
