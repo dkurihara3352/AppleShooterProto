@@ -91,7 +91,8 @@ namespace AppleShooterProto{
 		public ShootingTargetCriticalHitDetectorAdaptor thisCriticalHitDetectorAdaptor;
 		public void SetUpDetectorAdaptors(){
 			thisNormalHitDetectorAdaptor.SetUp();
-			thisCriticalHitDetectorAdaptor.SetUp();
+			if(thisCriticalHitDetectorAdaptor != null)
+				thisCriticalHitDetectorAdaptor.SetUp();
 		}
 		public override void SetUpReference(){
 
@@ -116,9 +117,11 @@ namespace AppleShooterProto{
 			thisShootingTarget.SetShootingTargetNormalHitDetector(normalHitDetector);
 			normalHitDetector.SetShootingTarget(thisShootingTarget);
 
-			IShootingTargetCriticalHitDetector criticalHitDetector = thisCriticalHitDetectorAdaptor.GetShootingTargetCriticalHitDetector();
-			thisShootingTarget.SetShootingTargetCriticalHitDetector(criticalHitDetector);
-			criticalHitDetector.SetShootingTarget(thisShootingTarget);
+			if(thisCriticalHitDetectorAdaptor != null){
+				IShootingTargetCriticalHitDetector criticalHitDetector = thisCriticalHitDetectorAdaptor.GetShootingTargetCriticalHitDetector();
+				thisShootingTarget.SetShootingTargetCriticalHitDetector(criticalHitDetector);
+				criticalHitDetector.SetShootingTarget(thisShootingTarget);
+			}
 		}
 		public override void FinalizeSetUp(){
 			thisShootingTarget.Deactivate();

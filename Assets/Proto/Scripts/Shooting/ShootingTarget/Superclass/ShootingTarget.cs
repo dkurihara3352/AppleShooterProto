@@ -223,17 +223,20 @@ namespace AppleShooterProto{
 				}
 				void ToggleCollider(bool toggle){
 					thisNormalHitDetector.ToggleCollider(toggle);
-					thisCriticalHitDetector.ToggleCollider(toggle);
+					if(!thisIsRare)
+						thisCriticalHitDetector.ToggleCollider(toggle);
 				}
 				public ILandedArrow[] GetLandedArrows(){
 					List<ILandedArrow> resultList = new List<ILandedArrow>();
 					resultList.AddRange(thisNormalHitDetector.GetLandedArrows());
-					resultList.AddRange(thisCriticalHitDetector.GetLandedArrows());
+					if(!thisIsRare)
+						resultList.AddRange(thisCriticalHitDetector.GetLandedArrows());
 					return resultList.ToArray();
 				}
 				public void DeactivateAllLandedArrows(){
 					thisNormalHitDetector.DeactivateAllLandedArrows();
-					thisCriticalHitDetector.DeactivateAllLandedArrows();
+					if(!thisIsRare)
+						thisCriticalHitDetector.DeactivateAllLandedArrows();
 				}
 			/*  */
 			protected IPopUIReserve thisPopUIReserve;

@@ -17,6 +17,7 @@ namespace AppleShooterProto{
 
 		void SetIndex(int index);
 		string GetParentName();
+		Vector3 GetPrevPosition();
 	}
 	public class ArrowAdaptor : AppleShooterMonoBehaviourAdaptor, IArrowAdaptor {
 		
@@ -88,6 +89,9 @@ namespace AppleShooterProto{
 		/* Collision Detection */
 			int checkPerEveryThisFrames;
 			Vector3 thisPrevPosition;
+			public Vector3 GetPrevPosition(){
+				return thisPrevPosition;
+			}
 			int targetLayerNumber = 8;
 			int critLayerNumber = 9;
 			Vector3 prevForDebug;

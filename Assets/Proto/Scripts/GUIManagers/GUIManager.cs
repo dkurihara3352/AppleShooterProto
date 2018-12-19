@@ -134,6 +134,7 @@ namespace AppleShooterProto{
 					"WarmUp"
 				)){
 					gameManager.WarmUp();
+					thisCurvesAreReady = true;
 				}
 				if(GUI.Button(
 					sTL_4,
@@ -461,15 +462,17 @@ namespace AppleShooterProto{
 				follower.SmoothStart();
 			}
 			public WaypointCurveCycleManagerAdaptor curveCycleManagerAdaptor;
+			bool thisCurvesAreReady = false;
 			void DrawWaypointEvents(Rect rect){
-				if(thisSystemIsReady){
+				if(thisCurvesAreReady){
 					string result = "";
 					IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 					float normalizedPosOnCurve = follower.GetNormalizedPositionInCurve();
 					result += "normPos: " + normalizedPosOnCurve.ToString("N2") + "\n";
-
+					
 					IWaypointCurveCycleManager curveManager = curveCycleManagerAdaptor.GetWaypointsManager();
-					IWaypointCurve currentCurve = curveManager.GetWaypointCurvesInSequence()[0];
+					int currentCurveIndex = gameManager.GetCurrentWaypointGroupIndex();
+					IWaypointCurve currentCurve = curveManager.GetAllWaypointCurves()[currentCurveIndex];
 					IWaypointEvent[] evnets = currentCurve.GetWaypointEvents();
 					result += "curve id: " + currentCurve.GetIndex().ToString() + "\n";
 					foreach(IWaypointEvent wpEvent in evnets){
@@ -547,6 +550,13 @@ namespace AppleShooterProto{
 				}
 			}
 			public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+			void DrawBottomRight(){
+				// Rect sub_0 = GetHorizontalSubRect(bottomRightRect, 0, 2);
+				// Rect sub_1 = GetHorizontalSubRect(bottomRightRect, 1, 2);
+				// DrawPlayerData(sub_0);
+				// DrawBowData(sub_1);
+				DrawWaypointEvents(bottomRightRect);
+			}
 			void DrawPlayerData(Rect rect){
 				if(thisSystemIsReady){
 					IPlayerDataManager manager = playerDataManagerAdaptor.GetPlayerDataManager();
@@ -555,12 +565,6 @@ namespace AppleShooterProto{
 						manager.GetDebugString()
 					);
 				}
-			}
-			void DrawBottomRight(){
-				Rect sub_0 = GetHorizontalSubRect(bottomRightRect, 0, 2);
-				Rect sub_1 = GetHorizontalSubRect(bottomRightRect, 1, 2);
-				DrawPlayerData(sub_0);
-				DrawBowData(sub_1);
 			}
 			void DrawBowData(Rect rect){
 				if(thisSystemIsReady){

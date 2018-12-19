@@ -32,6 +32,8 @@ namespace AppleShooterProto{
 
 		void SetArrowTrail(IArrowTrail trail);
 		void CheckAndClearArrowTrail(IArrowTrail trail);
+
+		Vector3 GetPrevPosition();
 	}
 	public class Arrow : AppleShooterSceneObject, IArrow{
 		/* Setup */
@@ -47,7 +49,7 @@ namespace AppleShooterProto{
 				);
 				thisStateEngine = new ArrowStateEngine(stateEngineArg);
 			}
-			IArrowAdaptor thisTypedAdaptor{
+			IArrowAdaptor thisArrowAdaptor{
 				get{
 					return (IArrowAdaptor)thisAdaptor;
 				}
@@ -163,10 +165,10 @@ namespace AppleShooterProto{
 				Deactivate();
 			}
 			public void StartCollisionCheck(){
-				thisTypedAdaptor.StartCollisionCheck();
+				thisArrowAdaptor.StartCollisionCheck();
 			}
 			public void StopColllisionCheck(){
-				thisTypedAdaptor.StopCollisionCheck();
+				thisArrowAdaptor.StopCollisionCheck();
 			}
 		/* Debug */
 			readonly int thisIndex;
@@ -180,7 +182,7 @@ namespace AppleShooterProto{
 				thisAdaptor.SetLookRotation(forward);
 			}
 			public string GetParentName(){
-				return thisTypedAdaptor.GetParentName();
+				return thisArrowAdaptor.GetParentName();
 			}
 		/*  */
 			float thisAttack;
@@ -189,6 +191,9 @@ namespace AppleShooterProto{
 			}
 			public void SetAttack(float attack){
 				thisAttack = attack;
+			}
+			public Vector3 GetPrevPosition(){
+				return thisArrowAdaptor.GetPrevPosition();
 			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{

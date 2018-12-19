@@ -9,7 +9,7 @@ namespace AppleShooterProto{
 	public class ShootingTargetNormalHitDetector : ArrowHitDetector, IShootingTargetNormalHitDetector {
 
 		public ShootingTargetNormalHitDetector(IConstArg arg ): base(arg){}
-		IShootingTarget thisShootingTarget;
+		protected IShootingTarget thisShootingTarget;
 		public void SetShootingTarget(IShootingTarget target){
 			thisShootingTarget = target;
 		}

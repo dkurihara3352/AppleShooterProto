@@ -29,58 +29,59 @@ namespace AppleShooterProto{
 		public void SetUpSpawnWaypointEvents(){
 			IShootingTargetSpawnDataCalculator calculator = CreateCalculator();
 			TargetSpawnData spawnData = calculator.CalculateTargetSpawnDataByTargetType();
-
-			List<IShootingTargetSpawnWaypointEvent> spawnWaypointEventsList = new List<IShootingTargetSpawnWaypointEvent>();
-
 			TargetSpawnData.Entry[] entries = spawnData.GetEntries();
+			IShootingTargetSpawnWaypointEvent[] spawnWaypointEvents = CreateSpawnWaypointEvents(entries);
+			
+
+			thisSpawnEvents = spawnWaypointEvents;
+		}
+		IShootingTargetSpawnWaypointEvent[] CreateSpawnWaypointEvents(TargetSpawnData.Entry[] entries){
+
+			List<IShootingTargetSpawnWaypointEvent> resultList = new List<IShootingTargetSpawnWaypointEvent>();
 
 			foreach(TargetSpawnData.Entry entry in entries){
 			
 				int spawnCount = entry.numToCreate;
-				ISpawnPointEventPointPair[] pairs = CreateSpawnPointEventPointPairs(entry);
+				IShootingTargetSpawnPoint[] spawnPoints = entry.spawnPoints;
+				int spawnPointCount = spawnPoints.Length;
 
-				int[] spawnPointIndexToSpawn = DKUtility.Calculator.GetRandomIntegers(
+				int[] spawnPointIndicesToSpawn = DKUtility.Calculator.GetRandomIntegers(
 					count: spawnCount, 
-					maxNumber: pairs.Length -1
+					maxNumber: spawnPointCount -1
 				);
+				
+				IShootingTargetSpawnWaypointEvent[] eventsForEntry = CreateSpawnEventsForEntry(
+					entry.reserve,
+					spawnPoints,
+					spawnPointIndicesToSpawn
+				);
+				resultList.AddRange(eventsForEntry);
 
-
-				foreach(int spawnPointIndex in spawnPointIndexToSpawn){
-					ISpawnPointEventPointPair pointPair = pairs[spawnPointIndex];
-					IShootingTargetSpawnPoint spawnPoint = pointPair.GetSpawnPoint();
-					float eventPoint = pointPair.GetEventPoint();
-					IShootingTargetReserve reserve = entry.reserve;
-					ShootingTargetSpawnWaypointEvent.IConstArg eventConstArg = new ShootingTargetSpawnWaypointEvent.ConstArg(
-						reserve,
-						spawnPoint,
-						eventPoint,
-						this
-					);
-					IShootingTargetSpawnWaypointEvent spawnWaypointEvent = new ShootingTargetSpawnWaypointEvent(
-						eventConstArg
-					);
-
-					spawnWaypointEventsList.Add(spawnWaypointEvent);
-
-				}
-			}
-			thisSpawnEvents = spawnWaypointEventsList.ToArray();
-		}
-		ISpawnPointEventPointPair[] CreateSpawnPointEventPointPairs(TargetSpawnData.Entry entry){
-			IShootingTargetSpawnPoint[] spawnPoints = entry.spawnPoints;
-			List<ISpawnPointEventPointPair> resultList = new List<ISpawnPointEventPointPair>();
-			foreach(IShootingTargetSpawnPoint spawnPoint in spawnPoints){
-				float eventPoint = spawnPoint.GetEventPoint();
-				ISpawnPointEventPointPair pair = new SpawnPointEventPointPair(spawnPoint, eventPoint);
-				resultList.Add(pair);
 			}
 			return resultList.ToArray();
 		}
-		string GetIndicesString(int[] indices){
-			string result =  "";
-			foreach(int i in indices)
-				result += i.ToString() + ", " ;
-			return result;
+		IShootingTargetSpawnWaypointEvent[] CreateSpawnEventsForEntry(
+			IShootingTargetReserve reserve,
+			IShootingTargetSpawnPoint[] spawnPoints,
+			int[] indicesToSpawn
+		){
+			List<IShootingTargetSpawnWaypointEvent> resultList = new List<IShootingTargetSpawnWaypointEvent>();
+			foreach(int spawnPointIndex in indicesToSpawn){
+				IShootingTargetSpawnPoint spawnPoint = spawnPoints[spawnPointIndex];
+				float eventPoint = spawnPoint.GetEventPoint();
+				ShootingTargetSpawnWaypointEvent.IConstArg eventConstArg = new ShootingTargetSpawnWaypointEvent.ConstArg(
+					reserve,
+					spawnPoint,
+					eventPoint,
+					this
+				);
+				IShootingTargetSpawnWaypointEvent spawnWaypointEvent = new ShootingTargetSpawnWaypointEvent(
+					eventConstArg
+				);
+
+				resultList.Add(spawnWaypointEvent);
+			}
+			return resultList.ToArray();
 		}
 		protected virtual IShootingTargetSpawnDataCalculator CreateCalculator(){
 			ShootingTargetSpawnDataCalculator.IConstArg arg = new ShootingTargetSpawnDataCalculator.ConstArg(

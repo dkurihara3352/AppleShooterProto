@@ -138,14 +138,7 @@ namespace AppleShooterProto{
 			thisEntries = entries;
 		}
 		Entry[] thisEntries;
-		public int GetNumToCreate(TargetType type){
-			foreach(Entry entry in thisEntries)
-				if(entry.targetType == type)
-					return entry.numToCreate;
-			throw new System.InvalidOperationException(
-				"not match"
-			);
-		}
+
 		public Entry[] GetEntries(){
 			return thisEntries;
 		}
