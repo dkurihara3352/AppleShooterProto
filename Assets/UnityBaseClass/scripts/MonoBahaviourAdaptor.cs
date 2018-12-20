@@ -23,6 +23,8 @@ namespace UnityBase{
 		void Rotate(float angleOnAxis, int axis);
 		void SetLookRotation(Vector3 forward, Vector3 up);
 		void SetLookRotation(Vector3 forward);
+		void ResetScale();
+		Vector3 GetLocalScale();
 
 		Transform GetTransform();
 		void SetParent(Transform parent);
@@ -80,6 +82,7 @@ namespace UnityBase{
 			public void ResetLocalTransform(){
 				this.transform.localPosition = Vector3.zero;
 				this.transform.localRotation = Quaternion.identity;
+				ResetScale();
 			}
 			public Vector3 GetForwardDirection(){
 				return this.transform.forward;
@@ -156,6 +159,13 @@ namespace UnityBase{
 					forward,
 					this.transform.up
 				);
+			}
+		/* scale */
+			public void ResetScale(){
+				transform.localScale = Vector3.one;
+			}
+			public Vector3 GetLocalScale(){
+				return transform.localScale;
 			}
 	}
 }

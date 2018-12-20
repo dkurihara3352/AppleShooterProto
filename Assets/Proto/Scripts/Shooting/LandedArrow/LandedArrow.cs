@@ -57,7 +57,7 @@ namespace AppleShooterProto{
 			AddSelfToCurrentDetector();
 
 			SetParent(detector);
-			ResetLocalTransform();
+			// ResetLocalTransform();
 			SetPosition(position);
 			SetRotation(rotation);
 		}

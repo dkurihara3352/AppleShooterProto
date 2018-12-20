@@ -561,6 +561,7 @@ namespace AppleShooterProto{
 				// DrawPlayerData(sub_0);
 				// DrawBowData(sub_1);
 				DrawWaypointEvents(bottomRightRect);
+				// DrawLandedArrows(bottomRightRect);
 			}
 			void DrawPlayerData(Rect rect){
 				if(thisSystemIsReady){
@@ -575,6 +576,31 @@ namespace AppleShooterProto{
 				if(thisSystemIsReady){
 					IShootingManager shootingManager = shootingManagerAdaptor.GetShootingManager();
 					string result = shootingManager.GetDebugString();
+					GUI.Label(
+						rect,
+						result
+					);
+				}
+			}
+			public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
+			void DrawLandedArrows(Rect rect){
+				if(thisSystemIsReady){
+					ILandedArrowReserve reserve = landedArrowReserveAdaptor.GetLandedArrowReserve();
+					ILandedArrow[] arrows = reserve.GetLandedArrows();
+					string result = "";
+					foreach(ILandedArrow arrow in arrows){
+						int index = arrow.GetIndex();
+						result += index.ToString() + ": ";
+						if(arrow.IsActivated()){
+							result += DKUtility.DebugHelper.StringInColor(" activated ", Color.green);
+							result += "\n\t" + "detector: " + arrow.GetHitDetector().GetName();
+						}
+						else
+							result += "deactivated ";
+						Vector3 localScale = arrow.GetLocalScale();
+						result += "locScale: " + localScale.ToString();
+						result += "\n";
+					}
 					GUI.Label(
 						rect,
 						result

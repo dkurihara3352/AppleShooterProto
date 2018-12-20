@@ -13,7 +13,9 @@ namespace UnityBase{
 		Quaternion GetLocalRotation();
 		void SetLocalRotation(Quaternion localRotation);
 		void ResetLocalTransform();
-		
+
+		void ResetScale();
+		Vector3 GetLocalScale();
 		void SetParent(ISceneObject sceneObj);
 		IMonoBehaviourAdaptor GetAdaptor();
 		string GetName();
@@ -55,7 +57,12 @@ namespace UnityBase{
 		public void SetLocalRotation(Quaternion localRot){
 			thisAdaptor.SetLocalRotation(localRot);
 		}
-
+		public void ResetScale(){
+			thisAdaptor.ResetScale();
+		}
+		public Vector3 GetLocalScale(){
+			return thisAdaptor.GetLocalScale();
+		}
 		public void SetParent(ISceneObject sceneObj){
 			Transform parentTrans;
 			if(sceneObj != null){

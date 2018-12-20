@@ -432,6 +432,13 @@ namespace UISystem{
 						this.transform.up
 					);
 				}
+			/* scale */
+				public void ResetScale(){
+					transform.localScale = Vector3.one;
+				}
+				public Vector3 GetLocalScale(){
+					return transform.localScale;
+				}
 		/* Event System Imple */
 			IUIAdaptorInputStateEngine thisInputStateEngine;
 			bool PointerIDMatchesTheRegistered(int pointerId){
