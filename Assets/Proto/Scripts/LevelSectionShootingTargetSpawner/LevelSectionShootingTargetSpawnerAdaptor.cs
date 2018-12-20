@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface ILevelSectionShootingTargetSpawnerAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		ILevelSectionShootingTargetSpawner GetSpawner();
+		IShootingTargetReserve[] GetRareTargetReserves();
 	}	
 	public class LevelSectionShootingTargetSpawnerAdaptor : AppleShooterMonoBehaviourAdaptor, ILevelSectionShootingTargetSpawnerAdaptor {
 		public override void SetUp(){
@@ -22,16 +23,31 @@ namespace AppleShooterProto{
 			);
 			return new LevelSectionShootingTargetSpawner(arg);
 		}
-
+		
 		public override void SetUpReference(){
 			thisSpawner.SetLevelSectionTargetSpawnDataInput(spawnDataInput);
 			IPlayerCharacterWaypointsFollower follower = GetFollower();
 			thisSpawner.SetPlayerCharacterWaypointsFollower(follower);
+
+			thisRareTargetReserves = CollectRareTargetReserves();
 		}
 		public TargetSpawnDataInput[] spawnDataInput;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
 		IPlayerCharacterWaypointsFollower GetFollower(){
 			return playerCharacterWaypointsFollowerAdaptor.GetPlayerCharacterWaypointsFollower();
+		}
+		public AbsShootingTargetReserveAdaptor[] rareTargetReserveAdaptors;
+		IShootingTargetReserve[] thisRareTargetReserves;
+		public IShootingTargetReserve[] GetRareTargetReserves(){
+			return thisRareTargetReserves;
+		}
+		IShootingTargetReserve[] CollectRareTargetReserves(){
+			List<IShootingTargetReserve> resultList = new List<IShootingTargetReserve>();
+			foreach(AbsShootingTargetReserveAdaptor rareTargetReserveAdaptor in rareTargetReserveAdaptors){
+				IShootingTargetReserve rareTargetReserve = rareTargetReserveAdaptor.GetReserve();
+				resultList.Add(rareTargetReserve);
+			}
+			return resultList.ToArray();
 		}
 
 	}

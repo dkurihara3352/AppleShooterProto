@@ -10,6 +10,8 @@ namespace AppleShooterProto{
 		TargetType GetTargetType();
 		void ActivateShootingTargetAt(IShootingTargetSpawnPoint point);
 		void SetTier(int tier);
+		int GetTier();
+		float GetTargetTypeRareProbability();
 	}
 	public abstract class AbsShootingTargetReserve<T> : AbsSceneObjectReserve<T>, IShootingTargetReserve where T: IShootingTarget{
 		public AbsShootingTargetReserve(
@@ -31,17 +33,19 @@ namespace AppleShooterProto{
 			);
 		}
 		public TargetType GetTargetType(){
-			return thisTypedAdaptor.GetTargetType();
+			return thisShootingTargetReserveAdaptor.GetTargetType();
 		}
-		IShootingTargetReserveAdaptor thisTypedAdaptor{
+		IShootingTargetReserveAdaptor thisShootingTargetReserveAdaptor{
 			get{
 				return (IShootingTargetReserveAdaptor)thisAdaptor;
 			}
 		}
 		public abstract void ActivateShootingTargetAt(IShootingTargetSpawnPoint point);
+		int thisTier = 0;
 		public void SetTier(int tier){
-			Material mat = thisTypedAdaptor.GetMaterialForTier(tier);
-			TargetData targetData = thisTypedAdaptor.GetTargetDataForTier(tier);
+			thisTier = tier;
+			Material mat = thisShootingTargetReserveAdaptor.GetMaterialForTier(tier);
+			TargetData targetData = thisShootingTargetReserveAdaptor.GetTargetDataForTier(tier);
 			TargetTierData tierData = new TargetTierData(
 				mat,
 				targetData
@@ -52,6 +56,9 @@ namespace AppleShooterProto{
 			SetAllDestroyedTargetTier(
 				tierData
 			);
+		}
+		public int GetTier(){
+			return thisTier;
 		}
 		void SetAllTargetTier(
 			TargetTierData tierData
@@ -86,6 +93,9 @@ namespace AppleShooterProto{
 					);
 				}
 			}
+		}
+		public float GetTargetTypeRareProbability(){
+			return thisShootingTargetReserveAdaptor.GetTargetTypeRareProbability();
 		}
 		/*  */
 			public new interface IConstArg: AbsSceneObject.IConstArg{

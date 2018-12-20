@@ -20,7 +20,11 @@ namespace AppleShooterProto{
 		): base(arg){
 			thisSpawnValueLimit = arg.spawnValueLimit;
 		}
-
+		ILevelSectionShootingTargetSpawnerAdaptor thisLevelSectionShootingTargetSpawnerAdaptor{
+			get{
+				return (ILevelSectionShootingTargetSpawnerAdaptor)thisAdaptor;
+			}
+		}
 		int thisSpawnValueLimit;
 		TargetSpawnDataInput[] thisSpawnDataInput;
 		public void SetLevelSectionTargetSpawnDataInput(TargetSpawnDataInput[] input){
@@ -31,7 +35,6 @@ namespace AppleShooterProto{
 			TargetSpawnData spawnData = calculator.CalculateTargetSpawnDataByTargetType();
 			TargetSpawnData.Entry[] entries = spawnData.GetEntries();
 			IShootingTargetSpawnWaypointEvent[] spawnWaypointEvents = CreateSpawnWaypointEvents(entries);
-			
 
 			thisSpawnEvents = spawnWaypointEvents;
 		}
@@ -51,8 +54,9 @@ namespace AppleShooterProto{
 				);
 				
 				IShootingTargetSpawnWaypointEvent[] eventsForEntry = CreateSpawnEventsForEntry(
-					entry.reserve,
+					// entry,
 					spawnPoints,
+					entry.reserve,
 					spawnPointIndicesToSpawn
 				);
 				resultList.AddRange(eventsForEntry);
@@ -60,17 +64,47 @@ namespace AppleShooterProto{
 			}
 			return resultList.ToArray();
 		}
-		IShootingTargetSpawnWaypointEvent[] CreateSpawnEventsForEntry(
-			IShootingTargetReserve reserve,
+		protected IShootingTargetSpawnWaypointEvent[] CreateSpawnEventsForEntry(
 			IShootingTargetSpawnPoint[] spawnPoints,
+			IShootingTargetReserve reserve,
 			int[] indicesToSpawn
 		){
 			List<IShootingTargetSpawnWaypointEvent> resultList = new List<IShootingTargetSpawnWaypointEvent>();
+
+			float sumOfTargetRareProbability = GetSumOfTargetTypeRareChance(
+				indicesToSpawn.Length,
+				reserve.GetTargetTypeRareProbability()
+			);
+			float sumOfRelativeRareChance = GetSumOfRelativeRareChance(
+				spawnPoints,
+				indicesToSpawn
+			);
+
 			foreach(int spawnPointIndex in indicesToSpawn){
 				IShootingTargetSpawnPoint spawnPoint = spawnPoints[spawnPointIndex];
+
+				IShootingTargetReserve resultReserve = reserve;
+
+				float rareProbability = GetRareProbability(
+					spawnPoint.GetRelativeRareChance(),
+					sumOfRelativeRareChance,
+					sumOfTargetRareProbability
+				);
+				bool isRare = false;
+
+				if(this.ShouldSpawnRare(rareProbability)){
+					isRare = true;
+					IShootingTargetReserve rareTargetReserve = GetRareTargetReserve(reserve.GetTargetType());
+					int currentTier = reserve.GetTier();
+					rareTargetReserve.SetTier(currentTier);
+					resultReserve = rareTargetReserve;
+				}else
+					resultReserve = reserve;
+
 				float eventPoint = spawnPoint.GetEventPoint();
+
 				ShootingTargetSpawnWaypointEvent.IConstArg eventConstArg = new ShootingTargetSpawnWaypointEvent.ConstArg(
-					reserve,
+					resultReserve,
 					spawnPoint,
 					eventPoint,
 					this
@@ -79,9 +113,55 @@ namespace AppleShooterProto{
 					eventConstArg
 				);
 
+				if(isRare)
+					spawnWaypointEvent.MarkRare();
+
 				resultList.Add(spawnWaypointEvent);
 			}
 			return resultList.ToArray();
+		}
+		protected float GetSumOfTargetTypeRareChance(
+			float spawnCount,
+			float targetTypeRareProbability
+		){
+			return targetTypeRareProbability * spawnCount;
+		}
+		protected float GetSumOfRelativeRareChance(
+			IShootingTargetSpawnPoint[] spawnPoints,
+			int[] indicesToSpawn
+		){
+			float result = 0f;
+			foreach(int index in indicesToSpawn)
+				result += spawnPoints[index].GetRelativeRareChance();
+			return result;
+		}
+		protected float GetRareProbability(
+			float relativeRareChance,
+			float sumOfRelativeRareChance,
+			float sumOfTargetRareProbability
+		){
+			return relativeRareChance/ sumOfRelativeRareChance * sumOfTargetRareProbability;
+		}
+		protected bool ShouldSpawnRare(float probability){
+			if(Random.Range(0f, 1f) <= probability)
+				return true;
+			return false;
+		}
+		IShootingTargetReserve[] thisRareTargetReserves{
+			get{
+				return thisLevelSectionShootingTargetSpawnerAdaptor.GetRareTargetReserves();
+			}
+		}
+		
+		protected virtual IShootingTargetReserve GetRareTargetReserve(TargetType targetType){
+			foreach(IShootingTargetReserve rareTargetReserve in thisRareTargetReserves){
+				if(rareTargetReserve.GetTargetType() == targetType){
+					return rareTargetReserve;
+				}
+			}
+			throw new System.InvalidOperationException(
+				"there's no rare target reserve with matching targetType"
+			);
 		}
 		protected virtual IShootingTargetSpawnDataCalculator CreateCalculator(){
 			ShootingTargetSpawnDataCalculator.IConstArg arg = new ShootingTargetSpawnDataCalculator.ConstArg(

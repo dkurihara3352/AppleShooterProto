@@ -479,8 +479,10 @@ namespace AppleShooterProto{
 						string thisEventString = "\n";
 						thisEventString += wpEvent.GetName() + ": " + wpEvent.GetEventPoint().ToString("N2");
 						TargetType thisType = TargetType.Flyer;
+						bool isRare = false;
 						if(wpEvent is IShootingTargetSpawnWaypointEvent){
 							IShootingTargetSpawnWaypointEvent spawnEvent = (IShootingTargetSpawnWaypointEvent)wpEvent;
+							isRare = spawnEvent.IsRare();
 							thisType = spawnEvent.GetTargetType();
 							IShootingTargetSpawnPoint spawnPoint = spawnEvent.GetSpawnPoint();
 							thisEventString += ", sp: " + spawnPoint.GetName();
@@ -491,7 +493,7 @@ namespace AppleShooterProto{
 								thisEventString += ", tar: null";
 
 						}
-						Color col = GetStringColorForType(thisType);
+						Color col = GetStringColorForType(thisType, isRare);
 						thisEventString = DKUtility.DebugHelper.StringInColor(thisEventString, col);
 						result += thisEventString;
 						string executedString = ", ";
@@ -507,16 +509,19 @@ namespace AppleShooterProto{
 					);
 				}
 			}
-			Color GetStringColorForType(TargetType targetType){
-				switch(targetType){
-					case TargetType.Static:
-						return new Color(0f, .7f, .3f);
-					case TargetType.Fatty:
-						return new Color(.5f, 1f, 0f);
-					case TargetType.Glider:
-						return new Color(.3f, 1f, 1f);
-					default: return Color.white;
-				}
+			Color GetStringColorForType(TargetType targetType, bool isRare){
+				if(isRare)
+					return Color.yellow;
+				else
+					switch(targetType){
+						case TargetType.Static:
+							return new Color(0f, .7f, .3f);
+						case TargetType.Fatty:
+							return new Color(.5f, 1f, 0f);
+						case TargetType.Glider:
+							return new Color(.3f, 1f, 1f);
+						default: return Color.white;
+					}
 			}
 			public AbsShootingTargetReserveAdaptor[] targetReserveAdaptors;
 			IShootingTargetReserve[] GetAllReserves(){

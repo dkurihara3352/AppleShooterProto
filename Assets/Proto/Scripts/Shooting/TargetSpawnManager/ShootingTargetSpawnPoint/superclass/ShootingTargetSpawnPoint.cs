@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void SetIndex(int index);
 		int GetIndex();
 		float GetEventPoint();
+		float GetRelativeRareChance();
 	}
 	public abstract class AbsShootingTargetSpawnPoint: AppleShooterSceneObject, IShootingTargetSpawnPoint{
 		public AbsShootingTargetSpawnPoint(
@@ -18,6 +19,11 @@ namespace AppleShooterProto{
 			arg
 		){
 			thisEventPoint = arg.eventPoint;
+		}
+		IShootingTargetSpawnPointAdaptor thisShootingTargetSpawnPointAdaptor{
+			get{
+				return (IShootingTargetSpawnPointAdaptor)thisAdaptor;
+			}
 		}
 		readonly float thisEventPoint;
 		public float GetEventPoint(){
@@ -40,6 +46,9 @@ namespace AppleShooterProto{
 		}
 		public int GetIndex(){
 			return thisIndex;
+		}
+		public float GetRelativeRareChance(){
+			return thisShootingTargetSpawnPointAdaptor.GetRelativeRareChance();
 		}
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float eventPoint{get;}

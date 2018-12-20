@@ -6,6 +6,8 @@ namespace AppleShooterProto{
 	public interface IShootingTargetSpawnWaypointEvent: IWaypointEvent{
 		IShootingTargetSpawnPoint GetSpawnPoint();
 		TargetType GetTargetType();
+		bool IsRare();
+		void MarkRare();
 	}
 	public class ShootingTargetSpawnWaypointEvent: AbsWaypointEvent, IShootingTargetSpawnWaypointEvent{
 		public ShootingTargetSpawnWaypointEvent(
@@ -32,6 +34,13 @@ namespace AppleShooterProto{
 		}
 		public override string GetName(){
 			return GetTargetType().ToString() + " spawn event";
+		}
+		bool thisIsRare = false;
+		public void MarkRare(){
+			thisIsRare = true;
+		}
+		public bool IsRare(){
+			return thisIsRare;
 		}
 		/*  */
 			public new interface IConstArg: AbsWaypointEvent.IConstArg{

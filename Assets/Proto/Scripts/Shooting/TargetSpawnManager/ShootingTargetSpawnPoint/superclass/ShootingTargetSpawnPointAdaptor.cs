@@ -6,6 +6,7 @@ namespace AppleShooterProto{
 	public interface IShootingTargetSpawnPointAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IShootingTargetSpawnPoint GetSpawnPoint();
 		float GetEventPoint();
+		float GetRelativeRareChance();
 	}
 	public abstract class AbsShootingTargetSpawnPointAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetSpawnPointAdaptor{
 		protected IShootingTargetSpawnPoint thisSpawnPoint;
@@ -16,6 +17,10 @@ namespace AppleShooterProto{
 		public float eventPoint;
 		public float GetEventPoint(){
 			return eventPoint;
+		}
+		public float rareRelativeProbability = 1f;
+		public float GetRelativeRareChance(){
+			return rareRelativeProbability;
 		}
 	}
 }

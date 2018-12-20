@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		TargetType GetTargetType();
 		Material GetMaterialForTier(int tier);
 		TargetData GetTargetDataForTier(int tier);
+		float GetTargetTypeRareProbability();
 	}
 	public abstract class AbsShootingTargetReserveAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingTargetReserveAdaptor {
 		public override void SetUpReference(){
@@ -45,6 +46,10 @@ namespace AppleShooterProto{
 		public TargetData[] targetDataArray;
 		public TargetData GetTargetDataForTier(int tier){
 			return targetDataArray[tier];
+		}
+		public float targetTypeRareProbability = 0f;
+		public float GetTargetTypeRareProbability(){
+			return targetTypeRareProbability;
 		}
 	}
 }
