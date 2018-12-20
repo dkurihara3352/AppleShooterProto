@@ -58,13 +58,11 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 	void OnEnable(){
 		if(thisCalculator == null)
 			thisCalculator = new AppleShooterProto.BowDataCalculator(this);
-		Debug.Log("OnEnable");
 
 	}
 	void Awake(){
 		if(thisCalculator == null)
 			thisCalculator = new AppleShooterProto.BowDataCalculator(this);
-		Debug.Log("Awake");
 	}
 	AppleShooterProto.IBowDataCalculator thisCalculator;
 	void OnGUI(){
@@ -167,66 +165,13 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 	public int GetMaxAttributeLevel(){
 		return thisMaxAttributeLevel;
 	}
-	// float thisBaseAttValue;
 	public int baseCost = 10;
 	public int GetBaseCost(){
 		return baseCost;
 	}
-	// float thisInitialValuePerCoin{
-	// 	get{
-	// 		return thisBaseAttValue/ baseCost;
-	// 	}
-	// }
 	[Range(0f, 2f)]
 	public float initialTotalAttriValue = 0f;
 
-	// void CalcAttriData(){
-	// 	thisCalculator.CalcAttributeData();
-	// 	thisDeltaMultiplierArray = CalculateDeltaMultiplierArray();
-	// 	thisSumOfMultArray = CalcSumOfMultArray(thisDeltaMultiplierArray);
-	// 	thisBaseAttValue = 1f/ thisSumOfMultArray[thisSumOfMultArray.Length -1];
-	// }
-	// float[] CalculateDeltaMultiplierArray(){
-	// 	List<float> resultList = new List<float>();
-	// 	for(int i = 0; i < maxAttributeLevel + 1; i ++){
-	// 		if(i == 0)
-	// 			resultList.Add(0f);
-	// 		else{
-	// 			resultList.Add(Mathf.Pow(attributeMultiplier, i - 1));
-	// 		}
-	// 	}
-	// 	return resultList.ToArray();
-	// }
-	// float[] CalcSumOfMultArray(float[] deltaArray){
-	// 	List<float> resultList = new List<float>();
-	// 	float sum = 0f;
-	// 	foreach(float delta in deltaArray){
-	// 		sum += delta;
-	// 		resultList.Add(sum);
-	// 	}
-	// 	return resultList.ToArray();
-	// }
-	// float[] thisDeltaMultiplierArray;
-	// float[] thisSumOfMultArray;
-	// float GetAttributeValue(int level){
-	// 	return (thisBaseAttValue * thisSumOfMultArray[level]);
-	// 	return thisCalculator.GetAttributeLevel(level);
-	// }
-	// float GetPrevAttriValue(int level){
-	// 	if(level == 0)
-	// 		return 0f;
-	// 	else
-	// 		return GetAttributeValue(level - 1);
-	// 	return thisCalculator.GetPrevAttributeValue(level);
-	// }
-	// float GetDeltaAV(int level){
-	// 	return GetAttributeValue(level) - GetPrevAttriValue(level);
-	// 	return thisCalculator.GetDeltaAttributeValue(level);
-	// }
-	// int CalcCost(int level, float coinDepreValue){
-	// 	return Mathf.RoundToInt(GetDeltaAV(level)/ thisInitialValuePerCoin * coinDepreValue);
-	// 	return thisCalculator.CalcCost(level, coinDepreValue);
-	// }
 	void DrawAttributeValue(Rect rect){
 		thisCalculator.CalcAttributeData();
 		string result = "";
@@ -246,26 +191,10 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 		}
 		GUI.Label(rect, result);
 	}
-
-
-	// float thisMaxTotalAttriValue = 3f;
-	// public float minCoinDepreValue = 1f;
 	public float thisMaxCoinDepreValue = 30f;
 	public float GetMaxCoinDepreciationValue(){
 		return thisMaxCoinDepreValue;
 	}
-
-	// float CalcCointDepreciationValue(
-	// 	float attriValue
-	// ){
-	// 	// float normalizedAttriValue = attriValue/ thisMaxTotalAttriValue;
-	// 	// return Mathf.Lerp(
-	// 	// 	minCoinDepreValue,
-	// 	// 	maxCoinDepreValue,
-	// 	// 	normalizedAttriValue
-	// 	// );
-	// 	return thisCalculator.CalcCoinDepreciationValue(attriValue);
-	// }
 	/*  */
 	void DrawAttributeControl(Rect rect){
 		Rect sub_0 = GetVerSubRect(rect, 0, 4);
@@ -289,28 +218,11 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 			"crit"
 		);
 	}
-	// int[] levels = new int[3]{0, 0, 0};
-	// int thisBowLevel{
-	// 	get{
-	// 		return levels[0] + levels[1] + levels[2];
-	// 	}
-	// }
-	// float[] attributeValues = new float[3]{0f, 0f, 0f};
-	// float thisTotalAttributeValue{
-	// 	get{
-	// 		return 
-	// 			attributeValues[0] +
-	// 			attributeValues[1] +
-	// 			attributeValues[2];
-	// 	}
-	// }
-	// int thisTotalSpentCoin = 0;
 	void DrawIndivAttributeControl(
 		int index,
 		Rect rect,
 		string attName
 	){
-		// CheckAndInitFields();
 		thisCalculator.CalcAttributeData();
 		float labelRectRatio = .3f;
 		Rect labelRect = CalcSubRect(
@@ -357,7 +269,7 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 				buttonRect,
 				nextCost.ToString()
 			)){
-				IncrementAttributeLevel(
+				thisCalculator.IncrementAttributeLevel(
 					index, nextCost
 				);
 			}
@@ -367,27 +279,6 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 				"max"
 			);
 		
-	}
-	// void CheckAndInitFields(){
-	// 	if(attributeValues.Length != 3)
-	// 		attributeValues = new float[3]{0f, 0f, 0f};
-	// 	if(levels.Length != 3)
-	// 		levels = new int[3]{0, 0, 0};
-	// }
-	void IncrementAttributeLevel(
-		int index,
-		int spentCoin
-	){
-		// if(levels[index] < thisMaxAttributeLevel){
-		// 	int newLevel = levels[index] + 1;
-		// 	levels[index] = newLevel;
-		// 	attributeValues[index] = GetAttributeValue(newLevel);
-		// 	thisTotalSpentCoin += spentCoin;
-		// }
-		thisCalculator.IncrementAttributeLevel(
-			index,
-			spentCoin
-		);
 	}
 	/* attack */
 		float CalcInitAttack(float attriValue){
@@ -506,13 +397,6 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 			sub_2,
 			"clear"
 		))
-			ClearAttribute();
-	}
-	void ClearAttribute(){
-		// levels = new int[3]{0, 0, 0};
-		// attributeValues = new float[3]{0f, 0f, 0f};
-		// thisTotalSpentCoin = 0;
-		// CalcAttriData();
-		thisCalculator.ClearAttribute();
+			thisCalculator.ClearAttribute();
 	}
 }
