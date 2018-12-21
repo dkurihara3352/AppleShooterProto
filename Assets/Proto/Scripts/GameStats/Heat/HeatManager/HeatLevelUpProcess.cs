@@ -15,7 +15,7 @@ namespace AppleShooterProto{
 		}
 		readonly IHeatManager thisHeatManager;
 		readonly float thisTargetMaxHeat;
-		float thisDiffThreshold = .001f;
+		float thisDiffThreshold = .005f;
 		float thisSmoothTime;
 
 		protected override void UpdateProcessImple(float deltaT){
@@ -36,6 +36,7 @@ namespace AppleShooterProto{
 			thisHeatManager.SetMaxHeat(newMaxHeat);
 		}
 		protected override void ExpireImple(){
+			thisHeatManager.SetMaxHeat(thisTargetMaxHeat);
 			thisHeatManager.OnLevelUpExpire();
 		}
 

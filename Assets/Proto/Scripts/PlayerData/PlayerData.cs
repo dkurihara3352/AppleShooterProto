@@ -44,8 +44,8 @@ namespace AppleShooterProto{
 		void Unlock();
 		int GetBowLevel();
 		void SetBowLevel(int level);
-		int[] GetAttributeLevelArray();
-		void SetAttributeLevelArray(int[] array);
+		int[] GetAttributeLevels();
+		void SetAttributeLevels(int[] array);
 	}
 	[System.Serializable]
 	public class BowConfigData: IBowConfigData{
@@ -63,12 +63,12 @@ namespace AppleShooterProto{
 		public void SetBowLevel(int level){
 			thisBowLevel = level;
 		}
-		int[] thisAttributeLevelsArray = new int[3]{0, 0, 0};
-		public int[] GetAttributeLevelArray(){
-			return thisAttributeLevelsArray;
+		int[] thisAttributeLevels = new int[3]{0, 0, 0};
+		public int[] GetAttributeLevels(){
+			return thisAttributeLevels;
 		}
-		public void SetAttributeLevelArray(int[] array){
-			thisAttributeLevelsArray = array;
+		public void SetAttributeLevels(int[] array){
+			thisAttributeLevels = array;
 		}
 	}
 }

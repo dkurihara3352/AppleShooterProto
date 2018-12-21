@@ -27,7 +27,7 @@ namespace AppleShooterProto{
 		public void CalculateShootingData(){
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
 			IBowConfigData bowConfigData = thisPlayerDataManager.GetBowConfigDataArray()[equippedBowIndex];
-			int[] attributeLevelArray = bowConfigData.GetAttributeLevelArray();
+			int[] attributeLevelArray = bowConfigData.GetAttributeLevels();
 			thisMinDrawStrength = CalculateMinDrawStrength(attributeLevelArray[0]);
 			thisMaxDrawStrength = CalculateMaxDrawStrength(attributeLevelArray[0]);
 			thisFireRate = CalculateFireRate(attributeLevelArray[1]);

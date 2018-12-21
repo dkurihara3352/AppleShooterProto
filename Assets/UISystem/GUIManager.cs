@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// using UISystem;
+using AppleShooterProto;
 namespace UISystem{
 	public class GUIManager : MonoBehaviour {
 		void Awake(){
@@ -255,6 +255,7 @@ namespace UISystem{
 			))
 				PlaceElementByIndexUnderCursor();
 		}
+
 		public UIElementGroupScrollerAdaptor groupScrollerAdaptor;
 		void SnapToElementByIndex(){
 			IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
@@ -265,7 +266,28 @@ namespace UISystem{
 			IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
 			groupScroller.PlaceGroupElementUnderCursor(groupElementIndex);
 		}
-		void DrawContextTwo(){}
+		void DrawContextTwo(){
+			if(GUI.Button(
+				topLeftSubRect_1,
+				"update"
+			))
+				UpdateStarsLevel();
+			if(GUI.Button(
+				topLeftSubRect_2,
+				"StartUpdateProcess"
+			))
+				StartStarsUpdateProcess();
+		}
+		public BowStarsPaneAdaptor bowStarsPaneAdaptor;
+		public int targetLevel;
+		void UpdateStarsLevel(){
+			IBowStarsPane thisPane = bowStarsPaneAdaptor.GetBowStarsPane();
+			thisPane.UpdateLevel(targetLevel);
+		}
+		void StartStarsUpdateProcess(){
+			IBowStarsPane thisPane = bowStarsPaneAdaptor.GetBowStarsPane();
+			thisPane.StartUpdateLevelProcess(targetLevel);
+		}
 		void DrawContextThree(){}
 
 		IUIElement _thisUIEToRecalc;

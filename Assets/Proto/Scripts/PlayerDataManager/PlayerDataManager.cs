@@ -56,10 +56,6 @@ namespace AppleShooterProto{
 			bf.Serialize(file, thisPlayerData);
 			thisPlayerData = null;
 			file.Close();
-			// Debug.Log(
-			// 	"file saved: " + 
-			// 	UnityEngine.Application.persistentDataPath
-			// );
 		}
 		IPlayerDataManagerAdaptor thisPlayerDataManagerAdaptor{
 			get{
@@ -85,10 +81,6 @@ namespace AppleShooterProto{
 				throw new System.InvalidOperationException(
 					"no file by the path exists, need to save first"
 				);
-			// Debug.Log(
-			// 	"file loaded: " + 
-			// 	UnityEngine.Application.persistentDataPath
-			// );
 		}
 		public int GetHighScore(){
 			if(thisPlayerData != null)
@@ -120,7 +112,7 @@ namespace AppleShooterProto{
 			for(int i = 0; i < thisBowCount; i ++){
 				IBowConfigData configData = new BowConfigData();
 				int[] attributeLevelArray = new int[]{0, 0, 0};
-				configData.SetAttributeLevelArray(attributeLevelArray);
+				configData.SetAttributeLevels(attributeLevelArray);
 
 				result[i] = configData;
 			}
@@ -147,7 +139,7 @@ namespace AppleShooterProto{
 					result += "\t";
 					result += "unlocked: " + data.IsUnlocked().ToString() + ", ";
 					result += "bowLevel: " + data.GetBowLevel().ToString() + ", ";
-					result += "attLevel: " + DKUtility.DebugHelper.GetIndicesString(data.GetAttributeLevelArray());
+					result += "attLevel: " + DKUtility.DebugHelper.GetIndicesString(data.GetAttributeLevels());
 					result += "\n";
 				}
 
@@ -202,10 +194,10 @@ namespace AppleShooterProto{
 			if(currentLevel < thisBowMaxLevel){
 				int deltaAttributeLevel = GetDeltaScaledLevel(currentLevel + 1);
 
-				int[] newAttributeLevelArray = data.GetAttributeLevelArray();
+				int[] newAttributeLevelArray = data.GetAttributeLevels();
 				newAttributeLevelArray[attributeIndex] += deltaAttributeLevel;
 
-				data.SetAttributeLevelArray(newAttributeLevelArray);
+				data.SetAttributeLevels(newAttributeLevelArray);
 				data.SetBowLevel(currentLevel + 1);
 			}
 		}

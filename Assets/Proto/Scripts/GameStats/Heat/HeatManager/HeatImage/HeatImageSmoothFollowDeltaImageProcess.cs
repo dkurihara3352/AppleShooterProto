@@ -18,7 +18,9 @@ namespace AppleShooterProto{
 		float thisInitHeat;
 		float thisFollowSmoothTime;
 		float thisDiffThreshold = .005f;
+		float thisElapsedTime = 0f;
 		protected override void UpdateProcessImple(float deltaT){
+			
 			float currentImageHeat = thisHeatImage.GetFollowImageHeat();
 			float velocity = 0f;
 			float newImageHeat = Mathf.SmoothDamp(
@@ -28,6 +30,7 @@ namespace AppleShooterProto{
 				thisFollowSmoothTime,
 				10f
 			);
+			
 			thisHeatImage.SetFollowImageHeat(newImageHeat);
 			float diff = thisTargetHeat - currentImageHeat;
 			if(diff <= thisDiffThreshold)
