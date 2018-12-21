@@ -46,10 +46,7 @@ namespace UISystem{
 
 			}
 		}
-		// public TestUIManagerAdaptor testUIManagerAdaptor;
-		// IUIManager thisUIM{
-		// 	get{return testUIManagerAdaptor.GetUIManager();}
-		// }
+
 		protected Rect CreateGUIRect(Vector2 normalizedPosition, Vector2 normalizedSize){
 			MakeSureValuesAreInRange(normalizedPosition);
 			MakeSureValuesAreInRange(normalizedSize);
@@ -195,9 +192,37 @@ namespace UISystem{
 				return adaptorManager.GetUIManager();
 			}
 		}
-
+		int thisContext = 0;
+		int thisContextCount = 4;
 		void DrawTopLeft(){
-			GUI.Label(topLeftSubRect_0, "Activation");
+			string[] texts = new string[]{
+				0.ToString(),
+				1.ToString(),
+				2.ToString(),
+				3.ToString()
+			};
+			thisContext = GUI.SelectionGrid(
+				topLeftSubRect_0, thisContext, texts, thisContextCount
+			);
+			switch(thisContext){
+				case 0:
+					DrawContextZero();
+					break;
+				case 1:
+					DrawContextOne();
+					break;
+				case 2:
+					DrawContextTwo();
+					break;
+				case 3:
+					DrawContextThree();
+					break;
+				default:
+					break;
+			}
+			
+		}
+		void DrawContextZero(){
 			if(GUI.Button(topLeftSubRect_1, "GetReadyForA"))
 				SetUpMonoBehaviourAdaptors();
 			if(GUI.Button(topLeftSubRect_2, "Activate")){
@@ -212,13 +237,37 @@ namespace UISystem{
 			if(GUI.Button(topLeftSubRect_6, "RecalculateUIRect"))
 				uiAdaptorToRecalculate.RecalculateRect();
 		}
-		// IUIElement thisUIEToRecalc{
-		// 	get{
-		// 		if(_thisUIEToRecalc == null)
-		// 			_thisUIEToRecalc = GetUIElementToRecalc();
-		// 		return _thisUIEToRecalc;
-		// 	}
-		// }
+		public int groupElementIndex = 0;
+		void DrawContextOne(){
+			GUI.Label(
+				topLeftSubRect_1,
+				"index: " + 
+				groupElementIndex.ToString()
+			);
+			if(GUI.Button(
+				topLeftSubRect_2,
+				"snap"
+			))
+				SnapToElementByIndex();
+			if(GUI.Button(
+				topLeftSubRect_3,
+				"place"
+			))
+				PlaceElementByIndexUnderCursor();
+		}
+		public UIElementGroupScrollerAdaptor groupScrollerAdaptor;
+		void SnapToElementByIndex(){
+			IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
+			
+			groupScroller.SnapToGroupElement(groupElementIndex);
+		}
+		void PlaceElementByIndexUnderCursor(){
+			IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
+			groupScroller.PlaceGroupElementUnderCursor(groupElementIndex);
+		}
+		void DrawContextTwo(){}
+		void DrawContextThree(){}
+
 		IUIElement _thisUIEToRecalc;
 		public UIAdaptor uiAdaptorToRecalculate;
 		IUIElement GetUIElementToRecalc(){

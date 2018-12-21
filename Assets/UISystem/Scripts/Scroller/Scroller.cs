@@ -24,9 +24,11 @@ namespace UISystem{
 		void ResetDrag();
 		void ClearTouchPositionCache();
 		Vector2 GetVelocity();
-		void PauseRunningMotorProcessRecursivelyUp();
+		void StopRunningMotorProcessRecursivelyUp();
 		void CheckAndPerformDynamicBoundarySnapOnAxis(float deltaPosOnAxis, float velocity, int dimension);
 		void CheckAndPerformStaticBoundarySnap();
+
+
 	}
 	public enum ScrollerAxis{
 		Horizontal, Vertical, Both
@@ -381,8 +383,15 @@ namespace UISystem{
 				return GetNormalizedCursoredPositionOnAxis(prospectiveElementLocalPosOnAxis, dimension);
 			}
 			protected void PlaceScrollerElement(Vector2 targetCursorValue){
-				Vector2 newLocalPos = CalcLocalPositionFromNormalizedCursoredPosition(targetCursorValue);
-				thisScrollerElement.SetLocalPosition(newLocalPos);
+				for(int i = 0; i < 2; i ++){
+					PlaceScrollerElement(targetCursorValue[i], i);
+				}
+			}
+			protected void PlaceScrollerElement(float targetCursorValueOnAxis, int dimension){
+				float localPosition = CalcLocalPositionFromNormalizedCursoredPositionOnAxis(targetCursorValueOnAxis, dimension);
+				Vector2 newLocalPosition = thisScrollerElement.GetLocalPosition();
+				newLocalPosition[dimension] = localPosition;
+				SetScrollerElementLocalPosition(newLocalPosition);
 			}
 			protected Vector2 CalcLocalPositionFromNormalizedCursoredPosition(Vector2 normalizedCursoredPosition){
 				Vector2 result = new Vector2();
@@ -649,7 +658,7 @@ namespace UISystem{
 		/* motor process & OnTouch */
 			protected IScrollerElementMotorProcess[] thisRunningScrollerMotorProcess;
 			public void SwitchRunningElementMotorProcess(IScrollerElementMotorProcess process, int dimension){
-				PauseRunningElementMotorProcess(dimension);
+				StopRunningElementMotorProcess(dimension);
 				thisRunningScrollerMotorProcess[dimension] = process;
 			}
 			Vector2 thisVelocity;
@@ -707,19 +716,20 @@ namespace UISystem{
 			protected override void OnTouchImple(int touchCount){
 				thisUIManager.SetInputHandlingScroller(this, UIManager.InputName.Touch);
 			}
-			public void PauseRunningMotorProcessRecursivelyUp(){
-				PauseAllRunningElementMotorProcess();
+			public void StopRunningMotorProcessRecursivelyUp(){
+				StopAllRunningElementMotorProcess();
 				if(thisProximateParentScroller != null)
-					thisProximateParentScroller.PauseRunningMotorProcessRecursivelyUp();
+					thisProximateParentScroller.StopRunningMotorProcessRecursivelyUp();
 			}
-			void PauseRunningElementMotorProcess(int dimension){
+			void StopRunningElementMotorProcess(int dimension){
 				if(thisRunningScrollerMotorProcess[dimension] != null){
 					thisRunningScrollerMotorProcess[dimension].Stop();
 				}
+				thisRunningScrollerMotorProcess[dimension] = null;
 			}
-			void PauseAllRunningElementMotorProcess(){
+			protected void StopAllRunningElementMotorProcess(){
 				for(int i = 0; i < 2; i ++)
-					PauseRunningElementMotorProcess(i);
+					StopRunningElementMotorProcess(i);
 			}
 
 

@@ -227,7 +227,7 @@ namespace UISystem{
 					if(this.IsActivated() && thisIsEnabledInput){
 						IScroller scrollerToStartPauseMotorProcess = GetTargetUIEOrItsProximateParentAsScroller(this);
 						if(scrollerToStartPauseMotorProcess != null)
-							scrollerToStartPauseMotorProcess.PauseRunningMotorProcessRecursivelyUp();
+							scrollerToStartPauseMotorProcess.StopRunningMotorProcessRecursivelyUp();
 						OnTouchImple(touchCount);
 					}
 					else

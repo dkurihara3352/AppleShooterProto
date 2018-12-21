@@ -6,7 +6,23 @@ namespace UISystem{
 	public interface IUIElementGroupScroller: IScroller{
 		IUIElement[] GetCursoredElements();
 		int GetGroupElementIndex(IUIElement groupElement);
-		// void UpdateGroupElementLengthAndPadding();
+		void SnapToGroupElement(
+			IUIElement groupElement,
+			float initialVelocity,
+			int dimension
+		);
+		void SnapToGroupElement(
+			IUIElement groupElement,
+			int dimension
+		);
+		void SnapToGroupElement(
+			IUIElement groupElement
+		);
+		void SnapToGroupElement(
+			int index
+		);
+		void PlaceGroupElementUnderCursor(IUIElement groupElement);
+		void PlaceGroupElementUnderCursor(int index);
 	}
 	public class UIElementGroupScroller : AbsScroller, IUIElementGroupScroller{
 		public UIElementGroupScroller(
@@ -98,8 +114,6 @@ namespace UISystem{
 						GetRectSize().ToString()
 					);
 					throw new System.InvalidOperationException("cursorLength cannot exceed this rect length. provide lesser cursor size");
-					// thisUIElementGroup.UpdateGroupElementLength();
-					// UpdateGroupElementLengthAndPadding();
 				}
 			}
 			protected override void OnScrollerElementDisplace(float normalizedCursoredPositionOnAxis, int dimension){
@@ -124,14 +138,6 @@ namespace UISystem{
 						thisScrollerAxis
 					);
 			}
-			// protected override void SetUpScrollerElementRect(){
-			// 	base.SetUpScrollerElementRect();
-			// 	UpdateGroupElementLengthAndPadding();
-			// }
-			// public void UpdateGroupElementLengthAndPadding(){
-			// 	thisGroupElementSize = thisUIElementGroup.GetGroupElementSize();
-			// 	thisPadding = thisUIElementGroup.GetPadding();
-			// }
 		/* Initially Cursored Element */
 			readonly int thisInitiallyCursoredGroupElementIndex;
 			protected override Vector2 GetInitialNormalizedCursoredPosition(){
@@ -189,10 +195,41 @@ namespace UISystem{
 			public IUIElement[] GetCursoredElements(){
 				return thisCursoredElements;
 			}
-			protected void SnapToGroupElement(IUIElement groupElement, float initialVelocity, int dimension){
+			public void SnapToGroupElement(int index){
+				IUIElement groupElement = thisGroupElements[index];
+				SnapToGroupElement(groupElement);
+			}
+			public void SnapToGroupElement(IUIElement groupElement){
+				for(int i = 0; i < 2; i ++)
+					SnapToGroupElement(groupElement, i);
+			}
+			public void SnapToGroupElement(IUIElement groupElement, int dimension){
+				float velocity = GetVelocity()[dimension];
+				SnapToGroupElement(groupElement, velocity, dimension);
+			}
+			public void SnapToGroupElement(IUIElement groupElement, float initialVelocity, int dimension){
 				IUIElement targetGroupElement = GetCorrectedGroupElementCorrectedForBounds(groupElement);
 				float targetNormalizedCursoredPosition = GetNormalizedCursoredPositionFromGroupElementToCursor(targetGroupElement, dimension);
 				SnapTo(targetNormalizedCursoredPosition, initialVelocity, dimension);
+			}
+			public void PlaceGroupElementUnderCursor(IUIElement groupElement){
+				for(int i = 0; i < 2; i ++)
+					PlaceGroupElementUnderCursor(groupElement, i);
+			}
+			public void PlaceGroupElementUnderCursor(
+				IUIElement groupElement,
+				int dimension
+			){
+				StopAllRunningElementMotorProcess();
+				IUIElement targetGroupElement = GetCorrectedGroupElementCorrectedForBounds(groupElement);
+				float targetNormalizedCursoredPosition = GetNormalizedCursoredPositionFromGroupElementToCursor(targetGroupElement, dimension);
+				// PlaceScrollerElement(targetNormalizedCursoredPosition);
+				PlaceScrollerElement(targetNormalizedCursoredPosition, dimension);
+				
+			}
+			public void PlaceGroupElementUnderCursor(int index){
+				IUIElement groupElement = thisGroupElements[index];
+				PlaceGroupElementUnderCursor(groupElement);
 			}
 			IUIElement GetCorrectedGroupElementCorrectedForBounds(IUIElement source){
 				int sourceIndex = thisUIElementGroup.GetGroupElementIndex(source);
@@ -414,8 +451,6 @@ namespace UISystem{
 					if(cursoredElement != null)
 						cursoredElement.BecomeFocusedInScrollerRecursively();
 			}
-
-
 		/* Const */
 			public new interface IConstArg: AbsScroller.IConstArg{
 				int[] cursorSize{get;}
