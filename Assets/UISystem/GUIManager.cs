@@ -237,57 +237,97 @@ namespace UISystem{
 			if(GUI.Button(topLeftSubRect_6, "RecalculateUIRect"))
 				uiAdaptorToRecalculate.RecalculateRect();
 		}
-		public int groupElementIndex = 0;
-		void DrawContextOne(){
-			GUI.Label(
-				topLeftSubRect_1,
-				"index: " + 
-				groupElementIndex.ToString()
-			);
-			if(GUI.Button(
-				topLeftSubRect_2,
-				"snap"
-			))
-				SnapToElementByIndex();
-			if(GUI.Button(
-				topLeftSubRect_3,
-				"place"
-			))
-				PlaceElementByIndexUnderCursor();
-		}
+		/* Context 1 */
+			public int groupElementIndex = 0;
+			void DrawContextOne(){
+				GUI.Label(
+					topLeftSubRect_1,
+					"index: " + 
+					groupElementIndex.ToString()
+				);
+				if(GUI.Button(
+					topLeftSubRect_2,
+					"snap"
+				))
+					SnapToElementByIndex();
+				if(GUI.Button(
+					topLeftSubRect_3,
+					"place"
+				))
+					PlaceElementByIndexUnderCursor();
+			}
 
-		public UIElementGroupScrollerAdaptor groupScrollerAdaptor;
-		void SnapToElementByIndex(){
-			IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
-			
-			groupScroller.SnapToGroupElement(groupElementIndex);
-		}
-		void PlaceElementByIndexUnderCursor(){
-			IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
-			groupScroller.PlaceGroupElementUnderCursor(groupElementIndex);
-		}
-		void DrawContextTwo(){
-			if(GUI.Button(
-				topLeftSubRect_1,
-				"update"
-			))
-				UpdateStarsLevel();
-			if(GUI.Button(
-				topLeftSubRect_2,
-				"StartUpdateProcess"
-			))
-				StartStarsUpdateProcess();
-		}
-		public BowStarsPaneAdaptor bowStarsPaneAdaptor;
-		public int targetLevel;
-		void UpdateStarsLevel(){
-			IBowStarsPane thisPane = bowStarsPaneAdaptor.GetBowStarsPane();
-			thisPane.UpdateLevel(targetLevel);
-		}
-		void StartStarsUpdateProcess(){
-			IBowStarsPane thisPane = bowStarsPaneAdaptor.GetBowStarsPane();
-			thisPane.StartUpdateLevelProcess(targetLevel);
-		}
+			public UIElementGroupScrollerAdaptor groupScrollerAdaptor;
+			void SnapToElementByIndex(){
+				IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
+				
+				groupScroller.SnapToGroupElement(groupElementIndex);
+			}
+			void PlaceElementByIndexUnderCursor(){
+				IUIElementGroupScroller groupScroller = (IUIElementGroupScroller)groupScrollerAdaptor.GetUIElement();
+				groupScroller.PlaceGroupElementUnderCursor(groupElementIndex);
+			}
+		/* Context 2 */
+			void DrawContextTwo(){
+				if(GUI.Button(
+					topLeftSubRect_1,
+					"update"
+				))
+					UpdateStarsLevel();
+				if(GUI.Button(
+					topLeftSubRect_2,
+					"StartUpdateProcess"
+				))
+					StartStarsUpdateProcess();
+				if(GUI.Button(
+					topLeftSubRect_3,
+					"Show"
+				))
+					ShowEquippedText();
+				if(GUI.Button(
+					topLeftSubRect_4,
+					"Hide"
+				))
+					HideEquippedText();
+				if(GUI.Button(
+					topLeftSubRect_5,
+					"StartShowProcess"
+				))
+					StartEqpTextShowProcess();
+				if(GUI.Button(
+					topLeftSubRect_6,
+					"StartHideProcess"
+				))
+					StartEqpTextHideProcess();
+			}
+			public BowStarsPaneAdaptor bowStarsPaneAdaptor;
+			public int targetLevel;
+			void UpdateStarsLevel(){
+				IBowStarsPane thisPane = bowStarsPaneAdaptor.GetBowStarsPane();
+				thisPane.UpdateLevel(targetLevel);
+			}
+			void StartStarsUpdateProcess(){
+				IBowStarsPane thisPane = bowStarsPaneAdaptor.GetBowStarsPane();
+				thisPane.StartUpdateLevelProcess(targetLevel);
+			}
+			public BowEquippedTextPaneAdaptor textPaneAdaptor;
+			void ShowEquippedText(){
+				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
+				textPane.ShowEquippedText();
+			}
+			void HideEquippedText(){
+				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
+				textPane.HideEquippedText();
+			}
+			void StartEqpTextShowProcess(){
+				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
+				textPane.StartShowTextProcess();
+			}
+			void StartEqpTextHideProcess(){
+				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
+				textPane.StartHideTextProcess();
+			}
+		/* Context 3 */
 		void DrawContextThree(){}
 
 		IUIElement _thisUIEToRecalc;

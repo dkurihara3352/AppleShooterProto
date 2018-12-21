@@ -31,6 +31,7 @@ namespace AppleShooterProto{
 			}
 		}
 		public void UpdateLevel(int level){
+			thisUpdateBowLevelProcessSuite.Stop();
 			float targetFill = CalcFill(level);
 			thisBowLevelPaneAdaptor.SetFill(targetFill);
 		}

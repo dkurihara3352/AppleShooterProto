@@ -237,8 +237,9 @@ namespace UISystem{
 					PassOnTouchUpward(touchCount);
 				}
 				void PassOnTouchUpward(int touchCount){
-					if(thisParentUIE != null)
+					if(thisParentUIE != null){
 						thisParentUIE.OnTouch(touchCount);
+					}
 				}
 			/* delayed touch */
 				public void OnDelayedTouch(){

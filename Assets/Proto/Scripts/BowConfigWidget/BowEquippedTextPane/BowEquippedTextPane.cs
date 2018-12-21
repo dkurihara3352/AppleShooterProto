@@ -35,10 +35,12 @@ namespace AppleShooterProto{
 			}
 		}
 		public void ShowEquippedText(){
+			StopAllProcess();
 			thisBowEquippedTextPaneAdaptor.SetAlpha(1f);
 			thisBowEquippedTextPaneAdaptor.SetScale(1f);
 		}
 		public void HideEquippedText(){
+			StopAllProcess();
 			thisBowEquippedTextPaneAdaptor.SetAlpha(0f);
 		}
 		public void StartShowTextProcess(){
@@ -80,6 +82,10 @@ namespace AppleShooterProto{
 				ShowEquippedText();
 			else if(suite == thisHideProcessSuite)
 				HideEquippedText();
+		}
+		void StopAllProcess(){
+			thisShowProcessSuite.Stop();
+			thisHideProcessSuite.Stop();
 		}
 
 	}
