@@ -33,6 +33,7 @@ namespace AppleShooterProto{
 			float normalizedCursoredPositionOnAxis, 
 			int dimension
 		){
+			if(thisInputManager != null)
 			thisInputManager.OnScrollerElementDisplace(
 				normalizedCursoredPositionOnAxis,
 				dimension

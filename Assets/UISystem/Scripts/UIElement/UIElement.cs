@@ -400,8 +400,11 @@ namespace UISystem{
 				}
 			/* Swipe */
 				public void OnSwipe( ICustomEventData eventData){
-					if(this.IsActivated() && thisIsEnabledInput)
+					if(this.IsActivated() && thisIsEnabledInput){
+						if(!(this is IScroller))
+							CheckAndPerformStaticBoundarySnapFrom(this);
 						OnSwipeImple(eventData);
+					}
 					else
 						PassOnSwipeUpward(eventData);
 				}
