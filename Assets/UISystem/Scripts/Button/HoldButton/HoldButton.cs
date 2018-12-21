@@ -59,7 +59,7 @@ namespace UISystem{
 			if(suite == thisHoldProcessSuite){
 				if(!thisHoldIndicatorImage.IsActivated()){
 					if(normalizedTime > thisIndicatorActivationDelayNormalizedTime){
-						thisHoldIndicatorImage.ActivateRecursively(false);
+						thisHoldIndicatorImage.ActivateThruBackdoor(false);
 						thisHoldIndicatorImage.EvaluateScrollerFocusRecursively();
 					}
 				}else
@@ -74,12 +74,9 @@ namespace UISystem{
 		public void OnProcessExpire(IProcessSuite suite){
 			if(suite == thisHoldProcessSuite){
 				// thisHoldIndicatorImage.SetHoldValue(1f);
-				thisHoldIndicatorImage.DeactivateRecursively(false);
+				thisHoldIndicatorImage.DeactivateRecursively(true);
 				this.OnHoldButtonExecute();
 			}
-		}
-		public override void ActivateRecursively(bool instantly){
-			ActivateSelf(instantly);
 		}
 	}
 }
