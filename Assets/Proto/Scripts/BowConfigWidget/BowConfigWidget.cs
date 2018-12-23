@@ -9,7 +9,11 @@ namespace AppleShooterProto{
 		void SetBowPanelGroupScroller(IUIElementGroupScroller scroller);
 		void SetBowPanels(IBowPanel[] panels);
 		void SetPlayerDataManager(IPlayerDataManager manager);
+		void SetResourcePanel(IResourcePanel resourcePanel);
+
+
 		void TrySetEquippedBow(int index);
+		void IncreaseAttributeLevel(int attributeIndex);
 	}
 	public class BowConfigWidget: AppleShooterSceneObject, IBowConfigWidget{
 		public BowConfigWidget(IConstArg arg): base(arg){
@@ -42,8 +46,13 @@ namespace AppleShooterProto{
 		public void ActivateImple(){
 			LoadAndFeedAllPanelsWithPlayerData();
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
-			// thisBowPanelScroller.SnapToGroupElement(equippedBowIndex);
 			thisBowPanelScroller.PlaceGroupElementUnderCursor(equippedBowIndex);
+			if(!thisResourcePanel.IsShown())//temp
+					thisResourcePanel.Show();
+		}
+		IResourcePanel thisResourcePanel;
+		public void SetResourcePanel(IResourcePanel panel){
+			thisResourcePanel = panel;
 		}
 		void LoadAndFeedAllPanelsWithPlayerData(){
 			
@@ -106,6 +115,28 @@ namespace AppleShooterProto{
 					panelToUnequip.SetEquippedness(false, false);
 				}
 			}
+		}
+		public void IncreaseAttributeLevel(int attributeIndex){
+			if(!thisPlayerDataManager.PlayerDataIsLoaded())
+				thisPlayerDataManager.Load();
+
+			thisPlayerDataManager.IncreaseAttributeLevel(attributeIndex);
+
+			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
+			IBowPanel panel = thisBowPanels[equippedBowIndex];
+
+			IBowConfigData configData = thisPlayerDataManager.GetBowConfigDataArray()[equippedBowIndex];
+			int bowLevel = configData.GetBowLevel();
+			panel.SetBowLevel(bowLevel, false);
+
+			int attributeLevel = configData.GetAttributeLevels()[attributeIndex];
+			panel.SetAttributeLevel(
+				attributeIndex,
+				attributeLevel, 
+				false
+			);
+
+			thisPlayerDataManager.Save();
 		}
 	}
 }

@@ -11,6 +11,10 @@ namespace AppleShooterProto{
 		void SetEquippedBowIndex(int index);
 		IBowConfigData[] GetBowConfigDataArray();
 		void SetBowConfigDataArray(IBowConfigData[] array);
+
+
+		int GetCoins();
+		void SetCoins(int coins);
 	}
 	[System.Serializable]
 	public class PlayerData : IPlayerData {
@@ -36,6 +40,14 @@ namespace AppleShooterProto{
 		}
 		public void SetBowConfigDataArray(IBowConfigData[] array){
 			thisBowConfigDataArray = array;
+		}
+
+		int thisCoins;
+		public int GetCoins(){
+			return thisCoins;
+		}
+		public void SetCoins(int coins){
+			thisCoins = coins;
 		}
 	}
 

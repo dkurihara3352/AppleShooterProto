@@ -31,6 +31,7 @@ namespace AppleShooterProto{
 			return resultList.ToArray();
 		}
 		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+		public ResourcePanelAdaptor resourcePanelAdaptor;
 		public override void SetUpReference(){
 			IUIElementGroupScroller bowPanelScroller = (IUIElementGroupScroller)bowPanelGroupScrollerAdaptor.GetUIElement();
 			thisWidget.SetBowPanelGroupScroller(bowPanelScroller);
@@ -42,6 +43,9 @@ namespace AppleShooterProto{
 
 			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 			thisWidget.SetPlayerDataManager(playerDataManager);
+
+			IResourcePanel resourcePanel = resourcePanelAdaptor.GetResourcePanel();
+			thisWidget.SetResourcePanel(resourcePanel);
 		}
 	}
 }

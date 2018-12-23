@@ -484,7 +484,7 @@ namespace UISystem{
 				BecomeUnselectable();
 			}
 			public virtual void BecomeFocusedInScrollerRecursively(){
-				OnScrollerDefocus();
+				OnScrollerFocus();
 				foreach(IUIElement child in GetChildUIElements())
 					child.BecomeFocusedInScrollerRecursively();
 			}

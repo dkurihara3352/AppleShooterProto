@@ -40,17 +40,17 @@ namespace AppleShooterProto{
 			mbAdaptorManager.SetUpAdaptorReference();
 			mbAdaptorManager.FinalizeSetUp();
 		}
-		void SetUpAllMonoBehaviourAdaptors(){
-		}
-		void SetUpAdaptorReference(){
-		}
-		void FinalizeMBAdaptorSetUp(){
-		}
-		void FinalizeUISystemSetUp(){
-			ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
-			IPlayerInputManager inputManager = playerInputManagerAdaptor.GetInputManager();
-			scroller.SetPlayerInputManager(inputManager);
-		}
+		// void SetUpAllMonoBehaviourAdaptors(){
+		// }
+		// void SetUpAdaptorReference(){
+		// }
+		// void FinalizeMBAdaptorSetUp(){
+		// }
+		// void FinalizeUISystemSetUp(){
+		// 	ICoreGameplayInputScroller scroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
+		// 	IPlayerInputManager inputManager = playerInputManagerAdaptor.GetInputManager();
+		// 	scroller.SetPlayerInputManager(inputManager);
+		// }
 		IHeatManager thisHeatManager;
 		public HeatManagerAdaptor heatManagerAdaptor;
 		IPlayerCharacterWaypointsFollower thisPlayerCharacterWaypointsFollower;

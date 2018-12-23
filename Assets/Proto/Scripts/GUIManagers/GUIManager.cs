@@ -150,6 +150,19 @@ namespace AppleShooterProto{
 						"End"
 					))
 						gameManager.StartEndGameplaySequence();
+					if(GUI.Button(
+						sTL_7,
+						"DoSomething"
+					))
+						DoSomething();
+				}
+				public ResourcePanelAdaptor resourcePanelAdaptor;
+				void DoSomething(){
+					IResourcePanel resourcePanel = resourcePanelAdaptor.GetResourcePanel();
+					if(resourcePanel.IsShown())
+						resourcePanel.Hide();
+					else
+						resourcePanel.Show();
 				}
 			/* Context 1 */
 				void DrawContextOne(){
