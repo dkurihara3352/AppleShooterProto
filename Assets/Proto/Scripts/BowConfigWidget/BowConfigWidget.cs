@@ -9,9 +9,9 @@ namespace AppleShooterProto{
 		void SetBowPanelGroupScroller(IUIElementGroupScroller scroller);
 		void SetBowPanels(IBowPanel[] panels);
 		void SetPlayerDataManager(IPlayerDataManager manager);
+		void SetBowDataCalculator(IBowDataCalculator calculator);
 		void SetResourcePanel(IResourcePanel resourcePanel);
 		void SetCurrencyPane(ICurrencyPane pane);
-
 
 		void TrySetEquippedBow(int index);
 		void IncreaseAttributeLevel(int attributeIndex);
@@ -40,10 +40,16 @@ namespace AppleShooterProto{
 		public void SetPlayerDataManager(IPlayerDataManager manager){
 			thisPlayerDataManager = manager;
 		}
+		IBowDataCalculator thisCalculator;
+		public void SetBowDataCalculator(IBowDataCalculator calculator){
+			thisCalculator = calculator;
+		}
 		IBowPanel[] thisBowPanels;
 		public void SetBowPanels(IBowPanel[] panels){
 			thisBowPanels = panels;
 		}
+		
+		
 		public void ActivateImple(){
 			LoadAndFeedAllPanelsWithPlayerData();
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
@@ -72,37 +78,95 @@ namespace AppleShooterProto{
 			IBowConfigData[] configDataArray = thisPlayerDataManager.GetBowConfigDataArray();
 
 			foreach(IBowPanel bowPanel in thisBowPanels){
-				int index = bowPanel.GetIndex();
-				IBowConfigData bowConfigData = configDataArray[index];
+				int bowIndex = bowPanel.GetIndex();
+				IBowConfigData bowConfigData = configDataArray[bowIndex];
 				if(!bowConfigData.IsUnlocked()){
 					bowPanel.Lock(instantly: true);
 				}else{
 					bowPanel.Unlock(instantly: true);
 				}
-				if(index == equippedBowIndex)
+				if(bowIndex == equippedBowIndex)
 					bowPanel.SetEquippedness(isEquipped: true, instantly: true);
 				else
 					bowPanel.SetEquippedness(isEquipped: false, instantly: true);
 				
 				int bowLevel = bowConfigData.GetBowLevel();
 				bowPanel.SetBowLevel(bowLevel, instantly: false);
-
+				
+				UpdateAttributePanel(bowPanel, bowConfigData);
+			}
+		}
+		void UpdateAttributePanel(
+			IBowPanel bowPanel,
+			IBowConfigData bowConfigData
+		){
 				int[] attributeLevels = bowConfigData.GetAttributeLevels();
+				int bowIndex = bowPanel.GetIndex();
 				int attributeIndex = 0;
-				foreach(int attributeLevel in attributeLevels)
+			
+				foreach(int attributeLevel in attributeLevels){
 					bowPanel.SetAttributeLevel(
-						attributeIndex++, 
+						attributeIndex, 
 						attributeLevel,
 						true
 					);
+					IBowAttributeLevelUpHoldButton levelUpButton = bowPanel.GetBowAttributeLevelUpHoldButtons()[attributeIndex];
+					if(attributeLevel == thisPlayerDataManager.GetMaxAttributeLevel())
+						levelUpButton.MaxOut();
+					else{
+
+						int nextLevel = attributeLevel + 1;
+						int nextCost = CalculateCost(
+							bowIndex,
+							nextLevel
+						);
+						levelUpButton.SetNextCost(nextCost);
+						
+						int currency = thisPlayerDataManager.GetCurrency();
+						if(currency < nextCost)
+							levelUpButton.InvalidateForShortMoney();
+						else
+							levelUpButton.Validate();
+					}
+					attributeIndex += 1;
+				}
+				int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
 				Debug.Log(
 					"BowPanel " + bowPanel.GetIndex().ToString() + ", " +
 					"unlocked: " + bowConfigData.IsUnlocked().ToString() + ", " +
-					"equipped: " + (index == equippedBowIndex).ToString() + ", " +
+					"equipped: " + (bowIndex == equippedBowIndex).ToString() + ", " +
 					"bowLevel: " + bowConfigData.GetBowLevel().ToString() + ", " +
 					"attLevels: " + DKUtility.DebugHelper.GetIndicesString(attributeLevels)
 				);
+		}
+		int CalculateCost(
+			int bowIndex,
+			int level
+		){
+			IBowConfigData bowConfigData = thisPlayerDataManager.GetBowConfigDataArray()[bowIndex];
+			int[] levels = bowConfigData.GetAttributeLevels();
+			float coinDepreValue = CalculateCoinDepreciationValue(
+				levels,
+				thisCalculator
+			);
+			int cost = thisCalculator.CalcCost(
+				level,
+				coinDepreValue
+			);
+			return cost;
+		}
+		float CalculateCoinDepreciationValue(
+			int[] levels,
+			IBowDataCalculator calculator
+		){
+			float totalAttributeValues = 0f;
+			foreach(int level in levels){
+				float attributeValue = calculator.GetAttributeValue(level);
+				totalAttributeValues += attributeValue;
 			}
+			return calculator.CalcCoinDepreciationValue(
+				totalAttributeValues
+			);
 		}
 		public void DeactivateImple(){
 			return;
@@ -129,23 +193,30 @@ namespace AppleShooterProto{
 		public void IncreaseAttributeLevel(int attributeIndex){
 			if(!thisPlayerDataManager.PlayerDataIsLoaded())
 				thisPlayerDataManager.Load();
-
+			
 			thisPlayerDataManager.IncreaseAttributeLevel(attributeIndex);
 
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
 			IBowPanel panel = thisBowPanels[equippedBowIndex];
-
-			IBowConfigData configData = thisPlayerDataManager.GetBowConfigDataArray()[equippedBowIndex];
-			int bowLevel = configData.GetBowLevel();
+			IBowConfigData[] dataArray = thisPlayerDataManager.GetBowConfigDataArray();
+			IBowConfigData data = dataArray[equippedBowIndex];
+			int bowLevel = data.GetBowLevel();
 			panel.SetBowLevel(bowLevel, false);
+			
+			IBowAttributeLevelUpHoldButton button = panel.GetBowAttributeLevelUpHoldButtons()[attributeIndex];
 
-			int attributeLevel = configData.GetAttributeLevels()[attributeIndex];
-			panel.SetAttributeLevel(
-				attributeIndex,
-				attributeLevel, 
-				false
-			);
+			int currency = thisPlayerDataManager.GetCurrency();
+			int newCurrency = currency - button.GetCost();
+			thisPlayerDataManager.SetCurrency(newCurrency);
+			thisCurrencyPane.StartCurrencyUpdateProcess(newCurrency);
 
+			foreach(IBowPanel bowPanel in thisBowPanels){
+				IBowConfigData configData = dataArray[bowPanel.GetIndex()];
+				UpdateAttributePanel(
+					bowPanel,
+					configData
+				);
+			}
 			thisPlayerDataManager.Save();
 		}
 	}

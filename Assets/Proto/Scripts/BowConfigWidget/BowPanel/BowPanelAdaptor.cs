@@ -35,6 +35,14 @@ namespace AppleShooterProto{
 		public BowEquippedTextPaneAdaptor bowEquippedTextPaneAdaptor;
 		public BowStarsPaneAdaptor bowLevelPaneAdaptor;
 		public BowStarsPaneAdaptor[] bowAttributeLevelPaneAdaptors;
+		public BowAttributeLevelUpHoldButtonAdaptor[] bowAttributeLevelUpHoldButtonAdaptors;
+		IBowAttributeLevelUpHoldButton[] CollectButtons(){
+			List<IBowAttributeLevelUpHoldButton> resultList = new List<IBowAttributeLevelUpHoldButton>();
+			foreach(IBowAttributeLevelUpHoldButtonAdaptor adaptor in bowAttributeLevelUpHoldButtonAdaptors)
+				resultList.Add(adaptor.GetBowAttributeLevelUpHoldButton());
+			return resultList.ToArray();
+
+		}
 		public override void SetUpReference(){
 			base.SetUpReference();
 			IBowLockPane bowLockPane = bowLockPaneAdaptor.GetBowLockPane();
@@ -48,6 +56,9 @@ namespace AppleShooterProto{
 
 			IBowStarsPane[] bowAttributeLevelPanes = CollectBowAttributeLevelPanes();
 			thisBowPanel.SetBowAttributeLevelPanes(bowAttributeLevelPanes);
+
+			IBowAttributeLevelUpHoldButton[] buttons = CollectButtons();
+			thisBowPanel.SetBowAttributeLevelUpHoldButtons(buttons);
 		}
 		IBowStarsPane[] CollectBowAttributeLevelPanes(){
 			List<IBowStarsPane> resultList = new List<IBowStarsPane>();

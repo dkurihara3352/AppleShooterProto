@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
-
+using UnityEngine.UI;
 namespace AppleShooterProto{
 	public interface IBowAttributeLevelUpHoldButtonAdaptor: IHoldButtonAdaptor{
 		IBowAttributeLevelUpHoldButton GetBowAttributeLevelUpHoldButton();
 		int GetAttributeIndex();
+		void SetLabelText(string text);
+		void SetCostText(string text);
 	}
 	public class BowAttributeLevelUpHoldButtonAdaptor: HoldButtonAdaptor, IBowAttributeLevelUpHoldButtonAdaptor{
 		protected override IUIElement CreateUIElement(){
@@ -33,6 +35,14 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			IBowConfigWidget widget = bowConfigWidgetAdaptor.GetBowConfigWidget();
 			thisButton.SetBowConfigWidget(widget);
+		}
+		public Text labelText;
+		public void SetLabelText(string text){
+			labelText.text = text;
+		}
+		public Text costText;
+		public void SetCostText(string text){
+			costText.text = text;
 		}
 	}
 }

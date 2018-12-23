@@ -206,11 +206,11 @@ namespace UISystem{
 				return thisSelectabilityEngine.IsSelected();
 			}
 			/* imple */
-				public void BecomeSelectableImple(){
+				public virtual void BecomeSelectableImple(){
 					if(thisUIManager.ShowsNormal())
 						thisImage.TurnToSelectableBrightness();
 				}
-				public void BecomeUnselectableImple(){
+				public virtual void BecomeUnselectableImple(){
 					if(thisUIManager.ShowsNormal())
 						thisImage.TurnToUnselectableBrightness();
 				}
@@ -287,7 +287,8 @@ namespace UISystem{
 								PassOnTapUpward(tapCount);
 							}
 						}
-					}
+					}else
+						PassOnTapUpward(tapCount);
 				}
 				protected virtual void OnTapImple(int tapCount){
 					PassOnTapUpward(tapCount);
@@ -478,10 +479,14 @@ namespace UISystem{
 			public virtual void OnScrollerFocus(){
 				thisIsFocusedInScroller = true;
 				BecomeSelectable();
+				// if(this.IsActivated()){
+				// }
 			}
 			public virtual void OnScrollerDefocus(){
 				thisIsFocusedInScroller = false;
 				BecomeUnselectable();
+				// if(this.IsActivated()){
+				// }
 			}
 			public virtual void BecomeFocusedInScrollerRecursively(){
 				OnScrollerFocus();

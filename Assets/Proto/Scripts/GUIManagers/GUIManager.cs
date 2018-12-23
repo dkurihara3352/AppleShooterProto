@@ -156,11 +156,10 @@ namespace AppleShooterProto{
 					))
 						DoSomething();
 				}
-				public CurrencyPaneAdaptor currencyPaneAdaptor;
-				public int currency;
+				public BowAttributeLevelUpHoldButtonAdaptor levelUpButtonAdaptor;
 				void DoSomething(){
-					ICurrencyPane currencyPane = currencyPaneAdaptor.GetCurrencyPane();
-					currencyPane.StartCurrencyUpdateProcess(currency);
+					IBowAttributeLevelUpHoldButton levelUpButton = levelUpButtonAdaptor.GetBowAttributeLevelUpHoldButton();
+					levelUpButton.MaxOut();
 				}
 			/* Context 1 */
 				void DrawContextOne(){
@@ -518,6 +517,7 @@ namespace AppleShooterProto{
 						SetTierOnAllTargetReserves(thisTargetTier);
 					
 				}
+				public int currency;
 				void DrawCurrencyControl(Rect rect){
 					if(thisSystemIsReady){
 						// Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);//

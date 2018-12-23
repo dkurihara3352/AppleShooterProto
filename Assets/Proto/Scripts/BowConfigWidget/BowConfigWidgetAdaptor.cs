@@ -45,6 +45,9 @@ namespace AppleShooterProto{
 			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 			thisWidget.SetPlayerDataManager(playerDataManager);
 
+			IBowDataCalculator bowDataCalculator = new BowDataCalculator(playerDataManagerAdaptor);
+			thisWidget.SetBowDataCalculator(bowDataCalculator);
+
 			IResourcePanel resourcePanel = resourcePanelAdaptor.GetResourcePanel();
 			thisWidget.SetResourcePanel(resourcePanel);
 

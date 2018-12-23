@@ -10,6 +10,8 @@ namespace AppleShooterProto{
 		void SetBowEquippedTextPane(IBowEquippedTextPane pane);
 		void SetBowLevelPane(IBowStarsPane pane);
 		void SetBowAttributeLevelPanes(IBowStarsPane[] panes);
+		void SetBowAttributeLevelUpHoldButtons(IBowAttributeLevelUpHoldButton[] buttons);
+		IBowAttributeLevelUpHoldButton[] GetBowAttributeLevelUpHoldButtons();
 
 		int GetIndex();
 		void Lock(bool instantly);
@@ -104,6 +106,14 @@ namespace AppleShooterProto{
 				
 				thisWidget.TrySetEquippedBow(GetIndex());
 			}
+		}
+
+		IBowAttributeLevelUpHoldButton[] thisButtons;
+		public void SetBowAttributeLevelUpHoldButtons(IBowAttributeLevelUpHoldButton[] buttons){
+			thisButtons = buttons;
+		}
+		public IBowAttributeLevelUpHoldButton[] GetBowAttributeLevelUpHoldButtons(){
+			return thisButtons;
 		}
 	}
 }
