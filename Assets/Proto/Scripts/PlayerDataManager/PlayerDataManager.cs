@@ -7,228 +7,300 @@ using System.IO;
 
 namespace AppleShooterProto{
 	public interface IPlayerDataManager: IAppleShooterSceneObject{
-		void SetFileIndex(int fileIndex);
-		void InitializePlayerData();
-		void Load();
-		void Save();
-		int GetHighScore();
-		void SetHighScore(int highScore);
-		void SwitchEquippedBow(int index);
-		int GetEquippedBowIndex();
-		void SetEquippedBow(int index);
-		bool PlayerDataIsLoaded();
-		IBowConfigData[] GetBowConfigDataArray();
+		/* File Management */
+			string GetDirectory();
+			string GetBaseFileName();
+			void CreateNewPlayerDataFile(string fileName);
+			string[] GetFilePaths();
+			int GetFileIndex(string fileName);
+			void SetFileIndex(int fileIndex);
 
+			bool PlayerDataIsLoaded();
+			void InitializePlayerData();
+			void Load();
+			void Save();
+		/* Fields */
+			int GetBowCount();
+			int GetMaxAttributeLevel();
+		/* Data Manipulation */
+			int GetHighScore();
+			void SetHighScore(int highScore);
 
-		int GetTierSteps();
-		int GetTierCount();
-		int[] GetTierLevelMultipliers();
+			int GetEquippedBowIndex();
+			void SetEquippedBow(int index);
 
-		void IncrementBowLevel(int bowIndex, int attributeIndex);
-		void ClearBowConfigData(int bowIndex);
-		
-		string GetDebugString();
-		int GetMaxScaledLevel();
+			IBowConfigData[] GetBowConfigDataArray();
+			void IncreaseAttributeLevel(int attributeIndex);
+			void DecreaseAttributeLevel(int attributeIndex);
+
+			void UnlockBow(int bowIndex);
+			void LockBow(int bowIndex);
+		/* Debug */
+			string GetDebugString();
+		/* Other */
+			void ClearBowConfigData(int bowIndex);
 	}
 	public class PlayerDataManager : AppleShooterSceneObject, IPlayerDataManager {
 		public PlayerDataManager(
 			IConstArg arg
 		): base(arg){
+		}
+		/* File Management */
+			public void SetFileIndex(int index){
+				thisFileIndex = index;
+				Debug.Log("fileID is now " + thisFileIndex.ToString());
+			}
+			int thisFileIndex = 0;
 
-		}
-		public void SetFileIndex(int index){
-			thisFileIndex = index;
-		}
-		int thisFileIndex = 0;
-		string thisFilePath{
-			get{
-				return UnityEngine.Application.persistentDataPath + "/playerData" + thisFileIndex.ToString() + ".dat";
-			}
-		}
-		public void Save(){
-			System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new BinaryFormatter();
-			System.IO.FileStream file = System.IO.File.Create(
-				thisFilePath
-			);
-			if(thisPlayerData == null){
-				InitializePlayerData();
-			}
-			bf.Serialize(file, thisPlayerData);
-			thisPlayerData = null;
-			file.Close();
-		}
-		IPlayerDataManagerAdaptor thisPlayerDataManagerAdaptor{
-			get{
-				return (IPlayerDataManagerAdaptor)thisAdaptor;
-			}
-		}
-		IPlayerData thisPlayerData;
-		public bool PlayerDataIsLoaded(){
-			return thisPlayerData != null;
-		}
-		public void Load(){
-			if(System.IO.File.Exists(
-				thisFilePath
-			)){
-				System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new BinaryFormatter();
-				System.IO.FileStream file = System.IO.File.Open(
-					thisFilePath,
-					FileMode.Open
-				);
-				thisPlayerData = (IPlayerData)bf.Deserialize(file);
-				file.Close();
-			}else
-				throw new System.InvalidOperationException(
-					"no file by the path exists, need to save first"
-				);
-		}
-		public int GetHighScore(){
-			if(thisPlayerData != null)
-				return thisPlayerData.GetHighScore();
-			else
-				throw new System.InvalidOperationException(
-					"load first"
-				);
-		}
-		public void SetHighScore(int score){
-			if(thisPlayerData != null)
-				thisPlayerData.SetHighScore(score);
-			else
-				new System.InvalidOperationException(
-					"load first"
-				);
-		}
-		public void InitializePlayerData(){
-			IPlayerData data = new PlayerData();
-			data.SetHighScore(0);
-			data.SetEquippedBowIndex(0);
-			IBowConfigData[] bowConfigDataArray = CreateInitializedBowCofigDataArray();
-			data.SetBowConfigDataArray(bowConfigDataArray);
-			thisPlayerData = data;
-		}
-		int thisBowCount = 3;
-		IBowConfigData[] CreateInitializedBowCofigDataArray(){
-			IBowConfigData[] result = new IBowConfigData[thisBowCount];
-			for(int i = 0; i < thisBowCount; i ++){
-				IBowConfigData configData = new BowConfigData();
-				int[] attributeLevelArray = new int[]{0, 0, 0};
-				configData.SetAttributeLevels(attributeLevelArray);
-
-				result[i] = configData;
-			}
-			result[0].Unlock();
-			return result;
-
-		}
-		public string GetDebugString(){
-			string result = "";
-			if(thisPlayerData != null){
-				result += "HighScore: " + thisPlayerData.GetHighScore().ToString()+ "\n";
-				result += "EqpBow: "+ thisPlayerData.GetEquippedBowIndex().ToString() + "\n";
-				result += GetBowConfigDataArrayString(thisPlayerData.GetBowConfigDataArray());
-			}else{
-				result += "data is null";
-			}
-			return result;
-		}
-		string GetBowConfigDataArrayString(IBowConfigData[] array){
-			string result = "";
-			if(array != null){
-				result += "bowConfigData: " + "\n";
-				foreach(IBowConfigData data in array){
-					result += "\t";
-					result += "unlocked: " + data.IsUnlocked().ToString() + ", ";
-					result += "bowLevel: " + data.GetBowLevel().ToString() + ", ";
-					result += "attLevel: " + DKUtility.DebugHelper.GetIndicesString(data.GetAttributeLevels());
-					result += "\n";
+			string thisDirectory{
+				get{
+					return UnityEngine.Application.persistentDataPath + "/PlayerData";
 				}
-
-			}else{
-				result += "array is null";
 			}
-			return result;
-		}
-		public void SwitchEquippedBow(int index){
-			if(thisPlayerData != null){
-				thisPlayerData.SetEquippedBowIndex(index);
+			public string GetDirectory(){
+				return thisDirectory;
 			}
-		}
-		public int GetEquippedBowIndex(){
-			if(thisPlayerData != null){
-				return thisPlayerData.GetEquippedBowIndex();
-			}else
-				throw new System.InvalidOperationException(
-					"there's no player data"
+			public string GetBaseFileName(){
+				return "PlayerData_";
+			}
+			public string[] GetFilePaths(){
+				string playerDataPath = GetDirectory();
+				if(!System.IO.Directory.Exists(playerDataPath)){
+					System.IO.Directory.CreateDirectory(playerDataPath);
+				}
+				string[] filePaths = System.IO.Directory.GetFiles(playerDataPath);	
+				return filePaths;
+			}
+			string GetFilePathFromName(string fileName){
+				return thisDirectory + "/" + fileName + ".dat";
+			}
+			public int GetFileIndex(string fileName){
+				string targetFilePath = GetFilePathFromName(fileName);
+				int index = 0;
+				foreach(string filePath in GetFilePaths()){
+					if(filePath == targetFilePath)
+						return index;
+					index ++;
+				}
+				return -1;
+			}
+			public void CreateNewPlayerDataFile(string fileName){
+				System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new BinaryFormatter();
+				string filePath = GetFilePathFromName(fileName);
+				System.IO.FileStream file = System.IO.File.Create(
+					filePath
 				);
-		}
-		public void SetEquippedBow(int index){
-			if(thisPlayerData != null)
-				thisPlayerData.SetEquippedBowIndex(index);
-			else
+				InitializePlayerData();
+				bf.Serialize(file, thisPlayerData);
+				file.Close();
+				Debug.Log("created at: " + filePath);
+			}
+			public void Save(){
+				string path = GetFilePaths()[thisFileIndex];
+				System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new BinaryFormatter();
+				System.IO.FileStream file = System.IO.File.Create(
+					path
+				);
+				if(thisPlayerData == null){
+					InitializePlayerData();
+				}
+				bf.Serialize(file, thisPlayerData);
+				thisPlayerData = null;
+				file.Close();
+				Debug.Log("fileID: " + thisFileIndex.ToString() + " is saved");
+			}
+			IPlayerDataManagerAdaptor thisPlayerDataManagerAdaptor{
+				get{
+					return (IPlayerDataManagerAdaptor)thisAdaptor;
+				}
+			}
+			IPlayerData thisPlayerData;
+			public bool PlayerDataIsLoaded(){
+				return thisPlayerData != null;
+			}
+			public void Load(){
+				string path = GetFilePaths()[thisFileIndex];
+				if(System.IO.File.Exists(
+					path
+				)){
+					System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new BinaryFormatter();
+					System.IO.FileStream file = System.IO.File.Open(
+						path,
+						FileMode.Open
+					);
+					thisPlayerData = (IPlayerData)bf.Deserialize(file);
+					file.Close();
+					Debug.Log("fileID: " + thisFileIndex.ToString() + " is loaded");
+				}else
+					throw new System.InvalidOperationException(
+						"no file by the path exists, need to save first"
+					);
+			}
+		/* Fields */
+			int thisBowCount = 3;
+			public int GetBowCount(){
+				return thisBowCount;
+			}
+			int thisMaxAttributeLevel = 5;
+			public int GetMaxAttributeLevel(){
+				return thisMaxAttributeLevel;
+			}
+		/* Data Manipulation */
+			public void InitializePlayerData(){
+				IPlayerData data = new PlayerData();
+				data.SetHighScore(0);
+				data.SetEquippedBowIndex(0);
+				IBowConfigData[] bowConfigDataArray = CreateInitializedBowCofigDataArray();
+				data.SetBowConfigDataArray(bowConfigDataArray);
+				thisPlayerData = data;
+
+				Debug.Log("fileID: " + thisFileIndex.ToString() + "'s playerData is init'ed");
+			}
+			IBowConfigData[] CreateInitializedBowCofigDataArray(){
+				IBowConfigData[] result = new IBowConfigData[thisBowCount];
+				for(int i = 0; i < thisBowCount; i ++){
+					IBowConfigData configData = new BowConfigData();
+					int[] attributeLevelArray = new int[]{0, 0, 0};
+					configData.SetAttributeLevels(attributeLevelArray);
+
+					result[i] = configData;
+				}
+				result[0].Unlock();
+				return result;
+			}
+			public int GetHighScore(){
+				if(PlayerDataIsLoaded())
+					return thisPlayerData.GetHighScore();
+				else
+					throw new System.InvalidOperationException(
+						"load first"
+					);
+			}
+			public void SetHighScore(int score){
+				if(PlayerDataIsLoaded())
+					thisPlayerData.SetHighScore(score);
+				else
+					new System.InvalidOperationException(
+						"load first"
+					);
+			}
+			public int GetEquippedBowIndex(){
+				if(PlayerDataIsLoaded()){
+					return thisPlayerData.GetEquippedBowIndex();
+				}else
+					throw new System.InvalidOperationException(
+						"there's no player data"
+					);
+			}
+			public void SetEquippedBow(int index){
+				if(PlayerDataIsLoaded()){
+					thisPlayerData.SetEquippedBowIndex(index);
+					Debug.Log("bow " + index.ToString() + " is equipped");
+				}
+				else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public IBowConfigData[] GetBowConfigDataArray(){
+				if(PlayerDataIsLoaded())
+					return thisPlayerData.GetBowConfigDataArray();
 				throw new System.InvalidOperationException(
 					"no player data"
 				);
-		}
-		public IBowConfigData[] GetBowConfigDataArray(){
-			if(thisPlayerData != null)
-				return thisPlayerData.GetBowConfigDataArray();
-			throw new System.InvalidOperationException(
-				"no player data"
-			);
-		}
-		/*  */
-		public int GetTierSteps(){
-			return thisPlayerDataManagerAdaptor.GetTierSteps();
-		}
-		public int GetTierCount(){
-			return thisPlayerDataManagerAdaptor.GetTierCount();
-		}
-		public int[] GetTierLevelMultipliers(){
-			return thisPlayerDataManagerAdaptor.GetTierLevelMultipliers();
-		}
-		/*  */
-		public void IncrementBowLevel(int bowIndex, int attributeIndex){
-			
-			IBowConfigData data = GetBowConfigDataArray()[bowIndex];
-			int currentLevel = data.GetBowLevel();
-			if(currentLevel < thisBowMaxLevel){
-				int deltaAttributeLevel = GetDeltaScaledLevel(currentLevel + 1);
+			}
+			public void IncreaseAttributeLevel(
+				int attributeIndex
+			){
+				ChangeAttributeLevelByOne(attributeIndex, true);
+			}
+			public void DecreaseAttributeLevel(
+				int attributeIndex
+			){
+				ChangeAttributeLevelByOne(attributeIndex, false);
+			}
+			void ChangeAttributeLevelByOne(
+				int attributeIndex,
+				bool increment
+			){
+				if(PlayerDataIsLoaded()){
+					int equippedBowIndex = GetEquippedBowIndex();
+					IBowConfigData configData = GetBowConfigDataArray()[equippedBowIndex];
 
-				int[] newAttributeLevelArray = data.GetAttributeLevels();
-				newAttributeLevelArray[attributeIndex] += deltaAttributeLevel;
+					int[] attributeLevels = configData.GetAttributeLevels();
+					int currentAttributeLevel = attributeLevels[attributeIndex];
+					
+					int newAttributeLevel = increment? currentAttributeLevel +1: currentAttributeLevel -1;
+					if(newAttributeLevel > thisMaxAttributeLevel)
+						newAttributeLevel = thisMaxAttributeLevel;
+					else if(newAttributeLevel < 0)
+						newAttributeLevel = 0;
 
-				data.SetAttributeLevels(newAttributeLevelArray);
-				data.SetBowLevel(currentLevel + 1);
+					int[] newAttributeLevels = attributeLevels;
+					newAttributeLevels[attributeIndex] = newAttributeLevel;
+
+					configData.SetAttributeLevels(newAttributeLevels);
+
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
 			}
-		}
-		public void ClearBowConfigData(int bowIndex){
-			IBowConfigData newData = new BowConfigData();
+			public void UnlockBow(int bowIndex){
+				if(PlayerDataIsLoaded()){
+					IBowConfigData configData = GetBowConfigDataArray()[bowIndex];
+					configData.Unlock();
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public void LockBow(int bowIndex){
+				if(PlayerDataIsLoaded()){
+					IBowConfigData configData = GetBowConfigDataArray()[bowIndex];
+					configData.Lock();
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
 			
-			GetBowConfigDataArray()[bowIndex] = newData;
-		}
-		int thisBowMaxLevel{
-			get{
-				return GetTierSteps() * GetTierCount();
+		/* Others */
+
+			public void ClearBowConfigData(int bowIndex){
+				IBowConfigData newData = new BowConfigData();
+				
+				GetBowConfigDataArray()[bowIndex] = newData;
 			}
-		}
-		protected int GetLevelTier(int sourceLevel){
-			return (sourceLevel - 1) / GetTierSteps();
-		}
-		protected int GetScaledLevel(int sourceLevel){
-			int result = 0;
-			for(int i = 1; i <= sourceLevel; i ++){
-				int tier = GetLevelTier(i);
-				result += GetTierLevelMultipliers()[tier];
+		/* Debug */
+			public string GetDebugString(){
+				string result = "";
+				if(thisPlayerData != null){
+					result += "HighScore: " + thisPlayerData.GetHighScore().ToString()+ "\n";
+					result += "EqpBow: "+ thisPlayerData.GetEquippedBowIndex().ToString() + "\n";
+					result += GetBowConfigDataArrayString(thisPlayerData.GetBowConfigDataArray());
+				}else{
+					result += "data is null";
+				}
+				return result;
 			}
-			return result;
-		}
-		public int GetMaxScaledLevel(){
-			return GetScaledLevel(thisBowMaxLevel);
-		}
-		public int GetDeltaScaledLevel(int level){
-			int tier = GetLevelTier(level);
-			return GetTierLevelMultipliers()[tier];
-		}
+			string GetBowConfigDataArrayString(IBowConfigData[] array){
+				string result = "";
+				if(array != null){
+					result += "bowConfigData: " + "\n";
+					foreach(IBowConfigData data in array){
+						result += "\t";
+						result += "unlocked: " + data.IsUnlocked().ToString() + ", ";
+						result += "bowLevel: " + data.GetBowLevel().ToString() + ", ";
+						result += "attLevel: " + DKUtility.DebugHelper.GetIndicesString(data.GetAttributeLevels());
+						result += "\n";
+					}
+
+				}else{
+					result += "array is null";
+				}
+				return result;
+			}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 

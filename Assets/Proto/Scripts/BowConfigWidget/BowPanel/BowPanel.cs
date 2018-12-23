@@ -5,8 +5,9 @@ using UISystem;
 
 namespace AppleShooterProto{
 	public interface IBowPanel: IUIElement{
-		void SetBowLockPanel(IBowLockPane pane);
-		void SetBowEquippedTextPanel(IBowEquippedTextPane pane);
+		void SetBowConfigWidget(IBowConfigWidget widget);
+		void SetBowLockPane(IBowLockPane pane);
+		void SetBowEquippedTextPane(IBowEquippedTextPane pane);
 		void SetBowLevelPane(IBowStarsPane pane);
 		void SetBowAttributeLevelPanes(IBowStarsPane[] panes);
 
@@ -28,20 +29,28 @@ namespace AppleShooterProto{
 			return thisBowPanelAdaptor.GetBowIndex();
 		}
 		IBowLockPane thisBowLockPanel;
-		public void SetBowLockPanel(IBowLockPane panel){
+		public void SetBowLockPane(IBowLockPane panel){
 			thisBowLockPanel = panel;
 		}
 		public void Lock(bool instantly){
-			thisBowLockPanel.ActivateRecursively(instantly);
+			thisBowLockPanel.ActivateThruBackdoor(instantly);
 			this.DeactivateRecursively(instantly);
 		}
 		public void Unlock(bool instantly){
-			thisBowLockPanel.DeactivateRecursively(instantly);
+			// Debug.Log(GetName() + " is unlocked");
+			thisBowLockPanel.DeactivateThruBackdoor(instantly);
 			this.ActivateRecursively(instantly);
 		}
+		protected override void OnUIActivate(){
+			// Debug.Log(GetName() + " is activated");
+		}
+		protected override void OnUIDeactivate(){
+			// Debug.Log(GetName() + " is deactivated");
+		}
+		
 
 		IBowEquippedTextPane thisBowEquippedTextPane;
-		public void SetBowEquippedTextPanel(IBowEquippedTextPane pane){
+		public void SetBowEquippedTextPane(IBowEquippedTextPane pane){
 			thisBowEquippedTextPane = pane;
 		}
 		public void SetEquippedness(bool isEquipped, bool instantly){
@@ -83,6 +92,18 @@ namespace AppleShooterProto{
 				pane.UpdateLevel(level);
 			else
 				pane.StartUpdateLevelProcess(level);
+		}
+
+		IBowConfigWidget thisWidget;
+		public void SetBowConfigWidget(IBowConfigWidget widget){
+			thisWidget = widget;
+		}
+		public override void OnScrollerFocus(){
+			base.OnScrollerFocus();
+			if(thisWidget.IsActivated()){
+				
+				thisWidget.TrySetEquippedBow(GetIndex());
+			}
 		}
 	}
 }

@@ -38,6 +38,17 @@ namespace AppleShooterProto{
 			return fillCurve;
 		}
 		public Image[] thisStarImages;
+		public override void SetUp(){
+			base.SetUp();
+			MakeSureImagesAreProperlySet();
+		}
+		void MakeSureImagesAreProperlySet(){
+			foreach(Image image in thisStarImages){
+				image.type = Image.Type.Filled;
+				image.fillMethod = Image.FillMethod.Radial360;
+				image.fillOrigin = 2;
+			}
+		}
 		public void SetFill(float fill){
 			ClearAllFill();
 			int quotient = Mathf.FloorToInt(fill);

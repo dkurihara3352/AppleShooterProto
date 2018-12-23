@@ -28,8 +28,6 @@ namespace UISystem{
 		public UIImage(
 			Graphic graphicComponent, 
 			Transform imageTrans, 
-			float defaultBrightness, 
-			float darkenedBrightness,
 			IUISystemProcessFactory processFactory,
 			float changeColorTime
 
@@ -37,8 +35,12 @@ namespace UISystem{
 			thisGraphicComponent = graphicComponent;
 			thisOriginalColor = GetColor();
 			thisImageTrans = imageTrans;
-			thisDefaultBrightness = defaultBrightness;
-			thisDarkenedBrightness = darkenedBrightness;
+			thisDefaultBrightness = GetCurrentBrightness();
+			thisDarkenedBrightness = Mathf.Lerp(
+				thisDefaultBrightness,
+				0f,
+				.5f
+			);
 			thisDefaultColor = GetColorAtBrightness(thisDefaultBrightness);
 			thisDarkenedColor = GetColorAtBrightness(thisDarkenedBrightness);
 			SetColor(thisDefaultColor);

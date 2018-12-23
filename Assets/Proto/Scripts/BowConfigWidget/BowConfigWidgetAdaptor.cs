@@ -37,6 +37,8 @@ namespace AppleShooterProto{
 
 			IBowPanel[] bowPanels = CollectBowPanels();
 			thisWidget.SetBowPanels(bowPanels);
+			foreach(IBowPanel bowPanel in bowPanels)
+				bowPanel.SetBowConfigWidget(thisWidget);
 
 			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 			thisWidget.SetPlayerDataManager(playerDataManager);

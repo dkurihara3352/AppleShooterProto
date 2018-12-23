@@ -33,6 +33,9 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			IPlayerDataManager playerDataManager = CollectPlayerDataManager();
 			thisShootingDataManager.SetPlayerDataManager(playerDataManager);
+
+			IBowDataCalculator bowDataCalculator = new BowDataCalculator(playerDataManagerAdaptor);
+			thisShootingDataManager.SetBowDataCalculator(bowDataCalculator);
 		}
 		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
 		IPlayerDataManager CollectPlayerDataManager(){
@@ -61,6 +64,5 @@ namespace AppleShooterProto{
 		public float[] GetGlobalCriticalLimit(){
 			return globalCriticalMulitiplierLimit;
 		}
-		
 	}
 }

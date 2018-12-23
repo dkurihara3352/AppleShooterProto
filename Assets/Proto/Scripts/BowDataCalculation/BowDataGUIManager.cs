@@ -58,11 +58,13 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 	void OnEnable(){
 		if(thisCalculator == null)
 			thisCalculator = new AppleShooterProto.BowDataCalculator(this);
+		InitFields();
 
 	}
 	void Awake(){
 		if(thisCalculator == null)
 			thisCalculator = new AppleShooterProto.BowDataCalculator(this);
+		InitFields();
 	}
 	AppleShooterProto.IBowDataCalculator thisCalculator;
 	void OnGUI(){
@@ -218,6 +220,43 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 			"crit"
 		);
 	}
+	/*  */
+		int[] thisAttributeLevels;
+		int GetAttributeLevel(int index){
+			return thisAttributeLevels[index];
+		}
+		float GetTotalAttributeValue(){
+			float result = 0f;
+			foreach(int attributeLevel in thisAttributeLevels){
+				result += thisCalculator.GetAttributeValue(attributeLevel);
+			}
+			return result;
+		}
+		int thisTotalCoinsSpent;
+		void IncrementAttributeLevel(
+			int index,
+			int spentCost
+		){
+			thisAttributeLevels[index] ++;
+			thisTotalCoinsSpent += spentCost;
+		}
+		int GetBowLevel(){
+			int result = 0;
+			foreach(int attributeLevel in thisAttributeLevels)
+				result += attributeLevel;
+			return result;
+		}
+		float GetCurrentAttributeValueByIndex(int index){
+			return thisCalculator.GetAttributeValue(thisAttributeLevels[index]);
+		}
+		void InitFields(){
+			ClearAttribute();
+		}
+		void ClearAttribute(){
+			thisAttributeLevels = new int[]{0, 0, 0};
+			thisTotalCoinsSpent = 0;
+		}
+	/*  */
 	void DrawIndivAttributeControl(
 		int index,
 		Rect rect,
@@ -249,9 +288,9 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 		);
 		string labelString = "";
 		labelString += attName + "\n";
-		int attributeLevel = thisCalculator.GetAttributeLevel(index);
+		int attributeLevel = GetAttributeLevel(index);
 		labelString += "lv " + attributeLevel.ToString() + "\n";
-		float attributeValue = thisCalculator.GetCurrentAttributeValueByIndex(index);
+		float attributeValue = thisCalculator.GetAttributeValue(attributeLevel);
 		labelString += "av: " + attributeValue.ToString();
 		GUI.Label(
 			labelRect,
@@ -259,7 +298,7 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 		);
 		if(attributeLevel < thisMaxAttributeLevel){
 			int nextLevel = attributeLevel + 1;
-			float totalAttributeValue = thisCalculator.GetTotalAttributeValue();
+			float totalAttributeValue = GetTotalAttributeValue();
 			float coinDepreValue = thisCalculator.CalcCoinDepreciationValue(totalAttributeValue);
 			int nextCost = thisCalculator.CalcCost(
 				nextLevel,
@@ -269,7 +308,7 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 				buttonRect,
 				nextCost.ToString()
 			)){
-				thisCalculator.IncrementAttributeLevel(
+				IncrementAttributeLevel(
 					index, nextCost
 				);
 			}
@@ -358,22 +397,22 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 		Rect sub_1 = GetHorSubRect(rect, 1, 3);
 		Rect sub_2 = GetHorSubRect(rect, 2, 3);
 		string labelString = "";
-		int bowLevel = thisCalculator.GetBowLevel();
+		int bowLevel = GetBowLevel();
 		labelString += "bowLevel: " + bowLevel.ToString() + "\n";
-		float totalAttributeValue = thisCalculator.GetTotalAttributeValue();
+		float totalAttributeValue = GetTotalAttributeValue();
 		labelString += "totalAV: " + totalAttributeValue.ToString() + "\n";
-		int totalSpentCoin = thisCalculator.GetTotalSpentCoin();
+		int totalSpentCoin = thisTotalCoinsSpent;
 		labelString += "totalCoin: " + totalSpentCoin.ToString() + "\n";
 		labelString += "val/coin: " + (totalAttributeValue/ totalSpentCoin).ToString() + "\n";
 		labelString += "depreValue: " + thisCalculator.CalcCoinDepreciationValue(totalAttributeValue);
 
 		string labelString2 = "";
-		float strengthAttValue = thisCalculator.GetCurrentAttributeValueByIndex(0);
+		float strengthAttValue = GetCurrentAttributeValueByIndex(0);
 		float initAttack = CalcInitAttack(strengthAttValue);
 		float termAttack = CalcTermAttack(strengthAttValue);
-		float quicknessAttValue = thisCalculator.GetCurrentAttributeValueByIndex(1);
+		float quicknessAttValue = GetCurrentAttributeValueByIndex(1);
 		float fireRate = GetFireRate(quicknessAttValue);
-		float critAttValue = thisCalculator.GetCurrentAttributeValueByIndex(2);
+		float critAttValue = GetCurrentAttributeValueByIndex(2);
 		float critMult = GetCritMult(critAttValue);
 		labelString2 += "attack: " + initAttack.ToString("N1") + " to "  + termAttack.ToString("N1") + "\n";
 		labelString2 += "fireRate: " + fireRate.ToString("N2") + "\n";
@@ -397,6 +436,6 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 			sub_2,
 			"clear"
 		))
-			thisCalculator.ClearAttribute();
+			ClearAttribute();
 	}
 }

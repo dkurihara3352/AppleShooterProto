@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IShootingDataManager: IAppleShooterSceneObject{
 		void SetPlayerDataManager(IPlayerDataManager playerDataManager);
+		void SetBowDataCalculator(IBowDataCalculator calculator);
 		void CalculateShootingData();
 
 		float GetFireRate();
@@ -14,7 +15,9 @@ namespace AppleShooterProto{
 		float GetCriticalMultiplier();
 	}
 	public class ShootingDataManager: AppleShooterSceneObject, IShootingDataManager{
-		public ShootingDataManager(IConstArg arg): base(arg){}
+		public ShootingDataManager(IConstArg arg): base(arg){
+			
+		}
 		IPlayerDataManager thisPlayerDataManager;
 		public void SetPlayerDataManager(IPlayerDataManager manager){
 			thisPlayerDataManager = manager;
@@ -24,28 +27,25 @@ namespace AppleShooterProto{
 				return (IShootingDataManagerAdaptor)thisAdaptor;
 			}
 		}
+
+		IBowDataCalculator thisCalculator;
+		public void SetBowDataCalculator(IBowDataCalculator calculator){
+			thisCalculator = calculator;
+		}
 		public void CalculateShootingData(){
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
 			IBowConfigData bowConfigData = thisPlayerDataManager.GetBowConfigDataArray()[equippedBowIndex];
-			int[] attributeLevelArray = bowConfigData.GetAttributeLevels();
-			thisMinDrawStrength = CalculateMinDrawStrength(attributeLevelArray[0]);
-			thisMaxDrawStrength = CalculateMaxDrawStrength(attributeLevelArray[0]);
-			thisFireRate = CalculateFireRate(attributeLevelArray[1]);
-			thisDrawTime = CalculateDrawTime(attributeLevelArray[1]);
-			thisCritMultiplier = CalculateCriticalMultiplier(attributeLevelArray[2]);
+			int[] attributeLevels = bowConfigData.GetAttributeLevels();
+			float strengthValue = thisCalculator.GetAttributeValue(attributeLevels[0]);
+			float quicknessValue = thisCalculator.GetAttributeValue(attributeLevels[1]);
+			float criticalValue = thisCalculator.GetAttributeValue(attributeLevels[2]);
+			thisMinDrawStrength = CalculateMinDrawStrength(strengthValue);
+			thisMaxDrawStrength = CalculateMaxDrawStrength(strengthValue);
+			thisFireRate = CalculateFireRate(quicknessValue);
+			thisDrawTime = CalculateDrawTime(quicknessValue);
+			thisCritMultiplier = CalculateCriticalMultiplier(criticalValue);
 		}
-		/*  */
-			int thisMaxScaledLevel{
-				get{
-					return thisPlayerDataManager.GetMaxScaledLevel();
-				}
-			}
 
-			protected float GetNormalizedScaledLevel(int scaledLevel, int maxScaledLevel){
-				if(scaledLevel == 0)
-					return 0f;
-				return (scaledLevel * 1f) / maxScaledLevel;
-			}
 		/* DrawStrength */
 			float thisMinDrawStrength;
 			public float GetMinDrawStrength(){
@@ -56,12 +56,11 @@ namespace AppleShooterProto{
 					return thisShootingDataManagerAdaptor.GetGlobalMinDrawStrengthLimit();
 				}
 			}
-			float CalculateMinDrawStrength(int strengthLevel){
-				float normalizedScaledLevel = GetNormalizedScaledLevel(strengthLevel, thisMaxScaledLevel);
+			float CalculateMinDrawStrength(float attributeValue){
 				return Mathf.Lerp(
 					thisGlobalMinDrawStrengthLimit[0],
 					thisGlobalMinDrawStrengthLimit[1],
-					normalizedScaledLevel
+					attributeValue
 				);
 			}
 			float thisMaxDrawStrength;
@@ -73,12 +72,11 @@ namespace AppleShooterProto{
 					return thisShootingDataManagerAdaptor.GetGlobalMaxDrawStrengthLimit();
 				}
 			}
-			float CalculateMaxDrawStrength(int strengthLevel){
-				float normalizedScaledLevel = GetNormalizedScaledLevel(strengthLevel, thisMaxScaledLevel);
+			float CalculateMaxDrawStrength(float attributeValue){
 				return Mathf.Lerp(
 					thisGlobalMaxDrawStrengthLimit[0],
 					thisGlobalMaxDrawStrengthLimit[1],
-					normalizedScaledLevel
+					attributeValue
 				);
 			}
 		/* FireRate */
@@ -91,12 +89,11 @@ namespace AppleShooterProto{
 					return thisShootingDataManagerAdaptor.GetGlobalFireRateLimit();
 				}
 			}
-			float CalculateFireRate(int quicknessLevel){
-				float normalizedScaledLevel = GetNormalizedScaledLevel(quicknessLevel, thisMaxScaledLevel);
+			float CalculateFireRate(float attributeValue){
 				return Mathf.Lerp(
 					thisGlobalFireRateLimit[0],
 					thisGlobalFireRateLimit[1],
-					normalizedScaledLevel
+					attributeValue
 				);
 			}
 		/* DrawTime */
@@ -109,14 +106,12 @@ namespace AppleShooterProto{
 					return thisShootingDataManagerAdaptor.GetGlobalDrawTimeLimit();
 				}
 			}
-			float CalculateDrawTime(int quicknessLevel){
-				float normalizedScaledLevel = GetNormalizedScaledLevel(quicknessLevel, thisMaxScaledLevel);
+			float CalculateDrawTime(float attributeValue){
 				return Mathf.Lerp(
 					thisGlobalDrawTimeLimit[0],
 					thisGlobalDrawTimeLimit[1],
-					normalizedScaledLevel
+					attributeValue
 				);
-
 			}
 		/* Crit */
 			float thisCritMultiplier;
@@ -128,12 +123,11 @@ namespace AppleShooterProto{
 					return thisShootingDataManagerAdaptor.GetGlobalCriticalLimit();
 				}
 			}
-			float CalculateCriticalMultiplier(int criticalLevel){
-				float normalizedScaledLevel = GetNormalizedScaledLevel(criticalLevel, thisMaxScaledLevel);
+			float CalculateCriticalMultiplier(float attributeValue){
 				return Mathf.Lerp(
 					thisGlobalCriticalLimit[0],
 					thisGlobalCriticalLimit[1],
-					normalizedScaledLevel
+					attributeValue
 				);
 			}
 		

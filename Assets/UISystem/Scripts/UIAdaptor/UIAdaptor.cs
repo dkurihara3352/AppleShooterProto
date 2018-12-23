@@ -211,8 +211,8 @@ namespace UISystem{
 				IUIImage uiImage = new UIImage(
 					image, 
 					childWithImage, 
-					thisImageDefaultBrightness, 
-					thisImageDarkenedBrightness, 
+					// thisImageDefaultBrightness, 
+					// thisImageDarkenedBrightness, 
 					thisUISystemProcessFactory,
 					thisChangeColorTime
 				);
@@ -229,8 +229,8 @@ namespace UISystem{
 				}
 				throw new System.InvalidOperationException("there's no child transform with Image component asigned");
 			}
-			public float thisImageDefaultBrightness = .8f;
-			public float thisImageDarkenedBrightness = .5f;
+			// public float thisImageDefaultBrightness = .8f;
+			// public float thisImageDarkenedBrightness = .5f;
 
 		/* Activation */
 			public ActivationMode activationMode;

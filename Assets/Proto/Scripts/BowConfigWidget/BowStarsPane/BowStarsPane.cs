@@ -17,6 +17,7 @@ namespace AppleShooterProto{
 				ProcessConstraint.ExpireTime,
 				thisBowLevelPaneAdaptor.GetProcessTime()
 			);
+			UpdateLevel(0);
 		}
 		IBowStarsPaneAdaptor thisBowLevelPaneAdaptor{
 			get{

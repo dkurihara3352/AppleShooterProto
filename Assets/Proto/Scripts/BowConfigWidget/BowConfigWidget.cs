@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		void SetBowPanelGroupScroller(IUIElementGroupScroller scroller);
 		void SetBowPanels(IBowPanel[] panels);
 		void SetPlayerDataManager(IPlayerDataManager manager);
+		void TrySetEquippedBow(int index);
 	}
 	public class BowConfigWidget: AppleShooterSceneObject, IBowConfigWidget{
 		public BowConfigWidget(IConstArg arg): base(arg){
@@ -41,10 +42,12 @@ namespace AppleShooterProto{
 		public void ActivateImple(){
 			LoadAndFeedAllPanelsWithPlayerData();
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
-			thisBowPanelScroller.SnapToGroupElement(equippedBowIndex);
+			// thisBowPanelScroller.SnapToGroupElement(equippedBowIndex);
+			thisBowPanelScroller.PlaceGroupElementUnderCursor(equippedBowIndex);
 		}
 		void LoadAndFeedAllPanelsWithPlayerData(){
-
+			
+			thisPlayerDataManager.SetFileIndex(0);
 			thisPlayerDataManager.Load();
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
 			IBowConfigData[] configDataArray = thisPlayerDataManager.GetBowConfigDataArray();
@@ -73,13 +76,37 @@ namespace AppleShooterProto{
 						attributeLevel,
 						true
 					);
+				Debug.Log(
+					"BowPanel " + bowPanel.GetIndex().ToString() + ", " +
+					"unlocked: " + bowConfigData.IsUnlocked().ToString() + ", " +
+					"equipped: " + (index == equippedBowIndex).ToString() + ", " +
+					"bowLevel: " + bowConfigData.GetBowLevel().ToString() + ", " +
+					"attLevels: " + DKUtility.DebugHelper.GetIndicesString(attributeLevels)
+				);
 			}
-
 		}
 		public void DeactivateImple(){
 			return;
 		}
+		/* Data Manipulation */
+		public void TrySetEquippedBow(int index){
+			if(!thisPlayerDataManager.PlayerDataIsLoaded())
+				thisPlayerDataManager.Load();
+			int prevEquippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
+			if(prevEquippedBowIndex != index){
+				IBowConfigData configData = thisPlayerDataManager.GetBowConfigDataArray()[index];
+				if(configData.IsUnlocked()){
+					thisPlayerDataManager.SetEquippedBow(index);
+					thisPlayerDataManager.Save();
 
+					IBowPanel panelToEquip = thisBowPanels[index];
+					IBowPanel panelToUnequip = thisBowPanels[prevEquippedBowIndex];
+
+					panelToEquip.SetEquippedness(true, false);
+					panelToUnequip.SetEquippedness(false, false);
+				}
+			}
+		}
 	}
 }
 

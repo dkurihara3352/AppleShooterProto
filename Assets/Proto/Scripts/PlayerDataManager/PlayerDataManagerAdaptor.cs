@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IPlayerDataManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+	public interface IPlayerDataManagerAdaptor: IAppleShooterMonoBehaviourAdaptor, BowDataCalculator.IAdaptor{
 		IPlayerDataManager GetPlayerDataManager();
-
-		int GetTierSteps();
-		int GetTierCount();
-		int[] GetTierLevelMultipliers();
 	}
 	public class PlayerDataManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IPlayerDataManagerAdaptor {
 
@@ -25,17 +21,22 @@ namespace AppleShooterProto{
 			);
 			return new PlayerDataManager(arg);
 		}
-		public int tierSteps = 4;
-		public int GetTierSteps(){
-			return tierSteps;
+		/* BowDataCalculator adaptor */
+		public float attributeMultiplier = 1.2f;
+		public float GetAttributeMultiplier(){
+			return attributeMultiplier;
 		}
-		public int tierCount = 3;
-		public int GetTierCount(){
-			return tierCount;
+		public int maxAttributeLevel = 5;
+		public int GetMaxAttributeLevel(){
+			return maxAttributeLevel;
 		}
-		public int[] tierLevelMultipliers = new int[3]{1, 2, 4};
-		public int[] GetTierLevelMultipliers(){
-			return tierLevelMultipliers;
+		public int baseCost = 10;
+		public int GetBaseCost(){
+			return baseCost;
+		}
+		public float maxCoinDepreciationValue = 30f;
+		public float GetMaxCoinDepreciationValue(){
+			return maxCoinDepreciationValue;
 		}
 	}
 }

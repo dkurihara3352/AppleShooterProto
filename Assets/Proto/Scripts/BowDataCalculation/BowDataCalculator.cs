@@ -10,23 +10,11 @@ namespace AppleShooterProto{
 		float GetDeltaAttributeValue(int level);
 		int CalcCost(int level, float coinDepreciationValue);
 		float CalcCoinDepreciationValue(float totalAttributeValue);
-
-		int GetAttributeLevel(int index);
-		int GetBowLevel();
-		float GetCurrentAttributeValueByIndex(int index);
-		float GetTotalAttributeValue();
-		int GetTotalSpentCoin();
-		void IncrementAttributeLevel(
-			int index,
-			int spentCoin
-		);
-		void ClearAttribute();
 	}
 	public class BowDataCalculator: IBowDataCalculator{
 		public BowDataCalculator(IAdaptor adaptor){
 			thisAdaptor = adaptor;
-			InitLevels();
-			InitAttributeValues();
+			CalcAttributeData();
 		}
 		IAdaptor thisAdaptor;
 		/*  */
@@ -114,60 +102,6 @@ namespace AppleShooterProto{
 			get{
 				return thisAdaptor.GetMaxCoinDepreciationValue();
 			}
-		}
-
-
-		public int GetAttributeLevel(int index){
-			return thisLevels[index];
-		}
-		int[] thisLevels;
-		public int GetBowLevel(){
-			return thisLevels[0] + thisLevels[1] + thisLevels[2];
-		}
-		public float GetCurrentAttributeValueByIndex(int index){
-			return thisAttributeValues[index];
-		}
-		float[] thisAttributeValues;
-		public float GetTotalAttributeValue(){
-			return 
-				thisAttributeValues[0] +
-				thisAttributeValues[1] +
-				thisAttributeValues[2];
-		}
-
-		public void IncrementAttributeLevel(
-			int index,
-			int spentCoin
-		){
-			if(thisLevels[index] < thisMaxAttributeLevel){
-				int newLevel = thisLevels[index] + 1;
-				thisLevels[index] = newLevel;
-				thisAttributeValues[index] = GetAttributeValue(newLevel);
-				thisTotalSpentCoin += spentCoin;
-			}
-		}
-
-		public int GetTotalSpentCoin(){
-			return thisTotalSpentCoin;
-		}
-		int thisTotalSpentCoin;
-
-
-
-
-
-		public void ClearAttribute(){
-			thisBaseAttValue = 0f;
-			thisTotalSpentCoin = 0;
-			InitLevels();
-			InitAttributeValues();
-			CalcAttributeData();
-		}
-		void InitLevels(){
-			thisLevels = new int[3]{0, 0, 0};
-		}
-		void InitAttributeValues(){
-			thisAttributeValues = new float[3]{0f, 0f, 0f};
 		}
 		/*  */
 		public interface IAdaptor{

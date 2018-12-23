@@ -165,7 +165,7 @@ namespace UISystem{
 			public void DeactivateSelf(bool instantly){
 				thisUIEActivationStateEngine.Deactivate(instantly);
 			}
-			void DeactivateAllChildren(bool instantly){
+			protected void DeactivateAllChildren(bool instantly){
 				foreach(IUIElement childUIE in this.GetChildUIElements()){
 					if(childUIE != null)
 						childUIE.DeactivateRecursively(instantly);
