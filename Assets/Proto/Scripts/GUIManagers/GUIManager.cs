@@ -171,10 +171,7 @@ namespace AppleShooterProto{
 					DrawAttributeSwitch(sTL_6);
 					DrawAttributeControl(sTL_7);
 				}
-				void DrawContextTwo(){
-					DrawAddHeatButton(sTL_2);
-					DrawTargetTierControl(sTL_3);
-				}
+
 				int thisSelectedFileIndex;
 				void DrawFileSwitch(Rect rect){
 					if(thisSystemIsReady){
@@ -499,7 +496,41 @@ namespace AppleShooterProto{
 					IShootingDataManager shootingDataManager = shootingDataManagerAdaptor.GetShootingDataManager();
 					shootingDataManager.CalculateShootingData();
 				}
-			/*  */
+			/* Context two */
+				void DrawContextTwo(){
+					DrawAddHeatButton(sTL_2);
+					DrawTargetTierControl(sTL_3);
+					DrawCurrencyControl(sTL_4);
+				}
+				void DrawAddHeatButton(Rect rect){
+					if(GUI.Button(
+						rect,
+						"add heat"
+					))
+						AddHeat();
+				}
+				int thisTargetTier;
+				void DrawTargetTierControl(Rect rect){
+					string[] texts = new string[]{"tier0", "tier1", "tier2"};
+					int prevTier = thisTargetTier;
+					thisTargetTier = GUI.SelectionGrid(rect, thisTargetTier, texts, 3);
+					if(thisTargetTier != prevTier)
+						SetTierOnAllTargetReserves(thisTargetTier);
+					
+				}
+				void DrawCurrencyControl(Rect rect){
+					if(thisSystemIsReady){
+						// Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);//
+						IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+						if(GUI.Button(
+							rect,
+							"Set Currency"
+						))
+							playerDataManager.SetCurrency(currency);
+
+					}
+				}
+		/*  */
 			void DrawArrowsState(Rect rect){
 				if(thisSystemIsReady){
 					IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
@@ -529,22 +560,6 @@ namespace AppleShooterProto{
 						result += ": " + reserve.GetIndexInReserve(arrow);
 				}
 				return result;
-			}
-			void DrawAddHeatButton(Rect rect){
-				if(GUI.Button(
-					rect,
-					"add heat"
-				))
-					AddHeat();
-			}
-			int thisTargetTier;
-			void DrawTargetTierControl(Rect rect){
-				string[] texts = new string[]{"tier0", "tier1", "tier2"};
-				int prevTier = thisTargetTier;
-				thisTargetTier = GUI.SelectionGrid(rect, thisTargetTier, texts, 3);
-				if(thisTargetTier != prevTier)
-					SetTierOnAllTargetReserves(thisTargetTier);
-				
 			}
 		/* Bottom Left */
 			void DrawBottomLeft(){

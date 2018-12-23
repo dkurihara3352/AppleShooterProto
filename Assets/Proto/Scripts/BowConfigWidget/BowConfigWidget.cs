@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void SetBowPanels(IBowPanel[] panels);
 		void SetPlayerDataManager(IPlayerDataManager manager);
 		void SetResourcePanel(IResourcePanel resourcePanel);
+		void SetCurrencyPane(ICurrencyPane pane);
 
 
 		void TrySetEquippedBow(int index);
@@ -47,12 +48,21 @@ namespace AppleShooterProto{
 			LoadAndFeedAllPanelsWithPlayerData();
 			int equippedBowIndex = thisPlayerDataManager.GetEquippedBowIndex();
 			thisBowPanelScroller.PlaceGroupElementUnderCursor(equippedBowIndex);
+
 			if(!thisResourcePanel.IsShown())//temp
 					thisResourcePanel.Show();
+
+			int currency = thisPlayerDataManager.GetCurrency();
+			thisCurrencyPane.StartCurrencyUpdateProcess(currency);//temp
+			
 		}
 		IResourcePanel thisResourcePanel;
 		public void SetResourcePanel(IResourcePanel panel){
 			thisResourcePanel = panel;
+		}
+		ICurrencyPane thisCurrencyPane;
+		public void SetCurrencyPane(ICurrencyPane pane){
+			thisCurrencyPane = pane;
 		}
 		void LoadAndFeedAllPanelsWithPlayerData(){
 			

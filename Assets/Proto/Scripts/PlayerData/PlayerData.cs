@@ -13,8 +13,8 @@ namespace AppleShooterProto{
 		void SetBowConfigDataArray(IBowConfigData[] array);
 
 
-		int GetCoins();
-		void SetCoins(int coins);
+		int GetCurrency();
+		void SetCurrency(int currency);
 	}
 	[System.Serializable]
 	public class PlayerData : IPlayerData {
@@ -42,12 +42,12 @@ namespace AppleShooterProto{
 			thisBowConfigDataArray = array;
 		}
 
-		int thisCoins;
-		public int GetCoins(){
-			return thisCoins;
+		int thisCurrency;
+		public int GetCurrency(){
+			return thisCurrency;
 		}
-		public void SetCoins(int coins){
-			thisCoins = coins;
+		public void SetCurrency(int currency){
+			thisCurrency = currency;
 		}
 	}
 

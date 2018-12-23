@@ -32,6 +32,7 @@ namespace AppleShooterProto{
 		}
 		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
 		public ResourcePanelAdaptor resourcePanelAdaptor;
+		public CurrencyPaneAdaptor currencyPaneAdaptor;
 		public override void SetUpReference(){
 			IUIElementGroupScroller bowPanelScroller = (IUIElementGroupScroller)bowPanelGroupScrollerAdaptor.GetUIElement();
 			thisWidget.SetBowPanelGroupScroller(bowPanelScroller);
@@ -46,6 +47,9 @@ namespace AppleShooterProto{
 
 			IResourcePanel resourcePanel = resourcePanelAdaptor.GetResourcePanel();
 			thisWidget.SetResourcePanel(resourcePanel);
+
+			ICurrencyPane currencyPane = currencyPaneAdaptor.GetCurrencyPane();
+			thisWidget.SetCurrencyPane(currencyPane);
 		}
 	}
 }

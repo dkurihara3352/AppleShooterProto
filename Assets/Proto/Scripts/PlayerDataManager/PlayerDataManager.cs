@@ -26,6 +26,9 @@ namespace AppleShooterProto{
 			int GetHighScore();
 			void SetHighScore(int highScore);
 
+			int GetCurrency();
+			void SetCurrency(int currency);
+
 			int GetEquippedBowIndex();
 			void SetEquippedBow(int index);
 
@@ -180,7 +183,24 @@ namespace AppleShooterProto{
 				if(PlayerDataIsLoaded())
 					thisPlayerData.SetHighScore(score);
 				else
-					new System.InvalidOperationException(
+					throw new System.InvalidOperationException(
+						"load first"
+					);
+			}
+			public int GetCurrency(){
+				if(PlayerDataIsLoaded())
+					return thisPlayerData.GetCurrency();
+				else
+					throw new System.InvalidOperationException(
+						"load first"
+					);
+
+			}
+			public void SetCurrency(int currency){
+				if(PlayerDataIsLoaded())
+					thisPlayerData.SetCurrency(currency);
+				else
+					throw new System.InvalidOperationException(
 						"load first"
 					);
 			}
@@ -277,6 +297,7 @@ namespace AppleShooterProto{
 				string result = "";
 				if(thisPlayerData != null){
 					result += "HighScore: " + thisPlayerData.GetHighScore().ToString()+ "\n";
+					result += "Currency: " + thisPlayerData.GetCurrency().ToString() + "\n";
 					result += "EqpBow: "+ thisPlayerData.GetEquippedBowIndex().ToString() + "\n";
 					result += GetBowConfigDataArrayString(thisPlayerData.GetBowConfigDataArray());
 				}else{
