@@ -156,13 +156,11 @@ namespace AppleShooterProto{
 					))
 						DoSomething();
 				}
-				public ResourcePanelAdaptor resourcePanelAdaptor;
+				public CurrencyPaneAdaptor currencyPaneAdaptor;
+				public int currency;
 				void DoSomething(){
-					IResourcePanel resourcePanel = resourcePanelAdaptor.GetResourcePanel();
-					if(resourcePanel.IsShown())
-						resourcePanel.Hide();
-					else
-						resourcePanel.Show();
+					ICurrencyPane currencyPane = currencyPaneAdaptor.GetCurrencyPane();
+					currencyPane.StartCurrencyUpdateProcess(currency);
 				}
 			/* Context 1 */
 				void DrawContextOne(){
