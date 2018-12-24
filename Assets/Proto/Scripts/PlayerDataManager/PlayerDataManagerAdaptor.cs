@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IPlayerDataManagerAdaptor: IAppleShooterMonoBehaviourAdaptor, BowDataCalculator.IAdaptor{
 		IPlayerDataManager GetPlayerDataManager();
+		int[] GetBowUnlockCostArray();
 	}
 	public class PlayerDataManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IPlayerDataManagerAdaptor {
 
@@ -37,6 +38,14 @@ namespace AppleShooterProto{
 		public float maxCoinDepreciationValue = 30f;
 		public float GetMaxCoinDepreciationValue(){
 			return maxCoinDepreciationValue;
+		}
+		public int[] bowUnlockCostArray = new int[]{
+			0,
+			100,
+			500
+		};
+		public int[] GetBowUnlockCostArray(){
+			return bowUnlockCostArray;
 		}
 	}
 }

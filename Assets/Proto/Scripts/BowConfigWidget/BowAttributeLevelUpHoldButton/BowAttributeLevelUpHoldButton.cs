@@ -7,7 +7,7 @@ namespace AppleShooterProto{
 	public interface IBowAttributeLevelUpHoldButton: IHoldButton{
 		void SetBowConfigWidget(IBowConfigWidget widget);
 		void MaxOut();
-		void Validate();
+		void ValidateForLevelUp();
 		void SetNextCost(int cost);
 		int GetCost();
 		void InvalidateForShortMoney();
@@ -32,42 +32,13 @@ namespace AppleShooterProto{
 			thisWidget.IncreaseAttributeLevel(thisIndex);
 		}
 
-		bool thisIsValid = true;
-		public override void ActivateRecursively(bool instantly){
-			if(thisIsValid)
-				ActivateSelf(instantly);
-			ActivateAllChildren(instantly);
-		}
 		public void MaxOut(){
-			thisIsValid = false;
-			DeactivateSelf(false);
+			Invalidate();
 			thisBowAttributeLevelUpHoldButtonAdaptor.SetLabelText("Level Max");
 		}
-		public void Validate(){
-			thisIsValid = true;
-			ActivateSelf(false);
+		public void ValidateForLevelUp(){
+			Validate();
 			thisBowAttributeLevelUpHoldButtonAdaptor.SetLabelText("Level Up");
-		}
-		public override void BecomeSelectableImple(){
-			if(thisUIManager.ShowsNormal())
-				if(thisIsValid)
-					thisImage.TurnToOriginalColor();
-		}
-		protected override void OnTapImple(int tapCount){
-			base.OnTapImple(tapCount);
-			BecomeSelectable();
-		}
-		protected override void OnTouchImple(int touchCount){
-			base.OnTouchImple(touchCount);
-			BecomeUnselectable();
-		}
-		protected override void OnReleaseImple(){
-			base.OnReleaseImple();
-			BecomeSelectable();
-		}
-		protected override void OnSwipeImple(ICustomEventData eventData){
-			base.OnSwipeImple(eventData);
-			BecomeSelectable();
 		}
 		int thisNextCost = 0;
 		public int GetCost(){
@@ -78,8 +49,7 @@ namespace AppleShooterProto{
 			thisBowAttributeLevelUpHoldButtonAdaptor.SetCostText(cost.ToString());
 		}
 		public void InvalidateForShortMoney(){
-			thisIsValid = false;
-			DeactivateSelf(false);
+			Invalidate();
 			thisBowAttributeLevelUpHoldButtonAdaptor.SetLabelText("Not Enough");
 		}
 	}

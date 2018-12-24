@@ -11,11 +11,16 @@ namespace UISystem{
 	public class HoldIndicatorImageAdaptor: UIAdaptor, IHoldIndicatorImageAdaptor{
 		public override void SetUp(){
 			base.SetUp();
+			MakeSureImageIsProperlySet();
+		}
+		void MakeSureImageIsProperlySet(){
+			fillImage.type = Image.Type.Filled;
+			fillImage.fillMethod = Image.FillMethod.Horizontal;
 		}
 		protected override IUIElement CreateUIElement(){
 			HoldIndicatorImage.IConstArg arg = new HoldIndicatorImage.ConstArg(
 				this,
-				activationMode
+				ActivationMode.Alpha
 			);
 			return new HoldIndicatorImage(arg);
 		}

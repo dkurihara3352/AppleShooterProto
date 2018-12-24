@@ -4,10 +4,10 @@ using UnityEngine;
 using DKUtility;
 
 namespace UISystem{
-	public interface IHoldButton: IUIElement{
+	public interface IHoldButton: IValidatableUIElement{
 		void SetHoldIndicatorImage(IHoldIndicatorImage image);
 	}
-	public abstract class HoldButton: UIElement, IHoldButton, IProcessHandler{
+	public abstract class HoldButton: ValidatableUIElement, IHoldButton, IProcessHandler{
 		public HoldButton(IConstArg arg): base(arg){
 			thisHoldProcessSuite = new ProcessSuite(
 				thisProcessManager,
@@ -27,12 +27,15 @@ namespace UISystem{
 			thisHoldIndicatorImage = image;
 		}
 		protected override void OnTouchImple(int touchCount){
+			base.OnTouchImple(touchCount);
 			StartButtonHoldProcess();
 		}
 		protected override void OnReleaseImple(){
+			base.OnReleaseImple();
 			StopButtonHoldProcess();
 		}
 		protected override void OnTapImple(int tapCount){
+			base.OnTapImple(tapCount);
 			StopButtonHoldProcess();
 		}
 		protected override void OnSwipeImple(ICustomEventData eventData){
@@ -73,7 +76,6 @@ namespace UISystem{
 		}
 		public void OnProcessExpire(IProcessSuite suite){
 			if(suite == thisHoldProcessSuite){
-				// thisHoldIndicatorImage.SetHoldValue(1f);
 				thisHoldIndicatorImage.DeactivateRecursively(true);
 				this.OnHoldButtonExecute();
 			}

@@ -22,6 +22,7 @@ namespace AppleShooterProto{
 		/* Fields */
 			int GetBowCount();
 			int GetMaxAttributeLevel();
+			int[] GetBowUnlockCostArray();
 		/* Data Manipulation */
 			int GetHighScore();
 			void SetHighScore(int highScore);
@@ -147,6 +148,14 @@ namespace AppleShooterProto{
 			int thisMaxAttributeLevel = 5;
 			public int GetMaxAttributeLevel(){
 				return thisMaxAttributeLevel;
+			}
+			int[] thisBowUnlockCostArray{
+				get{
+					return thisPlayerDataManagerAdaptor.GetBowUnlockCostArray();
+				}
+			}
+			public int[] GetBowUnlockCostArray(){
+				return thisBowUnlockCostArray;
 			}
 		/* Data Manipulation */
 			public void InitializePlayerData(){

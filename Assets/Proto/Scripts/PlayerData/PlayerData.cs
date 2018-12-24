@@ -15,6 +15,8 @@ namespace AppleShooterProto{
 
 		int GetCurrency();
 		void SetCurrency(int currency);
+		int[] GetBowUnlockCostArray();
+		void SetBowUnlockCostArray(int[] array);
 	}
 	[System.Serializable]
 	public class PlayerData : IPlayerData {
@@ -49,6 +51,14 @@ namespace AppleShooterProto{
 		public void SetCurrency(int currency){
 			thisCurrency = currency;
 		}
+		int[] thisBowUnlockCostArray;
+		public int[] GetBowUnlockCostArray(){
+			return thisBowUnlockCostArray;
+		}
+		public void SetBowUnlockCostArray(int[] array){
+			thisBowUnlockCostArray = array;
+		}
+
 	}
 
 	public interface IBowConfigData{

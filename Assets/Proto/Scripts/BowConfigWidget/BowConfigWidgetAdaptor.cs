@@ -33,6 +33,14 @@ namespace AppleShooterProto{
 		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
 		public ResourcePanelAdaptor resourcePanelAdaptor;
 		public CurrencyPaneAdaptor currencyPaneAdaptor;
+		public BowUnlockButtonAdaptor[] bowUnlockButtonAdaptors;
+		IBowUnlockButton[] CollectBowUnlockButtons(){
+			List<IBowUnlockButton> resultList = new List<IBowUnlockButton>();
+			foreach(IBowUnlockButtonAdaptor adaptor in bowUnlockButtonAdaptors){
+				resultList.Add(adaptor.GetBowUnlockButton());
+			}
+			return resultList.ToArray();
+		}
 		public override void SetUpReference(){
 			IUIElementGroupScroller bowPanelScroller = (IUIElementGroupScroller)bowPanelGroupScrollerAdaptor.GetUIElement();
 			thisWidget.SetBowPanelGroupScroller(bowPanelScroller);
@@ -53,6 +61,13 @@ namespace AppleShooterProto{
 
 			ICurrencyPane currencyPane = currencyPaneAdaptor.GetCurrencyPane();
 			thisWidget.SetCurrencyPane(currencyPane);
+
+			IBowUnlockButton[] unlockButtons = CollectBowUnlockButtons();
+			thisWidget.SetBowUnlockButtons(unlockButtons);
+			foreach(IBowUnlockButton button in unlockButtons){
+				button.SetBowConfigWidget(thisWidget);
+			}
+			
 		}
 	}
 }

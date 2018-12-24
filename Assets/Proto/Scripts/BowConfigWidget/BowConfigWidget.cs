@@ -12,9 +12,11 @@ namespace AppleShooterProto{
 		void SetBowDataCalculator(IBowDataCalculator calculator);
 		void SetResourcePanel(IResourcePanel resourcePanel);
 		void SetCurrencyPane(ICurrencyPane pane);
+		void SetBowUnlockButtons(IBowUnlockButton[] buttons);
 
 		void TrySetEquippedBow(int index);
 		void IncreaseAttributeLevel(int attributeIndex);
+		void UnlockPanel(int panelIndex);
 	}
 	public class BowConfigWidget: AppleShooterSceneObject, IBowConfigWidget{
 		public BowConfigWidget(IConstArg arg): base(arg){
@@ -60,7 +62,11 @@ namespace AppleShooterProto{
 
 			int currency = thisPlayerDataManager.GetCurrency();
 			thisCurrencyPane.StartCurrencyUpdateProcess(currency);//temp
-			
+
+			foreach(IBowUnlockButton button in thisBowUnlockButtons){
+				int unlockCost = thisPlayerDataManager.GetBowUnlockCostArray()[button.GetPanelIndex()];
+				button.SetCostText(unlockCost);
+			}
 		}
 		IResourcePanel thisResourcePanel;
 		public void SetResourcePanel(IResourcePanel panel){
@@ -95,6 +101,7 @@ namespace AppleShooterProto{
 				
 				UpdateAttributePanel(bowPanel, bowConfigData);
 			}
+			UpdateUnlockButtons();
 		}
 		void UpdateAttributePanel(
 			IBowPanel bowPanel,
@@ -126,7 +133,7 @@ namespace AppleShooterProto{
 						if(currency < nextCost)
 							levelUpButton.InvalidateForShortMoney();
 						else
-							levelUpButton.Validate();
+							levelUpButton.ValidateForLevelUp();
 					}
 					attributeIndex += 1;
 				}
@@ -138,6 +145,24 @@ namespace AppleShooterProto{
 					"bowLevel: " + bowConfigData.GetBowLevel().ToString() + ", " +
 					"attLevels: " + DKUtility.DebugHelper.GetIndicesString(attributeLevels)
 				);
+		}
+		IBowUnlockButton[] thisBowUnlockButtons;
+		public void SetBowUnlockButtons(IBowUnlockButton[] buttons){
+			thisBowUnlockButtons = buttons;
+		}
+		void UpdateUnlockButtons(){
+			int currency = thisPlayerDataManager.GetCurrency();
+			foreach(IBowUnlockButton unlockButton in thisBowUnlockButtons){
+				int index = unlockButton.GetPanelIndex();
+				IBowConfigData configData = thisPlayerDataManager.GetBowConfigDataArray()[index];
+				if(!configData.IsUnlocked()){
+					int unlockCost = thisPlayerDataManager.GetBowUnlockCostArray()[index];
+					if(currency < unlockCost)
+						unlockButton.InvalidateForShortMoney();
+					else
+						unlockButton.ValidateForUnlock();
+				}
+			}
 		}
 		int CalculateCost(
 			int bowIndex,
@@ -207,8 +232,7 @@ namespace AppleShooterProto{
 
 			int currency = thisPlayerDataManager.GetCurrency();
 			int newCurrency = currency - button.GetCost();
-			thisPlayerDataManager.SetCurrency(newCurrency);
-			thisCurrencyPane.StartCurrencyUpdateProcess(newCurrency);
+			UpdateCurrency(newCurrency);
 
 			foreach(IBowPanel bowPanel in thisBowPanels){
 				IBowConfigData configData = dataArray[bowPanel.GetIndex()];
@@ -217,7 +241,29 @@ namespace AppleShooterProto{
 					configData
 				);
 			}
+			UpdateUnlockButtons();
 			thisPlayerDataManager.Save();
+		}
+		void UpdateCurrency(int newCurrency){
+			thisPlayerDataManager.SetCurrency(newCurrency);
+			thisCurrencyPane.StartCurrencyUpdateProcess(newCurrency);
+		}
+		public void UnlockPanel(int index){
+			if(!thisPlayerDataManager.PlayerDataIsLoaded())
+				thisPlayerDataManager.Load();
+
+			IBowConfigData data = thisPlayerDataManager.GetBowConfigDataArray()[index];
+			data.Unlock();
+
+			int currency = thisPlayerDataManager.GetCurrency();
+			int cost = thisPlayerDataManager.GetBowUnlockCostArray()[index];
+			int newCurrency = currency - cost;
+			UpdateCurrency(newCurrency);
+			
+			TrySetEquippedBow(index);
+
+			IBowPanel panel = thisBowPanels[index];
+			panel.Unlock(false);
 		}
 	}
 }
