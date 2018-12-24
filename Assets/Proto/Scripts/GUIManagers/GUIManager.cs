@@ -144,22 +144,31 @@ namespace AppleShooterProto{
 						sTL_5,
 						"Start"
 					))
-						gameManager.StartGameplaySequence();
+						StartGameplay();
 					if(GUI.Button(
 						sTL_6,
 						"End"
 					))
-						gameManager.StartEndGameplaySequence();
+						EndGameplay();
 					if(GUI.Button(
 						sTL_7,
 						"DoSomething"
 					))
 						DoSomething();
 				}
-				public BowAttributeLevelUpHoldButtonAdaptor levelUpButtonAdaptor;
+				public GameplayWidgetAdaptor gameplayWidgetAdaptor;
+				void StartGameplay(){
+					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
+					widget.StartGameplay();
+				}
+				void EndGameplay(){
+					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
+					widget.EndGameplay();
+				}
+
 				void DoSomething(){
-					IBowAttributeLevelUpHoldButton levelUpButton = levelUpButtonAdaptor.GetBowAttributeLevelUpHoldButton();
-					levelUpButton.MaxOut();
+					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
+					widget.ToggleMainMenu();
 				}
 			/* Context 1 */
 				void DrawContextOne(){
@@ -520,13 +529,24 @@ namespace AppleShooterProto{
 				public int currency;
 				void DrawCurrencyControl(Rect rect){
 					if(thisSystemIsReady){
-						// Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);//
+
+						Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);//set
+						Rect sub_1 = GetHorizontalSubRect(rect, 1, 2);//add
+
 						IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 						if(GUI.Button(
-							rect,
+							sub_0,
 							"Set Currency"
 						))
 							playerDataManager.SetCurrency(currency);
+						if(GUI.Button(
+							sub_1,
+							"Add 100"
+						)){
+							int currency = playerDataManager.GetCurrency();
+							int newCurrency = currency + 100;
+							playerDataManager.SetCurrency(newCurrency);
+						}
 
 					}
 				}

@@ -10,6 +10,7 @@ namespace UnityBase{
 		void SetFrostValue(float value);
 	}
 	public class FrostGlassAdaptor : MonoBehaviourAdaptor, IFrostGlassAdaptor {
+		
 		public override void SetUp(){
 			thisFrostGlass = CreateFrostGlass();
 			thisMaterial = CollectMaterial();

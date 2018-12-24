@@ -55,13 +55,15 @@ namespace DKUtility{
 		}
 		sealed public override void UpdateProcess(float deltaT){
 			thisElapsedTime += deltaT;
-			if(thisProcessConstraint != ProcessConstraint.none){
-				if(thisElapsedTime >= thisExpireTime){
-					Expire();
-					return;
+			if(!thisIsStoppedThisFrame){
+				if(thisProcessConstraint != ProcessConstraint.none){
+					if(thisElapsedTime >= thisExpireTime){
+						Expire();
+						return;
+					}
 				}
+				UpdateProcessImple(deltaT);
 			}
-			UpdateProcessImple(deltaT);
 		}
 		public new interface IConstArg: AbsProcess.IConstArg{
 			ProcessConstraint processConstraint{get;}

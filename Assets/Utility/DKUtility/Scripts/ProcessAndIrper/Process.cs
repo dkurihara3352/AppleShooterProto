@@ -30,7 +30,7 @@ namespace DKUtility{
 			UpdateProcess(0f);
 		}
 		protected virtual void RunImple(){}
-		bool thisIsStoppedThisFrame = false;
+		protected bool thisIsStoppedThisFrame = false;
 		public void Stop(){
 			thisIsStoppedThisFrame = true;
 			thisProcessManager.RemoveRunningProcess(this);

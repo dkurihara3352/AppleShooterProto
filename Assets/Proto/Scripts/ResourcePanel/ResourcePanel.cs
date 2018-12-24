@@ -26,6 +26,9 @@ namespace AppleShooterProto{
 			}
 		}
 		public void Show(){
+			// Debug.Log(
+			// 	DKUtility.DebugHelper.StringInColor("Shown", Color.blue)
+			// );
 			BecomeFocusedInScrollerRecursively();
 			thisIsShown = true;
 			thisInitialAlpha = thisResourcePanelAdaptor.GetAlpha();
@@ -41,6 +44,9 @@ namespace AppleShooterProto{
 				childUIE.BecomeSelectable();
 		}
 		public void Hide(){
+			// Debug.Log(
+			// 	DKUtility.DebugHelper.StringInColor("Hidden", Color.red)
+			// );
 			thisIsShown = false;
 			thisInitialAlpha = thisResourcePanelAdaptor.GetAlpha();
 			thisTargetAlpha = thisResourcePanelAdaptor.GetHideAlpha();
@@ -84,6 +90,15 @@ namespace AppleShooterProto{
 					processValue
 				);
 				thisResourcePanelAdaptor.SetAlpha(newAlpha);
+
+				// Debug.Log(
+				// 	"frame: " + Time.frameCount.ToString("N2") + ", " +
+				// 	"normT: " + normalizedTime.ToString("N2") + ", " +
+				// 	"localP :" + newLocalPosition.ToString("N2") + ", " +
+				// 	"alpha: " + newAlpha.ToString("N2") + ", " +
+				// 	"initLP: " + thisInitialLocalPosition.ToString("N2") + ", " +
+				// 	"targetLP: " + thisTargetLocalPosition.ToString("N2") + ", " 
+				// );
 			}
 		}
 		public void OnProcessExpire(

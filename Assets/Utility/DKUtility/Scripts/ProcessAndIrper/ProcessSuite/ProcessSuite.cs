@@ -41,8 +41,9 @@ namespace DKUtility{
 			thisProcess.Run();
 		}
 		public void Stop(){
-			if(thisProcess != null && thisProcess.IsRunning())
+			if(thisProcess != null && thisProcess.IsRunning()){
 				thisProcess.Stop();
+			}
 			thisProcess = null;
 		}
 		IProcess thisProcess;
