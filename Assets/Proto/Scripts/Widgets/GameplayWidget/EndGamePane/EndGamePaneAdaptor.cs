@@ -16,6 +16,7 @@ namespace AppleShooterProto{
 		float GetUpdateCurrencyProcessStartTime();
 		float GetShowWatchADButtonProcessStartTime();
 		float GetUpdateCurrencyProcessTime();
+		float GetShowButtonClusterProcessTime();
 	}
 	public class EndGamePaneAdaptor: UIAdaptor, IEndGamePaneAdaptor{
 		protected override IUIElement CreateUIElement(){
@@ -57,7 +58,7 @@ namespace AppleShooterProto{
 		public float GetUpdateHighScoreProcessTime(){
 			return updateHighScoreProcessTime;
 		}
-		public float currencyMasterProcessTime = 3f;
+		public float currencyMasterProcessTime = 4f;
 		public float GetCurrencyMasterProcessTime(){
 			return currencyMasterProcessTime;
 		}
@@ -72,6 +73,10 @@ namespace AppleShooterProto{
 		public float updateCurrencyProcessTime = 1f;
 		public float GetUpdateCurrencyProcessTime(){
 			return updateCurrencyProcessTime;
+		}
+		public float showButtonClusterProcessTime = 1f;
+		public float GetShowButtonClusterProcessTime(){
+			return showButtonClusterProcessTime;
 		}
 
 		public override void SetUpReference(){
@@ -90,12 +95,16 @@ namespace AppleShooterProto{
 
 			IWatchADButton button = watchADButtonAdaptor.GetWatchADButton();
 			thisEndGamePane.SetWatchADButton(button);
+
+			IMainMenuButtonCluster cluster = buttonClusterAdaptor.GetMainMenuButtonCluster();
+			thisEndGamePane.SetMainMenuButtonCluster(cluster);
 		}
 		public ResultLabelPaneAdaptor resultLabelPaneAdaptor;
 		public ResultScorePaneAdaptor resultScorePaneAdaptor;
 		public ResultHighScorePaneAdaptor resultHighScorePaneAdaptor;
 		public ResultCurrencyPaneAdaptor resultCurrencyPaneAdaptor;
 		public WatchADButtonAdaptor watchADButtonAdaptor;
+		public MainMenuButtonClusterAdaptor buttonClusterAdaptor;
 	}
 }
 

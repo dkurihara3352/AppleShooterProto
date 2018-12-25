@@ -29,6 +29,11 @@ namespace AppleShooterProto{
 		public void EnableInput(){
 			EnableInputRecursively();
 		}
+		protected override void OnTapImple(int tapCount){
+			base.OnTapImple(tapCount);
+			Debug.Log("making money!");
+		}
+
 	}
 }
 

@@ -23,7 +23,6 @@ namespace AppleShooterProto{
 		public IWatchADButton GetWatchADButton(){
 			return thisButton;
 		}
-
 	}
 }
 
