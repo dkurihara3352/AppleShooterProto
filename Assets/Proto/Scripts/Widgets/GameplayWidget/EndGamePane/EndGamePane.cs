@@ -9,6 +9,9 @@ namespace AppleShooterProto{
 		void SetResultLabelPane(IResultLabelPane pane);
 		void SetResultScorePane(IResultScorePane pane);
 		void SetResultHighScorePane(IResultHighScorePane pane);
+		void SetResultCurrencyPane(IResultCurrencyPane pane);
+		void SetWatchADButton(IWatchADButton button);
+
 		void StartSequence();
 		void ResetEndGamePane();
 	}
@@ -44,6 +47,42 @@ namespace AppleShooterProto{
 				ProcessConstraint.ExpireTime,
 				thisEndGamePaneAdaptor.GetShowLabelProcessTime()
 			);
+			thisHighScoreUpdateMasterProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisEndGamePaneAdaptor.GetUpdateHighScoreMasterProcessTime()
+			);
+			thisHighScoreUpdateProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisEndGamePaneAdaptor.GetUpdateHighScoreProcessTime()
+			);
+			thisCurrencyMasterProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisEndGamePaneAdaptor.GetCurrencyMasterProcessTime()
+			);
+			thisShowCurrencyProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisEndGamePaneAdaptor.GetShowLabelProcessTime()
+			);
+			thisUpdateCurrencyProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisEndGamePaneAdaptor.GetUpdateCurrencyProcessTime()
+			);
+			thisShowWatchADButtonProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisEndGamePaneAdaptor.GetShowLabelProcessTime()
+			);
 		}
 		IEndGamePaneAdaptor thisEndGamePaneAdaptor{
 			get{
@@ -61,9 +100,23 @@ namespace AppleShooterProto{
 					return;
 				}else if(suite == thisShowHighScoreProcessSuite){
 					return;
+			}else if(suite == thisHighScoreUpdateMasterProcessSuite){
+				StartHighScoreUpdateProcess();
+				}else if(suite == thisHighScoreUpdateProcessSuite){
+					return;
+			}else if(suite == thisCurrencyMasterProcessSuite){
+				StartShowCurrencyProcess();
+				}else if(suite == thisShowCurrencyProcessSuite){
+					return;
+				}else if(suite == thisUpdateCurrencyProcessSuite){
+					return;
+				}else if(suite == thisShowWatchADButtonProcessSuite){
+					return;
 				}
 		}
 		bool thisShowHighScoreProcessIsStarted = false;
+		bool thisUpdateCurrencyProcessIsStarted = false;
+		bool thisShowWatchADButtonProcessIsStarted = false;
 		public void OnProcessUpdate(
 			float deltaTime,
 			float normalizedTime,
@@ -88,6 +141,32 @@ namespace AppleShooterProto{
 					UpdateScoreShowness(normalizedTime);
 				}else if(suite == thisShowHighScoreProcessSuite){
 					UpdateHighScoreShowness(normalizedTime);
+			}else if(suite == thisHighScoreUpdateMasterProcessSuite){
+				return;
+				}else if(suite == thisHighScoreUpdateProcessSuite){
+					UpdateHighScore(normalizedTime);
+			}else if(suite == thisCurrencyMasterProcessSuite){
+
+				float elapsedTime = normalizedTime * thisEndGamePaneAdaptor.GetCurrencyMasterProcessTime();
+				if(!thisUpdateCurrencyProcessIsStarted){
+					if(elapsedTime >= thisEndGamePaneAdaptor.GetUpdateCurrencyProcessStartTime()){
+						StartUpdateCurrencyProcess();
+						thisUpdateCurrencyProcessIsStarted = true;
+					}
+				}
+				if(!thisShowWatchADButtonProcessIsStarted){
+					if(elapsedTime >= thisEndGamePaneAdaptor.GetShowWatchADButtonProcessStartTime()){
+						StartShowWatchADButtonProcess();
+						thisShowWatchADButtonProcessIsStarted = true;
+					}
+				}
+
+				}else if(suite == thisShowCurrencyProcessSuite){
+					UpdateCurrencyShowness(normalizedTime);
+				}else if(suite == thisUpdateCurrencyProcessSuite){
+					UpdateCurrency(normalizedTime);
+				}else if(suite == thisShowWatchADButtonProcessSuite){
+					UpdateWatchADButtonShowness(normalizedTime);
 				}
 		}
 		public void OnProcessExpire(IProcessSuite suite){
@@ -101,6 +180,18 @@ namespace AppleShooterProto{
 					UpdateScoreShowness(1f);
 				}else if(suite == thisShowHighScoreProcessSuite){
 					UpdateHighScoreShowness(1f);
+			}else if(suite == thisHighScoreUpdateMasterProcessSuite){
+				TerminateHighScoreUpdateProcessAndStartCurrencyMasterProcess();
+				}else if(suite == thisHighScoreUpdateProcessSuite){
+					UpdateHighScore(1f);
+			}else if(suite == thisCurrencyMasterProcessSuite){
+				TerminateAllCurrencyProcessAndStartShowButtonClusterProcess();
+				}else if(suite == thisShowCurrencyProcessSuite){
+					UpdateCurrencyShowness(1f);
+				}else if(suite == thisUpdateCurrencyProcessSuite){
+					UpdateCurrency(1f);
+				}else if(suite == thisShowWatchADButtonProcessSuite){
+					UpdateWatchADButtonShowness(1f);
 				}
 		}
 		protected override void OnTapImple(int tapCount){
@@ -164,17 +255,101 @@ namespace AppleShooterProto{
 					thisResultHighScorePane = pane;
 				}
 			void TerminateAllScoreProcessAndCheckHighScoreUpdate(){
-				UpdateScoreShowness(1f);
-				UpdateHighScoreShowness(1f);
+				thisShowScoreProcessSuite.Expire();
+				if(!thisShowHighScoreProcessIsStarted)
+					StartShowHighscoreProcess();
+				thisShowHighScoreProcessSuite.Expire();
+				CheckForHighScoreUpdate();
 			}
+			void CheckForHighScoreUpdate(){
+				if(this.RequiresHighScoreUpdate())
+					StartHighScoreUpdateMasterProcess();
+			}
+			bool RequiresHighScoreUpdate(){
+				return true;
+			}
+			void StartHighScoreUpdateMasterProcess(){
+				thisRunningSkippableProcessSuite = thisHighScoreUpdateMasterProcessSuite;
+				thisHighScoreUpdateMasterProcessSuite.Start();
+			}
+			IProcessSuite thisHighScoreUpdateMasterProcessSuite;
+				void StartHighScoreUpdateProcess(){
+					int targetHighScore = 100;
+					thisResultHighScorePane.SetTargetHighScore(targetHighScore);
+					thisHighScoreUpdateProcessSuite.Start();
+				}
+				IProcessSuite thisHighScoreUpdateProcessSuite;
+				void UpdateHighScore(float normalizedTime){
+					thisResultHighScorePane.UpdateHighScore(normalizedTime);
+				}
+			void TerminateHighScoreUpdateProcessAndStartCurrencyMasterProcess(){
+				thisHighScoreUpdateProcessSuite.Expire();
+				StartCurrencyMasterProcess();
+			}
+		/* Currency */
+			void StartCurrencyMasterProcess(){
+				thisRunningSkippableProcessSuite = thisCurrencyMasterProcessSuite;
+				thisCurrencyMasterProcessSuite.Start();
+			}
+			IProcessSuite thisCurrencyMasterProcessSuite;
+			void TerminateAllCurrencyProcessAndStartShowButtonClusterProcess(){
 
+				thisShowCurrencyProcessSuite.Expire();
+
+				if(!thisUpdateCurrencyProcessIsStarted)
+					thisUpdateCurrencyProcessSuite.Start();
+				thisUpdateCurrencyProcessSuite.Expire();
+				
+				if(!thisShowWatchADButtonProcessIsStarted)
+					thisShowWatchADButtonProcessSuite.Start();
+				thisShowWatchADButtonProcessSuite.Expire();
+				// StartShowButtonClusterProcess();
+			}
+			void StartShowCurrencyProcess(){
+				thisShowCurrencyProcessSuite.Start();
+			}
+			IProcessSuite thisShowCurrencyProcessSuite;
+			void UpdateCurrencyShowness(float normalizedTime){
+				thisCurrencyPane.UpdateShowness(normalizedTime);
+			}
+			IResultCurrencyPane thisCurrencyPane;
+			public void SetResultCurrencyPane(IResultCurrencyPane pane){
+				thisCurrencyPane = pane;
+			}
+			void StartUpdateCurrencyProcess(){
+				int targetCurrency = 10;
+				thisCurrencyPane.SetTargetCurrency(targetCurrency);
+				thisUpdateCurrencyProcessSuite.Start();
+			}
+			IProcessSuite thisUpdateCurrencyProcessSuite;
+			void UpdateCurrency(float normalizedTime){
+				thisCurrencyPane.UpdateCurrency(normalizedTime);
+			}
+			void StartShowWatchADButtonProcess(){
+				thisWatchADButton.EnableInput();
+				thisShowWatchADButtonProcessSuite.Start();
+			}
+			IProcessSuite thisShowWatchADButtonProcessSuite;
+			IWatchADButton thisWatchADButton;
+			public void SetWatchADButton(IWatchADButton button){
+				thisWatchADButton = button;
+			}
+			void UpdateWatchADButtonShowness(float normalizedTime){
+				thisWatchADButton.UpdateShowness(normalizedTime);
+			}
 		/* Reset */
 			public void ResetEndGamePane(){
 				thisRunningSkippableProcessSuite = null;
+
 				thisShowHighScoreProcessIsStarted = false;
+				thisUpdateCurrencyProcessIsStarted = false;
+				thisShowWatchADButtonProcessIsStarted = false;
+
 				thisResultLabelPane.ResetResultLabelPane();
 				thisResultScorePane.ResetScorePane();
 				thisResultHighScorePane.ResetHighScorePane();
+				thisCurrencyPane.ResetCurrencyPane();
+				thisWatchADButton.ResetWatchADButton();
 			}
 
 

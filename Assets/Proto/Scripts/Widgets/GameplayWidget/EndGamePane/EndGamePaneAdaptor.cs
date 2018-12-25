@@ -10,6 +10,12 @@ namespace AppleShooterProto{
 		float GetShowLabelProcessTime();
 		float GetScoreMasterProcessTime();
 		float GetShowHighScoreProcessStartTime();
+		float GetUpdateHighScoreMasterProcessTime();
+		float GetUpdateHighScoreProcessTime();
+		float GetCurrencyMasterProcessTime();
+		float GetUpdateCurrencyProcessStartTime();
+		float GetShowWatchADButtonProcessStartTime();
+		float GetUpdateCurrencyProcessTime();
 	}
 	public class EndGamePaneAdaptor: UIAdaptor, IEndGamePaneAdaptor{
 		protected override IUIElement CreateUIElement(){
@@ -43,6 +49,31 @@ namespace AppleShooterProto{
 		public float GetShowHighScoreProcessStartTime(){
 			return showHighScoreProcessStartTime;
 		}
+		public float updateHighScoreMasterProcessTime = 2f;
+		public float GetUpdateHighScoreMasterProcessTime(){
+			return updateHighScoreMasterProcessTime;
+		}
+		public float updateHighScoreProcessTime = 1f;
+		public float GetUpdateHighScoreProcessTime(){
+			return updateHighScoreProcessTime;
+		}
+		public float currencyMasterProcessTime = 3f;
+		public float GetCurrencyMasterProcessTime(){
+			return currencyMasterProcessTime;
+		}
+		public float updateCurrencyProcessStartTime = 1f;
+		public float GetUpdateCurrencyProcessStartTime(){
+			return updateCurrencyProcessStartTime;
+		}
+		public float showWatchADButtonProcessStartTime = 2f;
+		public float GetShowWatchADButtonProcessStartTime(){
+			return showWatchADButtonProcessStartTime;
+		}
+		public float updateCurrencyProcessTime = 1f;
+		public float GetUpdateCurrencyProcessTime(){
+			return updateCurrencyProcessTime;
+		}
+
 		public override void SetUpReference(){
 			base.SetUpReference();
 			IResultLabelPane resultLabelPane = resultLabelPaneAdaptor.GetResultLabelPane();
@@ -53,10 +84,18 @@ namespace AppleShooterProto{
 
 			IResultHighScorePane highScorePane = resultHighScorePaneAdaptor.GetResultHighScorePane();
 			thisEndGamePane.SetResultHighScorePane(highScorePane);
+
+			IResultCurrencyPane currencyPane = resultCurrencyPaneAdaptor.GetResultCurrencyPane();
+			thisEndGamePane.SetResultCurrencyPane(currencyPane);
+
+			IWatchADButton button = watchADButtonAdaptor.GetWatchADButton();
+			thisEndGamePane.SetWatchADButton(button);
 		}
 		public ResultLabelPaneAdaptor resultLabelPaneAdaptor;
 		public ResultScorePaneAdaptor resultScorePaneAdaptor;
 		public ResultHighScorePaneAdaptor resultHighScorePaneAdaptor;
+		public ResultCurrencyPaneAdaptor resultCurrencyPaneAdaptor;
+		public WatchADButtonAdaptor watchADButtonAdaptor;
 	}
 }
 
