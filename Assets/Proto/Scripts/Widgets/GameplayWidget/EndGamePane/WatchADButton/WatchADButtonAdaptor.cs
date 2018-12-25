@@ -6,6 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IWatchADButtonAdaptor: IAlphaVisibilityTogglableUIAdaptor{
 		IWatchADButton GetWatchADButton();
+		void SetLabelText(string text);
 	}
 	public class WatchADButtonAdaptor: AlphaVisibilityTogglableUIAdaptor, IWatchADButtonAdaptor{
 		protected override IUIElement CreateUIElement(){
@@ -22,6 +23,16 @@ namespace AppleShooterProto{
 		}
 		public IWatchADButton GetWatchADButton(){
 			return thisButton;
+		}
+		public override void SetUpReference(){
+			base.SetUpReference();
+			IEndGamePane pane = endGamePaneAdaptor.GetEndGamePane();
+			thisButton.SetEndGamePane(pane);
+		}
+		public EndGamePaneAdaptor endGamePaneAdaptor;
+		public UnityEngine.UI.Text labelTextComp;
+		public void SetLabelText(string text){
+			labelTextComp.text = text;
 		}
 	}
 }

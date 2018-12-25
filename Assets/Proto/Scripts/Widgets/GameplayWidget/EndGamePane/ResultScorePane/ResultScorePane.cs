@@ -6,6 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IResultScorePane: IAlphaVisibilityTogglableUIElement{
 		void ResetScorePane();
+		void SetScore(int score);
 	}
 	public class ResultScorePane: AlphaVisibilityTogglableUIElement, IResultScorePane{
 		public ResultScorePane(IConstArg arg): base(arg){}
@@ -16,6 +17,10 @@ namespace AppleShooterProto{
 		}
 		public void ResetScorePane(){
 			thisResultScorePaneAdaptor.SetAlpha(0f);
+			SetScore(0);
+		}
+		public void SetScore(int score){
+			thisResultScorePaneAdaptor.SetScoreText(score.ToString());
 		}
 	}
 }

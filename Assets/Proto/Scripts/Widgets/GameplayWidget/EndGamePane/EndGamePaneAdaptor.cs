@@ -98,6 +98,12 @@ namespace AppleShooterProto{
 
 			IMainMenuButtonCluster cluster = buttonClusterAdaptor.GetMainMenuButtonCluster();
 			thisEndGamePane.SetMainMenuButtonCluster(cluster);
+
+			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+			thisEndGamePane.SetPlayerDataManager(playerDataManager);
+
+			IUIElementGroupScroller rootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
+			thisEndGamePane.SetRootScroller(rootScroller);
 		}
 		public ResultLabelPaneAdaptor resultLabelPaneAdaptor;
 		public ResultScorePaneAdaptor resultScorePaneAdaptor;
@@ -105,6 +111,8 @@ namespace AppleShooterProto{
 		public ResultCurrencyPaneAdaptor resultCurrencyPaneAdaptor;
 		public WatchADButtonAdaptor watchADButtonAdaptor;
 		public MainMenuButtonClusterAdaptor buttonClusterAdaptor;
+		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+		public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
 	}
 }
 

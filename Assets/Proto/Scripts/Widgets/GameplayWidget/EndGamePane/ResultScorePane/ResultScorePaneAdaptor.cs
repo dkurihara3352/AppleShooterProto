@@ -6,6 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IResultScorePaneAdaptor: IAlphaVisibilityTogglableUIAdaptor{
 		IResultScorePane GetResultScorePane();
+		void SetScoreText(string text);
 	}
 	public class ResultScorePaneAdaptor: AlphaVisibilityTogglableUIAdaptor, IResultScorePaneAdaptor{
 		protected override IUIElement CreateUIElement(){
@@ -22,6 +23,10 @@ namespace AppleShooterProto{
 		}
 		public IResultScorePane GetResultScorePane(){
 			return thisScorePane;
+		}
+		public UnityEngine.UI.Text scoreTextComp;
+		public void SetScoreText(string text){
+			scoreTextComp.text = text;
 		}
 	}
 }

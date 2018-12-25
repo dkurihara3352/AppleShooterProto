@@ -51,8 +51,10 @@ namespace AppleShooterProto{
 			thisActivationEngine.Deactivate();
 		}
 		public void ActivateImple(){
-			// ShowMainMenu();
+			DeactivateEndGamePane();
 			HideResourcePanel();
+			ShowTitle();
+			ShowMainMenuButtonCluster();
 		}
 		void HideResourcePanel(){
 			if(thisResourcePanel.IsShown())

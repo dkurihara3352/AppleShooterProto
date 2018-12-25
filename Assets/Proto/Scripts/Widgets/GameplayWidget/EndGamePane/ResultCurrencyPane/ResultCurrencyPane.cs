@@ -7,7 +7,9 @@ namespace AppleShooterProto{
 	public interface IResultCurrencyPane: IAlphaVisibilityTogglableUIElement{
 		void ResetCurrencyPane();
 		void SetInitialCurrency(int currency);
+		int GetInitialCurrency();
 		void SetTargetCurrency(int currency);
+		int GetTargetCurrency();
 		void UpdateCurrency(float normalizedTime);
 	}
 	public class ResultCurrencyPane: AlphaVisibilityTogglableUIElement, IResultCurrencyPane{
@@ -27,9 +29,16 @@ namespace AppleShooterProto{
 		public void SetTargetCurrency(int currency){
 			thisTargetCurrency = currency;
 		}
+		public int GetTargetCurrency(){
+			return thisTargetCurrency;
+		}
 		int thisInitialCurrency;
 		public void SetInitialCurrency(int currency){
 			thisInitialCurrency = currency;
+			thisResultCurrencyPaneAdaptor.SetCurrencyText(thisInitialCurrency.ToString());
+		}
+		public int GetInitialCurrency(){
+			return thisInitialCurrency;
 		}
 		public void UpdateCurrency(float normalizedTime){
 			AnimationCurve updateCurrencyProcessCurve = thisResultCurrencyPaneAdaptor.GetUpdateCurrencyProcessCurve();

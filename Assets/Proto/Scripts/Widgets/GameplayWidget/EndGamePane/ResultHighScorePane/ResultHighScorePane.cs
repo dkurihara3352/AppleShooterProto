@@ -28,6 +28,7 @@ namespace AppleShooterProto{
 		int thisInitialHighScore;
 		public void SetInitialHighScore(int score){
 			thisInitialHighScore = score;
+			thisResultHighScorePaneAdaptor.SetScoreText(thisInitialHighScore.ToString());
 		}
 		
 		public void UpdateHighScore(float normalizedTime){

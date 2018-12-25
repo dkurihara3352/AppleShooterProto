@@ -169,11 +169,21 @@ namespace AppleShooterProto{
 				void DoSomething(){
 					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
 					widget.ShowMainMenu();
+					IUIElementGroupScroller rootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
+					rootScroller.DisableInputSelf();
+
 					IEndGamePane endGamePane = endGamePaneAdaptor.GetEndGamePane();
-					endGamePane.ActivateRecursively(true);
+
+					endGamePane.ActivateThruBackdoor(true);
 					endGamePane.ResetEndGamePane();
+					endGamePane.FeedStats(
+						300,
+						200,
+						20
+					);
 					endGamePane.StartSequence();
 				}
+				public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
 				public EndGamePaneAdaptor endGamePaneAdaptor;
 			/* Context 1 */
 				void DrawContextOne(){
