@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DKUtility{
 	public enum ProcessConstraint{
-		none,
+		None,
 		RateOfChange,
 		ExpireTime
 	}
@@ -56,7 +56,7 @@ namespace DKUtility{
 		sealed public override void UpdateProcess(float deltaT){
 			thisElapsedTime += deltaT;
 			if(!thisIsStoppedThisFrame){
-				if(thisProcessConstraint != ProcessConstraint.none){
+				if(thisProcessConstraint != ProcessConstraint.None){
 					if(thisElapsedTime >= thisExpireTime){
 						Expire();
 						return;

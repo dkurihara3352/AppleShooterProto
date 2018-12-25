@@ -6,7 +6,9 @@ namespace DKUtility{
 	public interface IProcessSuite{
 		void Start();
 		void Stop();
+		void Expire();
 		void SetConstraintValue(float value);
+		bool IsRunning();
 	}
 	public class ProcessSuite: IProcessSuite{
 		public ProcessSuite(
@@ -41,12 +43,29 @@ namespace DKUtility{
 			thisProcess.Run();
 		}
 		public void Stop(){
-			if(thisProcess != null && thisProcess.IsRunning()){
+			if(this.IsRunning()){
 				thisProcess.Stop();
 			}
 			thisProcess = null;
 		}
 		IProcess thisProcess;
+
+		public void Expire(){
+			if(this.IsRunning()){
+				IProcess processToExpire = thisProcess;
+				thisProcess.Expire();
+				CheckAndClearProcess(processToExpire);
+			}
+		}
+		public bool IsRunning(){
+			return thisProcess != null && thisProcess.IsRunning();
+		}
+		void CheckAndClearProcess(IProcess process){
+			if(thisProcess != null){
+				if(thisProcess == process)
+					thisProcess = null;
+			}
+		}
 
 		/* process */
 			public interface IProcess: DKUtility.IProcess{

@@ -168,8 +168,13 @@ namespace AppleShooterProto{
 
 				void DoSomething(){
 					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
-					widget.ToggleMainMenu();
+					widget.ShowMainMenu();
+					IEndGamePane endGamePane = endGamePaneAdaptor.GetEndGamePane();
+					endGamePane.ActivateRecursively(true);
+					endGamePane.ResetEndGamePane();
+					endGamePane.StartSequence();
 				}
+				public EndGamePaneAdaptor endGamePaneAdaptor;
 			/* Context 1 */
 				void DrawContextOne(){
 					DrawFileSwitch(sTL_2);

@@ -39,7 +39,7 @@ namespace UISystem{
 				bool doesActivate
 			): base(
 				processManager,
-				ProcessConstraint.none,
+				ProcessConstraint.None,
 				expireT
 			){
 				thisEngine = engine;

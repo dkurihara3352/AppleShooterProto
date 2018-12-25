@@ -99,7 +99,7 @@ namespace UISystem{
 		){
 			UIAWaitForReleaseProcess.IConstArg arg = new UIAWaitForReleaseProcess.ConstArg(
 				thisProcessManager,
-				ProcessConstraint.none,
+				ProcessConstraint.None,
 				1f,
 				state,
 				engine

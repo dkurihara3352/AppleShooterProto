@@ -56,7 +56,7 @@ namespace AppleShooterProto{
 				IProcessManager processManager
 			): base(
 				processManager,
-				ProcessConstraint.none,
+				ProcessConstraint.None,
 				0f
 			){
 				thisShootingManager = shootingManager;

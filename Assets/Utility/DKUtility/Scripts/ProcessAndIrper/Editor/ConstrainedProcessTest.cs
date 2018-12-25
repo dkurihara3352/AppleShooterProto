@@ -29,13 +29,13 @@ public class ConstrainedProcessTest {
 	public class Run_TestCases{
 		public static object[] variousCases = new object[]{
 			new object[]{
-				ProcessConstraint.none, 1f, 0f, 0f
+				ProcessConstraint.None, 1f, 0f, 0f
 			},
 			new object[]{
-				ProcessConstraint.none, .5f, 0f, 0f
+				ProcessConstraint.None, .5f, 0f, 0f
 			},
 			new object[]{
-				ProcessConstraint.none, -.5f, 0f, 0f
+				ProcessConstraint.None, -.5f, 0f, 0f
 			},
 			new object[]{
 				ProcessConstraint.ExpireTime, 1f, 1f, 0f
