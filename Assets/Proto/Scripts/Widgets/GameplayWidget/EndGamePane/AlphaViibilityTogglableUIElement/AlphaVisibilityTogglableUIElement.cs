@@ -111,8 +111,13 @@ namespace AppleShooterProto{
 			}
 		}
 		public void OnProcessExpire(IProcessSuite suite){
-			if(suite == thisProcessSuite)
+			if(suite == thisProcessSuite){
 				UpdateShowness(thisShows, 1f);
+				OnShowComplete();
+			}
+		}
+		protected virtual void OnShowComplete(){
+
 		}
 
 	}

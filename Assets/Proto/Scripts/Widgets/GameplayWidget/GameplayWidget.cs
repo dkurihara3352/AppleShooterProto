@@ -7,14 +7,14 @@ using UISystem;
 
 namespace AppleShooterProto{
 	public interface IGameplayWidget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
-		void SetGameplayUIElement(IUIElement uiElement);
+		void SetGameplayUIElement(IGameplayUIElement uiElement);
 		void SetPlayerCharacterWaypointsFollower(IPlayerCharacterWaypointsFollower follower);
 		void SetGameStatsTracker(IGameStatsTracker tracker);
 		void SetHeadUpDisplay(IHeadUpDisplay hud);
 		void SetRootScroller(IUIElementGroupScroller scroller);
 		void SetRootElementFrostGlass(IFrostGlass glass);
 		void SetResourcePanel(IResourcePanel panel);
-		void SetMainMenuUIElement(IUIElement uiElemenet);
+		void SetMainMenuUIElement(IMainMenuUIElement mainMenuUIElement);
 		void SetEndGamePane(IEndGamePane pane);
 		void SetTitlePane(ITitlePane pane);
 
@@ -56,7 +56,6 @@ namespace AppleShooterProto{
 			
 			HideResourcePanel();
 			ShowTitle();
-			// ShowMainMenuButtonCluster();
 		}
 		void DeactivateEndGamePane(){
 			thisEndGamePane.DeactivateRecursively(false);
@@ -90,17 +89,18 @@ namespace AppleShooterProto{
 		/* StartGameplay */
 			public void StartGameplay(){
 				// StartTargetSpawn();
-				HideMainMenu();
+				// HideMainMenu();
 				ActivateGameplayUI();
 				StartWaitAndStartGameplay();
 				DisableRootScroller();
 				DefrostRootElement();
 			}
 			public void ActivateGameplayUI(){
-				thisGameplayUIElement.ActivateRecursively(instantly: false);
+				// thisGameplayUIElement.ActivateRecursively(instantly: false);
+				thisGameplayUIElement.ActivateThruBackdoor(instantly: false);
 			}
-			IUIElement thisGameplayUIElement;
-			public void SetGameplayUIElement(IUIElement uiElement){
+			IGameplayUIElement thisGameplayUIElement;
+			public void SetGameplayUIElement(IGameplayUIElement uiElement){
 				thisGameplayUIElement = uiElement;
 			}
 			public void StartWaitAndStartGameplay(){
@@ -197,8 +197,8 @@ namespace AppleShooterProto{
 		public void HideMainMenu(){
 			thisMainMenuUIElement.DeactivateRecursively(false);
 		}
-		IUIElement thisMainMenuUIElement;
-		public void SetMainMenuUIElement(IUIElement uiElement){
+		IMainMenuUIElement thisMainMenuUIElement;
+		public void SetMainMenuUIElement(IMainMenuUIElement uiElement){
 			thisMainMenuUIElement = uiElement;
 		}
 	}

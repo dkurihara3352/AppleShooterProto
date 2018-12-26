@@ -26,7 +26,7 @@ namespace AppleShooterProto{
 		}
 
 		public override void SetUpReference(){
-			IUIElement gameplayUIElement = gameplayUIElementAdaptor.GetUIElement();
+			IGameplayUIElement gameplayUIElement = gameplayUIElementAdaptor.GetGameplayUIElement();
 			thisWidget.SetGameplayUIElement(gameplayUIElement);
 
 			IPlayerCharacterWaypointsFollower follower = playerCharacterWaypointsFollowerAdaptor.GetPlayerCharacterWaypointsFollower();
@@ -47,7 +47,7 @@ namespace AppleShooterProto{
 			IResourcePanel resourcePanel = resourcePanelAdaptor.GetResourcePanel();
 			thisWidget.SetResourcePanel(resourcePanel);
 
-			IUIElement mainMenuUIElement = mainMenuUIAdaptor.GetUIElement();
+			IMainMenuUIElement mainMenuUIElement = mainMenuUIAdaptor.GetMainMenuUIElement();
 			thisWidget.SetMainMenuUIElement(mainMenuUIElement);
 
 			IEndGamePane endGamePane = endGamePaneAdaptor.GetEndGamePane();
@@ -56,14 +56,14 @@ namespace AppleShooterProto{
 			ITitlePane titlePane = titlePaneAdaptor.GetTitlePane();
 			thisWidget.SetTitlePane(titlePane);
 		}
-		public UIAdaptor gameplayUIElementAdaptor;
+		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
 		public GameStatsTrackerAdaptor gameStatsTrackerAdaptor;
 		public HeadUpDisplayAdaptor headUpDisplayAdaptor;
 		public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
 		public FrostGlassAdaptor rootElementFrostGlassAdaptor;
 		public ResourcePanelAdaptor resourcePanelAdaptor;
-		public UIAdaptor mainMenuUIAdaptor;
+		public MainMenuUIAdaptor mainMenuUIAdaptor;
 		public EndGamePaneAdaptor endGamePaneAdaptor;
 		public TitlePaneAdaptor titlePaneAdaptor;
 	}

@@ -167,7 +167,19 @@ namespace AppleShooterProto{
 				}
 
 				void DoSomething(){
-					StartEndGameSequence();	
+					// StartEndGameSequence();	
+					StartUp();
+					// ToggleMainMenu();
+				}
+				bool init;
+				void ToggleMainMenu(){
+					if(!init){
+						gameManager.SetUp();
+						gameManager.ActivateRootUI();
+						init = true;
+					}
+					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
+					widget.ToggleMainMenu();
 				}
 				void StartEndGameSequence(){
 					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
@@ -188,6 +200,9 @@ namespace AppleShooterProto{
 						0
 					);
 					endGamePane.StartSequence();
+				}
+				void StartUp(){
+					gameManager.StartUp();
 				}
 
 				public UIElementGroupScrollerAdaptor rootScrollerAdaptor;

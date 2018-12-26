@@ -236,7 +236,9 @@ namespace UISystem{
 			public ActivationMode activationMode;
 			public void SetUpCanvasGroupComponent(){
 				if(thisCanvasGroup == null){
-					CanvasGroup canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
+					CanvasGroup canvasGroup = this.GetComponent<CanvasGroup>();
+					if(canvasGroup == null)
+					canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
 					canvasGroup.alpha = 0f;
 					thisCanvasGroup = canvasGroup;
 				}

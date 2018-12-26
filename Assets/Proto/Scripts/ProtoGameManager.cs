@@ -6,6 +6,14 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public class ProtoGameManager : MonoBehaviour{
+		public void StartUp(){
+			SetUp();
+			ActivateRootUI();
+			WarmUp();
+			IStartupManager startupManager = startupManagerAdaptor.GetStartupManager();
+			startupManager.StartStartupSequence();
+		}
+		public StartupManagerAdaptor startupManagerAdaptor;
 		public void SetUp(){
 			SetUpMBAdaptors();
 			SetUpSceneObjectRefs();
@@ -26,6 +34,7 @@ namespace AppleShooterProto{
 		/* ActivateRootUI */
 			public void ActivateRootUI(){
 				thisRootUIElement.ActivateRecursively(false);
+				thisRootUIElement.EvaluateScrollerFocusRecursively();
 			}
 			IUIElement thisRootUIElement;
 			public UIAdaptor rootUIAdaptor;

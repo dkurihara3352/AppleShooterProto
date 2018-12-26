@@ -4,11 +4,10 @@ using UnityEngine;
 using UISystem;
 
 namespace AppleShooterProto{
-	public interface IMainMenuUIAdaptor: IUIAdaptor{
+	public interface IMainMenuUIAdaptor: IAlphaVisibilityTogglableUIAdaptor{
 		IMainMenuUIElement GetMainMenuUIElement();
 	}
-	public class MainMenuUIAdaptor : UIAdaptor, IMainMenuUIAdaptor {
-
+	public class MainMenuUIAdaptor: AlphaVisibilityTogglableUIAdaptor, IMainMenuUIAdaptor{
 		protected override IUIElement CreateUIElement(){
 			MainMenuUIElement.IConstArg arg = new MainMenuUIElement.ConstArg(
 				this,
@@ -16,8 +15,13 @@ namespace AppleShooterProto{
 			);
 			return new MainMenuUIElement(arg);
 		}
+		IMainMenuUIElement thisMainMenuUIElement{
+			get{
+				return (IMainMenuUIElement)thisUIElement;
+			}
+		}
 		public IMainMenuUIElement GetMainMenuUIElement(){
-			return (IMainMenuUIElement)thisUIElement;
+			return thisMainMenuUIElement;
 		}
 	}
 }

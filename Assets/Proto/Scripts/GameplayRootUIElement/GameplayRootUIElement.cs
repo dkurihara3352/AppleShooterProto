@@ -4,9 +4,9 @@ using UnityEngine;
 using UISystem;
 
 namespace AppleShooterProto{
-	public interface IMainMenuUIElement: IUIElement{}
-	public class MainMenuUIElement : UIElement, IMainMenuUIElement {
-		public MainMenuUIElement(
+	public interface IGameplayRootUIElement: IUIElement{}
+	public class GameplayRootUIElement : UIElement, IGameplayRootUIElement {
+		public GameplayRootUIElement(
 			IConstArg arg
 		): base(
 			arg
@@ -22,7 +22,7 @@ namespace AppleShooterProto{
 		public new interface IConstArg: UIElement.IConstArg{}
 		public new class ConstArg: UIElement.ConstArg, IConstArg{
 			public ConstArg(
-				IMainMenuUIAdaptor adaptor,
+				IGameplayRootUIAdaptor adaptor,
 				ActivationMode activationMode
 			): base(
 				adaptor,
