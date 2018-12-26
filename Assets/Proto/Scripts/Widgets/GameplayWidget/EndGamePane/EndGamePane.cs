@@ -478,7 +478,7 @@ namespace AppleShooterProto{
 				int initialCurrency = thisCurrencyPane.GetTargetCurrency();
 				int doubledCurrency = initialCurrency * 2;
 
-				// AddCurrencyToPlayerData(initialCurrency);
+				AddCurrencyToPlayerData(initialCurrency);
 
 				thisCurrencyPane.SetInitialCurrency(initialCurrency);
 				thisCurrencyPane.SetTargetCurrency(doubledCurrency);
@@ -489,7 +489,7 @@ namespace AppleShooterProto{
 
 			void AddCurrencyToPlayerData(int addedCurrency){
 				thisPlayerDataManager.SetFileIndex(0);
-				if(thisPlayerDataManager.PlayerDataIsLoaded())
+				if(!thisPlayerDataManager.PlayerDataIsLoaded())
 					thisPlayerDataManager.Load();
 				int currency = thisPlayerDataManager.GetCurrency();
 				int newCurrency = currency + addedCurrency;

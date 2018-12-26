@@ -21,6 +21,8 @@ namespace AppleShooterProto{
 		void StartDraw();
 		void DrawImple(float deltaTime);
 		void HoldDraw();
+		bool IsHeld();
+		void ReleaseHold();
 		void StopDraw();
 
 		float GetDrawElapsedTime();
@@ -231,6 +233,14 @@ namespace AppleShooterProto{
 			/*  */
 			public void HoldDraw(){
 				thisDrawProcess.Hold();
+			}
+			public bool IsHeld(){
+				if(thisDrawProcess == null)
+					return false;
+				return thisDrawProcess.IsHeld();
+			}
+			public void ReleaseHold(){
+				thisDrawProcess.ReleaseHold();
 			}
 			public void StopDraw(){
 				if(thisDrawProcess != null && thisDrawProcess.IsRunning()){

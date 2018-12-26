@@ -234,7 +234,7 @@ namespace AppleShooterProto{
 					thisPlayerDataManager.Load();
 				
 				int currency = thisPlayerDataManager.GetCurrency();
-				int newCurrency = currency + stats.gainedCurrency;
+				int newCurrency = currency + stats.gainedCurrency + stats.scoreCurrencyBonus;
 
 				thisPlayerDataManager.SetCurrency(newCurrency);
 
@@ -250,6 +250,7 @@ namespace AppleShooterProto{
 				public int score;
 				public int highScore;
 				public int gainedCurrency;
+				public int scoreCurrencyBonus;
 			}
 			GameResultStats CreateGameResultStats(){
 				int score = thisScoreManager.GetScore();
@@ -259,6 +260,7 @@ namespace AppleShooterProto{
 				stats.score = score;
 				stats.highScore = highScore;
 				stats.gainedCurrency = gainedCurrency;
+				stats.scoreCurrencyBonus = CalculateScoreCurrencyBonus(score);
 
 				return stats;
 			}
@@ -280,12 +282,11 @@ namespace AppleShooterProto{
 				thisEndGamePane.ResetEndGamePane();
 			}
 			void FeedEndGamePane(GameResultStats stats){
-				int scoreCurrencyBonus = CalculateScoreCurrencyBonus(stats.score);
 				thisEndGamePane.FeedStats(
 					stats.score,
 					stats.highScore,
 					stats.gainedCurrency,
-					scoreCurrencyBonus
+					stats.scoreCurrencyBonus
 				);
 			}
 			int CalculateScoreCurrencyBonus(int score){

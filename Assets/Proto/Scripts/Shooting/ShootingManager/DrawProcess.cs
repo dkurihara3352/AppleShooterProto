@@ -6,6 +6,8 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface IDrawProcess: IProcess{
 		void Hold();
+		bool IsHeld();
+		void ReleaseHold();
 	}
 	public class DrawProcess : AbsProcess, IDrawProcess {
 
@@ -32,7 +34,12 @@ namespace AppleShooterProto{
 		public void Hold(){
 			isHeld = true;
 		}
-
+		public bool IsHeld(){
+			return isHeld;
+		}
+		public void ReleaseHold(){
+			this.isHeld = false;
+		}
 
 		public new interface IConstArg: AbsProcess.IConstArg{
 			IShootingManager shootingManager{get;}

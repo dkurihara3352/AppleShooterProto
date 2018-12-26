@@ -134,7 +134,10 @@ namespace AppleShooterProto{
 	public class PlayerInputDrawingState: AbsPlayerInputPointerDownState, IPlayerInputDrawingState{
 		public PlayerInputDrawingState(IPlayerInputStateConstArg arg): base(arg){}
 		public override void OnEnter(){
-			thisEngine.StartDraw();
+			if(thisEngine.IsHeld())
+				thisEngine.ReleaseHold();
+			else
+				thisEngine.StartDraw();
 		}
 		public override void OnDrag(ICustomEventData eventData){
 			if(PointerDeltaIsWithinDrawThreshold(eventData.velocity)){

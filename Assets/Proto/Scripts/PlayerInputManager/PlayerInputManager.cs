@@ -19,6 +19,8 @@ namespace AppleShooterProto{
 		void Nock();
 		void StartDraw();
 		void HoldDraw();
+		bool IsHeld();
+		void ReleaseHold();
 		void StopDraw();
 		void Release();
 		// void TryResetArrow();
@@ -127,6 +129,12 @@ namespace AppleShooterProto{
 			}
 			public void HoldDraw(){
 				thisShootingManager.HoldDraw();
+			}
+			public bool IsHeld(){
+				return thisShootingManager.IsHeld();
+			}
+			public void ReleaseHold(){
+				thisShootingManager.ReleaseHold();
 			}
 			public void StopDraw(){
 				thisShootingManager.StopDraw();
