@@ -27,10 +27,19 @@ namespace AppleShooterProto{
 		public void ResetWatchADButton(){
 			UpdateShowness(0f);
 			DisableInputRecursively();
+			Validate();
 			thisWatchADButtonAdaptor.SetLabelText("Watch AD");
 		}
 		public void EnableInput(){
 			EnableInputRecursively();
+		}
+		public override void BecomeSelectableImple(){
+			base.BecomeSelectableImple();
+			// Debug.Log(DKUtility.DebugHelper.StringInColor("become selectable, isValid: " + thisIsValid.ToString(), Color.blue));
+		}
+		public override void BecomeUnselectableImple(){
+			base.BecomeUnselectableImple();
+			// Debug.Log(DKUtility.DebugHelper.StringInColor("become unselectable", Color.red));
 		}
 		protected override void OnTapImple(int tapCount){
 			base.OnTapImple(tapCount);

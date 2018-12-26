@@ -36,6 +36,8 @@ namespace AppleShooterProto{
 		public void ClearScore(){
 			thisScore = 0;
 			thisScoreImage.UpdateImage(thisScore);
+			thisHighScore = 0;
+			thisHighScoreImage.UpdateImage(thisHighScore);
 		}
 		/* highScore */
 		IScoreImage thisHighScoreImage;

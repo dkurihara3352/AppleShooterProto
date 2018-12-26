@@ -55,6 +55,18 @@ namespace AppleShooterProto{
 
 			ITitlePane titlePane = titlePaneAdaptor.GetTitlePane();
 			thisWidget.SetTitlePane(titlePane);
+
+			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+			thisWidget.SetPlayerDataManager(playerDataManager);
+
+			IShootingDataManager shootingDataManager = shootingDataManagerAdaptor.GetShootingDataManager();
+			thisWidget.SetShootingDataManager(shootingDataManager);
+
+			IScoreManager scoreManager = scoreManagerAdaptor.GetScoreManager();
+			thisWidget.SetScoreManager(scoreManager);
+
+			ICurrencyManager currencyManager = CurrencyManagerAdaptor.GetCurrencyManager();
+			thisWidget.SetCurrencyManager(currencyManager);
 		}
 		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
@@ -66,6 +78,10 @@ namespace AppleShooterProto{
 		public MainMenuUIAdaptor mainMenuUIAdaptor;
 		public EndGamePaneAdaptor endGamePaneAdaptor;
 		public TitlePaneAdaptor titlePaneAdaptor;
+		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+		public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
+		public ScoreManagerAdaptor scoreManagerAdaptor;
+		public CurrencyManagerAdaptor CurrencyManagerAdaptor;
 	}
 }
 

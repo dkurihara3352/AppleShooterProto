@@ -17,10 +17,18 @@ namespace UISystem{
 			ActivateAllChildren(instantly);
 		}
 		public void Validate(){
+			// Debug.Log(DKUtility.DebugHelper.StringInColor("validated", Color.blue));
 			thisIsValid = true;
 			ActivateSelf(false);
+			if(thisIsFocusedInScroller){
+				if(this.IsSelectable())
+					BecomeSelectableImple();
+				else
+					BecomeSelectable();
+			}
 		}
 		public void Invalidate(){
+			// Debug.Log(DKUtility.DebugHelper.StringInColor("invalidated", Color.red));
 			thisIsValid = false;
 			DeactivateSelf(false);
 		}

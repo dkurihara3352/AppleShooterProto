@@ -410,15 +410,7 @@ namespace AppleShooterProto{
 			void StartUpdateCurrencyProcess(){
 				thisUpdateCurrencyProcessSuite.Start();
 			}
-			// int thisCurrencyBonus;
-/* 			int thisCurrencyBonus;
-			int CalculateScoreCurrencyBonus(){
-				int score = thisResultScorePane.GetScore();
-				if(score >= 100){
-					return score / 100;
-				}else
-					return 0;
-			} */
+
 			IProcessSuite thisUpdateCurrencyProcessSuite;
 			void UpdateCurrency(float normalizedTime){
 				thisCurrencyPane.UpdateCurrency(normalizedTime);

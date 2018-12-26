@@ -183,7 +183,7 @@ namespace AppleShooterProto{
 				}
 				void StartEndGameSequence(){
 					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
-					widget.ShowMainMenu();
+					widget.ActivateMainMenu();
 					IUIElementGroupScroller rootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
 					rootScroller.DisableInputSelf();
 					ITitlePane titlePane = titlePaneAdaptor.GetTitlePane();
