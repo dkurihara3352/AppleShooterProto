@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 			}
 		}
 		public void UpdateShowness(float normalizedTime){
-			AnimationCurve alphaCurve = thisWatchADButtonAdaptor.GetAlphaCurve();
+			AnimationCurve alphaCurve = thisWatchADButtonAdaptor.GetProcessCurve();
 			float newAlpha = alphaCurve.Evaluate(normalizedTime);
 			thisWatchADButtonAdaptor.SetAlpha(newAlpha);
 		}

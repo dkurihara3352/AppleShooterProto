@@ -78,7 +78,6 @@ namespace AppleShooterProto{
 		public float GetShowButtonClusterProcessTime(){
 			return showButtonClusterProcessTime;
 		}
-
 		public override void SetUpReference(){
 			base.SetUpReference();
 			IResultLabelPane resultLabelPane = resultLabelPaneAdaptor.GetResultLabelPane();

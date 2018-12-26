@@ -167,10 +167,15 @@ namespace AppleShooterProto{
 				}
 
 				void DoSomething(){
+					StartEndGameSequence();	
+				}
+				void StartEndGameSequence(){
 					IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
 					widget.ShowMainMenu();
 					IUIElementGroupScroller rootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
 					rootScroller.DisableInputSelf();
+					ITitlePane titlePane = titlePaneAdaptor.GetTitlePane();
+					titlePane.Hide(true);
 
 					IEndGamePane endGamePane = endGamePaneAdaptor.GetEndGamePane();
 
@@ -179,12 +184,15 @@ namespace AppleShooterProto{
 					endGamePane.FeedStats(
 						300,
 						200,
-						20
+						10,
+						0
 					);
 					endGamePane.StartSequence();
 				}
+
 				public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
 				public EndGamePaneAdaptor endGamePaneAdaptor;
+				public TitlePaneAdaptor titlePaneAdaptor;
 			/* Context 1 */
 				void DrawContextOne(){
 					DrawFileSwitch(sTL_2);

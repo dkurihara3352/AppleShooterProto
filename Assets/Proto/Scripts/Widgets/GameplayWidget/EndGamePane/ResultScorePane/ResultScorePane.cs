@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 	public interface IResultScorePane: IAlphaVisibilityTogglableUIElement{
 		void ResetScorePane();
 		void SetScore(int score);
+		int GetScore();
 	}
 	public class ResultScorePane: AlphaVisibilityTogglableUIElement, IResultScorePane{
 		public ResultScorePane(IConstArg arg): base(arg){}
@@ -16,11 +17,18 @@ namespace AppleShooterProto{
 			}
 		}
 		public void ResetScorePane(){
-			thisResultScorePaneAdaptor.SetAlpha(0f);
+			// thisResultScorePaneAdaptor.SetAlpha(0f);
+			Hide(true);
 			SetScore(0);
+			ClearFields();
 		}
 		public void SetScore(int score){
+			thisScore = score;
 			thisResultScorePaneAdaptor.SetScoreText(score.ToString());
+		}
+		int thisScore;
+		public int GetScore(){
+			return thisScore;
 		}
 	}
 }

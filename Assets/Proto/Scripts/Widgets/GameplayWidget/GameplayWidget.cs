@@ -15,6 +15,8 @@ namespace AppleShooterProto{
 		void SetRootElementFrostGlass(IFrostGlass glass);
 		void SetResourcePanel(IResourcePanel panel);
 		void SetMainMenuUIElement(IUIElement uiElemenet);
+		void SetEndGamePane(IEndGamePane pane);
+		void SetTitlePane(ITitlePane pane);
 
 		void StartGameplay();
 		void EndGameplay();
@@ -51,10 +53,17 @@ namespace AppleShooterProto{
 			thisActivationEngine.Deactivate();
 		}
 		public void ActivateImple(){
-			DeactivateEndGamePane();
+			
 			HideResourcePanel();
 			ShowTitle();
-			ShowMainMenuButtonCluster();
+			// ShowMainMenuButtonCluster();
+		}
+		void DeactivateEndGamePane(){
+			thisEndGamePane.DeactivateRecursively(false);
+		}
+		IEndGamePane thisEndGamePane;
+		public  void SetEndGamePane(IEndGamePane pane){
+			thisEndGamePane = pane;
 		}
 		void HideResourcePanel(){
 			if(thisResourcePanel.IsShown())
@@ -64,7 +73,15 @@ namespace AppleShooterProto{
 		public void SetResourcePanel(IResourcePanel panel){
 			thisResourcePanel = panel;
 		}
+		void ShowTitle(){
+			thisTitlePane.Show(false);
+		}
+		ITitlePane thisTitlePane;
+		public void SetTitlePane(ITitlePane pane){
+			thisTitlePane = pane;
+		}
 		public void DeactivateImple(){
+			DeactivateEndGamePane();
 
 		}
 		public bool IsActivated(){

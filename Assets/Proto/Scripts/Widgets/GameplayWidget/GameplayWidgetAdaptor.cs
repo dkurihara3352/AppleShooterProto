@@ -49,6 +49,12 @@ namespace AppleShooterProto{
 
 			IUIElement mainMenuUIElement = mainMenuUIAdaptor.GetUIElement();
 			thisWidget.SetMainMenuUIElement(mainMenuUIElement);
+
+			IEndGamePane endGamePane = endGamePaneAdaptor.GetEndGamePane();
+			thisWidget.SetEndGamePane(endGamePane);
+
+			ITitlePane titlePane = titlePaneAdaptor.GetTitlePane();
+			thisWidget.SetTitlePane(titlePane);
 		}
 		public UIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
@@ -58,6 +64,8 @@ namespace AppleShooterProto{
 		public FrostGlassAdaptor rootElementFrostGlassAdaptor;
 		public ResourcePanelAdaptor resourcePanelAdaptor;
 		public UIAdaptor mainMenuUIAdaptor;
+		public EndGamePaneAdaptor endGamePaneAdaptor;
+		public TitlePaneAdaptor titlePaneAdaptor;
 	}
 }
 

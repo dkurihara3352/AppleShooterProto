@@ -20,7 +20,9 @@ namespace AppleShooterProto{
 		}
 		public void ResetButtonCluster(){
 			DisableInputRecursively();
-			thisMainMenuButtonClusterAdaptor.SetAlpha(0f);
+			// thisMainMenuButtonClusterAdaptor.SetAlpha(0f);
+			Hide(true);
+			ClearFields();
 		}
 	}
 }

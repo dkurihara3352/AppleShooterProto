@@ -15,7 +15,9 @@ namespace AppleShooterProto{
 			}
 		}
 		public void ResetResultLabelPane(){
-			thisResultLabelPaneAdaptor.SetAlpha(0f);
+			// thisResultLabelPaneAdaptor.SetAlpha(0f);
+			Hide(true);
+			ClearFields();
 		}
 	}
 }

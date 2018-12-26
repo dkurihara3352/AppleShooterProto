@@ -22,8 +22,10 @@ namespace AppleShooterProto{
 			}
 		}
 		public void ResetCurrencyPane(){
-			thisResultCurrencyPaneAdaptor.SetAlpha(0f);
+			// thisResultCurrencyPaneAdaptor.SetAlpha(0f);
+			Hide(true);
 			thisTargetCurrency = 0;
+			ClearFields();
 		}
 		int thisTargetCurrency;
 		public void SetTargetCurrency(int currency){

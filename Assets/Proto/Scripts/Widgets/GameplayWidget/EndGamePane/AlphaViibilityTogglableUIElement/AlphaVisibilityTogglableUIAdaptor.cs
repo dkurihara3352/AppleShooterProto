@@ -6,8 +6,10 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IAlphaVisibilityTogglableUIAdaptor: IUIAdaptor{
 		IAlphaVisibilityTogglableUIElement GetAlphaVisibilityTogglableUIElement();
-		AnimationCurve GetAlphaCurve();
+		AnimationCurve GetProcessCurve();
 		void SetAlpha(float alpha);
+		float GetAlpha();
+		float GetProcessTime();
 	}
 	[RequireComponent(typeof(CanvasGroup))]
 	public class AlphaVisibilityTogglableUIAdaptor: UIAdaptor, IAlphaVisibilityTogglableUIAdaptor{
@@ -30,12 +32,19 @@ namespace AppleShooterProto{
 		public IAlphaVisibilityTogglableUIElement GetAlphaVisibilityTogglableUIElement(){
 			return thisTogglableUIElement;
 		}
-		public AnimationCurve alphaCurve;
-		public AnimationCurve GetAlphaCurve(){
-			return alphaCurve;
+		public AnimationCurve processCurve;
+		public AnimationCurve GetProcessCurve(){
+			return processCurve;
 		}
 		public void SetAlpha(float alpha){
 			thisCanvasGroup.alpha = alpha;
+		}
+		public float GetAlpha(){
+			return thisCanvasGroup.alpha;
+		}
+		public float processTime = .5f;
+		public float GetProcessTime(){
+			return processTime;
 		}
 	}
 }

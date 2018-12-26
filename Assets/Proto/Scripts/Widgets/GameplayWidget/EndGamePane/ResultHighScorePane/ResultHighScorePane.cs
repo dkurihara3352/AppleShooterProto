@@ -17,9 +17,10 @@ namespace AppleShooterProto{
 			}
 		}
 		public void ResetHighScorePane(){
-			thisResultHighScorePaneAdaptor.SetAlpha(0f);
+			// thisResultHighScorePaneAdaptor.SetAlpha(0f);
+			Hide(true);
 			thisTargetHighScore = 0;
-			
+			ClearFields();
 		}
 		int thisTargetHighScore;
 		public void SetTargetHighScore(int score){
