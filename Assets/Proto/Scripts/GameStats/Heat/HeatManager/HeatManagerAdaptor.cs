@@ -67,6 +67,20 @@ namespace AppleShooterProto{
 
 			IHeatLevelText heatLevelText = heatLevelTextAdaptor.GetHeatLevelText();
 			thisHeatManager.SetHeatLevelText(heatLevelText);
+
+			IShootingTargetReserve[] shootingTargetReserves = CollectShootingTargetReserves();
+			thisHeatManager.SetShootingTargetReserves(shootingTargetReserves);
+
+			IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
+			thisHeatManager.SetGameplayWidget(widget);
+		}
+		public AbsShootingTargetReserveAdaptor[] shootingTargetReserveAdaptors;
+		public GameplayWidgetAdaptor gameplayWidgetAdaptor;
+		IShootingTargetReserve[] CollectShootingTargetReserves(){
+			List<IShootingTargetReserve> resultList = new List<IShootingTargetReserve>();
+			foreach(IShootingTargetReserveAdaptor adaptor in shootingTargetReserveAdaptors)
+				resultList.Add(adaptor.GetReserve());
+			return resultList.ToArray();
 		}
 		public override void FinalizeSetUp(){
 			thisHeatManager.InitializeHeat();

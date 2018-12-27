@@ -21,6 +21,8 @@ namespace AppleShooterProto{
 		void SetShootingDataManager(IShootingDataManager manager);
 		void SetScoreManager(IScoreManager manager);
 		void SetCurrencyManager(ICurrencyManager manager);
+		void SetHeatManager(IHeatManager manager);
+		void SetCoreGameplayInputScroller(ICoreGameplayInputScroller scroller);
 
 		void StartGameplay();
 		void EndGameplay();
@@ -195,7 +197,10 @@ namespace AppleShooterProto{
 			}
 
 		/* End gameplay */
-			public void EndGameplay(){	
+			public void EndGameplay(){
+				RaisePointerOnInputScroller();
+				//StopAllPauseProcess();
+				StopCountDownHeat();
 				DeactivateGameplayUI();
 				DeactivateHUD();
 				StopTargetSpawn();
@@ -212,6 +217,20 @@ namespace AppleShooterProto{
 
 				FeedEndGamePane(stats);
 				StartEndSequence();
+			}
+			void RaisePointerOnInputScroller(){
+				thisInputScroller.ClearInput();
+			}
+			ICoreGameplayInputScroller thisInputScroller;
+			public void SetCoreGameplayInputScroller(ICoreGameplayInputScroller scroller){
+				thisInputScroller = scroller;
+			}
+			void StopCountDownHeat(){
+				thisHeatManager.StopCountingDown();
+			}
+			IHeatManager thisHeatManager;
+			public void SetHeatManager(IHeatManager manager){
+				thisHeatManager = manager;
 			}
 			public void DeactivateGameplayUI(){
 				thisGameplayUIElement.DeactivateRecursively(false);

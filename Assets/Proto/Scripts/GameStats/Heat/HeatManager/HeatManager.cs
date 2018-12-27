@@ -6,6 +6,9 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface IHeatManager: IAppleShooterSceneObject, IHeatManagerStateHandler{
 		void SetHeatLevelText(IHeatLevelText text);
+		void SetShootingTargetReserves(IShootingTargetReserve[] reserves);
+		void SetGameplayWidget(IGameplayWidget widget);
+
 		void InitializeHeat();
 		void SetHeatImage(IHeatImage heatImage);
 		void TickAwayHeat(float delta);
@@ -70,6 +73,16 @@ namespace AppleShooterProto{
 		public void TickAwayHeat(float delta){
 			thisHeat -= delta;
 			thisHeatImage.UpdateHeat(thisHeat);
+			if(thisHeat <= 0f)
+				EndGameplay();
+		}
+		void EndGameplay(){
+			// StopRunningPauseProcess();
+			thisGameplayWidget.EndGameplay();
+		}
+		IGameplayWidget thisGameplayWidget;
+		public void SetGameplayWidget(IGameplayWidget widget){
+			thisGameplayWidget = widget;
 		}
 		public void AddHeat(float delta){
 			thisHeat += delta;
@@ -149,11 +162,15 @@ namespace AppleShooterProto{
 			thisHeatLevelText = heatLevelText;
 		}
 		void LevelUpHeat(){
-			ResetCurrentMaxComboMultiplier();
-			thisHeatLevel ++;
-			StartHeatLevelUpProcess();
-			thisHeatLevelText.StartLevelUpTo(thisHeatLevel);
+			if(thisHeatLevel < thisMaxHeatLevel){
+				ResetCurrentMaxComboMultiplier();
+				thisHeatLevel ++;
+				StartHeatLevelUpProcess();
+				thisHeatLevelText.StartLevelUpTo(thisHeatLevel);
+				SetAllTargetReserveTier(thisHeatLevel - 1);
+			}
 		}
+		int thisMaxHeatLevel = 3;
 		int thisHeatLevel = 1;
 		int thisInitHeatLevel = 1;
 		void StartHeatLevelUpProcess(){
@@ -165,6 +182,15 @@ namespace AppleShooterProto{
 			);
 			process.Run();
 
+		}
+		void SetAllTargetReserveTier(int tier){
+			foreach(IShootingTargetReserve reserve in thisTargetReserves){
+				reserve.SetTier(tier);
+			}
+		}
+		IShootingTargetReserve[] thisTargetReserves;
+		public void SetShootingTargetReserves(IShootingTargetReserve[] reserves){
+			thisTargetReserves = reserves;
 		}
 		public void OnLevelUpExpire(){
 			AddHeat(0f);

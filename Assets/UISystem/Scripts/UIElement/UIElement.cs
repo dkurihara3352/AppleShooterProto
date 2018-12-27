@@ -56,6 +56,7 @@ namespace UISystem{
 
 		Vector2 GetRectSize();
 		void SetRectSize(Vector2 size);
+		void ClearInput();
 	}
 	public class UIElement: UISystemSceneObject, IUIElement{
 		public UIElement(
@@ -543,7 +544,9 @@ namespace UISystem{
 		public void Flash(Color color){
 			GetUIImage().Flash(color);
 		}
-
+		public void ClearInput(){
+			this.OnRelease();
+		}
 		public new interface IConstArg: UISystemSceneObject.IConstArg{
 			ActivationMode activationMode{get;}
 		}

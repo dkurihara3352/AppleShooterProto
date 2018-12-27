@@ -65,8 +65,14 @@ namespace AppleShooterProto{
 			IScoreManager scoreManager = scoreManagerAdaptor.GetScoreManager();
 			thisWidget.SetScoreManager(scoreManager);
 
-			ICurrencyManager currencyManager = CurrencyManagerAdaptor.GetCurrencyManager();
+			ICurrencyManager currencyManager = currencyManagerAdaptor.GetCurrencyManager();
 			thisWidget.SetCurrencyManager(currencyManager);
+
+			IHeatManager heatManager = heatManagerAdaptor.GetHeatManager();
+			thisWidget.SetHeatManager(heatManager);
+			
+			ICoreGameplayInputScroller inputScroller = inputScrollerAdaptor.GetInputScroller();
+			thisWidget.SetCoreGameplayInputScroller(inputScroller);
 		}
 		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
@@ -81,7 +87,9 @@ namespace AppleShooterProto{
 		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
 		public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
 		public ScoreManagerAdaptor scoreManagerAdaptor;
-		public CurrencyManagerAdaptor CurrencyManagerAdaptor;
+		public CurrencyManagerAdaptor currencyManagerAdaptor;
+		public HeatManagerAdaptor heatManagerAdaptor;
+		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
 	}
 }
 
