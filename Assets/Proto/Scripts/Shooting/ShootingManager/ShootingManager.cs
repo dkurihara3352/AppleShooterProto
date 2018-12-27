@@ -130,18 +130,23 @@ namespace AppleShooterProto{
 				);
 				thisDrawProcess.Run();
 			}
+			
 			public void DrawImple(float deltaTime){
 				if(thisDrawElapsedTime < thisShootingDataManager.GetDrawTime()){
 					thisDrawElapsedTime += deltaTime;
 					float normalizedDrawTime = GetNormalizedDrawTime();
 					thisDrawStrength = CalculateDrawStrength(normalizedDrawTime);
-
 					thisInputManager.Zoom(thisDrawStrength);
 					thisFlightSpeed = CalculateFlightSpeed();
 					thisArrowAttack = CalculateArrowAttack(thisDrawStrength);
+
+					thisLaunchPoint.SetDrawPosition(normalizedDrawTime);
 				}
+
 				DrawTrajectory();
 			}
+			// float thisNormalizedDrawTime = 0f;
+			
 			/* DrawStrength */
 				AnimationCurve thisBowDrawProfileCurve{
 					get{

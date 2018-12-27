@@ -5,6 +5,8 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface ILaunchPointAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		ILaunchPoint GetLaunchPoint();
+		Vector3 GetMinDrawPosition();
+		Vector3 GetMaxDrawPosition();
 	}
 	public class LaunchPointAdaptor : AppleShooterMonoBehaviourAdaptor, ILaunchPointAdaptor {
 		ILaunchPoint thisLaunchPoint;
@@ -19,6 +21,14 @@ namespace AppleShooterProto{
 		}
 		public ILaunchPoint GetLaunchPoint(){
 			return thisLaunchPoint;
+		}
+		public Transform minDrawPositionTransform;
+		public Vector3 GetMinDrawPosition(){
+			return  minDrawPositionTransform.localPosition;
+		}
+		public Transform maxDrawPositionTransform;
+		public Vector3 GetMaxDrawPosition(){
+			return maxDrawPositionTransform.localPosition;
 		}
 	}
 }
