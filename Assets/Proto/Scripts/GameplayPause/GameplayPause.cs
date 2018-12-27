@@ -13,6 +13,8 @@ namespace AppleShooterProto{
 		void ActivatePauseButton();
 		void SetTimeScale(float scale);
 		float GetTimeScale();
+
+		void ExpireUnpauseProcess();
 	}
 	public class GameplayPause : AppleShooterSceneObject, IGameplayPause {
 		public GameplayPause(
@@ -65,6 +67,7 @@ namespace AppleShooterProto{
 		}
 		public void ActivatePauseButton(){
 			thisPauseButton.ActivateRecursively(false);
+			thisPauseButton.EvaluateScrollerFocusRecursively();
 		}
 
 		public void SetTimeScale(float scale){
@@ -73,7 +76,12 @@ namespace AppleShooterProto{
 		public float GetTimeScale(){
 			return thisTypedAdaptor.GetTimeScale();
 		}
-
+		public void ExpireUnpauseProcess(){
+			if(thisProcess != null && thisProcess.IsRunning()){
+				thisProcess.Expire();
+			}
+			thisProcess = null;
+		}
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float unpauseTime{get;}
 		}

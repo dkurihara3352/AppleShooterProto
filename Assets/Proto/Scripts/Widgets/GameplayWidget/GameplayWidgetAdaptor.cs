@@ -73,6 +73,9 @@ namespace AppleShooterProto{
 			
 			ICoreGameplayInputScroller inputScroller = inputScrollerAdaptor.GetInputScroller();
 			thisWidget.SetCoreGameplayInputScroller(inputScroller);
+
+			IGameplayPause gameplayPause = gameplayPauseAdaptor.GetGameplayPause();
+			thisWidget.SetGameplayPause(gameplayPause);
 		}
 		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
@@ -90,6 +93,7 @@ namespace AppleShooterProto{
 		public CurrencyManagerAdaptor currencyManagerAdaptor;
 		public HeatManagerAdaptor heatManagerAdaptor;
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
+		public GameplayPauseAdaptor gameplayPauseAdaptor;
 	}
 }
 

@@ -27,6 +27,7 @@ namespace AppleShooterProto{
 
 		protected override void ExpireImple(){
 			thisGameplayPause.ActivatePauseButton();
+			thisGameplayPause.SetTimeScale(1f);
 		}
 
 		public new interface IConstArg: AbsConstrainedProcess.IConstArg{
