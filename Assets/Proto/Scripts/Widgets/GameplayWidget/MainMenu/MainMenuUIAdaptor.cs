@@ -23,5 +23,11 @@ namespace AppleShooterProto{
 		public IMainMenuUIElement GetMainMenuUIElement(){
 			return thisMainMenuUIElement;
 		}
+		public StartupManagerAdaptor startupManagerAdaptor;
+		public override void SetUpReference(){
+			base.SetUpReference();
+			IStartupManager startupManager = startupManagerAdaptor.GetStartupManager();
+			thisMainMenuUIElement.SetStartupManager(startupManager);
+		}
 	}
 }

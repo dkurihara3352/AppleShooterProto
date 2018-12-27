@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void SetMainMenuUIElement(IMainMenuUIElement mainMenuUIElement);
 		void SetRootScroller(IUIElementGroupScroller scroller);
 		void StartStartupSequence();
+		void OnStartUpMainMenuShowComplete();
 	}
 	public class StartupManager: AppleShooterSceneObject, IStartupManager{
 		public StartupManager(IConstArg arg): base(arg){
@@ -61,11 +62,15 @@ namespace AppleShooterProto{
 				
 			}else if(suite == thisFadeInProcessSuite){
 				thisMainMenuUIElement.ActivateRecursively(true);
+				thisMainMenuUIElement.DisableInputRecursively();
 				thisMainMenuUIElement.EvaluateScrollerFocusRecursively();
 				thisMainMenuUIElement.Hide(true);
-				thisMainMenuUIElement.Show(false);
-				thisRootScroller.EnableInputSelf();
+				thisMainMenuUIElement.ShowForStartup();
 			}
+		}
+		public void OnStartUpMainMenuShowComplete(){
+			thisRootScroller.EnableInputSelf();
+			thisMainMenuUIElement.EnableInputRecursively();
 		}
 		void StartFadeInProcess(){
 			thisFadeInProcessSuite.Start();

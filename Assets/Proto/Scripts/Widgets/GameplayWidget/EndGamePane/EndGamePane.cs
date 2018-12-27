@@ -262,7 +262,8 @@ namespace AppleShooterProto{
 					UpdateWatchADButtonShowness(1f);
 			}else if(suite == thisShowButtonClusterProcessSuite){
 				UpdateButtonClusterShowness(1f);
-				thisMainMenuButtonCluster.EnableInput();
+				// thisMainMenuButtonCluster.EnableInput();
+				thisMainMenuButtonCluster.EndPassingTapToEndGamePane();
 				thisRootScroller.EnableInputSelf();
 			}else if(suite == thisDoubleCurrencyProcessSuite){
 				UpdateCurrency(1f);

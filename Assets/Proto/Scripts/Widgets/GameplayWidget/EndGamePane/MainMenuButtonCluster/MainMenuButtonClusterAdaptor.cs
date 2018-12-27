@@ -23,5 +23,11 @@ namespace AppleShooterProto{
 		public IMainMenuButtonCluster GetMainMenuButtonCluster(){
 			return thisButtonCluster;
 		}
+		public override void SetUpReference(){
+			base.SetUpReference();
+			IEndGamePane pane = endGamePaneAdaptor.GetEndGamePane();
+			thisButtonCluster.SetEndGamePane(pane);
+		}
+		public EndGamePaneAdaptor endGamePaneAdaptor;
 	}
 }

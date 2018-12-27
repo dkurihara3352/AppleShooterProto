@@ -63,7 +63,7 @@ namespace AppleShooterProto{
 			thisShows = true;
 			thisProcessSuite.Start();
 		}
-		bool thisShows;
+		protected bool thisShows;
 		public void ClearFields(){
 			thisUpdateIsStarted = false;
 			thisShows = false;
@@ -89,7 +89,7 @@ namespace AppleShooterProto{
 		public bool IsShown(){
 			return thisIsShown;
 		}
-		bool thisIsShown;
+		protected bool thisIsShown;
 		public void Toggle(bool instantly){
 			if(thisIsShown)
 				Hide(instantly);
@@ -98,7 +98,7 @@ namespace AppleShooterProto{
 		}
 
 		public void OnProcessRun(IProcessSuite suite){}
-		public void OnProcessUpdate(
+		public virtual void OnProcessUpdate(
 			float deltaTime,
 			float normalizedTime,
 			IProcessSuite suite
@@ -110,7 +110,7 @@ namespace AppleShooterProto{
 				);
 			}
 		}
-		public void OnProcessExpire(IProcessSuite suite){
+		public virtual void OnProcessExpire(IProcessSuite suite){
 			if(suite == thisProcessSuite){
 				UpdateShowness(thisShows, 1f);
 				OnShowComplete();
