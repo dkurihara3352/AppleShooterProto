@@ -111,6 +111,7 @@ namespace AppleShooterProto{
 		public override void OnEnter(){
 			thisEngine.ResetCameraZoom();
 			thisEngine.ResetCameraPan();
+			thisEngine.Unaim();
 		}
 		public override void OnTouch(int touchCount){
 			thisEngine.ClearAndDeactivateShotInBuffer();
@@ -136,8 +137,10 @@ namespace AppleShooterProto{
 		public override void OnEnter(){
 			if(thisEngine.IsHeld())
 				thisEngine.ReleaseHold();
-			else
+			else{
+				thisEngine.Aim();
 				thisEngine.StartDraw();
+			}
 		}
 		public override void OnDrag(ICustomEventData eventData){
 			if(PointerDeltaIsWithinDrawThreshold(eventData.velocity)){
@@ -177,6 +180,7 @@ namespace AppleShooterProto{
 	public class PlayerInputLookingAroundState: AbsPlayerInputPointerDownState, IPlayerInputLookingAroundState{
 		public PlayerInputLookingAroundState(IPlayerInputStateConstArg arg): base(arg){}
 		public override void OnEnter(){
+			// thisEngine.Unaim();
 			// thisEngine.ResetCameraZoom();
 			return;
 		}

@@ -14,6 +14,9 @@ namespace AppleShooterProto{
 		float GetGlobalMaxAttack();
 		float GetGlobalMinFlightSpeed();
 		float GetGlobalMaxFlightSpeed();
+
+		Animator GetAimAnimator();
+		int GetAimHash();
 	}
 	public class ShootingManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingManagerAdaptor{
 
@@ -54,6 +57,15 @@ namespace AppleShooterProto{
 		public float arrowFlightTime = 4f;
 		public override void SetUp(){
 			thisShootingManager = CreateShootingManager();
+			thisAimHash = Animator.StringToHash("aimBool");
+		}
+		int thisAimHash;
+		public int GetAimHash(){
+			return thisAimHash;
+		}
+		public Animator aimAnimator;
+		public Animator GetAimAnimator(){
+			return aimAnimator;
 		}
 		IShootingManager thisShootingManager;
 		public IShootingManager GetShootingManager(){

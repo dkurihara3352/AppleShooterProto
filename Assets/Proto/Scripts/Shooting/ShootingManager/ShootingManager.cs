@@ -18,6 +18,10 @@ namespace AppleShooterProto{
 		void SetNockedArrow(IArrow arrow);
 		void CheckAndClearNockedArrow(IArrow arrow);
 
+		void Aim();
+		void Unaim();
+		void MarkAimDone();
+
 		void StartDraw();
 		void DrawImple(float deltaTime);
 		void HoldDraw();
@@ -105,8 +109,10 @@ namespace AppleShooterProto{
 		/* Nock */
 			IArrow thisNockedArrow;
 			public void NockArrow(){
-				IArrow nextArrow = thisArrowReserve.GetNextArrow();
-				nextArrow.Nock();
+				if(thisNockedArrow == null){
+					IArrow nextArrow = thisArrowReserve.GetNextArrow();
+					nextArrow.Nock();
+				}
 			}
 			public virtual void SetNockedArrow(IArrow arrow){
 				thisNockedArrow = arrow;
@@ -310,14 +316,21 @@ namespace AppleShooterProto{
 			}
 		/* Release */
 			public void Release(){
-				IArrow arrow = thisNockedArrow;
-				thisNockedArrow = null;
-				arrow.SetAttack(thisArrowAttack);
-				arrow.Release();
-				StopDraw();
-
-				thisArrowTrailReserve.ActivateTrailAt(arrow);
-				// ResetDraw();
+				if(thisAimIsDone){
+					IArrow arrow = thisNockedArrow;
+					thisNockedArrow = null;
+					arrow.SetAttack(thisArrowAttack);
+					arrow.Release();
+					StopDraw();
+					thisArrowTrailReserve.ActivateTrailAt(arrow);
+				}
+			}
+			bool thisAimIsDone = false;
+			public void MarkAimDone(){
+				thisAimIsDone = true;
+			}
+			public void MarkAimNotDone(){
+				thisAimIsDone = false;
 			}
 		/* shooting Process */
 			public virtual bool AcceptsNewShot(){
@@ -415,6 +428,19 @@ namespace AppleShooterProto{
 				result += "corrected atk: " + minCor.ToString("N0") + " to " + maxCor.ToString("N0") + " ";
 				result += "(dps: " + (minCor * 1f/fireRate).ToString("N0") + " to " + (maxCor * 1f/(fireRate + drawTime)).ToString("N0") + ")\n";
 				return result;
+			}
+		/* Aiming */
+			public void Aim(){
+				Animator aimAnimator = thisShootingManagerAdaptor.GetAimAnimator();
+				int aimHash = thisShootingManagerAdaptor.GetAimHash();
+				aimAnimator.SetBool(aimHash, true);
+			}
+			
+			public void Unaim(){
+				Animator aimAnimator = thisShootingManagerAdaptor.GetAimAnimator();
+				int aimHash = thisShootingManagerAdaptor.GetAimHash();
+				aimAnimator.SetBool(aimHash, false);
+				MarkAimNotDone();
 			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
