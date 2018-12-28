@@ -5,59 +5,48 @@ using DKUtility.CurveUtility;
 
 namespace AppleShooterProto{
 
-	public interface IWaypointCurveAdaptor: IAppleShooterMonoBehaviourAdaptor{
+	public interface IWaypointCurveAdaptor: IAppleShooterMonoBehaviourAdaptor, IDrawableCurve{
 		IWaypointCurve GetWaypointCurve();
-		void UpdateCurve();
-		ICurvePoint[] GetCurvePoints();
 		float GetTotalDistance();
 		Vector3 GetPositionOnCurve(float normalizedPosition);
 	}
-	[ExecuteInEditMode]
-	public abstract class AbsWaypointCurveAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointCurveAdaptor {
+	public abstract class AbsWaypointCurveAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointCurveAdaptor{
 		public Color lineColor = new Color(.2f, 1f, 1f, 1f);
+		public Color GetLineColor(){
+			return lineColor;
+		}
 		public Color upDirColor = new Color(1f, .5f, 1f, 1f);
+		public Color GetUpDirColor(){
+			return upDirColor;
+		}
+		public Vector3 controlPointDrawSize = Vector3.one;
+		public Vector3 GetControlPointDrawSize(){
+			return controlPointDrawSize;
+		}
+		public Vector3 controlPointHandleSize = Vector3.one;
+		public Vector3 GetControlPointHandleSize(){
+			return controlPointHandleSize;
+		}
+		public Color controlPointColor = Color.red;
+		public Color GetControlPointColor(){
+			return controlPointColor;
+		}
+		public Color handleColor = Color.yellow;
+		public Color GetHandleColor(){
+			return handleColor;
+		}
 		public float upDirLineLength = 1f;
+		public float GetUpDirLineLength(){
+			return upDirLineLength;
+		}
 		public Transform controlPointsParent;
-		public void UpdateCurve(){
-			CheckAndUpdateControlPoints();
-			UpdateCurvePoints();
-		}
-
-		int cachedResolution = 0;
-		public bool drawGizmos = true;
-		// #if UNITY_EDITOR
-		// #endif
-		protected override void Awake(){
-			base.Awake();
-			UpdateCurve();
-		}
-		public void Start(){
-			UpdateCurve();
-		}
-		public void Update(){
-			CheckAndUpdateControlPoints();
-			// if(!Application.isPlaying){
-			// }
-		}
-		void OnDrawGizmos(){
-			if(drawGizmos){
-				if(thisCurvePoints != null){
-					ICurvePoint prev = null;
-					int index = 0;
-					foreach(CurvePoint curvePoint in thisCurvePoints){
-						if(index != 0){
-							Vector3 position = curvePoint.GetPosition();
-							Gizmos.color = lineColor;
-							Gizmos.DrawLine(position, prev.GetPosition());
-							Gizmos.color = upDirColor;
-							Vector3 up = curvePoint.GetUpDirection().normalized;
-							Gizmos.DrawLine(position, position + up * upDirLineLength);
-						}
-						index ++;
-						prev = curvePoint;
-					}
-				}
-			}
+		// public void UpdateCurve(){
+		// 	CheckAndUpdateControlPoints();
+		// 	UpdateCurvePoints();
+		// }
+		public void Calculate(){
+			//updateControlPoints => becomes this
+			UpdateControlPoints();
 		}
 		/* Curve, segment, controlPoints */
 			public int curveSegmentResolution = 10;
@@ -67,16 +56,21 @@ namespace AppleShooterProto{
 				return thisWaypointCurve;
 			}
 			protected ICurveControlPoint[] thisControlPoints;
-			List<ICurveSegment> thisCurveSegments;
+			public ICurveControlPoint[] GetCurveControlPoints(){
+				return thisControlPoints;
+			}
+			ICurveSegment[] thisCurveSegments;
 
 			void UpdateControlPoints(){
-				thisControlPoints = GetLatestControlPoints();
-				SetSelfOnAllControlPoints();
-				MakeSureHeadAndTailControlPointsAreSet();
+				thisControlPoints = CollectControlPoints();
+				// SetSelfOnAllControlPoints();
+				// MakeSureHeadAndTailControlPointsAreSet();
 				UpdateCurveSegments();
+				UpdateCurvePoints();
+
 				CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
 			}
-			ICurveControlPoint[] GetLatestControlPoints(){
+			ICurveControlPoint[] CollectControlPoints(){
 				List<ICurveControlPoint> result = new List<ICurveControlPoint>();
 				int controlPointCount = controlPointsParent.childCount;
 				for(int i = 0; i < controlPointCount; i ++){
@@ -88,21 +82,21 @@ namespace AppleShooterProto{
 				}
 				return result.ToArray();
 			}
-			void SetSelfOnAllControlPoints(){
-				foreach(ICurveControlPoint controlPoint in thisControlPoints){
-					controlPoint.SetWaypointCurveAdaptor(this);
-				}
-			}
-			void MakeSureHeadAndTailControlPointsAreSet(){
-				if(!(thisControlPoints[0] is TailCurveControlPoint))
-					throw new System.InvalidOperationException(
-						"the first entry of controlPoints should be TailControlPoint"
-					);
-				if(!(thisControlPoints[thisControlPoints.Length - 1] is HeadCurveControlPoint))
-					throw new System.InvalidOperationException(
-						"the last entry of controlPoints should be HeadControlPoint"
-					);
-			}
+			// void SetSelfOnAllControlPoints(){
+			// 	foreach(ICurveControlPoint controlPoint in thisControlPoints){
+			// 		controlPoint.SetWaypointCurveAdaptor(this);
+			// 	}
+			// }
+			// void MakeSureHeadAndTailControlPointsAreSet(){
+			// 	if(!(thisControlPoints[0] is TailCurveControlPoint))
+			// 		throw new System.InvalidOperationException(
+			// 			"the first entry of controlPoints should be TailControlPoint"
+			// 		);
+			// 	if(!(thisControlPoints[thisControlPoints.Length - 1] is HeadCurveControlPoint))
+			// 		throw new System.InvalidOperationException(
+			// 			"the last entry of controlPoints should be HeadControlPoint"
+			// 		);
+			// }
 			void UpdateCurveSegments(){
 				List<ICurveSegment> result = new List<ICurveSegment>();
 				ICurveControlPoint prev = null;
@@ -117,30 +111,30 @@ namespace AppleShooterProto{
 					}
 					prev = controlPoint;
 				}
-				thisCurveSegments = result;
+				thisCurveSegments = result.ToArray();
 			}
-			void CheckAndUpdateControlPoints(){
-				if(thisControlPoints == null)
-					UpdateControlPoints();
-				else{
-					ICurveControlPoint[] controlPoints = GetLatestControlPoints();
-					if(!ControlPointsMatchesWithCache(controlPoints)){
-						UpdateControlPoints();
-					}
-				}
-			}
-			bool ControlPointsMatchesWithCache(ICurveControlPoint[] newControlPoints){
-				int cachedCount = thisControlPoints.Length;
-				if(cachedCount != newControlPoints.Length){
-					return false;
-				}else{
-					for(int i = 0 ; i < cachedCount; i ++){
-						if(thisControlPoints[i] != newControlPoints[i])
-							return false;
-					}
-					return true;
-				}
-			}
+			// void CheckAndUpdateControlPoints(){
+			// 	if(thisControlPoints == null)
+			// 		UpdateControlPoints();
+			// 	else{
+			// 		ICurveControlPoint[] controlPoints = CollectControlPoints();
+			// 		if(!ControlPointsMatchesWithCache(controlPoints)){
+			// 			UpdateControlPoints();
+			// 		}
+			// 	}
+			// }
+			// bool ControlPointsMatchesWithCache(ICurveControlPoint[] newControlPoints){
+			// 	int cachedCount = thisControlPoints.Length;
+			// 	if(cachedCount != newControlPoints.Length){
+			// 		return false;
+			// 	}else{
+			// 		for(int i = 0 ; i < cachedCount; i ++){
+			// 			if(thisControlPoints[i] != newControlPoints[i])
+			// 				return false;
+			// 		}
+			// 		return true;
+			// 	}
+			// }
 			public float GetTotalDistance(){
 				float sum = 0f;
 				if(thisCurveSegments != null)
@@ -155,12 +149,14 @@ namespace AppleShooterProto{
 				return thisCurvePoints;
 			}
 			void UpdateCurvePoints(){
-				if(cachedResolution != curveSegmentResolution){
-					CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
-					cachedResolution = curveSegmentResolution;
-				}else{
-					UpdateCurvePointsTransformForEachCurveSegment();
-				}
+				// if(cachedResolution != curveSegmentResolution){
+				// 	CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
+				// 	cachedResolution = curveSegmentResolution;
+				// }else{
+				// 	UpdateCurvePointsTransformForEachCurveSegment();
+				// }
+				CreateNewCurvePointsForEachCurveSegment(curveSegmentResolution);
+
 				SetTotalDistanceInCurveOnAllCurvePoints();
 				SetPrevPointPositionOnAllCurvePoints();
 				thisCurvePoints = CollectCurvePointsFromAllSegments();
@@ -172,20 +168,21 @@ namespace AppleShooterProto{
 				}
 				return result.ToArray();
 			}	
-			void CreateNewCurvePointsForEachCurveSegment(int resolution){
-				List<ICurvePoint> result = new List<ICurvePoint>();
+			/* ICurvePoint[] */void CreateNewCurvePointsForEachCurveSegment(int resolution){
+				// List<ICurvePoint> result = new List<ICurvePoint>();
 				foreach(ICurveSegment segment in thisCurveSegments){
 					segment.SetCurveResolution(resolution);
 					segment.UpdateCurvePoints();
-					ICurvePoint[] curvePointsForSegment = segment.GetCurvePoints();
-					result.AddRange(curvePointsForSegment);
+					// ICurvePoint[] curvePointsForSegment = segment.GetCurvePoints();
+					// result.AddRange(curvePointsForSegment);
 				}
+				// return result.ToArray();
 			}
-			void UpdateCurvePointsTransformForEachCurveSegment(){
-				foreach(ICurveSegment segment in thisCurveSegments){
-					segment.UpdateCurvePoints();
-				}
-			}
+			// void UpdateCurvePointsTransformForEachCurveSegment(){
+			// 	foreach(ICurveSegment segment in thisCurveSegments){
+			// 		segment.UpdateCurvePoints();
+			// 	}
+			// }
 			void SetTotalDistanceInCurveOnAllCurvePoints(){
 				float sumOfAllPrevSegmentsLength = 0f;
 				foreach(ICurveSegment segment in thisCurveSegments){
@@ -260,8 +257,8 @@ namespace AppleShooterProto{
 				never returns 0
 			*/
 
-			if(thisCurvePoints == null)
-				UpdateCurve();
+			// if(thisCurvePoints == null)
+			// 	UpdateCurve();
 			for(int i = 0; i < thisCurvePoints.Length; i ++){
 				if(thisCurvePoints[i].GetDistanceUpToPointOnCurve() > totalDistInCurve){
 					return i;

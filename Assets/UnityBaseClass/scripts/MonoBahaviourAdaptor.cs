@@ -42,6 +42,7 @@ namespace UnityBase{
 			thisMonoBehaviourAdaptorManager = FindAndSetMonoBehaviourAdaptor();
 			thisMonoBehaviourAdaptorManager.AddAdaptor(this);
 		}
+		void Update(){}
 		public virtual void SetUp(){}
 		public virtual void SetUpReference(){}
 		public virtual void FinalizeSetUp(){}

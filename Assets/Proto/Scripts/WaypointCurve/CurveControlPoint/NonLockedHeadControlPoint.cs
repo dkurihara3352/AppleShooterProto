@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEngine;
 
-namespace AppleShooterProto{
-	public class NonLockedHeadControlPoint : HeadCurveControlPoint {
+// namespace AppleShooterProto{
+// 	public class NonLockedHeadControlPoint : HeadCurveControlPoint {
 
-		protected override void LockTransform(){
-			LockHandle(GetHandle());
-		}
-	}
-}
+// 		protected override void LockTransform(){
+// 			LockHandle(GetHandle());
+// 		}
+// 	}
+// }

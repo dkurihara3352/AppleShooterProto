@@ -84,7 +84,7 @@ namespace AppleShooterProto{
 			}
 			ICurvePoint[] thisCurvePoints;
 			ICurvePoint[] CreateCurvePoints(){
-				thisTypedAdaptor.UpdateCurve();
+				thisTypedAdaptor.Calculate();
 				return thisTypedAdaptor.GetCurvePoints();
 			}
 			float thisTotalDistance;

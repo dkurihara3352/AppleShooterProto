@@ -138,6 +138,7 @@ namespace AppleShooterProto{
 				return this.GetNextCurve(currentCurve);
 			}
 			List<IWaypointCurve> CreateSequenceOfWaypointCurves(){
+				Debug.Log("thisCurveCountInSequecne: " + thisCurveCountInSequence.ToString() + ", " + "GetAllCurveIDs: " + DKUtility.DebugHelper.GetIndicesString(GetAllCurveIDs()));
 				int[] indexes = DKUtility.Calculator.GetRandomIntegers(
 					thisCurveCountInSequence,
 					GetAllCurveIDs()

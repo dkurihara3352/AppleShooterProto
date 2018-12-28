@@ -38,17 +38,17 @@ namespace AppleShooterProto{
 			return resultList.ToArray();
 		}
 		public Color lineColor;
-		void OnDrawGizmos(){
-			if(thisIsReady){
-				Gizmos.color = lineColor;
-				foreach(IShootingTargetSpawnPointAdaptor pointAdaptor in thisSpawnPointAdaptors){
-					Vector3 position = pointAdaptor.GetPosition();
-					float eventPoint = pointAdaptor.GetEventPoint();
-					Vector3 eventPointPosition = pcWaypointCurveAdaptor.GetPositionOnCurve(eventPoint);
+		// void OnDrawGizmos(){
+		// 	if(thisIsReady){
+		// 		Gizmos.color = lineColor;
+		// 		foreach(IShootingTargetSpawnPointAdaptor pointAdaptor in thisSpawnPointAdaptors){
+		// 			Vector3 position = pointAdaptor.GetPosition();
+		// 			float eventPoint = pointAdaptor.GetEventPoint();
+		// 			Vector3 eventPointPosition = pcWaypointCurveAdaptor.GetPositionOnCurve(eventPoint);
 					
-					Gizmos.DrawLine(position, eventPointPosition);
-				}
-			}
-		}
+		// 			Gizmos.DrawLine(position, eventPointPosition);
+		// 		}
+		// 	}
+		// }
 	}
 }
