@@ -314,57 +314,10 @@ namespace AppleShooterProto{
 				}
 				void CreateNewPlayerData(){
 					IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
-					string newFileName = CreateNewFileName();
-					playerDataManager.CreateNewPlayerDataFile(newFileName);
-					
-					int fileIndex = playerDataManager.GetFileIndex(newFileName);
-					thisSelectedFileIndex = fileIndex;
-					playerDataManager.SetFileIndex(fileIndex);
+					int newFileIndex = playerDataManager.CreateNewPlayerDataFile();
+					thisSelectedAttributeIndex = newFileIndex;
 				}
-				string CreateNewFileName(){
-					IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
-					string playerDataPath = playerDataManager.GetDirectory();
-					string[] filePaths = System.IO.Directory.GetFiles(playerDataPath);
-					string playerDataBaseFileName = playerDataManager.GetBaseFileName();
-					int newDigit = CalculateMinAvailableDigit(
-						playerDataBaseFileName,
-						filePaths
-					);
-					string result = playerDataBaseFileName + newDigit.ToString();
-					return result;
-				}
-				protected int CalculateMinAvailableDigit(string baseFileName, string[] filePaths){
-					int result = 0;
-					if(filePaths.Length != 0){
-						List<int> parsedIntList = new List<int>();
-						foreach(string filePath in filePaths){
-							Match match = Regex.Match(filePath, baseFileName + @"\d*\.dat");
-							string digits = match.Value.Replace(baseFileName, "");
-							digits = digits.Replace(".dat", "");
-							int parsedInt = int.Parse(digits);
-							parsedIntList.Add(parsedInt);
-						}
-						parsedIntList.Sort();
-						
-						int maxDigit = GetMaxDigit(parsedIntList.ToArray());
-						result = maxDigit + 1;
-						for(int i = 0; i < maxDigit; i ++){
-							if(!parsedIntList.Contains(i))
-								if(result > i)
-									result = i;
-						}
-					}else
-						result = 0;
-					return result;
-				}
-				int GetMaxDigit(int[] array){
-					int result = -1;
-					foreach(int i in array){
-						if(result <= i)
-							result = i;
-					}
-					return result;
-				}
+
 				int thisSelectedBowIndex;
 				void DrawBowSwitch(Rect rect){
 					thisSelectedBowIndex = GUI.SelectionGrid(

@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AppleShooterProto{
 	public interface IPlayerDataManager: IAppleShooterSceneObject{
@@ -19,6 +20,8 @@ namespace AppleShooterProto{
 			void InitializePlayerData();
 			void Load();
 			void Save();
+			int CreateNewPlayerDataFile();
+			void MakeSurePlayerDataFileExists();
 		/* Fields */
 			int GetBowCount();
 			int GetMaxAttributeLevel();
@@ -122,6 +125,12 @@ namespace AppleShooterProto{
 			public bool PlayerDataIsLoaded(){
 				return thisPlayerData != null;
 			}
+			public void MakeSurePlayerDataFileExists(){
+				int filesPathsCount = GetFilePaths().Length;
+				if(filesPathsCount == 0){
+					CreateNewPlayerDataFile(); 
+				}
+			}
 			public void Load(){
 				string path = GetFilePaths()[thisFileIndex];
 				if(System.IO.File.Exists(
@@ -140,6 +149,57 @@ namespace AppleShooterProto{
 						"no file by the path exists, need to save first"
 					);
 			}
+			public int CreateNewPlayerDataFile(){
+				string newFileName = CreateNewFileName();
+				CreateNewPlayerDataFile(newFileName);
+					
+				int fileIndex = GetFileIndex(newFileName);
+				SetFileIndex(fileIndex);
+				return fileIndex;
+			}
+				string CreateNewFileName(){
+					string playerDataPath = GetDirectory();
+					string[] filePaths = System.IO.Directory.GetFiles(playerDataPath);
+					string playerDataBaseFileName = GetBaseFileName();
+					int newDigit = CalculateMinAvailableDigit(
+						playerDataBaseFileName,
+						filePaths
+					);
+					string result = playerDataBaseFileName + newDigit.ToString();
+					return result;
+				}
+				protected int CalculateMinAvailableDigit(string baseFileName, string[] filePaths){
+					int result = 0;
+					if(filePaths.Length != 0){
+						List<int> parsedIntList = new List<int>();
+						foreach(string filePath in filePaths){
+							Match match = Regex.Match(filePath, baseFileName + @"\d*\.dat");
+							string digits = match.Value.Replace(baseFileName, "");
+							digits = digits.Replace(".dat", "");
+							int parsedInt = int.Parse(digits);
+							parsedIntList.Add(parsedInt);
+						}
+						parsedIntList.Sort();
+						
+						int maxDigit = GetMaxDigit(parsedIntList.ToArray());
+						result = maxDigit + 1;
+						for(int i = 0; i < maxDigit; i ++){
+							if(!parsedIntList.Contains(i))
+								if(result > i)
+									result = i;
+						}
+					}else
+						result = 0;
+					return result;
+				}
+				int GetMaxDigit(int[] array){
+					int result = -1;
+					foreach(int i in array){
+						if(result <= i)
+							result = i;
+					}
+					return result;
+				}
 		/* Fields */
 			int thisBowCount = 3;
 			public int GetBowCount(){

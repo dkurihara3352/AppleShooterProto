@@ -10,6 +10,8 @@ namespace AppleShooterProto{
 			SetUp();
 			ActivateRootUI();
 			WarmUp();
+			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+			playerDataManager.MakeSurePlayerDataFileExists();
 			IStartupManager startupManager = startupManagerAdaptor.GetStartupManager();
 			startupManager.StartStartupSequence();
 		}
