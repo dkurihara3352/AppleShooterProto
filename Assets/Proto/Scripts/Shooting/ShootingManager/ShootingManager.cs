@@ -129,6 +129,7 @@ namespace AppleShooterProto{
 					thisDrawProcessOrder
 				);
 				thisDrawProcess.Run();
+				thisShootingManagerAdaptor.PlayDrawSound();
 			}
 			
 			public void DrawImple(float deltaTime){
@@ -141,12 +142,17 @@ namespace AppleShooterProto{
 					thisArrowAttack = CalculateArrowAttack(thisDrawStrength);
 
 					thisLaunchPoint.SetDrawPosition(normalizedDrawTime);
+					
+				}else{
+					if(!thisIsFullyDrawn){
+						thisIsFullyDrawn = true;
+						thisShootingManagerAdaptor.StopDrawSound();
+					}
 				}
-
 				DrawTrajectory();
 			}
 			// float thisNormalizedDrawTime = 0f;
-			
+			bool thisIsFullyDrawn = false;
 			/* DrawStrength */
 				AnimationCurve thisBowDrawProfileCurve{
 					get{
@@ -244,6 +250,7 @@ namespace AppleShooterProto{
 			/*  */
 			public void HoldDraw(){
 				thisDrawProcess.Hold();
+				thisShootingManagerAdaptor.PauseDrawSound();
 			}
 			public bool IsHeld(){
 				if(thisDrawProcess == null)
@@ -252,15 +259,19 @@ namespace AppleShooterProto{
 			}
 			public void ReleaseHold(){
 				thisDrawProcess.ReleaseHold();
+				if(!thisIsFullyDrawn)
+					thisShootingManagerAdaptor.PlayDrawSound();
 			}
 			public void StopDraw(){
 				if(thisDrawProcess != null && thisDrawProcess.IsRunning()){
 					thisDrawProcess.Stop();
 				}
 				thisDrawProcess = null;
+				thisShootingManagerAdaptor.StopDrawSound();
 				ClearDrawFields();
 			}
 			void ClearDrawFields(){
+				thisIsFullyDrawn = false;
 				thisDrawElapsedTime = 0f;
 				thisDrawStrength = CalculateDrawStrength(0f);
 				thisFlightSpeed = CalculateFlightSpeed();

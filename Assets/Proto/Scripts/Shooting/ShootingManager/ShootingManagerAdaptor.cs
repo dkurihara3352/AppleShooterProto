@@ -17,6 +17,10 @@ namespace AppleShooterProto{
 
 		Animator GetAimAnimator();
 		int GetAimHash();
+
+		void PlayDrawSound();
+		void StopDrawSound();
+		void PauseDrawSound();
 	}
 	public class ShootingManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingManagerAdaptor{
 
@@ -135,5 +139,17 @@ namespace AppleShooterProto{
 			IShootingDataManager shootingDataManager = shootingDataManagerAdaptor.GetShootingDataManager();
 			thisShootingManager.SetShootingDataManager(shootingDataManager);
 		}
+		public void PlayDrawSound(){
+			// StopDrawSound();
+			drawSoundSource.Play(0);
+		}
+		public void StopDrawSound(){
+			if(drawSoundSource.isPlaying)
+				drawSoundSource.Stop();
+		}
+		public void PauseDrawSound(){
+			drawSoundSource.Pause();
+		}
+		public AudioSource drawSoundSource;
 	}
 }

@@ -25,6 +25,7 @@ namespace AppleShooterProto{
 		Color GetDefaultColor();
 
 		bool IsRare();
+		void PlayDestructionSound();
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
@@ -184,5 +185,10 @@ namespace AppleShooterProto{
 		public bool IsRare(){
 			return isRare;
 		}
+
+		public void PlayDestructionSound(){
+			destructionSoundSource.Play();
+		}
+		public AudioSource destructionSoundSource;
 	}
 }

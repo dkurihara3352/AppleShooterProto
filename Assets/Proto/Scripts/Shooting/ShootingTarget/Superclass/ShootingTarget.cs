@@ -156,6 +156,7 @@ namespace AppleShooterProto{
 					thisDestroyedTargetReserve.ActivateDestoryedTargetAt(this);
 					Deactivate();
 					thisGameStatsTracker.RegisterTargetDestroyed(this, thisIsRare);
+					thisShootingTargetAdaptor.PlayDestructionSound();
 				}
 				IDestroyedTarget thisDestroyedTarget;
 				public void SetDestroyedTarget(IDestroyedTarget target){

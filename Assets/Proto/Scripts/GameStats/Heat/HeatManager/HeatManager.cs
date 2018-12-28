@@ -201,6 +201,7 @@ namespace AppleShooterProto{
 			SetMaxHeat(thisInitialMaxHeat);
 			thisHeatLevel = thisInitHeatLevel;
 			thisHeatLevelText.SetHeatLevelText(thisHeatLevel);
+			SetAllTargetReserveTier(thisHeatLevel - 1);
 		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{

@@ -143,6 +143,7 @@ namespace AppleShooterProto{
 					thisShootingManager.GetFlightTime()
 				);
 				thisFlightProcess.Run();
+				thisArrowAdaptor.PlayArrowReleaseSound();
 			}
 			public void StopFlight(){
 				if(thisFlightProcess != null)
@@ -156,12 +157,15 @@ namespace AppleShooterProto{
 				Vector3 hitPosition
 			){
 				// if(detector.IsActivated())
-				if(detector.ShouldSpawnLandedArrow())
+				if(detector.ShouldSpawnLandedArrow()){
 					thisShootingManager.SpawnLandedArrowOn(
 						detector,
 						hitPosition,
 						thisAdaptor.GetRotation()
 					);
+					thisArrowAdaptor.PlayArrowHitSound();
+				}
+				
 				Deactivate();
 			}
 			public void StartCollisionCheck(){

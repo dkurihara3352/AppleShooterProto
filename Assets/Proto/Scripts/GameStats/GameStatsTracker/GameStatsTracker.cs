@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 
 		void RegisterTargetDestroyed(IShootingTarget target, bool isRare);
 		void ResetStats();
+		void MarkGameplayEnded();
 	}
 	public class GameStatsTracker : AppleShooterSceneObject, IGameStatsTracker {
 
@@ -33,22 +34,29 @@ namespace AppleShooterProto{
 		}
 
 		public void RegisterTargetDestroyed(IShootingTarget target, bool isRare){
-			float heat = target.GetHeatBonus();
-			thisHeatManager.AddHeat(heat);
+			if(!thisGameplayIsEnded){
+				float heat = target.GetHeatBonus();
+				thisHeatManager.AddHeat(heat);
 
-			int score = target.GetDestructionScore();
-			thisScoreManager.AddScore(score);
+				int score = target.GetDestructionScore();
+				thisScoreManager.AddScore(score);
 
-			if(isRare){
-				int targetTier = target.GetTier();
-				int currencyGained = /* thisRareDestructionCurrencyBonusCalculator.Calculate(targetTier) */100;
-				thisCurrencyManager.AddGainedCurrency(currencyGained);
+				if(isRare){
+					int targetTier = target.GetTier();
+					int currencyGained = /* thisRareDestructionCurrencyBonusCalculator.Calculate(targetTier) */100;
+					thisCurrencyManager.AddGainedCurrency(currencyGained);
+				}
 			}
 		}
+		bool thisGameplayIsEnded = false;
 		public void ResetStats(){
 			thisHeatManager.ResetHeat();
 			thisScoreManager.ClearScore();
 			thisCurrencyManager.ClearGainedCurrency();
+			thisGameplayIsEnded = false;
+		}
+		public void MarkGameplayEnded(){
+			thisGameplayIsEnded = true;
 		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{

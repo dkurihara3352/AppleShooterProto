@@ -202,6 +202,7 @@ namespace AppleShooterProto{
 				RaisePointerOnInputScroller();
 				ExpireUnpauseProcess();
 				StopCountDownHeat();
+				MarkGameStatsTrackerGameplayEnded();
 				DeactivateGameplayUI();
 				DeactivateHUD();
 				StopTargetSpawn();
@@ -235,6 +236,9 @@ namespace AppleShooterProto{
 			}
 			void StopCountDownHeat(){
 				thisHeatManager.StopCountingDown();
+			}
+			void MarkGameStatsTrackerGameplayEnded(){
+				thisGameStatsTracker.MarkGameplayEnded();
 			}
 			IHeatManager thisHeatManager;
 			public void SetHeatManager(IHeatManager manager){

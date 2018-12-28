@@ -18,6 +18,8 @@ namespace AppleShooterProto{
 		void SetIndex(int index);
 		string GetParentName();
 		Vector3 GetPrevPosition();
+		void PlayArrowHitSound();
+		void PlayArrowReleaseSound();
 	}
 	public class ArrowAdaptor : AppleShooterMonoBehaviourAdaptor, IArrowAdaptor {
 		
@@ -157,5 +159,13 @@ namespace AppleShooterProto{
 					}
 				}
 			}
+			public void PlayArrowHitSound(){
+				arrowHitAudioSource.Play();
+			}
+			public AudioSource arrowHitAudioSource;
+			public void PlayArrowReleaseSound(){
+				arrowReleaseSoundSource.Play();
+			}
+			public AudioSource arrowReleaseSoundSource;
 	}
 }
