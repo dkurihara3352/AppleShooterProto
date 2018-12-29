@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityBase{
-	public interface ISceneObjectPoolAdaptor<T>: IMonoBehaviourAdaptor where T: ISceneObject{
+	public interface ISceneObjectPoolAdaptor<T>: IMonoBehaviourAdaptor where T: IMonoBehaviourAdaptor{
 		ISceneObjectPool<T> GetSceneObjectPool();
 	}
-	public abstract class SceneObjectPoolAdaptor<T> : MonoBehaviourAdaptor, ISceneObjectPoolAdaptor<T> where T: ISceneObject {
+	public abstract class SceneObjectPoolAdaptor<T> : MonoBehaviourAdaptor, ISceneObjectPoolAdaptor<T> where T: IMonoBehaviourAdaptor {
 		public override void SetUp(){
 			thisPool = CreateSceneObjectPool();
 		}

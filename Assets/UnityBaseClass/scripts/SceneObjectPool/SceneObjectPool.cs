@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityBase{
-	public interface ISceneObjectPool<T>: ISceneObject where T: ISceneObject{
+	public interface ISceneObjectPool<T>: ISceneObject where T: IMonoBehaviourAdaptor{
 		void SetUpProbabilityTable(
 			Dictionary<T, float> relativeProbabilityTable
 		);
@@ -11,7 +11,7 @@ namespace UnityBase{
 		void Log();
 		void ClearLog();
 	}
-	public class SceneObjectPool<T> : AbsSceneObject, ISceneObjectPool<T> where T: ISceneObject {
+	public class SceneObjectPool<T> : AbsSceneObject, ISceneObjectPool<T> where T: IMonoBehaviourAdaptor {
 		public SceneObjectPool(
 			IConstArg<T> arg
 		): base(
@@ -44,9 +44,9 @@ namespace UnityBase{
 			thisPool.ClearLog();
 		}
 		/*  */
-		public interface IConstArg<U>: AbsSceneObject.IConstArg where U: ISceneObject{
+		public interface IConstArg<U>: AbsSceneObject.IConstArg where U: IMonoBehaviourAdaptor{
 		}
-		public class ConstArg<U>: AbsSceneObject.ConstArg, IConstArg<U> where U: ISceneObject{
+		public class ConstArg<U>: AbsSceneObject.ConstArg, IConstArg<U> where U: IMonoBehaviourAdaptor{
 			public ConstArg(
 				ISceneObjectPoolAdaptor<U> adaptor
 			): base(adaptor){

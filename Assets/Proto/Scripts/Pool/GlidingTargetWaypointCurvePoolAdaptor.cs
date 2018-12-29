@@ -1,21 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityBase;
-namespace AppleShooterProto{
-	public interface IGlidingTargetWaypointCurvePoolAdaptor: ISceneObjectPoolAdaptor<IGlidingTargetWaypointCurve>{}
-	public class GlidingTargetWaypointCurvePoolAdaptor : SceneObjectPoolAdaptor<IGlidingTargetWaypointCurve>, IGlidingTargetWaypointCurvePoolAdaptor{
+﻿// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEngine;
+// using UnityBase;
+// namespace AppleShooterProto{
+// 	public interface IGlidingTargetWaypointCurvePoolAdaptor: ISceneObjectPoolAdaptor<IGlidingTargetWaypointCurveAdaptor>{}
+// 	public class GlidingTargetWaypointCurvePoolAdaptor : SceneObjectPoolAdaptor<IGlidingTargetWaypointCurveAdaptor>, IGlidingTargetWaypointCurvePoolAdaptor{
 
-		protected override Dictionary<IGlidingTargetWaypointCurve, float> CreateRelativeProbabilityTable(
-			List<AdaptorRelativeProbPair> pairs
-		){
-			Dictionary<IGlidingTargetWaypointCurve, float> result = new Dictionary<IGlidingTargetWaypointCurve, float>();
-			foreach(AdaptorRelativeProbPair pair in pairs){
-				IGlidingTargetWaypointCurveAdaptor typedAdaptor = (IGlidingTargetWaypointCurveAdaptor)pair.adaptor;
-				IGlidingTargetWaypointCurve curve = typedAdaptor.GetGlidingTargetWaypointCurve();
-				result.Add(curve, pair.relativeProb);
-			}
-			return result;
-		}
-	}
-}
+// 		protected override Dictionary<IGlidingTargetWaypointCurveAdaptor, float> CreateRelativeProbabilityTable(
+// 			List<AdaptorRelativeProbPair> pairs
+// 		){
+// 			Dictionary<IGlidingTargetWaypointCurveAdaptor, float> result = new Dictionary<IGlidingTargetWaypointCurveAdaptor, float>();
+// 			foreach(AdaptorRelativeProbPair pair in pairs){
+// 				IGlidingTargetWaypointCurveAdaptor typedAdaptor = (IGlidingTargetWaypointCurveAdaptor)pair.adaptor;
+// 				// IGlidingTargetWaypointCurve curve = typedAdaptor.GetGlidingTargetWaypointCurve();
+// 				result.Add(typedAdaptor, pair.relativeProb);
+// 			}
+// 			return result;
+// 		}
+// 	}
+// }

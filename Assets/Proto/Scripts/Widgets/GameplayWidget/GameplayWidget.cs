@@ -24,6 +24,7 @@ namespace AppleShooterProto{
 		void SetHeatManager(IHeatManager manager);
 		void SetCoreGameplayInputScroller(ICoreGameplayInputScroller scroller);
 		void SetGameplayPause(IGameplayPause pause);
+		void SetPlayerInputManager(IPlayerInputManager manager);
 		
 		void StartGameplay();
 		void EndGameplay();
@@ -144,6 +145,7 @@ namespace AppleShooterProto{
 				LoadAndSetHighScore();
 				// ActivateGameplayUI();
 				ActivateHUD();
+				StartHeatCountDown();
 			}
 			public void StartTargetSpawn(){
 				thisPlayerCharacterWaypointsFollower.StartExecutingSpawnEvents();
@@ -176,6 +178,12 @@ namespace AppleShooterProto{
 			public void SetHeadUpDisplay(IHeadUpDisplay hud){
 				thisHUD = hud;
 			}
+			void StartHeatCountDown(){
+				thisHeatManager.StartCountingDown();
+			}
+
+
+
 			public void OnProcessUpdate(
 				float deltaTime,
 				float normalizedTime,
@@ -221,7 +229,12 @@ namespace AppleShooterProto{
 				StartEndSequence();
 			}
 			void RaisePointerOnInputScroller(){
-				thisInputScroller.ClearInput();
+				if(thisPlayerInputMnanager.IsDrawing() || thisPlayerInputMnanager.IsLookingAround())
+					thisInputScroller.ClearInput();
+			}
+			IPlayerInputManager thisPlayerInputMnanager;
+			public void SetPlayerInputManager(IPlayerInputManager manager){
+				thisPlayerInputMnanager = manager;
 			}
 			ICoreGameplayInputScroller thisInputScroller;
 			public void SetCoreGameplayInputScroller(ICoreGameplayInputScroller scroller){

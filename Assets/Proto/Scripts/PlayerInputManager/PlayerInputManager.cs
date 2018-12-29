@@ -16,6 +16,9 @@ namespace AppleShooterProto{
 			float normalizedCameraPosition,
 			int axis
 		);
+
+		bool IsDrawing();
+		bool IsLookingAround();
 		void Nock();
 		void StartDraw();
 		void HoldDraw();
@@ -77,6 +80,12 @@ namespace AppleShooterProto{
 					normalizedCursoredPosition,
 					axis
 				);
+			}
+			public bool IsDrawing(){
+				return thisEngine.IsDrawing();
+			}
+			public bool IsLookingAround(){
+				return thisEngine.IsLookingAround();
 			}
 		/* Camera & Scroller */
 			IPlayerCamera thisPlayerCamera;

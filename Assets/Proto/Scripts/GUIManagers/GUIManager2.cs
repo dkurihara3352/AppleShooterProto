@@ -194,10 +194,9 @@ namespace AppleShooterProto{
 				DrawTargetsBySpawnPoints(subTop);
 				DrawSpawnPointForEachTarget(subBottom);
 			}
-			IStaticTargetSpawnPointGroup thisStaticTargetSpawnPointGroup;
 			void DrawTargetsBySpawnPoints(Rect rect){
 				if(thisSystemIsReady){
-					IStaticTargetSpawnPoint[] spawnPoints = thisStaticTargetSpawnPointGroup.GetStaticTargetSpawnPoints();
+					IStaticTargetSpawnPoint[] spawnPoints = CollectStaticTargetSpawnPonints();
 					string result = "";
 					int indexOfPoint = 0;
 					foreach(IStaticTargetSpawnPoint point in spawnPoints){
@@ -217,6 +216,16 @@ namespace AppleShooterProto{
 						result
 					);
 				}
+			}
+			IStaticTargetSpawnPointGroup thisStaticTargetSpawnPointGroup;
+			IStaticTargetSpawnPoint[] CollectStaticTargetSpawnPonints(){
+				List<IStaticTargetSpawnPoint> resultList = new List<IStaticTargetSpawnPoint>();
+				IShootingTargetSpawnPointAdaptor[] adaptors = staticTargetSpawnPointGroupAdaptor.GetAdaptors();
+				foreach(IShootingTargetSpawnPointAdaptor adaptor in adaptors){
+					IStaticTargetSpawnPointAdaptor typedAdaptor = (IStaticTargetSpawnPointAdaptor)adaptor;
+					resultList.Add(typedAdaptor.GetStaticTargetSpawnPoint());
+				}
+				return resultList.ToArray();
 			}
 			void DrawSpawnPointForEachTarget(Rect rect){
 				if(thisSystemIsReady){
@@ -252,11 +261,9 @@ namespace AppleShooterProto{
 				DrawGlidingTargetsByWaypointCurve(subTop);
 				DrawWaypointsByGlidingTarget(subBottom);
 			}
-			public GlidingTargetSpawnPointGroupAdaptor glidingTargetSpawnPointGroupAdaptor;
-			IGlidingTargetSpawnPointGroup thisGlidingTargetSpawnPointGroup;
 			void DrawGlidingTargetsByWaypointCurve(Rect rect){
 				if(thisSystemIsReady){
-					IGlidingTargetSpawnPoint[] spawnPoints = thisGlidingTargetSpawnPointGroup.GetGlidingTargetSpawnPoints();
+					IGlidingTargetSpawnPoint[] spawnPoints = CollectGlidingTargetSpawnPoints();
 					string result = "";
 					foreach(IGlidingTargetSpawnPoint spawnPoint in spawnPoints){
 						IGlidingTarget target = (IGlidingTarget)spawnPoint.GetSpawnedTarget();
@@ -274,6 +281,17 @@ namespace AppleShooterProto{
 					);
 				}
 			}
+			public GlidingTargetSpawnPointGroupAdaptor glidingTargetSpawnPointGroupAdaptor;
+			IGlidingTargetSpawnPointGroup thisGlidingTargetSpawnPointGroup;
+			IGlidingTargetSpawnPoint[] CollectGlidingTargetSpawnPoints(){
+				List<IGlidingTargetSpawnPoint> resultList = new List<IGlidingTargetSpawnPoint>();
+				foreach(IShootingTargetSpawnPointAdaptor adaptor in glidingTargetSpawnPointGroupAdaptor.GetAdaptors()){
+					IGlidingTargetSpawnPointAdaptor typedAdaptor = (IGlidingTargetSpawnPointAdaptor)adaptor;
+					resultList.Add(typedAdaptor.GetGlidingTargetSpawnPoint());
+				}
+				return resultList.ToArray();
+			}
+
 			void DrawWaypointsByGlidingTarget(Rect rect){
 				if(thisSystemIsReady){
 					IGlidingTarget[] targets = thisGlidingTargetReserve.GetGlidingTargets();
@@ -312,7 +330,7 @@ namespace AppleShooterProto{
 				thisDestroyedTargetReserve.ActivateDestoryedTargetAt(target);
 			}
 			void SetStaticShootingTargetsAtSpawnPoints(){
-				IStaticTargetSpawnPoint[] points = thisStaticTargetSpawnPointGroup.GetStaticTargetSpawnPoints();
+				IStaticTargetSpawnPoint[] points = CollectStaticTargetSpawnPonints();
 
 				IStaticShootingTarget[] targets = thisStaticShootingTargetReserve.GetStaticShootingTargets();
 				int targetCount = targets.Length;

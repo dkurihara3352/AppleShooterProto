@@ -57,13 +57,8 @@ namespace AppleShooterProto{
 
 			for(int i = 0; i < childCount; i++){
 				Transform child = transform.GetChild(i);
-				IWaypointCurveAdaptor curveAdaptor = /* (IWaypointCurveAdaptor)child.GetComponent(typeof(IWaypointCurveAdaptor)); */GetWaypointCurveAdaptorOfChild(child);
-				if(curveAdaptor != null)
-				Debug.Log(
-					"curveAdaptor == null: " + (curveAdaptor == null).ToString() + ", "
-					 +
-					"curveAdaptor.IsEnabled(): " + curveAdaptor.IsEnabled().ToString()
-				);
+				IWaypointCurveAdaptor curveAdaptor = GetWaypointCurveAdaptorOfChild(child);
+
 				if(curveAdaptor != null && curveAdaptor.IsEnabled())
 					result.Add(curveAdaptor.GetWaypointCurve());
 			}
@@ -71,10 +66,6 @@ namespace AppleShooterProto{
 				int index = result.IndexOf(curve);
 				curve.SetIndex(index);
 			}
-			Debug.Log(
-				"result.Count: " + result.Count.ToString() + ", " +
-				"childCount: " + childCount.ToString() + " "
-			);
 			return result;
 		}
 

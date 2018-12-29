@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace AppleShooterProto{
 	public interface IShootingTargetSpawnPointGroup: IAppleShooterSceneObject{
-		IShootingTargetSpawnPoint[] GetSpawnPoints();
 		void SetSpawnPoints(IShootingTargetSpawnPoint[] spawnPoints);
 		IShootingTargetSpawnPoint Draw();
 		void Log();
@@ -15,29 +14,17 @@ namespace AppleShooterProto{
 		): base(
 			arg
 		){}
-		protected IShootingTargetSpawnPoint[] thisSpawnPoints{
-			get{
-				if(_spawnPoints == null)
-					_spawnPoints = thisTypedAdaptor.GetSpawnPoints();
-				return _spawnPoints;
-			}
-			set{
-				_spawnPoints = value;
-			}
-		}
 		IShootingTargetSpawnPointGroupAdaptor thisTypedAdaptor{
 			get{
 				return (IShootingTargetSpawnPointGroupAdaptor)thisAdaptor;
 			}
 		}
-		IShootingTargetSpawnPoint[] _spawnPoints;
+		// IShootingTargetSpawnPoint[] _spawnPoints;
+		IShootingTargetSpawnPoint[] thisSpawnPoints;
 		public void SetSpawnPoints(IShootingTargetSpawnPoint[] spawnPoints){
 			thisSpawnPoints = spawnPoints;
 			float[] relativeProb = CreateRelativeProb(spawnPoints.Length);
 			thisIndexPool = new UnityBase.Pool(relativeProb);
-		}
-		public IShootingTargetSpawnPoint[] GetSpawnPoints(){
-			return thisSpawnPoints;
 		}
 		float[] CreateRelativeProb(int count){
 			float[] result = new float[count];
@@ -56,12 +43,6 @@ namespace AppleShooterProto{
 		}
 		public void Log(){
 			thisIndexPool.Log();
-		}
-		protected T[] GetTypedSpawnPoints<T>() where T: class, IShootingTargetSpawnPoint{
-			List<T> resultList = new List<T>();
-			foreach(IShootingTargetSpawnPoint point in thisSpawnPoints)
-				resultList.Add((T)point);
-			return resultList.ToArray();
 		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{

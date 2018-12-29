@@ -14,7 +14,6 @@ namespace AppleShooterProto{
 		}
 		public override void SetUp(){
 			thisGroup = CreateCurveGroup();
-			thisCurveAdaptors = CollectCurveAdaptors();
 		}
 		IGlidingTargetWaypointCurveGroup CreateCurveGroup(){
 			GlidingTargetWaypointCurveGroup.IConstArg arg = new GlidingTargetWaypointCurveGroup.ConstArg(
@@ -22,7 +21,9 @@ namespace AppleShooterProto{
 			);
 			return new GlidingTargetWaypointCurveGroup(arg);
 		}
-		IGlidingTargetWaypointCurveAdaptor[] thisCurveAdaptors;
+		public IGlidingTargetWaypointCurveAdaptor[] GetCurveAdaptors(){
+			return CollectCurveAdaptors();
+		}
 		IGlidingTargetWaypointCurveAdaptor[] CollectCurveAdaptors(){
 			Component[] comps =  this.transform.GetComponentsInChildren<Component>();
 			List<IGlidingTargetWaypointCurveAdaptor> adaptorsList = new List<IGlidingTargetWaypointCurveAdaptor>();
@@ -31,24 +32,6 @@ namespace AppleShooterProto{
 					adaptorsList.Add((IGlidingTargetWaypointCurveAdaptor)comp);
 			}
 			return adaptorsList.ToArray();
-		}
-		public IGlidingTargetWaypointCurveAdaptor[] GetCurveAdaptors(){
-			return CollectCurveAdaptors();
-		}
-		public override void SetUpReference(){
-			IGlidingTargetWaypointCurve[] curves = GetCurves();
-			thisGroup.SetCurves(curves);
-		}
-		IGlidingTargetWaypointCurve[] GetCurves(){
-			List<IGlidingTargetWaypointCurve> resultList = new List<IGlidingTargetWaypointCurve>();
-			int index = 0;
-			foreach(IGlidingTargetWaypointCurveAdaptor adaptor in thisCurveAdaptors){
-				IGlidingTargetWaypointCurve curve = (IGlidingTargetWaypointCurve)adaptor.GetWaypointCurve();
-				curve.SetIndex(index);
-				resultList.Add(curve);
-				index ++;
-			}
-			return resultList.ToArray();
 		}
 	}
 }

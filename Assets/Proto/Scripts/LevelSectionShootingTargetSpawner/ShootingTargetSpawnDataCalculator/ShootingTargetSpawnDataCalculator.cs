@@ -54,8 +54,15 @@ namespace AppleShooterProto{
 			return new TargetSpawnData(entries);
 		}
 		IShootingTargetSpawnPoint[] CreateSpawnPoints(IShootingTargetSpawnPointGroupAdaptor spawnPointGroupAdaptor){
-			IShootingTargetSpawnPointGroup group = spawnPointGroupAdaptor.GetGroup();
-			return group.GetSpawnPoints();
+			// IShootingTargetSpawnPointGroup group = spawnPointGroupAdaptor.GetGroup();
+			// return group.GetSpawnPoints();
+			List<IShootingTargetSpawnPoint> resultList = new List<IShootingTargetSpawnPoint>();
+			IShootingTargetSpawnPointAdaptor[] adaptors = spawnPointGroupAdaptor.GetAdaptors();
+			foreach(IShootingTargetSpawnPointAdaptor adaptor in adaptors){
+				resultList.Add(adaptor.GetSpawnPoint());
+			}
+			return resultList.ToArray();
+
 		}
 		ISpawnPointEventPointPair[] CreatePairs(SpawnPointAdaptorEventPointPair[] adaptorPairs){
 			List<ISpawnPointEventPointPair> pairs = new List<ISpawnPointEventPointPair>();

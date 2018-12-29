@@ -40,6 +40,9 @@ namespace AppleShooterProto{
 		void ClearAndDeactivateShotInBuffer();
 		void Aim();
 		void Unaim();
+
+		bool IsDrawing();
+		bool IsLookingAround();
 	}
 	public class PlayerInputStateEngine : AbsSwitchableStateEngine<IPlayerInputState>, IPlayerInputStateEngine {
 
@@ -159,6 +162,13 @@ namespace AppleShooterProto{
 			}
 			public void Unaim(){
 				thisPlayerInputManager.Unaim();
+			}
+		/*  */
+			public bool IsDrawing(){
+				return thisCurState == thisDrawingState;
+			}
+			public bool IsLookingAround(){
+				return thisCurState == thisLookingAroundState;
 			}
 	}
 

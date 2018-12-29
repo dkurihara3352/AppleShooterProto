@@ -473,6 +473,7 @@ namespace UISystem{
 				}
 			}
 			public void OnPointerDown(PointerEventData eventData){
+				if(thisUIManager != null)
 				if(!thisUIManager.TouchIDIsRegistered()){
 					thisUIManager.RegisterTouchID(eventData.pointerId);
 					ICustomEventData customEventData = new CustomEventData(
@@ -484,6 +485,7 @@ namespace UISystem{
 				}
 			}
 			public void OnPointerUp(PointerEventData eventData){
+				if(thisUIManager != null)
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
 						ICustomEventData customEventData = new CustomEventData(
@@ -497,6 +499,7 @@ namespace UISystem{
 				}
 			}
 			public void OnBeginDrag(PointerEventData eventData){
+				if(thisUIManager != null)
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
 						ICustomEventData customEventData = new CustomEventData(
@@ -509,6 +512,7 @@ namespace UISystem{
 				}
 			}
 			public void OnDrag(PointerEventData eventData){
+				if(thisUIManager != null)
 				if(thisUIManager.TouchIDIsRegistered()){
 					if(PointerIDMatchesTheRegistered(eventData.pointerId)){
 						ICustomEventData customEventData = new CustomEventData(
@@ -556,5 +560,6 @@ namespace UISystem{
 				IUIImage image = thisUIElement.GetUIImage();
 				image.ToggleRaycastTarget(isTarget);
 			}
+		
 	}
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace AppleShooterProto{
 	public interface IStaticTargetSpawnPointGroup: IShootingTargetSpawnPointGroup{
-		IStaticTargetSpawnPoint[] GetStaticTargetSpawnPoints();
 	}
 	public class StaticTargetSpawnPointGroup : AbsShootingTargetSpawnPointGroup, IStaticTargetSpawnPointGroup {
 		
@@ -13,12 +12,6 @@ namespace AppleShooterProto{
 		): base(
 			arg
 		){}
-
-		public IStaticTargetSpawnPoint[] GetStaticTargetSpawnPoints(){
-			return GetTypedSpawnPoints<IStaticTargetSpawnPoint>();
-		}
-
-
 		/*  */
 		public new interface IConstArg: AbsShootingTargetSpawnPointGroup.IConstArg{
 
