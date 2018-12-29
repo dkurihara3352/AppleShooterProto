@@ -354,12 +354,12 @@ namespace AppleShooterProto{
 			void StartEndSequence(){
 				thisEndGamePane.StartSequence();
 			}
-
+			float frostTime = 1f;
 			void Defrost(){
-				thisFrostManager.Defrost();
+				thisFrostManager.Defrost(frostTime);
 			}
 			void Frost(){
-				thisFrostManager.Frost();
+				thisFrostManager.Frost(frostTime);
 			}
 			IFrostManager thisFrostManager;
 			public void SetFrostManager(IFrostManager manager){

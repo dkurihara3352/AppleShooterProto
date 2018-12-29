@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 		IGameplayPause GetGameplayPause();
 		void SetTimeScale(float scale);
 		float GetTimeScale();
+		float GetFrostTime();
 
 	}
 	public class GameplayPauseAdaptor : AppleShooterMonoBehaviourAdaptor, IGameplayPauseAdaptor {
@@ -27,6 +28,7 @@ namespace AppleShooterProto{
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
 		public GameplayPauseButtonAdaptor pauseButtonAdaptor;
 		public PopUpAdaptor pauseMenuPopUpAdaptor;
+		public FrostManagerAdaptor frostManagerAdaptor;
 
 		public override void SetUpReference(){
 			ICoreGameplayInputScroller scroller = inputScrollerAdaptor.GetInputScroller();
@@ -36,6 +38,9 @@ namespace AppleShooterProto{
 
 			IPopUp pauseMenuPopUp = pauseMenuPopUpAdaptor.GetPopUp();
 			thisPause.SetPauseMenuPopUp(pauseMenuPopUp);
+
+			IFrostManager frostManager = frostManagerAdaptor.GetFrostManager();
+			thisPause.SetFrostManager(frostManager);
 		}
 
 		public void SetTimeScale(float scale){
@@ -44,5 +49,10 @@ namespace AppleShooterProto{
 		public float GetTimeScale(){
 			return Time.timeScale;
 		}
+		public float frostTime = .1f;
+		public float GetFrostTime(){
+			return frostTime;
+		}
+
 	}
 }

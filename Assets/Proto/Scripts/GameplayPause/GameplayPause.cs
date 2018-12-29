@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 		void SetInputScroller(ICoreGameplayInputScroller scroller);
 		void SetGameplayPauseButton(IGameplayPauseButton button);
 		void SetPauseMenuPopUp(IPopUp popUp);
+		void SetFrostManager(IFrostManager manager);
 
 		void Pause();
 		void Unpause();
@@ -37,12 +38,20 @@ namespace AppleShooterProto{
 			thisPauseMenuPopUp = popUp;
 		}
 		public void Pause(){
-			thisInputScroller.DisableInputRecursively();//just to be sure, may not be needed
+			// thisInputScroller.DisableInputRecursively();//just to be sure, may not be needed
+			float frostTime = thisTypedAdaptor.GetFrostTime();
+			thisFrostManager.Frost(0f);
 			SetTimeScale(0f);
 			thisPauseMenuPopUp.Show(true);
 			thisPauseButton.DeactivateRecursively(true);
 		}
+		IFrostManager thisFrostManager;
+		public void SetFrostManager(IFrostManager manager){
+			thisFrostManager = manager;
+		}
+		
 		public void Unpause(){
+			thisFrostManager.Defrost(thisTypedAdaptor.GetFrostTime());
 			thisInputScroller.EnableInputRecursively();
 			StartUnpauseProcess();
 			thisPauseMenuPopUp.Hide(false);

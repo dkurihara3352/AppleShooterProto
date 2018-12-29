@@ -225,14 +225,17 @@ namespace UISystem{
 			protected bool thisIsEnabledInput = true;
 			/* Touch */
 				public void OnTouch(int touchCount){
-					if(this.IsActivated() && thisIsEnabledInput){
-						IScroller scrollerToStartPauseMotorProcess = GetTargetUIEOrItsProximateParentAsScroller(this);
-						if(scrollerToStartPauseMotorProcess != null)
-							scrollerToStartPauseMotorProcess.StopRunningMotorProcessRecursivelyUp();
-						OnTouchImple(touchCount);
-					}
-					else
+					if(this.IsActivated()){
+						if(thisIsEnabledInput){
+							IScroller scrollerToStartPauseMotorProcess = GetTargetUIEOrItsProximateParentAsScroller(this);
+							if(scrollerToStartPauseMotorProcess != null)
+								scrollerToStartPauseMotorProcess.StopRunningMotorProcessRecursivelyUp();
+							OnTouchImple(touchCount);
+						}
+					}else{
 						PassOnTouchUpward(touchCount);
+					}
+					
 				}
 				protected virtual void OnTouchImple(int touchCount){
 					PassOnTouchUpward(touchCount);

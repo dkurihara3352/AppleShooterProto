@@ -5,8 +5,8 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public interface IFrostManager: IAppleShooterSceneObject, IProcessHandler{
-		void Frost();
-		void Defrost();
+		void Frost(float time);
+		void Defrost(float time);
 	}
 	public class FrostManager: AppleShooterSceneObject, IFrostManager{
 		public FrostManager(IConstArg arg): base(arg){
@@ -22,11 +22,13 @@ namespace AppleShooterProto{
 				return (IFrostManagerAdaptor)thisAdaptor;
 			}
 		}
-		public void Frost(){
+		public void Frost(float time){
+			thisProcessSuite.SetConstraintValue(time);
 			thisFrsots = true;
 			thisProcessSuite.Start();
 		}
-		public void Defrost(){
+		public void Defrost(float time){
+			thisProcessSuite.SetConstraintValue(time);
 			thisFrsots = false;
 			thisProcessSuite.Start();
 		}
