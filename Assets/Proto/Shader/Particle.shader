@@ -9,7 +9,7 @@
 	SubShader
 	{
 		Tags { "Queue"="Transparent" "RenderType"="Transparent" }
-		LOD 100
+		// LOD 100
 		Blend SrcAlpha One
 		ZWrite Off
 		Pass
