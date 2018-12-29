@@ -103,7 +103,7 @@ namespace AppleShooterProto{
 				ActivateGameplayUI();
 				StartWaitAndStartGameplay();
 				DisableRootScroller();
-				DefrostRootElement();
+				// DefrostRootElement();
 			}
 			void SetUpShootingData(){
 				/*  
@@ -215,7 +215,7 @@ namespace AppleShooterProto{
 				DeactivateHUD();
 				StopTargetSpawn();
 				// EnableRootScroller();
-				FrostRootElement();
+				// FrostRootElement();
 
 				GameResultStats stats = CreateGameResultStats();
 				MightWannaSaveDataHere(stats);

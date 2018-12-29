@@ -41,8 +41,8 @@ namespace AppleShooterProto{
 			IUIElementGroupScroller rootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
 			thisWidget.SetRootScroller(rootScroller);
 
-			IFrostGlass frostGlass = rootElementFrostGlassAdaptor.GetFrostGlass();
-			thisWidget.SetRootElementFrostGlass(frostGlass);
+			// IFrostGlass frostGlass = rootElementFrostGlassAdaptor.GetFrostGlass();
+			// thisWidget.SetRootElementFrostGlass(frostGlass);
 
 			IResourcePanel resourcePanel = resourcePanelAdaptor.GetResourcePanel();
 			thisWidget.SetResourcePanel(resourcePanel);
@@ -85,7 +85,7 @@ namespace AppleShooterProto{
 		public GameStatsTrackerAdaptor gameStatsTrackerAdaptor;
 		public HeadUpDisplayAdaptor headUpDisplayAdaptor;
 		public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
-		public FrostGlassAdaptor rootElementFrostGlassAdaptor;
+		// public FrostGlassAdaptor rootElementFrostGlassAdaptor;
 		public ResourcePanelAdaptor resourcePanelAdaptor;
 		public MainMenuUIAdaptor mainMenuUIAdaptor;
 		public EndGamePaneAdaptor endGamePaneAdaptor;
