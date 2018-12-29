@@ -25,6 +25,7 @@ namespace AppleShooterProto{
 		void SetCoreGameplayInputScroller(ICoreGameplayInputScroller scroller);
 		void SetGameplayPause(IGameplayPause pause);
 		void SetPlayerInputManager(IPlayerInputManager manager);
+		void SetFrostManager(IFrostManager manager);
 		
 		void StartGameplay();
 		void EndGameplay();
@@ -99,10 +100,10 @@ namespace AppleShooterProto{
 				
 				DeactivateMainMenu();
 				SetUpShootingData();
-
 				ActivateGameplayUI();
 				StartWaitAndStartGameplay();
 				DisableRootScroller();
+				Defrost();
 				// DefrostRootElement();
 			}
 			void SetUpShootingData(){
@@ -125,6 +126,7 @@ namespace AppleShooterProto{
 			public void ActivateGameplayUI(){
 				// thisGameplayUIElement.ActivateRecursively(instantly: false);
 				thisGameplayUIElement.ActivateThruBackdoor(instantly: false);
+				thisGameplayUIElement.EvaluateScrollerFocusRecursively();
 			}
 			IGameplayUIElement thisGameplayUIElement;
 			public void SetGameplayUIElement(IGameplayUIElement uiElement){
@@ -145,6 +147,7 @@ namespace AppleShooterProto{
 				LoadAndSetHighScore();
 				// ActivateGameplayUI();
 				ActivateHUD();
+				ActivatePauseButton();
 				StartHeatCountDown();
 			}
 			public void StartTargetSpawn(){
@@ -178,6 +181,9 @@ namespace AppleShooterProto{
 			public void SetHeadUpDisplay(IHeadUpDisplay hud){
 				thisHUD = hud;
 			}
+			void ActivatePauseButton(){
+				thisGameplayPause.ActivatePauseButton();
+			}
 			void StartHeatCountDown(){
 				thisHeatManager.StartCountingDown();
 			}
@@ -209,6 +215,7 @@ namespace AppleShooterProto{
 			public void EndGameplay(){
 				RaisePointerOnInputScroller();
 				ExpireUnpauseProcess();
+				DeactivatePauseButton();
 				StopCountDownHeat();
 				MarkGameStatsTrackerGameplayEnded();
 				DeactivateGameplayUI();
@@ -227,6 +234,8 @@ namespace AppleShooterProto{
 
 				FeedEndGamePane(stats);
 				StartEndSequence();
+
+				Frost();
 			}
 			void RaisePointerOnInputScroller(){
 				if(thisPlayerInputMnanager.IsDrawing() || thisPlayerInputMnanager.IsLookingAround())
@@ -244,6 +253,9 @@ namespace AppleShooterProto{
 				thisGameplayPause.ExpireUnpauseProcess();
 			}
 			IGameplayPause thisGameplayPause;
+			void DeactivatePauseButton(){
+				thisGameplayPause.DeactivatePauseButton();
+			}
 			public void SetGameplayPause(IGameplayPause pause){
 				thisGameplayPause = pause;
 			}
@@ -342,6 +354,18 @@ namespace AppleShooterProto{
 			void StartEndSequence(){
 				thisEndGamePane.StartSequence();
 			}
+
+			void Defrost(){
+				thisFrostManager.Defrost();
+			}
+			void Frost(){
+				thisFrostManager.Frost();
+			}
+			IFrostManager thisFrostManager;
+			public void SetFrostManager(IFrostManager manager){
+				thisFrostManager = manager;
+			}
+
 		/*  */
 		public void ToggleMainMenu(){
 			if(thisMainMenuUIElement.IsActivated())

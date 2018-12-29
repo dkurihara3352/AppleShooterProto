@@ -26,6 +26,7 @@ namespace UISystem{
 
 	public class UIImage: IUIImage{
 		public UIImage(
+			Color defaultColor,
 			Graphic graphicComponent, 
 			Transform imageTrans, 
 			IUISystemProcessFactory processFactory,
@@ -33,7 +34,8 @@ namespace UISystem{
 
 		){
 			thisGraphicComponent = graphicComponent;
-			thisOriginalColor = GetColor();
+			thisOriginalColor = defaultColor;
+			SetColor(thisOriginalColor);
 			thisImageTrans = imageTrans;
 			thisDefaultBrightness = GetCurrentBrightness();
 			thisDarkenedBrightness = Mathf.Lerp(

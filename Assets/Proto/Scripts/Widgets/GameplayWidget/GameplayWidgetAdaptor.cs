@@ -79,13 +79,15 @@ namespace AppleShooterProto{
 
 			IPlayerInputManager playerInputManager = playerInputManagerAdaptor.GetInputManager();
 			thisWidget.SetPlayerInputManager(playerInputManager);
+
+			IFrostManager frostManager = frostManagerAdaptor.GetFrostManager();
+			thisWidget.SetFrostManager(frostManager);
 		}
 		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
 		public GameStatsTrackerAdaptor gameStatsTrackerAdaptor;
 		public HeadUpDisplayAdaptor headUpDisplayAdaptor;
 		public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
-		// public FrostGlassAdaptor rootElementFrostGlassAdaptor;
 		public ResourcePanelAdaptor resourcePanelAdaptor;
 		public MainMenuUIAdaptor mainMenuUIAdaptor;
 		public EndGamePaneAdaptor endGamePaneAdaptor;
@@ -98,6 +100,7 @@ namespace AppleShooterProto{
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
 		public GameplayPauseAdaptor gameplayPauseAdaptor;
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
+		public FrostManagerAdaptor frostManagerAdaptor;
 	}
 }
 

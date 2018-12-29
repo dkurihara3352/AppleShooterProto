@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 	}
 	public class GlidingTargetWaypointCurveAdaptor: AbsWaypointCurveAdaptor, IGlidingTargetWaypointCurveAdaptor{
 		public override void SetUp(){
+			Calculate();
 			AbsWaypointCurve.IConstArg arg = new AbsWaypointCurve.ConstArg(
 				this,
 				thisControlPoints,

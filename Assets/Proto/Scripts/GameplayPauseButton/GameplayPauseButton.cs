@@ -7,44 +7,28 @@ namespace AppleShooterProto{
 		void SetGameplayPause(IGameplayPause pause);
 
 		void Execute();
+		void ActivateThruBackdoor();
 	}
 	public class GameplayPauseButton : UIElement, IGameplayPauseButton {
 		public GameplayPauseButton(IConstArg arg): base(arg){
-			thisPauses = arg.pauses;
 		}
-		bool thisPauses;
 		IGameplayPause thisPause;
 		public void SetGameplayPause(IGameplayPause pause){
 			thisPause = pause;
 		}	
 		public void Execute(){
-			if(thisPauses)
-				thisPause.Pause();
-			else
-				thisPause.Unpause();
+			thisPause.Pause();
 		}
 		protected override void OnTapImple(int tapCount){
 			Execute();
 		}
-
-
-		public new interface IConstArg: UIElement.IConstArg{
-			bool pauses{get;}
+		public override void ActivateRecursively(bool instantly){
+			return;
 		}
-		public new class ConstArg: UIElement.ConstArg, IConstArg{
-			public ConstArg(
-				IGameplayPauseButtonAdaptor adaptor,
-				ActivationMode activationMode,
-
-				bool pauses
-			): base(
-				adaptor,
-				activationMode
-			){
-				thisPauses = pauses;
-			}
-			readonly bool thisPauses;
-			public bool pauses{get{return thisPauses;}}
+		public void ActivateThruBackdoor(){
+			ActivateSelf(false);
+			ActivateAllChildren(false);
+			EvaluateScrollerFocusRecursively();
 		}
 	}
 }

@@ -11,6 +11,7 @@ namespace AppleShooterProto{
 		void Pause();
 		void Unpause();
 		void ActivatePauseButton();
+		void DeactivatePauseButton();
 		void SetTimeScale(float scale);
 		float GetTimeScale();
 
@@ -66,10 +67,13 @@ namespace AppleShooterProto{
 			thisPauseButton = button;
 		}
 		public void ActivatePauseButton(){
-			thisPauseButton.ActivateRecursively(false);
-			thisPauseButton.EvaluateScrollerFocusRecursively();
+			// thisPauseButton.ActivateRecursively(false);
+			// thisPauseButton.EvaluateScrollerFocusRecursively();
+			thisPauseButton.ActivateThruBackdoor();
 		}
-
+		public void DeactivatePauseButton(){
+			thisPauseButton.DeactivateRecursively(true);
+		}
 		public void SetTimeScale(float scale){
 			thisTypedAdaptor.SetTimeScale(scale);
 		}

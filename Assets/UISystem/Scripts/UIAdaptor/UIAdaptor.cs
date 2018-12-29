@@ -205,10 +205,12 @@ namespace UISystem{
 			}
 		/* UIImage */
 			float thisChangeColorTime = .1f;
+			public Color defaultColor;
 			protected virtual IUIImage CreateUIImage(){
 				Image image;
 				Transform childWithImage = GetChildWithImage(out image);
 				IUIImage uiImage = new UIImage(
+					defaultColor,
 					image, 
 					childWithImage, 
 					// thisImageDefaultBrightness, 

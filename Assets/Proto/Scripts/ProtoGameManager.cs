@@ -6,6 +6,9 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public class ProtoGameManager : MonoBehaviour{
+		public void Start(){
+			StartUp();
+		}
 		public void StartUp(){
 			SetUp();
 			ActivateRootUI();

@@ -21,7 +21,6 @@ namespace AppleShooterProto{
 		public override void SetUp(){
 			base.SetUp();
 			thisCanvasGroup = GetComponent<CanvasGroup>();
-			thisShowLocalPosition = GetLocalPosition();
 		}
 		public override void FinalizeSetUp(){
 			base.FinalizeSetUp();
@@ -62,13 +61,24 @@ namespace AppleShooterProto{
 			return hideAlpha;
 		}
 		public Vector3 hideOffset = new Vector3(0f, 100f, 0f);
-		Vector3 thisShowLocalPosition;
 		public Vector3 GetShowLocalPosition(){
 			return thisShowLocalPosition;
 		}
-		public Vector3 GetHideLocalPosition(){
-			return thisShowLocalPosition + hideOffset;
+		Vector3 thisShowLocalPosition{
+			get{
+				return showPositionAdaptor.GetLocalPosition();
+			}
 		}
+		public UIAdaptor showPositionAdaptor;
+		public Vector3 GetHideLocalPosition(){
+			return thisHideLocalPosition;
+		}
+		Vector3 thisHideLocalPosition{
+			get{
+				return hidePositionAdaptor.GetLocalPosition();
+			}
+		}
+		public UIAdaptor hidePositionAdaptor;
 		public AnimationCurve processCurve;
 		public AnimationCurve GetProcessCurve(){
 			return processCurve;

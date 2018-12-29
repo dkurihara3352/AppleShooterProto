@@ -12,6 +12,7 @@ namespace UISystem{
 		public override void SetUp(){
 			base.SetUp();
 			MakeSureImageIsProperlySet();
+			SetFill(0f);
 		}
 		void MakeSureImageIsProperlySet(){
 			fillImage.type = Image.Type.Filled;

@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace AppleShooterProto{
 	public class GUIManager : AbsGUIManager {
-		void Awake(){
-			CalcRects();
-		}
+		// void Awake(){
+		// 	CalcRects();
+		// }
 		void CalcRects(){
 			topLeftRect = GetGUIRect(
 				normalizedSize: new Vector2(.2f, .4f),
@@ -78,6 +78,7 @@ namespace AppleShooterProto{
 		public ArrowReserveAdaptor arrowReserveAdaptor;
 		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		void OnGUI(){
+			CalcRects();
 			/* left */
 				DrawControl();
 				DrawBottomLeft();

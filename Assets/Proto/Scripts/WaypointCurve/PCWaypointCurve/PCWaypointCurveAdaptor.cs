@@ -6,6 +6,7 @@ namespace AppleShooterProto{
 	public interface IPCWaypointCurveAdaptor: IWaypointCurveAdaptor{}
 	public class PCWaypointCurveAdaptor: AbsWaypointCurveAdaptor, IPCWaypointCurveAdaptor{
 		public override void SetUp(){
+			Calculate();
 			AbsWaypointCurve.IConstArg arg = new AbsWaypointCurve.ConstArg(
 				this,
 				thisControlPoints,

@@ -283,13 +283,13 @@ namespace UISystem{
 							if(thisIsEnabledInput){
 								CheckAndPerformStaticBoundarySnapFrom(this);
 								OnTapImple(tapCount);
-							}
-							else{
+							}else{
 								PassOnTapUpward(tapCount);
 							}
 						}
-					}else
+					}else{
 						PassOnTapUpward(tapCount);
+					}
 				}
 				protected virtual void OnTapImple(int tapCount){
 					PassOnTapUpward(tapCount);

@@ -12,8 +12,7 @@ namespace AppleShooterProto{
 		protected override IUIElement CreateUIElement(){
 			GameplayPauseButton.IConstArg arg = new GameplayPauseButton.ConstArg(
 				this,
-				activationMode,
-				pauses
+				activationMode
 			);
 			return new GameplayPauseButton(arg);
 		}
