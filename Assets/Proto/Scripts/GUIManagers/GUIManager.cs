@@ -673,15 +673,15 @@ namespace AppleShooterProto{
 					);
 				}
 			}
-			public GlidingTargetSpawnPointGroupAdaptor glidingTargetSpawnPointGroupAdaptor;
-			void CalcCurveOnGliderSpawnPointGroup(){
-				IGlidingTargetSpawnPointGroup group = glidingTargetSpawnPointGroupAdaptor.GetGlidingTargetSpawnPointGroup();
-				IGlidingTargetSpawnPoint[] spawnPoints = group.GetGlidingTargetSpawnPoints();
-				foreach(IGlidingTargetSpawnPoint point in spawnPoints){
-					IGlidingTargetWaypointCurve curve = point.GetGlidingTargetWaypointCurve();
-					curve.CalculateCurve();
-				}
-			}
+			// public GlidingTargetSpawnPointGroupAdaptor glidingTargetSpawnPointGroupAdaptor;
+			// void CalcCurveOnGliderSpawnPointGroup(){
+			// 	IGlidingTargetSpawnPointGroup group = glidingTargetSpawnPointGroupAdaptor.GetGlidingTargetSpawnPointGroup();
+			// 	IGlidingTargetSpawnPoint[] spawnPoints = group.GetGlidingTargetSpawnPoints();
+			// 	foreach(IGlidingTargetSpawnPoint point in spawnPoints){
+			// 		IGlidingTargetWaypointCurve curve = point.GetGlidingTargetWaypointCurve();
+			// 		curve.CalculateCurve();
+			// 	}
+			// }
 			public HeatManagerAdaptor heatManagerAdaptor;
 			void AddHeat(){
 				IHeatManager manager = heatManagerAdaptor.GetHeatManager();

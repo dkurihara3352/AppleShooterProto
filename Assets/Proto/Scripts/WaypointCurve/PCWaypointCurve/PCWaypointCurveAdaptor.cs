@@ -25,15 +25,30 @@ namespace AppleShooterProto{
 			IWaypointCurve[] subordinateCurves = CollectSubordinateCurves();
 			thisTypedCurve.SetSubordinateCurves(subordinateCurves);
 		}
-		public GlidingTargetSpawnPointGroupAdaptor gliderSpawnPointGroupAdaptor;
+		// public GlidingTargetSpawnPointGroupAdaptor gliderSpawnPointGroupAdaptor;
+		public GlidingTargetWaypointCurveGroupAdaptor gliderWaypointCurveGroupAdaptor;
 		IWaypointCurve[] CollectSubordinateCurves(){
 			List<IWaypointCurve> resultList = new List<IWaypointCurve>();
-			IGlidingTargetSpawnPointGroup group = gliderSpawnPointGroupAdaptor.GetGlidingTargetSpawnPointGroup();
-			IGlidingTargetSpawnPoint[] points = group.GetGlidingTargetSpawnPoints();
-			foreach(IGlidingTargetSpawnPoint point in points){
-				resultList.Add(point.GetGlidingTargetWaypointCurve());
+			// IGlidingTargetSpawnPointGroup group = gliderSpawnPointGroupAdaptor.GetGlidingTargetSpawnPointGroup();
+			IGlidingTargetWaypointCurveGroup group = gliderWaypointCurveGroupAdaptor.GetCurveGroup();
+			IGlidingTargetWaypointCurve[] curves = group.GetCurves();
+			// IGlidingTargetSpawnPoint[] points = group.GetGlidingTargetSpawnPoints();
+			// Debug.Log(group.GetName() + ", points: " + points.Length.ToString());
+			foreach(IGlidingTargetWaypointCurve curve in curves){
+				resultList.Add(curve);
 			}
+			PrintList(resultList);
 			return resultList.ToArray();
+		}
+		void PrintList(List<IWaypointCurve> list){
+			string result = "";
+			foreach(IWaypointCurve curve in list){
+				if(curve == null)
+					result += "null, ";
+				else
+					result += "nonnull, ";
+ 			}
+			 Debug.Log(result);
 		}
 	}
 }

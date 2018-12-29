@@ -20,9 +20,9 @@ namespace AppleShooterProto{
 		public IGlidingTargetWaypointCurve GetGlidingTargetWaypointCurve(){
 			return thisCurve;
 		}
-		// public override string GetName(){
-		// 	return "glider " + GetIndex().ToString();
-		// }
+		public override string GetName(){
+			return "glider " + GetIndex().ToString();
+		}
 		/*  */
 		public new interface IConstArg: AbsShootingTargetSpawnPoint.IConstArg{
 			
