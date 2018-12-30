@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		void StopParticleSystem();
 		void SetTier(TargetTierData data);
 		void SetTargetTierDataOnQueue(TargetTierData data);
-
+		void PopText(string text, Color color);
 	}
 	public class DestroyedTarget : AppleShooterSceneObject, IDestroyedTarget {
 		public DestroyedTarget(
@@ -54,9 +54,19 @@ namespace AppleShooterProto{
 		}
 		public void ActivateImple(){
 			thisTypedAdaptor.StartDestruction();
+			PopText(
+				thisTarget.GetDestructionScore().ToString(),
+				Color.green
+			);
+		}
+		public void PopText(
+			string text,
+			Color color
+		){
 			thisPopUIReserve.PopText(
 				this,
-				"Destroyed"
+				text,
+				color
 			);
 		}
 		IShootingTarget thisTarget;

@@ -87,6 +87,8 @@ namespace AppleShooterProto{
 			public virtual void ActivateImple(){
 				// ToggleGameObject(true);
 				thisOriginalHealth = ResetHealth();
+				if(this.thisIsRare)
+					thisOriginalHealth *= 2;
 				thisHealth = thisOriginalHealth;
 				thisShootingTargetAdaptor.SetColor(thisDefaultColor);
 				ToggleCollider(true);
@@ -94,7 +96,8 @@ namespace AppleShooterProto{
 
 				thisPopUIReserve.PopText(
 					this,
-					GetActivationString()
+					GetActivationString(),
+					Color.white
 				);
 			}
 			int ResetHealth(){
@@ -207,9 +210,12 @@ namespace AppleShooterProto{
 				float totalAttack = attack + critBonus;
 				float hitMagnitude = CalculateHitMagnitude(totalAttack);
 				thisShootingTargetAdaptor.PlayHitAnimation(hitMagnitude);
+				Color popTextColor = (critBonus == 0f) ? Color.white: new Color(1f, .6f, .2f);
 				thisPopUIReserve.PopText(
 					this,
-					GetArrowAttackString(attack, critBonus)
+					// GetArrowAttackString(attack, critBonus),
+					totalAttack.ToString("N0"),
+					popTextColor
 				);
 			}
 			string GetArrowAttackString(float attack, float critBonus){

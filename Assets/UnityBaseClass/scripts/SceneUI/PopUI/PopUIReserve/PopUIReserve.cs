@@ -6,7 +6,8 @@ namespace UnityBase{
 	public interface IPopUIReserve: ISceneObjectReserve<IPopUI>{
 		void PopText(
 			ISceneObject targetSceneObject,
-			string text
+			string text,
+			Color color
 		);
 		IPopUI[] GetPopUIs();
 	}
@@ -55,18 +56,15 @@ namespace UnityBase{
 		}
 		public void PopText(
 			ISceneObject targetSceneObject,
-			string text
+			string text,
+			Color color
 		){
 			IPopUI popUI = GetNext();
+			popUI.SetColor(color);
 			popUI.ActivateAt(
 				targetSceneObject,
 				text
 			);
-
-			// popUI.SetTargetSceneObject(targetSceneObject);
-			// popUI.SetText(text);
-
-			// popUI.Activate();
 		}
 		public IPopUI[] GetPopUIs(){
 			return thisSceneObjects;

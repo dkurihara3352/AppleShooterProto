@@ -43,10 +43,25 @@ namespace AppleShooterProto{
 
 				if(isRare){
 					int targetTier = target.GetTier();
-					int currencyGained = /* thisRareDestructionCurrencyBonusCalculator.Calculate(targetTier) */100;
+					int currencyGained = CalculateCurrencyGained(targetTier);
 					thisCurrencyManager.AddGainedCurrency(currencyGained);
+
+					IDestroyedTarget destroyedTarget = target.GetDestroyedTarget();
+					destroyedTarget.PopText(
+						currencyGained.ToString(),
+						new Color(.8f, .2f, .9f)
+					);
 				}
 			}
+		}
+		int CalculateCurrencyGained(int tier){
+			if(tier == 0)
+				return 10;
+			else if(tier == 2)
+				return 25;
+			else if(tier == 2)
+				return 50;
+			else return 0;
 		}
 		bool thisGameplayIsEnded = false;
 		public void ResetStats(){

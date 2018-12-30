@@ -9,7 +9,9 @@ namespace UnityBase{
 		void SetPopUIReserve(IPopUIReserve reserve);
 		IPopUI GetPopUI();
 
-		void SetUIAlpha(float alpha);
+		// void SetUIAlpha(float alpha);
+		void SetAlpha(float alpha);
+		void SetColor(Color color);
 
 		void SetChildGraphicColor(Color color);
 		void SetChildGraphicScale(Vector3 scale);
@@ -21,7 +23,6 @@ namespace UnityBase{
 		void SetIndex(int index);
 		Rect GetGraphicRect();
 	}
-	
 	public class PopUIAdaptor: AbsSceneUIAdaptor, IPopUIAdaptor{
 		protected override ISceneUI CreateSceneUI(){
 			PopUI.IConstArg arg = new PopUI.ConstArg(
@@ -46,6 +47,7 @@ namespace UnityBase{
 			return new PopUI(arg);
 		}
 		public override void SetUp(){
+			thisCanvasGroup = gameObject.AddComponent<CanvasGroup>();
 			thisGraphic = CollectGraphic();
 			thisOriginalColor  = thisGraphic.color;
 			thisChildGraphicOriginalColor = thisGraphic.color;
@@ -128,21 +130,31 @@ namespace UnityBase{
 			thisGraphic.rectTransform.sizeDelta = size;
 		}
 		Color thisOriginalColor;
-		public void SetUIAlpha(float alpha){
-			float originalAlpha = thisOriginalColor.a;
-			float targetAlpha = Mathf.Lerp(
-				0f,
-				originalAlpha,
-				alpha
-			);
-			Color newColor = new Color(
-				thisOriginalColor.r,
-				thisOriginalColor.g,
-				thisOriginalColor.b,
-				targetAlpha
-			);
-			thisGraphic.color = newColor;
-		}	
+		// public void SetUIAlpha(float alpha){
+		// 	float originalAlpha = thisOriginalColor.a;
+		// 	float targetAlpha = Mathf.Lerp(
+		// 		0f,
+		// 		originalAlpha,
+		// 		alpha
+		// 	);
+		// 	Color newColor = new Color(
+		// 		thisOriginalColor.r,
+		// 		thisOriginalColor.g,
+		// 		thisOriginalColor.b,
+		// 		targetAlpha
+		// 	);
+		// 	thisGraphic.color = newColor;
+		// }	
+		public void SetAlpha(float alpha){
+			thisCanvasGroup.alpha = alpha;
+		}
+		CanvasGroup thisCanvasGroup;
+
+		public void SetColor(Color color){
+			thisGraphic.color = color;
+		}
+
+
 		public Color GetChildGraphicOriginalColor(){
 			return thisChildGraphicOriginalColor;
 		}

@@ -21,8 +21,10 @@ namespace UnityBase{
 			thisScaleCurve = arg.scaleCurve;
 
 			thisInitialPosition = arg.graphicOriginalLocalPosition;
-			thisChildGraphicOriginalColor = arg.graphicOriginalColor;
-			thisChildGraphicOriginalAlpha = thisChildGraphicOriginalColor.a;
+			// thisChildGraphicOriginalColor = arg.graphicOriginalColor;
+			// thisTextColor = thisPopUI.GetTextColor();
+			// thisChildGraphicOriginalAlpha = thisChildGraphicOriginalColor.a;
+			// thisAlpha = thisPopUI.Get
 		}
 		readonly IPopUI thisPopUI;
 		readonly PopUIAdaptor.PopMode thisPopMode;
@@ -32,8 +34,10 @@ namespace UnityBase{
 		readonly AnimationCurve thisAlphaCurve;
 		readonly AnimationCurve thisScaleCurve;
 		readonly Vector2 thisInitialPosition;
-		readonly Color thisChildGraphicOriginalColor;
-		readonly float thisChildGraphicOriginalAlpha;
+
+		// readonly Color thisTextColor;
+
+		// readonly float thisChildGraphicOriginalAlpha;
 		Vector2 thisGlideDirection;
 		protected override void RunImple(){
 			if(thisPopMode == PopUIAdaptor.PopMode.GlideUp)
@@ -81,22 +85,23 @@ namespace UnityBase{
 		}
 		void UpdateUIAlpha(){
 			float newAlpha =  thisAlphaCurve.Evaluate(thisNormalizedTime);
-			SetAlphaOnChildUIGraphic(newAlpha);
+			// SetAlphaOnChildUIGraphic(newAlphaValue);
+			thisPopUI.SetAlpha(newAlpha);
 		}
-		void SetAlphaOnChildUIGraphic(float alpha){
-			float newAlpha = Mathf.Lerp(
-				0f,
-				thisChildGraphicOriginalAlpha,
-				alpha
-			);
-			Color newColor = new Color(
-				thisChildGraphicOriginalColor.r,
-				thisChildGraphicOriginalColor.g,
-				thisChildGraphicOriginalColor.b,
-				newAlpha
-			);
-			thisPopUI.SetChildGraphicColor(newColor);
-		}
+		// void SetAlphaOnChildUIGraphic(float alphaValue){
+		// 	// float newAlpha = Mathf.Lerp(
+		// 	// 	0f,
+		// 	// 	1f
+		// 	// 	alphaValue
+		// 	// );
+		// 	Color newColor = new Color(
+		// 		thisChildGraphicOriginalColor.r,
+		// 		thisChildGraphicOriginalColor.g,
+		// 		thisChildGraphicOriginalColor.b,
+		// 		newAlpha
+		// 	);
+		// 	thisPopUI.SetChildGraphicColor(newColor);
+		// }
 		void UpdateUIScale(){
 			float newScale = thisScaleCurve.Evaluate(thisNormalizedTime);
 			SetScaleOnChildUIGraphic(newScale);

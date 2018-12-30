@@ -426,7 +426,8 @@ namespace AppleShooterProto{
 
 				thisPopUIReserve.PopText(
 					target,
-					"WTF"
+					"WTF",
+					Color.white
 				);
 			}
 			void DrawPopUISpawnStatus(Rect rect){

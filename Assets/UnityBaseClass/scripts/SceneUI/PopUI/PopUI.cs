@@ -19,6 +19,9 @@ namespace UnityBase{
 		void SetChildGraphicLocalScale(Vector3 scale);
 		void SetChildGraphicLocalPosition(Vector3 position);
 		ISceneObject GetSceneObject();
+
+		void SetAlpha(float alpha);
+		void SetColor(Color color);
 	}
 	public class PopUI: AbsSceneUI, IPopUI{
 		public PopUI(
@@ -34,7 +37,7 @@ namespace UnityBase{
 			thisGraphicOriginalLocalPosition = arg.graphicOriginalLocalPosition;
 			thisGraphicOriginalColor = arg.graphicOriginalColor;
 		}
-		IPopUIAdaptor thisTypedAdaptor{
+		IPopUIAdaptor thisPopUIAdaptor{
 			get{
 				return (IPopUIAdaptor)thisAdaptor;
 			}
@@ -118,7 +121,7 @@ namespace UnityBase{
 		
 		public void SetText(string text){
 			
-			thisTypedAdaptor.SetText(/* text + "\n" + GetDebugString() */text);
+			thisPopUIAdaptor.SetText(/* text + "\n" + GetDebugString() */text);
 		}
 		public string GetDebugString(){
 			// Vector2 targetWorldPos = thisTypedAdaptor.GetTargetWorldPosition();
@@ -126,7 +129,7 @@ namespace UnityBase{
 			// uiScreenPos = new Vector2(uiScreenPos.x/ Screen.width,  uiScreenPos.y/ Screen.height);
 			// string debugString = uiScreenPos.ToString();
 			// return debugString;
-			return thisTypedAdaptor.GetUINormalizedScreenPosition().ToString();
+			return thisPopUIAdaptor.GetUINormalizedScreenPosition().ToString();
 		}
 		IPopUIReserve thisReserve;
 		public void SetPopUIReserve(IPopUIReserve reserve){
@@ -138,17 +141,24 @@ namespace UnityBase{
 
 		/* Process */
 			public void SetChildGraphicColor(Color color){
-				thisTypedAdaptor.SetChildGraphicColor(color);
+				thisPopUIAdaptor.SetChildGraphicColor(color);
 			}
 			public void SetChildGraphicLocalScale(Vector3 scale){
-				thisTypedAdaptor.SetChildGraphicScale(scale);
+				thisPopUIAdaptor.SetChildGraphicScale(scale);
 			}
 			public void SetChildGraphicLocalPosition(Vector3 position){
-				thisTypedAdaptor.SetChildGraphicLocalPosition(position);
+				thisPopUIAdaptor.SetChildGraphicLocalPosition(position);
 			}
 		/*  */
 			public Rect GetGraphicRect(){
-				return thisTypedAdaptor.GetGraphicRect();
+				return thisPopUIAdaptor.GetGraphicRect();
+			}
+		/*  */
+			public void SetAlpha(float alpha){
+				thisPopUIAdaptor.SetAlpha(alpha);
+			}
+			public void SetColor(Color color){
+				thisPopUIAdaptor.SetColor(color);
 			}
 		/* Const */
 			public new interface IConstArg: AbsSceneUI.IConstArg{
