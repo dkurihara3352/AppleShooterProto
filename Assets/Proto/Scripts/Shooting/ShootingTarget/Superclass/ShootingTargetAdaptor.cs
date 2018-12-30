@@ -26,6 +26,7 @@ namespace AppleShooterProto{
 
 		bool IsRare();
 		void PlayDestructionSound();
+		void ToggleRenderer(bool toggle);
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
@@ -45,6 +46,9 @@ namespace AppleShooterProto{
 		}
 		int thisColorHash;
 		public MeshRenderer modelMeshRenderer;
+		public void ToggleRenderer(bool toggle){
+			modelMeshRenderer.enabled = toggle;
+		}
 		Animator CollectAnimator(){
 			return GetComponent<Animator>();
 		}

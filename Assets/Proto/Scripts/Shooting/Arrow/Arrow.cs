@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 		void SetLaunchPoint(ILaunchPoint launchPoint);
 		void SetShootingManager(IShootingManager shootingManager);
 		void SetArrowReserve(IArrowReserve reserve);
+		void SetArrowTrailReserve(IArrowTrailReserve reserve);
 
 		bool IsInFlight();
 		bool IsActivated();
@@ -24,6 +25,8 @@ namespace AppleShooterProto{
 
 		float GetAttack();
 		void SetAttack(float attack);
+
+		void SetNormalizedDraw(float drawValue);
 
 		int GetIndex();
 		ArrowStateEngine.IState GetCurrentState();
@@ -91,6 +94,8 @@ namespace AppleShooterProto{
 			}
 		/* action */
 			public void NockImple(){
+				// thisArrowAdaptor.ToggleGameObject(true);
+				thisArrowAdaptor.ToggleRenderer(true);
 				thisShootingManager.SetNockedArrow(this);
 				MoveToLaunchPosition();
 			}
@@ -109,6 +114,8 @@ namespace AppleShooterProto{
 				thisArrowReserve.Reserve(this);
 				thisShootingManager.CheckAndClearNockedArrow(this);
 
+				// thisArrowAdaptor.ToggleGameObject(false);
+				thisArrowAdaptor.ToggleRenderer(false);
 			}
 			IArrowTrail thisTrail;
 			public void SetArrowTrail(IArrowTrail trail){
@@ -144,6 +151,14 @@ namespace AppleShooterProto{
 				);
 				thisFlightProcess.Run();
 				thisArrowAdaptor.PlayArrowReleaseSound();
+				thisArrowTrailReserve.ActivateTrailAt(
+					this,
+					thisNormalizedDraw
+				);
+			}
+			IArrowTrailReserve thisArrowTrailReserve;
+			public void SetArrowTrailReserve(IArrowTrailReserve reserve){
+				thisArrowTrailReserve = reserve;
 			}
 			public void StopFlight(){
 				if(thisFlightProcess != null)
@@ -198,6 +213,10 @@ namespace AppleShooterProto{
 			}
 			public Vector3 GetPrevPosition(){
 				return thisArrowAdaptor.GetPrevPosition();
+			}
+			float thisNormalizedDraw;
+			public void SetNormalizedDraw(float drawValue){
+				thisNormalizedDraw = drawValue;
 			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{

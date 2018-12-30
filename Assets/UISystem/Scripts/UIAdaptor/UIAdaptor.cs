@@ -280,6 +280,9 @@ namespace UISystem{
 				public void SetName(string name){
 					this.name = name;
 				}
+				public void ToggleGameObject(bool toggle){
+					this.gameObject.SetActive(toggle);
+				}
 			/* Rect */
 				protected Vector2 GetScaledSize(Vector2 nonscaledSize){
 					return new Vector2(

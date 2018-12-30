@@ -25,7 +25,7 @@ namespace AppleShooterProto{
 			thisActivationStateEngine = new ActivationStateEngine(this);
 		}
 		ILandedArrowReserve thisReserve;
-		ILandedArrowAdaptor thisTypedAdaptor{
+		ILandedArrowAdaptor thisLandedArrowAdaptor{
 			get{
 				return (ILandedArrowAdaptor)thisAdaptor;
 			}
@@ -92,9 +92,11 @@ namespace AppleShooterProto{
 				return thisActivationStateEngine.IsActivated();
 			}
 			public void ActivateImple(){
+				thisLandedArrowAdaptor.ToggleRenderer(true);
 				thisArrowTwang.Twang();
 			}
 			public void DeactivateImple(){
+				thisLandedArrowAdaptor.ToggleRenderer(false);
 				thisArrowTwang.StopTwang();
 				RemoveSelfFromCurrentDetector();
 				thisReserve.Reserve(this);

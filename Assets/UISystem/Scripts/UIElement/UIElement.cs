@@ -226,13 +226,19 @@ namespace UISystem{
 			/* Touch */
 				public void OnTouch(int touchCount){
 					if(this.IsActivated()){
+						// Debug.Log(GetName() + " is activated");
 						if(thisIsEnabledInput){
+							// Debug.Log(GetName() + " is enabled");
 							IScroller scrollerToStartPauseMotorProcess = GetTargetUIEOrItsProximateParentAsScroller(this);
 							if(scrollerToStartPauseMotorProcess != null)
 								scrollerToStartPauseMotorProcess.StopRunningMotorProcessRecursivelyUp();
 							OnTouchImple(touchCount);
+						}else{
+							// Debug.Log(GetName() +  " is disabled");
+							PassOnTouchUpward(touchCount);
 						}
 					}else{
+						// Debug.Log(GetName() + " is deactivated");
 						PassOnTouchUpward(touchCount);
 					}
 					
@@ -429,11 +435,15 @@ namespace UISystem{
 				TurnTo(GetUIImage().GetDefaultColor());
 		}
 		public void EnableInputRecursively(){
+			// if(GetName().Contains("camScrollerElement"))
+			// 	Debug.Log("enabled");
 			this.EnableInputSelf();
 			foreach(IUIElement child in thisChildUIEs)
 				child.EnableInputRecursively();
 		}
 		public void DisableInputSelf(){
+			// if(GetName().Contains("camScrollerElement"))
+			// 	Debug.Log("disabled");
 			thisIsEnabledInput = false;
 			if(thisUIManager.ShowsInputability())
 				TurnTo(Color.red);

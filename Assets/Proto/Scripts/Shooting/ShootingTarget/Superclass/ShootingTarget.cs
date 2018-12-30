@@ -85,10 +85,12 @@ namespace AppleShooterProto{
 			}
 			IBellCurve thisHealthBellCurve;
 			public virtual void ActivateImple(){
+				// ToggleGameObject(true);
 				thisOriginalHealth = ResetHealth();
 				thisHealth = thisOriginalHealth;
 				thisShootingTargetAdaptor.SetColor(thisDefaultColor);
 				ToggleCollider(true);
+				ToggleRenderer(true);
 
 				thisPopUIReserve.PopText(
 					this,
@@ -110,13 +112,20 @@ namespace AppleShooterProto{
 				DeactivateAllLandedArrows();
 				ReserveSelf();
 				ToggleCollider(false);
+				ToggleRenderer(false);
 				if(thisTargetTierDataOnQueue != null){
 					SetTier(thisTargetTierDataOnQueue);
 					thisTargetTierDataOnQueue = null;
 				}
 				StopHitFlashProcess();
+
+				// ToggleGameObject(false);
 			}
 			protected abstract void ReserveSelf();
+
+			void ToggleGameObject(bool toggle){
+				thisShootingTargetAdaptor.ToggleGameObject(toggle);
+			}
 		/* Hit & arrow interaction */
 			public void Hit(
 				IArrow arrow,
@@ -226,6 +235,9 @@ namespace AppleShooterProto{
 					thisNormalHitDetector.ToggleCollider(toggle);
 					if(!thisIsRare)
 						thisCriticalHitDetector.ToggleCollider(toggle);
+				}
+				void ToggleRenderer(bool toggle){
+					thisShootingTargetAdaptor.ToggleRenderer(toggle);
 				}
 				public ILandedArrow[] GetLandedArrows(){
 					List<ILandedArrow> resultList = new List<ILandedArrow>();

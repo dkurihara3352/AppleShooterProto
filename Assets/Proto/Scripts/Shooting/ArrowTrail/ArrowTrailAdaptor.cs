@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 		IArrowTrail GetArrowTrail();
 		void SetAlpha(float alpha);
 		float GetAlpha();
+		void SetColor(Color color);
 		void EnableTrailRenderer();
 		void DisableTrailRenderer();
 		void ResetAlpha();
@@ -55,7 +56,7 @@ namespace AppleShooterProto{
 		}
 		int thisColorID;
 		int CollectColorID(){
-			return Shader.PropertyToID("_Color");
+			return Shader.PropertyToID("_TintColor");
 		}
 		public void SetAlpha(float alpha){
 			Color col = thisMaterial.GetColor(thisColorID);
@@ -66,6 +67,22 @@ namespace AppleShooterProto{
 			Color col = thisMaterial.GetColor(thisColorID);
 			return col.a;
 		}
+
+		public void SetColor(Color color){
+			Gradient gradient = new Gradient();
+			gradient.SetKeys(
+				new GradientColorKey[]{
+					new GradientColorKey(color, 0f),
+					new GradientColorKey(color, 1f)
+				},
+				new GradientAlphaKey[]{
+					new GradientAlphaKey(1f, 0f),
+					new GradientAlphaKey(0f, 1f)
+				}
+			);
+			thisTrailRenderer.colorGradient = gradient;
+		}
+
 		public void EnableTrailRenderer(){
 			thisTrailRenderer.enabled = true;
 		}

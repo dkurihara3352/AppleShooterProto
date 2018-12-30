@@ -7,6 +7,7 @@ namespace AppleShooterProto{
 		ILandedArrow GetLandedArrow();
 		void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor landedArrowReserveAdaptor);
 		void SetIndex(int index);
+		void ToggleRenderer(bool toggle);
 	}
 	public class LandedArrowAdaptor : AppleShooterMonoBehaviourAdaptor, ILandedArrowAdaptor {
 		ILandedArrow thisLandedArrow;
@@ -53,6 +54,10 @@ namespace AppleShooterProto{
 		public void SetIndex(int index){
 			thisIndex = index;
 		}
+		public void ToggleRenderer(bool toggle){
+			meshRenderer.enabled = toggle;
+		}
+		public MeshRenderer meshRenderer;
 	}
 }
 

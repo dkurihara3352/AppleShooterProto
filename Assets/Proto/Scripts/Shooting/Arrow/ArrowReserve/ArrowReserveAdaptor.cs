@@ -27,6 +27,7 @@ namespace AppleShooterProto{
 		public int collisionDetectionIntervalFrameCount = 1;
 		public LaunchPointAdaptor launchPointAdaptor;
 		public ShootingManagerAdaptor shootingManagerAdaptor;
+		public ArrowTrailReserveAdaptor arrowTrailReserveAdaptor;
 		IArrowAdaptor[] CreateArrowAdaptors(){
 			List<IArrowAdaptor> resultList = new List<IArrowAdaptor>();
 			for(int i = 0; i < arrowCounts; i ++){
@@ -39,6 +40,7 @@ namespace AppleShooterProto{
 				adaptor.SetCollisionDetectionIntervalFrameCount(collisionDetectionIntervalFrameCount);
 				adaptor.SetLaunchPointAdaptor(launchPointAdaptor);
 				adaptor.SetShootingManagerAdaptor(shootingManagerAdaptor);
+				adaptor.SetArrowTrailReserveAdaptor(arrowTrailReserveAdaptor);
 
 				adaptor.SetUp();
 

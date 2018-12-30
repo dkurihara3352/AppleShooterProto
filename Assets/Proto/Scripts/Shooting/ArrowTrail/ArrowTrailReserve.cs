@@ -5,7 +5,10 @@ using UnityBase;
 
 namespace AppleShooterProto{
 	public interface IArrowTrailReserve: ISceneObjectReserve<IArrowTrail>{
-		void ActivateTrailAt(IArrow arrow);
+		void ActivateTrailAt(
+			IArrow arrow,
+			float normalizedDraw
+		);
 	}
 	public class ArrowTrailReserve : AbsSceneObjectReserve<IArrowTrail>, IArrowTrailReserve {
 		public ArrowTrailReserve(
@@ -13,9 +16,34 @@ namespace AppleShooterProto{
 		): base(arg){
 
 		}
-		public void ActivateTrailAt(IArrow arrow){
+		IArrowTrailReserveAdaptor thisArrowTrailReserveAdaptor{
+			get{
+				return (IArrowTrailReserveAdaptor)thisAdaptor;
+			}
+		}
+		public void ActivateTrailAt(
+			IArrow arrow,
+			float normalizedDraw
+		){
 			IArrowTrail next = GetNext();
 			next.ActivateAt(arrow);
+
+			Color trailColor = Color.Lerp(
+				thisMinDrawColor,
+				thisMaxDrawColor,
+				normalizedDraw
+			);
+			next.SetColor(trailColor);
+		}
+		Color thisMinDrawColor{
+			get{
+				return thisArrowTrailReserveAdaptor.GetMinDrawColor();
+			}
+		}
+		Color thisMaxDrawColor{
+			get{
+				return thisArrowTrailReserveAdaptor.GetMaxDrawColor();
+			}
 		}
 		public override void Reserve(IArrowTrail trail){
 			trail.SetParent(this);

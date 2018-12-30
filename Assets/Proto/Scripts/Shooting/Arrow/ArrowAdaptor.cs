@@ -11,6 +11,7 @@ namespace AppleShooterProto{
 		void SetLaunchPointAdaptor(ILaunchPointAdaptor adaptor);
 		void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor);
 		void SetCollisionDetectionIntervalFrameCount(int count);
+		void SetArrowTrailReserveAdaptor(IArrowTrailReserveAdaptor adaptor);
 
 		void StartCollisionCheck();
 		void StopCollisionCheck();
@@ -20,6 +21,7 @@ namespace AppleShooterProto{
 		Vector3 GetPrevPosition();
 		void PlayArrowHitSound();
 		void PlayArrowReleaseSound();
+		void ToggleRenderer(bool toggle);
 	}
 	public class ArrowAdaptor : AppleShooterMonoBehaviourAdaptor, IArrowAdaptor {
 		
@@ -65,22 +67,19 @@ namespace AppleShooterProto{
 			IShootingManager shootingManager = thisShootingManagerAdaptor.GetShootingManager();
 			thisArrow.SetShootingManager(shootingManager);
 			thisShootingManager = shootingManager;
+
+			IArrowTrailReserve arrowTrailReserve = thisArrowTrailReserveAdaptor.GetArrowTrailReserve();
+			thisArrow.SetArrowTrailReserve(arrowTrailReserve);
+		}
+		IArrowTrailReserveAdaptor thisArrowTrailReserveAdaptor;
+		public void SetArrowTrailReserveAdaptor(IArrowTrailReserveAdaptor adaptor){
+			thisArrowTrailReserveAdaptor = adaptor;
 		}
 		public override void FinalizeSetUp(){
 			thisArrow.Deactivate();
 		}
 		/* Debug */
-		// bool thisIsReadyForGizmo = false;
-		// public void OnDrawGizmos(){
-		// 	if(thisIsReadyForGizmo){
-		// 		if(thisChecksForCollision){
-		// 			Gizmos.color = Color.red;
-		// 			Gizmos.DrawLine(prevForDebug, curForDebug);
-		// 		}
-		// 		Gizmos.color = Color.magenta;
-		// 		Gizmos.DrawWireSphere(hitPosition, 2f);
-		// 	}
-		// }
+
 		public string GetParentName(){
 			return this.transform.parent.ToString();
 		}
@@ -99,7 +98,6 @@ namespace AppleShooterProto{
 			Vector3 prevForDebug;
 			Vector3 curForDebug;
 			int count = 0;
-			// Vector3 hitPosition = Vector3.zero;
 			bool thisChecksForCollision = false;
 			public void StartCollisionCheck(){
 				count = 0;
@@ -126,12 +124,7 @@ namespace AppleShooterProto{
 
 						if(hasCritHit){
 							Transform hitTrans = critHit.transform;
-							// IShootingTargetAdaptor targetAdaptor = hitTrans.GetComponentInParent(typeof(IShootingTargetAdaptor)) as IShootingTargetAdaptor;
-							// if(targetAdaptor == null)
-							// 	throw new System.InvalidOperationException(
-							// 		"hitTrans seems not to have IShootingTargetAdaptor"
-							// 	);
-							// IShootingTarget target = targetAdaptor.GetShootingTarget();
+
 							IArrowHitDetectorAdaptor detectorAdaptor =  hitTrans.GetComponentInParent(typeof(IArrowHitDetectorAdaptor)) as IArrowHitDetectorAdaptor;
 							if(detectorAdaptor == null)
 								throw new System.InvalidOperationException(
@@ -140,15 +133,6 @@ namespace AppleShooterProto{
 							IArrowHitDetector detector = detectorAdaptor.GetArrowHitDetector();
 							
 							detector.Hit(thisArrow);
-							// RaycastHit critHit;
-							// int critLayerMask = 1<<(critLayerNumber);
-							// Vector3 rayDir = position - thisPrevPosition;
-							// bool hasCritHit = Physics.Raycast(thisPrevPosition, rayDir, out critHit, 10f, critLayerMask);
-							// if(hasCritHit){
-							// 	thisShootingManager.Flash();
-							// }
-
-							// target.Hit(thisArrow, hasCritHit);
 
 							thisArrow.Land(
 								detector,
@@ -167,5 +151,10 @@ namespace AppleShooterProto{
 				arrowReleaseSoundSource.Play();
 			}
 			public AudioSource arrowReleaseSoundSource;
+			public void ToggleRenderer(bool toggle){
+				meshRenderer.enabled = toggle;
+			}
+			public MeshRenderer meshRenderer;
+			
 	}
 }

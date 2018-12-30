@@ -10,6 +10,8 @@ namespace AppleShooterProto{
 		void Detach();
 
 		void SetAlpha(float alpha);
+
+		void SetColor(Color color);
 	}
 	public class ArrowTrail : AppleShooterSceneObject, IArrowTrail {
 
@@ -86,7 +88,9 @@ namespace AppleShooterProto{
 		public void SetAlpha(float alpha){
 			thisTypedAdaptor.SetAlpha(alpha);
 		}
-	
+		public void SetColor(Color color){
+			thisTypedAdaptor.SetColor(color);
+		}
 
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
 			float fadeTime{get;}

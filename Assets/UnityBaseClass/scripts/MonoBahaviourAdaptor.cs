@@ -36,6 +36,8 @@ namespace UnityBase{
 
 		string GetName();
 		void SetName(string name);
+
+		void ToggleGameObject(bool toggle);
 	}
 	public abstract class MonoBehaviourAdaptor: MonoBehaviour, IMonoBehaviourAdaptor{
 		protected virtual void Awake(){
@@ -97,6 +99,9 @@ namespace UnityBase{
 			}
 			public void SetName(string name){
 				this.name = name;
+			}
+			public void ToggleGameObject(bool toggle){
+				this.gameObject.SetActive(toggle);
 			}
 		/* position */
 			public Vector3 GetPosition(){
@@ -168,5 +173,6 @@ namespace UnityBase{
 			public Vector3 GetLocalScale(){
 				return transform.localScale;
 			}
+		/*  */
 	}
 }

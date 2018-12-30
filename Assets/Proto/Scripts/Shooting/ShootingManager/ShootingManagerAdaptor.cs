@@ -99,7 +99,7 @@ namespace AppleShooterProto{
 		public TrajectoryAdaptor trajectoryAdaptor;
 		public LandedArrowReserveAdaptor landedArrowReserveAdaptor;
 		public ArrowReserveAdaptor arrowReserveAdaptor;
-		public ArrowTrailReserveAdaptor arrowTrailReserveAdaptor;
+		// public ArrowTrailReserveAdaptor arrowTrailReserveAdaptor;
 		public CriticalFlashAdaptor criticalFlashAdaptor;
 		public ShootingDataManagerAdaptor shootingDataManagerAdaptor;
 		// public float initialFlightSpeed;
@@ -130,8 +130,8 @@ namespace AppleShooterProto{
 			IArrowReserve arrowReserve = arrowReserveAdaptor.GetArrowReserve();
 			thisShootingManager.SetArrowReserve(arrowReserve);
 
-			IArrowTrailReserve arrowTrailReserve = arrowTrailReserveAdaptor.GetArrowTrailReserve();
-			thisShootingManager.SetArrowTrailReserve(arrowTrailReserve);
+			// IArrowTrailReserve arrowTrailReserve = arrowTrailReserveAdaptor.GetArrowTrailReserve();
+			// thisShootingManager.SetArrowTrailReserve(arrowTrailReserve);
 
 			ICriticalFlash flash = criticalFlashAdaptor.GetCriticalFlash();
 			thisShootingManager.SetCriticalFlash(flash);

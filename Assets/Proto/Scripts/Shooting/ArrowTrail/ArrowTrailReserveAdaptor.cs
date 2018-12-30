@@ -5,9 +5,18 @@ using UnityEngine;
 namespace AppleShooterProto{
 	public interface IArrowTrailReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
 		IArrowTrailReserve GetArrowTrailReserve();
+		Color GetMinDrawColor();
+		Color GetMaxDrawColor();
 	}
 	public class ArrowTrailReserveAdaptor: AppleShooterMonoBehaviourAdaptor, IArrowTrailReserveAdaptor{
-
+		public Color minDrawColor = Color.white;
+		public Color GetMinDrawColor(){
+			return minDrawColor;
+		}
+		public Color maxDrawColor = Color.red;
+		public Color GetMaxDrawColor(){
+			return maxDrawColor;
+		}
 		public override void SetUp(){
 			thisReserve = CreateArrowTrailReserve();
 			thisAdaptors = CollectArrowTrailAdaptors();

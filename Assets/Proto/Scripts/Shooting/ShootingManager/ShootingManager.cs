@@ -10,7 +10,7 @@ namespace AppleShooterProto{
 		void SetTrajectory(ITrajectory trajectory);
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
 		void SetArrowReserve(IArrowReserve reserve);
-		void SetArrowTrailReserve(IArrowTrailReserve reserve);
+		// void SetArrowTrailReserve(IArrowTrailReserve reserve);
 		void SetCriticalFlash(ICriticalFlash flash);
 		void SetShootingDataManager(IShootingDataManager manager);
 
@@ -102,10 +102,10 @@ namespace AppleShooterProto{
 			public void SetLandedArrowReserve(ILandedArrowReserve reserve){
 				thisLandedArrowReserve = reserve;
 			}
-			IArrowTrailReserve thisArrowTrailReserve;
-			public void SetArrowTrailReserve(IArrowTrailReserve reserve){
-				thisArrowTrailReserve = reserve;
-			}
+			// IArrowTrailReserve thisArrowTrailReserve;
+			// public void SetArrowTrailReserve(IArrowTrailReserve reserve){
+			// 	thisArrowTrailReserve = reserve;
+			// }
 		/* Nock */
 			IArrow thisNockedArrow;
 			public void NockArrow(){
@@ -131,17 +131,17 @@ namespace AppleShooterProto{
 				thisDrawProcess.Run();
 				thisShootingManagerAdaptor.PlayDrawSound();
 			}
-			
+			float thisNormalizedDrawTime = 0f;
 			public void DrawImple(float deltaTime){
 				if(thisDrawElapsedTime < thisShootingDataManager.GetDrawTime()){
 					thisDrawElapsedTime += deltaTime;
-					float normalizedDrawTime = GetNormalizedDrawTime();
-					thisDrawStrength = CalculateDrawStrength(normalizedDrawTime);
+					thisNormalizedDrawTime = GetNormalizedDrawTime();
+					thisDrawStrength = CalculateDrawStrength(thisNormalizedDrawTime);
 					thisInputManager.Zoom(thisDrawStrength);
 					thisFlightSpeed = CalculateFlightSpeed();
 					thisArrowAttack = CalculateArrowAttack(thisDrawStrength);
 
-					thisLaunchPoint.SetDrawPosition(normalizedDrawTime);
+					thisLaunchPoint.SetDrawPosition(thisNormalizedDrawTime);
 					
 				}else{
 					if(!thisIsFullyDrawn){
@@ -273,6 +273,7 @@ namespace AppleShooterProto{
 			void ClearDrawFields(){
 				thisIsFullyDrawn = false;
 				thisDrawElapsedTime = 0f;
+				thisNormalizedDrawTime = 0f;
 				thisDrawStrength = CalculateDrawStrength(0f);
 				thisFlightSpeed = CalculateFlightSpeed();
 				thisArrowAttack = CalculateArrowAttack(thisDrawStrength);
@@ -335,10 +336,11 @@ namespace AppleShooterProto{
 				if(thisAimIsDone){
 					IArrow arrow = thisNockedArrow;
 					thisNockedArrow = null;
+					arrow.SetNormalizedDraw(thisNormalizedDrawTime);
 					arrow.SetAttack(thisArrowAttack);
 					arrow.Release();
 					StopDraw();
-					thisArrowTrailReserve.ActivateTrailAt(arrow);
+					// thisArrowTrailReserve.ActivateTrailAt(arrow);
 				}
 			}
 			bool thisAimIsDone = false;
