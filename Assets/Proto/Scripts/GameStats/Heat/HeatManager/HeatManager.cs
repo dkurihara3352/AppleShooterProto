@@ -21,6 +21,8 @@ namespace AppleShooterProto{
 		void SetMaxHeat(float maxHeat);
 		void ResetHeat();
 		void OnLevelUpExpire();
+
+		bool IsCountingDown();
 	}	
 	public class HeatManager: AppleShooterSceneObject, IHeatManager{
 		
@@ -45,6 +47,9 @@ namespace AppleShooterProto{
 			}
 		}
 		IHeatManagerStateEngine thisStateEngine;
+		public bool IsCountingDown(){
+			return thisStateEngine.IsCountingDown();
+		}
 		float thisHeatDecayRate;
 		float thisInitialHeat;
 		float thisInitialMaxHeat;

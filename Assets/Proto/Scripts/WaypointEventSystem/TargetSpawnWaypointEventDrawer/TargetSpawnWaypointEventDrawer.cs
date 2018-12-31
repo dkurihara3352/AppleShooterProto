@@ -5,6 +5,7 @@ using UnityEngine;
 namespace AppleShooterProto{
 	[ExecuteInEditMode]
 	public class TargetSpawnWaypointEventDrawer : MonoBehaviour {
+		void Update(){}
 		public AbsShootingTargetSpawnPointGroupAdaptor[] targetSpawnPointGroupAdaptors;
 		public PCWaypointCurveAdaptor pcWaypointCurveAdaptor;
 

@@ -105,6 +105,8 @@ namespace AppleShooterProto{
 					DrawContextOne();
 				if(thisControlContext == 2)
 					DrawContextTwo();
+				if(thisControlContext == 3)
+					DrawContextThree();
 			}
 			void DrawControlContexSwitch(){
 				string[] textArray = new string[]{
@@ -572,6 +574,28 @@ namespace AppleShooterProto{
 						result += ": " + reserve.GetIndexInReserve(arrow);
 				}
 				return result;
+			}
+		/* Context Three */
+			void DrawContextThree(){
+				DrawGameplayControl(sTL_2);
+			}
+
+			void DrawGameplayControl(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 2);
+				Rect sub_1 = GetHorizontalSubRect(rect, 1, 2);
+				DrawCountDownToggle(sub_0);
+			}
+			void DrawCountDownToggle(Rect rect){
+				IHeatManager heatManager = heatManagerAdaptor.GetHeatManager();
+				bool currentlyCountingDown = heatManager.IsCountingDown();
+				string toggleText = currentlyCountingDown? "Heat Stop" : "Heat Start";
+				bool countsDown = GUI.Toggle(rect, currentlyCountingDown, toggleText);
+				if(currentlyCountingDown != countsDown)
+					if(countsDown)
+						heatManager.StartCountingDown();
+					else
+						heatManager.StopCountingDown();
+
 			}
 		/* Bottom Left */
 			void DrawBottomLeft(){

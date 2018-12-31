@@ -15,6 +15,8 @@ namespace AppleShooterProto{
 
 		void TickAwayHeat(float delta);
 		float GetMaxHeat();
+
+		bool IsCountingDown();
 	}
 	public class HeatManagerStateEngine: AbsSwitchableStateEngine<HeatManagerStateEngine.IState>, IHeatManagerStateEngine{
 		public HeatManagerStateEngine(
@@ -64,6 +66,9 @@ namespace AppleShooterProto{
 		}
 		public float GetMaxHeat(){
 			return thisHeatManager.GetMaxHeat();
+		}
+		public bool IsCountingDown(){
+			return thisCurState == thisCountingDownState;
 		}
 		/* States */
 			public interface IState: ISwitchableState, IHeatManagerStateHandler{}
