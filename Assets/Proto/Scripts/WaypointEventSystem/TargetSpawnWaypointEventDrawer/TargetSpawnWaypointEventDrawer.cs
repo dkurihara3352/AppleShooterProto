@@ -25,17 +25,25 @@ namespace AppleShooterProto{
 
 
 		public Color lineColor;
+		public bool drawsStatics = true;
+		public bool drawsGliders = true;
 		void OnDrawGizmos(){
 			Gizmos.color = lineColor;
 			foreach(IShootingTargetSpawnPointAdaptor pointAdaptor in thisSpawnPointAdaptors){
 				if(pointAdaptor != null){
-					Vector3 position = pointAdaptor.GetPosition();
-					float eventPoint = pointAdaptor.GetEventPoint();
-					if(pcWaypointCurveAdaptor != null){
-						Vector3 eventPointPosition = pcWaypointCurveAdaptor.GetPositionOnCurve(eventPoint);
-						
-						Gizmos.DrawLine(position, eventPointPosition);
+					if(
+						(pointAdaptor is IStaticTargetSpawnPointAdaptor && drawsStatics) ||
+						(pointAdaptor is IGlidingTargetSpawnPointAdaptor && drawsGliders)
+					){
+						Vector3 position = pointAdaptor.GetPosition();
+						float eventPoint = pointAdaptor.GetEventPoint();
+						if(pcWaypointCurveAdaptor != null){
+							Vector3 eventPointPosition = pcWaypointCurveAdaptor.GetPositionOnCurve(eventPoint);
+							
+							Gizmos.DrawLine(position, eventPointPosition);
+						}
 					}
+
 				}
 			}
 			
