@@ -129,10 +129,6 @@ namespace UISystem{
 					return thisScrollerElement.GetRectSize();
 				}
 			}
-			// protected virtual void SetUpScrollerElementRect(){
-			// 	IUIAdaptor scrollerElementAdaptor = thisScrollerElement.GetUIAdaptor();
-			// 	thisScrollerElementLength = scrollerElementAdaptor.GetRectSize();
-			// }
 			/* Cursor Transform */
 			public void SetUpCursorTransform(){
 				thisCursorLength = CalcCursorLength();
@@ -286,14 +282,6 @@ namespace UISystem{
 						base.OnDragImple(eventData);
 					}
 				}
-				Vector2 GetNonscaledDeltaPosition(Vector2 deltaPosition){
-					Canvas canvas = thisUIManager.GetCanvas();
-					Vector2 canvasLocalScale = canvas.transform.localScale;
-					return new Vector2(
-						deltaPosition.x / canvasLocalScale.x,
-						deltaPosition.y / canvasLocalScale.y
-					);
-				}
 				protected virtual void DisplaceScrollerElement(
 					Vector2 deltaPosition
 				){
@@ -305,6 +293,14 @@ namespace UISystem{
 					);
 					Vector2 newElementLocalPosition =  GetScrollerElementRubberBandedLocalPosition(displacement);
 					SetScrollerElementLocalPosition(newElementLocalPosition);
+				}
+				Vector2 GetNonscaledDeltaPosition(Vector2 deltaPosition){
+					Canvas canvas = thisUIManager.GetCanvas();
+					Vector2 canvasLocalScale = canvas.transform.localScale;
+					return new Vector2(
+						deltaPosition.x / canvasLocalScale.x,
+						deltaPosition.y / canvasLocalScale.y
+					);
 				}
 				Vector2 CalcAxisCorrectedDeltaPosition(Vector2 source){
 					Vector2 result = source;
