@@ -5,6 +5,7 @@ using UnityEngine;
 namespace UISystem{
 	public interface IScrollerAdaptor: IUIAdaptor{
 		void SetCursorRect(Rect rect);
+		bool InvertsAxis(int axis);
 	}
 	public abstract class AbsScrollerAdaptor<T>: UIAdaptor, IScrollerAdaptor where T: class, IScroller{
 		public ScrollerAxis scrollerAxis;
@@ -78,6 +79,14 @@ namespace UISystem{
 				Gizmos.DrawLine(bottomLeft, bottomRight);
 
 			}
+		}
+		public bool invertsHorizontally = false;
+		public bool invertsVertically = false;
+		public bool InvertsAxis(int axis){
+			if(axis == 0)
+				return invertsHorizontally;
+			else
+				return invertsVertically;
 		}
 	}
 }

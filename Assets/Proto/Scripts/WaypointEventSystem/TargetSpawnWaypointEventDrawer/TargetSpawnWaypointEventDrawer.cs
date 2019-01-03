@@ -43,10 +43,8 @@ namespace AppleShooterProto{
 							Gizmos.DrawLine(position, eventPointPosition);
 						}
 					}
-
 				}
 			}
-			
 		}
 	}
 }

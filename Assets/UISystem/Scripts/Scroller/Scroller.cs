@@ -71,7 +71,11 @@ namespace UISystem{
 			}
 			protected readonly ScrollerAxis thisScrollerAxis;
 		/*  */
-			
+			IScrollerAdaptor thisScrollerAdaptor{
+				get{
+					return (IScrollerAdaptor)thisUIAdaptor;
+				}
+			}
 		/* ScrollerRect */
 			public void UpdateRect(){
 				// SetUpScrollerRect();
@@ -294,6 +298,7 @@ namespace UISystem{
 					Vector2 deltaPosition
 				){
 					deltaPosition = GetNonscaledDeltaPosition(deltaPosition);
+					deltaPosition = CalcAxisCorrectedDeltaPosition(deltaPosition);
 					thisElementDisplacementSinceLastTouch += deltaPosition;
 					Vector2 displacement = CalcDragDeltaSinceTouch(
 						thisElementDisplacementSinceLastTouch
@@ -301,7 +306,15 @@ namespace UISystem{
 					Vector2 newElementLocalPosition =  GetScrollerElementRubberBandedLocalPosition(displacement);
 					SetScrollerElementLocalPosition(newElementLocalPosition);
 				}
-				protected virtual Vector2 CalcDragDeltaSinceTouch(Vector2 displacementSinceTouch){
+				Vector2 CalcAxisCorrectedDeltaPosition(Vector2 source){
+					Vector2 result = source;
+					for(int i = 0; i < 2; i ++){
+						if(thisScrollerAdaptor.InvertsAxis(i))
+							result[i] = source[i] * -1f;
+					}
+					return result;
+				}
+ 				protected virtual Vector2 CalcDragDeltaSinceTouch(Vector2 displacementSinceTouch){
 					Vector2 rawDisplacement = displacementSinceTouch;
 					if(thisScrollerAxis == ScrollerAxis.Both)
 						return rawDisplacement;
@@ -443,16 +456,16 @@ namespace UISystem{
 			protected virtual void ProcessSwipe(ICustomEventData eventData){
 				if(thisIsEnabledInertia){
 					Vector2 nonscaledVelocity = GetNonscaledDeltaPosition(eventData.velocity);
-
+					nonscaledVelocity = CalcAxisCorrectedDeltaPosition(nonscaledVelocity);
 					ResetDrag();
 
-					if(InitialVelocityIsOverThreshold(/* eventData.velocity */nonscaledVelocity))
+					if(InitialVelocityIsOverThreshold(nonscaledVelocity))
 						DisableScrollInputRecursively(this);
 
 					for(int i = 0; i < 2; i ++){
 						if(!this.IsOutOfBounds(i)){
 							StartInertialScrollOnAxis(
-								/* eventData.velocity */nonscaledVelocity,
+								nonscaledVelocity,
 								i
 							);
 						}else{
