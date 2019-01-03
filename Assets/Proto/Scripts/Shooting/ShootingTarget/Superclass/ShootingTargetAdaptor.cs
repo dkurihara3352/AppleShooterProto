@@ -12,6 +12,8 @@ namespace AppleShooterProto{
 		void SetPopUIReserveAdaptor(IPopUIReserveAdaptor adaptor);
 		void SetGameStatsTrackerAdaptor(IGameStatsTrackerAdaptor adaptor);
 		void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor);
+		void SetAudioManagerAdaptor(IAudioManagerAdaptor adaptor);
+
 		void SetIndex(int index);
 		void SetColor(Color color);
 		void PlayHitAnimation(float magnitude);
@@ -27,6 +29,7 @@ namespace AppleShooterProto{
 		bool IsRare();
 		void PlayDestructionSound();
 		void ToggleRenderer(bool toggle);
+
 	}
 	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
@@ -127,6 +130,8 @@ namespace AppleShooterProto{
 				thisShootingTarget.SetShootingTargetCriticalHitDetector(criticalHitDetector);
 				criticalHitDetector.SetShootingTarget(thisShootingTarget);
 			}
+
+			thisAudioManager = thisAudioManagerAdaptor.GetAudioManager();
 		}
 		public override void FinalizeSetUp(){
 			thisShootingTarget.Deactivate();
@@ -191,8 +196,15 @@ namespace AppleShooterProto{
 		}
 
 		public void PlayDestructionSound(){
+			destructionSoundSource.volume = thisAudioManager.GetSFXVolume();
 			destructionSoundSource.Play();
 		}
 		public AudioSource destructionSoundSource;
+		IAudioManager thisAudioManager;
+		IAudioManagerAdaptor thisAudioManagerAdaptor;
+		public void SetAudioManagerAdaptor(IAudioManagerAdaptor adaptor){
+			thisAudioManagerAdaptor = adaptor;
+		}
+
 	}
 }

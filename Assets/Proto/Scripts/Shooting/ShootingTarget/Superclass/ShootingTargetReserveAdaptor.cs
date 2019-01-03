@@ -30,6 +30,7 @@ namespace AppleShooterProto{
 		public ShootingManagerAdaptor shootingManagerAdaptor;
 		public DestroyedTargetReserveAdaptor destroyedTargetReserveAdaptor;
 		public UnityBase.PopUIReserveAdaptor popUIReserveAdaptor;
+		public AudioManagerAdaptor audioManagerAdaptor;
 		public GameObject shootingTargetPrefab;
 		public int GetSpawnValue(){
 			return thisSpawnValue;

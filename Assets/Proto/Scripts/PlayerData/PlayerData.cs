@@ -12,11 +12,19 @@ namespace AppleShooterProto{
 		IBowConfigData[] GetBowConfigDataArray();
 		void SetBowConfigDataArray(IBowConfigData[] array);
 
-
 		int GetCurrency();
 		void SetCurrency(int currency);
 		int[] GetBowUnlockCostArray();
 		void SetBowUnlockCostArray(int[] array);
+		
+
+		bool GetAxisInversion(int axis);
+		void SetAxisInversion(int axis, bool inverts);
+
+		float GetBGMVolume();
+		void SetBGMVolume(float volume);
+		float GetSFXVolume();
+		void SetSFXVolume(float volume);
 	}
 	[System.Serializable]
 	public class PlayerData : IPlayerData {
@@ -59,6 +67,35 @@ namespace AppleShooterProto{
 			thisBowUnlockCostArray = array;
 		}
 
+		bool thisInvertsHorizontally = false;
+		bool thisInvertsVertically = false;
+		public bool GetAxisInversion(int axis){
+			if(axis == 0)
+				return thisInvertsHorizontally;
+			else
+				return thisInvertsVertically;
+		}
+		public void SetAxisInversion(int axis, bool value){
+			if(axis == 0)
+				thisInvertsHorizontally = value;
+			else
+				thisInvertsVertically = value;
+		}
+
+		float thisBGMVolume = 1f;
+		public float GetBGMVolume(){
+			return thisBGMVolume;
+		}
+		public void SetBGMVolume(float volume){
+			thisBGMVolume = volume;
+		}
+		float thisSFXVolume = 1f;
+		public float GetSFXVolume(){
+			return thisSFXVolume;
+		}
+		public void SetSFXVolume(float volume){
+			thisSFXVolume = volume;
+		}
 	}
 
 	public interface IBowConfigData{

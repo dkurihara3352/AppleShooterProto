@@ -15,6 +15,10 @@ namespace AppleShooterProto{
 			WarmUp();
 			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 			playerDataManager.MakeSurePlayerDataFileExists();
+
+			SetInputScrollerAxisInversion();
+			SetVolume();
+
 			IStartupManager startupManager = startupManagerAdaptor.GetStartupManager();
 			startupManager.StartStartupSequence();
 		}
@@ -33,9 +37,10 @@ namespace AppleShooterProto{
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			thisPlayerCharacterWaypointsFollower = GetPlayerCharacterWaypointsFollower();
 			thisRootUIElement = rootUIAdaptor.GetUIElement();
-			thisScoreManager = scoreManagerAdaptor.GetScoreManager();
-			thisPlayerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+			// thisScoreManager = scoreManagerAdaptor.GetScoreManager();
+			// thisPlayerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 		}
+
 		/* ActivateRootUI */
 			public void ActivateRootUI(){
 				thisRootUIElement.ActivateRecursively(false);
@@ -106,27 +111,48 @@ namespace AppleShooterProto{
 			}
 			IPCWaypointsManager thisPCWaypointsManager;
 		/*  */
-			public void LoadHighScore(){
-				thisPlayerDataManager.Load();
-				int highScore = thisPlayerDataManager.GetHighScore();
-				thisScoreManager.SetHighScore(highScore);
-			}
-			public void SaveHighScore(){
-				int score = thisScoreManager.GetScore();
+			// public void LoadHighScore(){
+			// 	thisPlayerDataManager.Load();
+			// 	int highScore = thisPlayerDataManager.GetHighScore();
+			// 	thisScoreManager.SetHighScore(highScore);
+			// }
+			// public void SaveHighScore(){
+			// 	int score = thisScoreManager.GetScore();
 
-				int highScore = thisScoreManager.GetHighScore();
-				if(
-					highScore == 0 ||
-					score > highScore
-				){
-					thisPlayerDataManager.SetHighScore(score);
-					thisPlayerDataManager.Save();
+			// 	int highScore = thisScoreManager.GetHighScore();
+			// 	if(
+			// 		highScore == 0 ||
+			// 		score > highScore
+			// 	){
+			// 		thisPlayerDataManager.SetHighScore(score);
+			// 		thisPlayerDataManager.Save();
+			// 	}
+			// }
+			// public ScoreManagerAdaptor scoreManagerAdaptor;
+			// IScoreManager thisScoreManager;
+			public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+			void SetInputScrollerAxisInversion(){
+				IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+				ICoreGameplayInputScroller inputScroller = coreGameplayInputScrollerAdaptor.GetInputScroller();
+				if(!playerDataManager.PlayerDataIsLoaded())
+					playerDataManager.Load();
+				for(int i = 0; i < 2; i ++){
+					bool inverts = playerDataManager.GetAxisInversion(i);
+					inputScroller.SetAxisInversion(i, inverts);
 				}
 			}
-			public ScoreManagerAdaptor scoreManagerAdaptor;
-			IScoreManager thisScoreManager;
-			public PlayerDataManagerAdaptor playerDataManagerAdaptor;
-			IPlayerDataManager thisPlayerDataManager;
+			public CoreGameplayInputScrollerAdaptor coreGameplayInputScrollerAdaptor;
+			void SetVolume(){
+				IAudioManager audioManager = audioManagerAdaptor.GetAudioManager();
+				IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+				if(!playerDataManager.PlayerDataIsLoaded())
+					playerDataManager.Load();
+				float bgmVolume = playerDataManager.GetBGMVolume();
+				audioManager.SetBGMVolume(bgmVolume);
+				float sfxVolume = playerDataManager.GetSFXVolume();
+				audioManager.SetSFXVolume(sfxVolume);
+			}
+			public AudioManagerAdaptor audioManagerAdaptor;
 
 		/*  */
 			

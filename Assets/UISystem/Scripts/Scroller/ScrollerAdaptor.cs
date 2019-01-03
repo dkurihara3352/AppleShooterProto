@@ -6,6 +6,7 @@ namespace UISystem{
 	public interface IScrollerAdaptor: IUIAdaptor{
 		void SetCursorRect(Rect rect);
 		bool InvertsAxis(int axis);
+		void SetAxisInversion(int axis, bool toggled);
 	}
 	public abstract class AbsScrollerAdaptor<T>: UIAdaptor, IScrollerAdaptor where T: class, IScroller{
 		public ScrollerAxis scrollerAxis;
@@ -87,6 +88,12 @@ namespace UISystem{
 				return invertsHorizontally;
 			else
 				return invertsVertically;
+		}
+		public void SetAxisInversion(int axis, bool inverted){
+			if(axis == 0)
+				invertsHorizontally = inverted;
+			else
+				invertsVertically = inverted;
 		}
 	}
 }

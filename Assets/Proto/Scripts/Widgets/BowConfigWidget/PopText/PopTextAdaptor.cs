@@ -4,10 +4,11 @@ using UnityEngine;
 using UISystem;
 
 namespace AppleShooterProto{
-	public interface IBowEquippedTextPaneAdaptor: IUIAdaptor{
-		IBowEquippedTextPane GetBowEquippedTextPane();
+	public interface IPopTextAdaptor: IUIAdaptor{
+		IPopText GetPopText();
 		void SetScale(float scaleValue);
 		void SetAlpha(float alhpa);
+		void SetText(string text);
 
 		float GetProcessTime();
 		AnimationCurve GetShowScaleCurve();
@@ -16,25 +17,25 @@ namespace AppleShooterProto{
 		AnimationCurve GetHideAlphaCurve();
 	}
 	[RequireComponent(typeof(CanvasGroup))]
-	public class BowEquippedTextPaneAdaptor: UIAdaptor, IBowEquippedTextPaneAdaptor{
+	public class PopTextAdaptor: UIAdaptor, IPopTextAdaptor{
 
 		public override void SetUp(){
 			base.SetUp();
 			thisCanvasGroup = CollectCanvasGroup();
 		}
 		protected override IUIElement CreateUIElement(){
-			BowEquippedTextPane.IConstArg arg = new BowEquippedTextPane.ConstArg(
+			PopText.IConstArg arg = new PopText.ConstArg(
 				this,
 				activationMode
 			);
-			return new BowEquippedTextPane(arg);
+			return new PopText(arg);
 		}
-		IBowEquippedTextPane thisBowEquippedTextPane{
+		IPopText thisBowEquippedTextPane{
 			get{
-				return (IBowEquippedTextPane)thisUIElement;
+				return (IPopText)thisUIElement;
 			}
 		}
-		public IBowEquippedTextPane GetBowEquippedTextPane(){
+		public IPopText GetPopText(){
 			return thisBowEquippedTextPane;
 		}
 
@@ -52,6 +53,11 @@ namespace AppleShooterProto{
 		public float processTime = .5f;
 		public float GetProcessTime(){
 			return processTime;
+		}
+
+		public UnityEngine.UI.Text textComp;
+		public void SetText(string text){
+			textComp.text = text;
 		}
 		public AnimationCurve showScaleCurve;
 		public AnimationCurve GetShowScaleCurve(){

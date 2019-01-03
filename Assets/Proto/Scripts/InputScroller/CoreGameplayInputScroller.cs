@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		void SetScrollMultiplier(float multiplier);
 		float GetScrollMultiplier();
 		void SnapToCenter();
+		void SetAxisInversion(int axis, bool toggled);
 	
 	}
 	public class CoreGameplayInputScroller : GenericSingleElementScroller, ICoreGameplayInputScroller {
@@ -94,6 +95,15 @@ namespace AppleShooterProto{
 			SnapTo(.5f, 0f, 0);
 			SnapTo(.5f, 0f, 1);
 		}
+		public void SetAxisInversion(int axis, bool inverted){
+			thisCoreGameplayInputScrollerAdaptor.SetAxisInversion(axis, inverted);
+		}
+		ICoreGameplayInputScrollerAdaptor thisCoreGameplayInputScrollerAdaptor{
+			get{
+				return (ICoreGameplayInputScrollerAdaptor)thisUIAdaptor;
+			}
+		}
+		/*  */
 		public new interface IConstArg: GenericSingleElementScroller.IConstArg{
 		}
 		public new class ConstArg: GenericSingleElementScroller.ConstArg, IConstArg{

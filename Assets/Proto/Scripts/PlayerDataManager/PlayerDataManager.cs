@@ -36,12 +36,22 @@ namespace AppleShooterProto{
 			int GetEquippedBowIndex();
 			void SetEquippedBow(int index);
 
+
 			IBowConfigData[] GetBowConfigDataArray();
 			void IncreaseAttributeLevel(int attributeIndex);
 			void DecreaseAttributeLevel(int attributeIndex);
 
 			void UnlockBow(int bowIndex);
 			void LockBow(int bowIndex);
+
+
+			bool GetAxisInversion(int axis);
+			void SetAxisInversion(int axis, bool inverts);
+
+			float GetBGMVolume();
+			void SetBGMVolume(float volume);
+			float GetSFXVolume();
+			void SetSFXVolume(float volume);
 		/* Debug */
 			string GetDebugString();
 		/* Other */
@@ -226,6 +236,12 @@ namespace AppleShooterProto{
 				data.SetBowConfigDataArray(bowConfigDataArray);
 				thisPlayerData = data;
 
+				data.SetAxisInversion(0, false);
+				data.SetAxisInversion(1, false);
+
+				data.SetBGMVolume(1f);
+				data.SetSFXVolume(1f);
+
 				Debug.Log("fileID: " + thisFileIndex.ToString() + "'s playerData is init'ed");
 			}
 			IBowConfigData[] CreateInitializedBowCofigDataArray(){
@@ -291,6 +307,59 @@ namespace AppleShooterProto{
 						"no player data"
 					);
 			}
+
+			public bool GetAxisInversion(int axis){
+				if(PlayerDataIsLoaded()){
+					return thisPlayerData.GetAxisInversion(axis);
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public void SetAxisInversion(int axis, bool inverts){
+				if(PlayerDataIsLoaded()){
+					thisPlayerData.SetAxisInversion(axis, inverts);
+					Debug.Log("axis: " + axis.ToString() + " is inverted: " + inverts.ToString());
+				}else{
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+				}
+			}
+			public float GetBGMVolume(){
+				if(PlayerDataIsLoaded()){
+					return thisPlayerData.GetBGMVolume();
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public void SetBGMVolume(float volume){
+				if(PlayerDataIsLoaded()){
+					thisPlayerData.SetBGMVolume(volume);
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public float GetSFXVolume(){
+				if(PlayerDataIsLoaded()){
+					return thisPlayerData.GetSFXVolume();
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public void SetSFXVolume(float volume){
+				if(PlayerDataIsLoaded()){
+					thisPlayerData.SetSFXVolume(volume);
+				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+
+
 			public IBowConfigData[] GetBowConfigDataArray(){
 				if(PlayerDataIsLoaded())
 					return thisPlayerData.GetBowConfigDataArray();

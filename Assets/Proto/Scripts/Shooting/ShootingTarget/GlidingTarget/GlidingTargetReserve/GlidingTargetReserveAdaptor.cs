@@ -51,6 +51,7 @@ namespace AppleShooterProto{
 				targetAdaptor.SetDestroyedTargetReserveAdaptor(destroyedTargetReserveAdaptor);
 				targetAdaptor.SetGameStatsTrackerAdaptor(gameStatsTrackerAdaptor);
 				targetAdaptor.SetShootingManagerAdaptor(shootingManagerAdaptor);
+				targetAdaptor.SetAudioManagerAdaptor(audioManagerAdaptor);
 
 				targetAdaptor.SetUp();
 				targetAdaptor.SetUpDetectorAdaptors();

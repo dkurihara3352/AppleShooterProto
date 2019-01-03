@@ -12,6 +12,7 @@ namespace AppleShooterProto{
 		void SetShootingManagerAdaptor(IShootingManagerAdaptor adaptor);
 		void SetCollisionDetectionIntervalFrameCount(int count);
 		void SetArrowTrailReserveAdaptor(IArrowTrailReserveAdaptor adaptor);
+		void SetAudioManagerAdaptor(IAudioManagerAdaptor adaptor);
 
 		void StartCollisionCheck();
 		void StopCollisionCheck();
@@ -70,6 +71,8 @@ namespace AppleShooterProto{
 
 			IArrowTrailReserve arrowTrailReserve = thisArrowTrailReserveAdaptor.GetArrowTrailReserve();
 			thisArrow.SetArrowTrailReserve(arrowTrailReserve);
+
+			thisAudioManager = thisAudioManagerAdaptor.GetAudioManager();
 		}
 		IArrowTrailReserveAdaptor thisArrowTrailReserveAdaptor;
 		public void SetArrowTrailReserveAdaptor(IArrowTrailReserveAdaptor adaptor){
@@ -144,10 +147,12 @@ namespace AppleShooterProto{
 				}
 			}
 			public void PlayArrowHitSound(){
+				arrowHitAudioSource.volume = thisAudioManager.GetSFXVolume();
 				arrowHitAudioSource.Play();
 			}
 			public AudioSource arrowHitAudioSource;
 			public void PlayArrowReleaseSound(){
+				arrowReleaseSoundSource.volume = thisAudioManager.GetSFXVolume();
 				arrowReleaseSoundSource.Play();
 			}
 			public AudioSource arrowReleaseSoundSource;
@@ -155,6 +160,11 @@ namespace AppleShooterProto{
 				meshRenderer.enabled = toggle;
 			}
 			public MeshRenderer meshRenderer;
-			
+			IAudioManagerAdaptor thisAudioManagerAdaptor;
+			public void SetAudioManagerAdaptor(IAudioManagerAdaptor adaptor){
+				thisAudioManagerAdaptor = adaptor;
+			}
+
+			IAudioManager thisAudioManager;
 	}
 }

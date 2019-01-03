@@ -310,22 +310,22 @@ namespace UISystem{
 				IBowStarsPane thisPane = bowStarsPaneAdaptor.GetBowStarsPane();
 				thisPane.StartUpdateLevelProcess(targetLevel);
 			}
-			public BowEquippedTextPaneAdaptor textPaneAdaptor;
+			public PopTextAdaptor popTextAdaptor;
 			void ShowEquippedText(){
-				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
-				textPane.ShowEquippedText();
+				IPopText popText = popTextAdaptor.GetPopText();
+				popText.Pop("Equipped", true);
 			}
 			void HideEquippedText(){
-				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
-				textPane.HideEquippedText();
+				IPopText popText = popTextAdaptor.GetPopText();
+				popText.Unpop(true);
 			}
 			void StartEqpTextShowProcess(){
-				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
-				textPane.StartShowTextProcess();
+				IPopText popText = popTextAdaptor.GetPopText();
+				popText.Pop("Equipped", false);
 			}
 			void StartEqpTextHideProcess(){
-				IBowEquippedTextPane textPane = textPaneAdaptor.GetBowEquippedTextPane();
-				textPane.StartHideTextProcess();
+				IPopText popText = popTextAdaptor.GetPopText();
+				popText.Unpop(false);
 			}
 		/* Context 3 */
 		void DrawContextThree(){}

@@ -7,7 +7,7 @@ namespace AppleShooterProto{
 	public interface IBowPanel: IUIElement{
 		void SetBowConfigWidget(IBowConfigWidget widget);
 		void SetBowLockPane(IBowLockPane pane);
-		void SetBowEquippedTextPane(IBowEquippedTextPane pane);
+		void SetBowEquippedTextPane(IPopText pane);
 		void SetBowLevelPane(IBowStarsPane pane);
 		void SetBowAttributeLevelPanes(IBowStarsPane[] panes);
 		void SetBowAttributeLevelUpHoldButtons(IBowAttributeLevelUpHoldButton[] buttons);
@@ -51,21 +51,23 @@ namespace AppleShooterProto{
 		}
 		
 
-		IBowEquippedTextPane thisBowEquippedTextPane;
-		public void SetBowEquippedTextPane(IBowEquippedTextPane pane){
+		IPopText thisBowEquippedTextPane;
+		public void SetBowEquippedTextPane(IPopText pane){
 			thisBowEquippedTextPane = pane;
 		}
 		public void SetEquippedness(bool isEquipped, bool instantly){
 			if(isEquipped){
-				if(instantly)
-					thisBowEquippedTextPane.ShowEquippedText();
-				else
-					thisBowEquippedTextPane.StartShowTextProcess();
+				thisBowEquippedTextPane.Pop("Equipped", instantly);
+				// if(instantly)
+				// 	thisBowEquippedTextPane.ShowEquippedText();
+				// else
+				// 	thisBowEquippedTextPane.StartShowTextProcess();
 			}else{
-				if(instantly)
-					thisBowEquippedTextPane.HideEquippedText();
-				else
-					thisBowEquippedTextPane.StartHideTextProcess();
+				// if(instantly)
+				// 	thisBowEquippedTextPane.HideEquippedText();
+				// else
+				// 	thisBowEquippedTextPane.StartHideTextProcess();
+				thisBowEquippedTextPane.Unpop(instantly);
 			}
 		}
 

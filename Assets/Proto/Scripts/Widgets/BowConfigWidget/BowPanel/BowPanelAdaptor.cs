@@ -32,7 +32,7 @@ namespace AppleShooterProto{
 			return bowIndex;
 		}
 		public BowLockPaneAdaptor bowLockPaneAdaptor;
-		public BowEquippedTextPaneAdaptor bowEquippedTextPaneAdaptor;
+		public PopTextAdaptor bowEquippedTextPaneAdaptor;
 		public BowStarsPaneAdaptor bowLevelPaneAdaptor;
 		public BowStarsPaneAdaptor[] bowAttributeLevelPaneAdaptors;
 		public BowAttributeLevelUpHoldButtonAdaptor[] bowAttributeLevelUpHoldButtonAdaptors;
@@ -48,7 +48,7 @@ namespace AppleShooterProto{
 			IBowLockPane bowLockPane = bowLockPaneAdaptor.GetBowLockPane();
 			thisBowPanel.SetBowLockPane(bowLockPane);
 
-			IBowEquippedTextPane bowEquippedTextPane = bowEquippedTextPaneAdaptor.GetBowEquippedTextPane();
+			IPopText bowEquippedTextPane = bowEquippedTextPaneAdaptor.GetPopText();
 			thisBowPanel.SetBowEquippedTextPane(bowEquippedTextPane);
 
 			IBowStarsPane bowLevelPane = bowLevelPaneAdaptor.GetBowStarsPane();
