@@ -96,6 +96,8 @@ namespace AppleShooterProto{
 			SnapTo(.5f, 0f, 1);
 		}
 		public void SetAxisInversion(int axis, bool inverted){
+			if(axis == 0)
+				inverted = !inverted;
 			thisCoreGameplayInputScrollerAdaptor.SetAxisInversion(axis, inverted);
 		}
 		ICoreGameplayInputScrollerAdaptor thisCoreGameplayInputScrollerAdaptor{
