@@ -13,8 +13,9 @@ namespace AppleShooterProto{
 		void SetTutorialBaseUIElement(ITutorialBaseUIElement uie);
 
 
-
+		
 		void StartTutorial();
+		void StartLookAroundTutorial();
 	}
 	public class TutorialManager: AppleShooterSceneObject, ITutorialManager{
 		public TutorialManager(IConstArg arg): base(arg){}
@@ -74,6 +75,11 @@ namespace AppleShooterProto{
 		ITutorialBaseUIElement thisTutorialBaseUIElement;
 		public void SetTutorialBaseUIElement(ITutorialBaseUIElement uie){
 			thisTutorialBaseUIElement = uie;
+		}
+
+		public void StartLookAroundTutorial(){
+			thisTutorialTitle.Deactivate();
+			thisTutorialBaseUIElement.DisableInputSelf();
 		}
 	}
 }

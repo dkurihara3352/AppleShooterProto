@@ -7,11 +7,12 @@ using DKUtility;
 namespace AppleShooterProto{
 	public interface ITutorialTitle: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, ITutorialBaseTapListener, IProcessHandler{
 		void SetTutorialBaseUIElement(ITutorialBaseUIElement baseUIElement);
+		void SetTutorialManager(ITutorialManager manager);
 	}
 	public class TutorialTitle: AppleShooterSceneObject, ITutorialTitle{
 		public TutorialTitle(IConstArg arg)	: base(arg){
 			thisActivationStateEngine = new ActivationStateEngine(this);
-			thisShowProcessSuite = new ProcessSuite(
+			thisProcessSuite = new ProcessSuite(
 				thisProcessManager,
 				this,
 				ProcessConstraint.ExpireTime,
@@ -38,7 +39,8 @@ namespace AppleShooterProto{
 			StartShowing();
 		}
 		public void DeactivateImple(){
-			
+			thisTutorialBaseUIElement.CheckAndClearTapListener(this);
+			StartHiding();
 		}
 		ITutorialBaseUIElement thisTutorialBaseUIElement;
 		public void SetTutorialBaseUIElement(ITutorialBaseUIElement uie){
@@ -46,17 +48,21 @@ namespace AppleShooterProto{
 		}
 		public void OnTutorialBaseTap(){
 			if(thisIsShowing)
-				thisShowProcessSuite.Expire();
-			// else if (thisIsShown)
-			// 	thisTutorialManager.StartLookAroundTutorial()
+				thisProcessSuite.Expire();
+			else if (thisIsShown)
+				thisTutorialManager.StartLookAroundTutorial();
 		}
 		bool thisIsShowing = false;
 		void StartShowing(){
-			thisShowProcessSuite.Start();
+			thisInitialShowness = 0f;
+			thisTargetShowness = 1f;
+			thisProcessSuite.Start();
 		}
-		IProcessSuite thisShowProcessSuite;
+		float thisInitialShowness;
+		float thisTargetShowness;
+		IProcessSuite thisProcessSuite;
 		public void OnProcessRun(IProcessSuite suite){
-			if(suite == thisShowProcessSuite){
+			if(suite == thisProcessSuite){
 				thisIsShowing = true;
 			}
 		}
@@ -65,20 +71,34 @@ namespace AppleShooterProto{
 			float normalizedTime,
 			IProcessSuite suite
 		){
-			if(suite == thisShowProcessSuite){
+			if(suite == thisProcessSuite){
 				UpdateShowness(normalizedTime);
 			}
 		}
 		public void OnProcessExpire(IProcessSuite suite){
-			if(suite == thisShowProcessSuite){
+			if(suite == thisProcessSuite){
 				UpdateShowness(1f);
 				thisIsShowing = false;
 				thisIsShown = true;
 			}
 		}
 		bool thisIsShown = false;
-		void UpdateShowness(float showness){
-			thisTutorialTitleAdaptor.SetAlpha(showness);
+		void UpdateShowness(float value){
+			float newShowness = Mathf.Lerp(
+				thisInitialShowness,
+				thisTargetShowness,
+				value
+			);
+			thisTutorialTitleAdaptor.SetAlpha(newShowness);
+		}
+		ITutorialManager thisTutorialManager;
+		public void SetTutorialManager(ITutorialManager manager){
+			thisTutorialManager = manager;
+		}
+		void StartHiding(){
+			thisInitialShowness = 1f;
+			thisTargetShowness = 0f;
+			thisProcessSuite.Start();
 		}
 	}
 }

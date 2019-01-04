@@ -6,7 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IGameplayStartButton: IValidatableUIElement{
 		void SetGameplayWidget(IGameplayWidget widget);
-		void SetTutorialManager(ITutorialManager manager);
+		// void SetTutorialManager(ITutorialManager manager);
 	}
 	public class GameplayStartButton: ValidatableUIElement, IGameplayStartButton{
 		public GameplayStartButton(IConstArg arg): base(arg){}
@@ -20,10 +20,10 @@ namespace AppleShooterProto{
 		public void SetGameplayWidget(IGameplayWidget widget){
 			thisGameplayWidget = widget;
 		}
-		ITutorialManager thisTutorialManager;
-		public void SetTutorialManager(ITutorialManager manager){
-			thisTutorialManager = manager;
-		}
+		// ITutorialManager thisTutorialManager;
+		// public void SetTutorialManager(ITutorialManager manager){
+		// 	thisTutorialManager = manager;
+		// }
 	}
 }
 

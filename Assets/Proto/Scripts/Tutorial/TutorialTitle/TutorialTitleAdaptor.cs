@@ -30,6 +30,9 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			ITutorialBaseUIElement tutorialBaseUIElement = tutorialBaseUIAdaptor.GetTutorialBaseUIElement();
 			thisTutorialTitle.SetTutorialBaseUIElement(tutorialBaseUIElement);
+
+			ITutorialManager tutorialManager = tutorialManagerAdaptor.GetTutorialManager();
+			thisTutorialTitle.SetTutorialManager(tutorialManager);
 		}
 		public TutorialBaseUIAdaptor tutorialBaseUIAdaptor;
 		public float GetShowProcessTime(){
@@ -40,6 +43,7 @@ namespace AppleShooterProto{
 			canvasGroup.alpha = value;
 		}
 		public CanvasGroup canvasGroup;
+		public TutorialManagerAdaptor tutorialManagerAdaptor;
 	}
 }
 
