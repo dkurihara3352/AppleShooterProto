@@ -11,7 +11,7 @@ namespace AppleShooterProto{
 		// }
 		void CalcRects(){
 			topLeftRect = GetGUIRect(
-				normalizedSize: new Vector2(.15f, .4f),
+				normalizedSize: new Vector2(.2f, .4f),
 				normalizedPosition: new Vector2(0f ,1f)
 			);
 			sTL_1 = GetSubRect(topLeftRect,0,7);

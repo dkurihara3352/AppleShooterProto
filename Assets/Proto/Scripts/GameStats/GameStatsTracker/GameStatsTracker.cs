@@ -57,10 +57,10 @@ namespace AppleShooterProto{
 		int CalculateCurrencyGained(int tier){
 			if(tier == 0)
 				return 10;
+			else if(tier == 1)
+				return 100;
 			else if(tier == 2)
-				return 25;
-			else if(tier == 2)
-				return 50;
+				return 500;
 			else return 0;
 		}
 		bool thisGameplayIsEnded = false;
