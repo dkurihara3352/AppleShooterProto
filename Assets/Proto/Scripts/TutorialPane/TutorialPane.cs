@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		void SetCoreGameplayInputScroller(ICoreGameplayInputScroller scroller);
 		void SetTutorialPaneInvertAxisButtons(ITutorialPaneInvertAxisButton[] buttons);
 		void SetPlayerDataManager(IPlayerDataManager manager);
+		void SetGameplayWidget(IGameplayWidget widget);
 
 		void ActivateThruBackdoor();
 		void EndTutorial();
@@ -48,9 +49,10 @@ namespace AppleShooterProto{
 		}
 
 		public void EndTutorial(){
+			SetPlayerDataTutorialIsDone();
 			DeactivateRecursively(false);
 			SaveAxisInversion();
-			// thisGameplayWidget.
+			thisGameplayWidget.StartDelayedGameplay();
 		}
 		IGameplayWidget thisGameplayWidget;
 		public void SetGameplayWidget(IGameplayWidget widget){
@@ -88,6 +90,11 @@ namespace AppleShooterProto{
 		IPlayerDataManager thisPlayerDataManager;
 		public void SetPlayerDataManager(IPlayerDataManager manager){
 			thisPlayerDataManager = manager;
+		}
+		void SetPlayerDataTutorialIsDone(){
+			if(!thisPlayerDataManager.PlayerDataIsLoaded())
+				thisPlayerDataManager.Load();
+			thisPlayerDataManager.SetTutorialIsDone();
 		}
 	}
 }

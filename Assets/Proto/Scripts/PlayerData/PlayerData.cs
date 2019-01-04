@@ -25,6 +25,8 @@ namespace AppleShooterProto{
 		void SetBGMVolume(float volume);
 		float GetSFXVolume();
 		void SetSFXVolume(float volume);
+		bool TutorialIsDone();
+		void SetTutorialIsDone();
 	}
 	[System.Serializable]
 	public class PlayerData : IPlayerData {
@@ -95,6 +97,14 @@ namespace AppleShooterProto{
 		}
 		public void SetSFXVolume(float volume){
 			thisSFXVolume = volume;
+		}
+
+		bool thisTutorialIsDone = false;
+		public bool TutorialIsDone(){
+			return thisTutorialIsDone;
+		}
+		public void SetTutorialIsDone(){
+			thisTutorialIsDone = true;
 		}
 	}
 

@@ -12,9 +12,8 @@ namespace AppleShooterProto{
 		public GameplayStartButton(IConstArg arg): base(arg){}
 		protected override void OnTapImple(int tapCount){
 			base.OnTapImple(tapCount);
-			// thisGameplayWidget.StartGameplay();
-			// thisTutorialManager.StartTutorial();
-			thisGameplayWidget.StartGameplayWithTutorial();
+			thisGameplayWidget.StartGameplay();
+			// thisGameplayWidget.StartGameplayWithTutorial();
 
 		}
 		IGameplayWidget thisGameplayWidget;

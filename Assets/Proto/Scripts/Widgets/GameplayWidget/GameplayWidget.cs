@@ -30,7 +30,7 @@ namespace AppleShooterProto{
 		
 		void StartGameplay();
 		void EndGameplay();
-		void StartGameplayWithTutorial();
+		void StartDelayedGameplay();
 
 		void ActivateMainMenu();
 		void DeactivateMainMenu();
@@ -99,14 +99,17 @@ namespace AppleShooterProto{
 		}
 		/* StartGameplay */
 			public void StartGameplay(){
-				
-				DeactivateMainMenu();
-				SetUpShootingData();
-				ActivateGameplayUI();
-				StartWaitAndStartGameplay();
-				DisableRootScroller();
-				Defrost();
-				// DefrostRootElement();
+				if(!TutorialIsDone())
+					StartGameplayWithTutorial();
+				else{
+					DeactivateMainMenu();
+					SetUpShootingData();
+					ActivateGameplayUI();
+					StartWaitAndStartGameplay();
+					DisableRootScroller();
+					Defrost();
+					// DefrostRootElement();
+				}
 			}
 			void SetUpShootingData(){
 				/*  
@@ -143,7 +146,7 @@ namespace AppleShooterProto{
 				if(suite == thisWaitAndStartProcessSuite)
 					StartDelayedGameplay();
 			}
-			void StartDelayedGameplay(){
+			public void StartDelayedGameplay(){
 				StartTargetSpawn();
 				ResetStats();
 				LoadAndSetHighScore();
@@ -213,7 +216,12 @@ namespace AppleShooterProto{
 				thisRootElementFrostGlass = glass;
 			}
 		/* Tutorial */
-			public void StartGameplayWithTutorial(){
+			bool TutorialIsDone(){
+				if(!thisPlayerDataManager.PlayerDataIsLoaded())
+					thisPlayerDataManager.Load();
+				return thisPlayerDataManager.GetTutorialIsDone();
+			}
+			void StartGameplayWithTutorial(){
 				DeactivateMainMenu();
 				SetUpShootingData();
 				ActivateGameplayUI();

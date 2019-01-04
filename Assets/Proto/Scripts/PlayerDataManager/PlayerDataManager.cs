@@ -52,6 +52,9 @@ namespace AppleShooterProto{
 			void SetBGMVolume(float volume);
 			float GetSFXVolume();
 			void SetSFXVolume(float volume);
+
+			bool GetTutorialIsDone();
+			void SetTutorialIsDone();
 		/* Debug */
 			string GetDebugString();
 		/* Other */
@@ -354,6 +357,22 @@ namespace AppleShooterProto{
 				if(PlayerDataIsLoaded()){
 					thisPlayerData.SetSFXVolume(volume);
 				}else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public bool GetTutorialIsDone(){
+				if(PlayerDataIsLoaded())
+					return thisPlayerData.TutorialIsDone();
+				else
+					throw new System.InvalidOperationException(
+						"no player data"
+					);
+			}
+			public void SetTutorialIsDone(){
+				if(PlayerDataIsLoaded())
+					thisPlayerData.SetTutorialIsDone();
+				else
 					throw new System.InvalidOperationException(
 						"no player data"
 					);

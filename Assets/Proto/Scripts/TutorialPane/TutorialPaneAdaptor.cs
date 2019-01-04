@@ -37,6 +37,8 @@ namespace AppleShooterProto{
 			thisTutorialPane.SetTutorialPaneInvertAxisButtons(buttons);
 			IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
 			thisTutorialPane.SetPlayerDataManager(playerDataManager);
+			IGameplayWidget gameplayWidget = gameplayWidgetAdaptor.GetGameplayWidget();
+			thisTutorialPane.SetGameplayWidget(gameplayWidget);
 		}
 		public PopTextAdaptor labelPopTextAdaptor;
 		public CoreGameplayInputScrollerAdaptor inputScrollerAdaptor;
@@ -54,6 +56,7 @@ namespace AppleShooterProto{
 			thisCanvasGroup.blocksRaycasts = toggles;
 		}
 		public PlayerDataManagerAdaptor playerDataManagerAdaptor;
+		public GameplayWidgetAdaptor gameplayWidgetAdaptor;
 	}
 }
 
