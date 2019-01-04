@@ -26,9 +26,11 @@ namespace AppleShooterProto{
 		void SetGameplayPause(IGameplayPause pause);
 		void SetPlayerInputManager(IPlayerInputManager manager);
 		void SetFrostManager(IFrostManager manager);
+		void SetTutorialPane(ITutorialPane pane);
 		
 		void StartGameplay();
 		void EndGameplay();
+		void StartGameplayWithTutorial();
 
 		void ActivateMainMenu();
 		void DeactivateMainMenu();
@@ -210,7 +212,23 @@ namespace AppleShooterProto{
 			public void SetRootElementFrostGlass(IFrostGlass glass){
 				thisRootElementFrostGlass = glass;
 			}
-
+		/* Tutorial */
+			public void StartGameplayWithTutorial(){
+				DeactivateMainMenu();
+				SetUpShootingData();
+				ActivateGameplayUI();
+				// StartWaitAndStartGameplay();
+				DisableRootScroller();
+				Defrost();
+				ActivateTutorialPane();
+			}
+			void ActivateTutorialPane(){
+				thisTutorialPane.ActivateThruBackdoor();
+			}
+			ITutorialPane thisTutorialPane;
+			public void SetTutorialPane(ITutorialPane pane){
+				thisTutorialPane = pane;
+			}
 		/* End gameplay */
 			public void EndGameplay(){
 				RaisePointerOnInputScroller();

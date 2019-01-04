@@ -82,6 +82,9 @@ namespace AppleShooterProto{
 
 			IFrostManager frostManager = frostManagerAdaptor.GetFrostManager();
 			thisWidget.SetFrostManager(frostManager);
+
+			ITutorialPane tutorialPane = tutorialPaneAdaptor.GetTutorialPane();
+			thisWidget.SetTutorialPane(tutorialPane);
 		}
 		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
@@ -101,6 +104,7 @@ namespace AppleShooterProto{
 		public GameplayPauseAdaptor gameplayPauseAdaptor;
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public FrostManagerAdaptor frostManagerAdaptor;
+		public TutorialPaneAdaptor tutorialPaneAdaptor;
 	}
 }
 
