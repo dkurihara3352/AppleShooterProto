@@ -28,7 +28,10 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			IGameplayWidget gameplayWidget = gameplayWidgetAdaptor.GetGameplayWidget();
 			thisGameplayStartButton.SetGameplayWidget(gameplayWidget);
+			ITutorialManager tutorialManager = tutorialManagerAdaptor.GetTutorialManager();
+			thisGameplayStartButton.SetTutorialManager(tutorialManager);
 		}
 		public GameplayWidgetAdaptor gameplayWidgetAdaptor;
+		public TutorialManagerAdaptor tutorialManagerAdaptor;
 	}
 }
