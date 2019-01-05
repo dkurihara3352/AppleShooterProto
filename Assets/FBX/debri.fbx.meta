@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 41e27d3b3ba4d45ebb54a9caf351ae63
-timeCreated: 1546159607
+guid: 3f005d7d090724dc18d166dab1e73478
+timeCreated: 1546701154
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: arrow
+    4300000: debri
   materials:
     importMaterials: 1
     materialName: 0
