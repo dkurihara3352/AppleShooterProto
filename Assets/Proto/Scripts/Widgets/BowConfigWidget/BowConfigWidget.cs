@@ -13,6 +13,7 @@ namespace AppleShooterProto{
 		void SetResourcePanel(IResourcePanel resourcePanel);
 		void SetCurrencyPane(ICurrencyPane pane);
 		void SetBowUnlockButtons(IBowUnlockButton[] buttons);
+		void SetBowConfigLabelPopText(IPopText popText);
 
 		void TrySetEquippedBow(int index);
 		void IncreaseAttributeLevel(int attributeIndex);
@@ -67,6 +68,11 @@ namespace AppleShooterProto{
 				int unlockCost = thisPlayerDataManager.GetBowUnlockCostArray()[button.GetPanelIndex()];
 				button.SetCostText(unlockCost);
 			}
+			thisBowConfigLabelPopText.Pop("Bow Customization", false);
+		}
+		IPopText thisBowConfigLabelPopText;
+		public void SetBowConfigLabelPopText(IPopText popText){
+			thisBowConfigLabelPopText = popText;
 		}
 		IResourcePanel thisResourcePanel;
 		public void SetResourcePanel(IResourcePanel panel){
@@ -194,6 +200,7 @@ namespace AppleShooterProto{
 			);
 		}
 		public void DeactivateImple(){
+			thisBowConfigLabelPopText.Unpop(false);
 			return;
 		}
 		/* Data Manipulation */

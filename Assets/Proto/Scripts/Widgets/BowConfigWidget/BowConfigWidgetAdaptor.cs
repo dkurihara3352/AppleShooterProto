@@ -67,8 +67,11 @@ namespace AppleShooterProto{
 			foreach(IBowUnlockButton button in unlockButtons){
 				button.SetBowConfigWidget(thisWidget);
 			}
+			IPopText popText = bowConfigLabelPopTextAdaptor.GetPopText();
+			thisWidget.SetBowConfigLabelPopText(popText);
 			
 		}
+		public PopTextAdaptor bowConfigLabelPopTextAdaptor;
 	}
 }
 
