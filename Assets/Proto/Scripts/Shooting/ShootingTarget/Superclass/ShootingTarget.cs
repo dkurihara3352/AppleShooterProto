@@ -56,6 +56,18 @@ namespace AppleShooterProto{
 				ProcessConstraint.ExpireTime,
 				thisShootingTargetAdaptor.GetFlashProcessTime()
 			);
+			thisHitAnimationProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisShootingTargetAdaptor.GetHitAnimationProcessTime()
+			);
+			thisSpawnAnimationProcessSuite = new ProcessSuite(
+				thisProcessManager,
+				this,
+				ProcessConstraint.ExpireTime,
+				thisShootingTargetAdaptor.GetSpawnAnimationProcessTime()
+			);
 		}
 		public void SetShootingManager(IShootingManager manager){
 			thisShootingManager = manager;
@@ -94,11 +106,12 @@ namespace AppleShooterProto{
 				ToggleCollider(true);
 				ToggleRenderer(true);
 
-				thisPopUIReserve.PopText(
-					this,
-					GetActivationString(),
-					Color.white
-				);
+				// thisPopUIReserve.PopText(
+				// 	this,
+				// 	GetActivationString(),
+				// 	Color.white
+				// );
+				StartSpawnAnimationProcess();
 			}
 			int ResetHealth(){
 				float randomeMult = thisHealthBellCurve.Evaluate();
@@ -121,13 +134,28 @@ namespace AppleShooterProto{
 					thisTargetTierDataOnQueue = null;
 				}
 				StopHitFlashProcess();
-
+				ExpireHitAnimationProcess();
+				ExpireSpawnAnimationProcess();
 				// ToggleGameObject(false);
 			}
 			protected abstract void ReserveSelf();
 
 			void ToggleGameObject(bool toggle){
 				thisShootingTargetAdaptor.ToggleGameObject(toggle);
+			}
+		/* SpawnAnimationProcess */
+			void StartSpawnAnimationProcess(){
+				thisSpawnAnimationProcessSuite.Start();
+			}
+			void ExpireSpawnAnimationProcess(){
+				if(thisSpawnAnimationProcessSuite.IsRunning())
+					thisSpawnAnimationProcessSuite.Expire();
+			}
+			IProcessSuite thisSpawnAnimationProcessSuite;
+			void UpdateSpawnScale(float normalizedTime){
+				AnimationCurve spawnScaleCurve = thisShootingTargetAdaptor.GetSpawnAnimationScaleCurve();
+				float newScaleValue = spawnScaleCurve.Evaluate(normalizedTime);
+				thisShootingTargetAdaptor.SetSpawnAnimationScale(newScaleValue);
 			}
 		/* Hit & arrow interaction */
 			public void Hit(
@@ -209,14 +237,15 @@ namespace AppleShooterProto{
 			){
 				float totalAttack = attack + critBonus;
 				float hitMagnitude = CalculateHitMagnitude(totalAttack);
-				thisShootingTargetAdaptor.PlayHitAnimation(hitMagnitude);
-				Color popTextColor = (critBonus == 0f) ? Color.white: new Color(1f, .6f, .2f);
-				thisPopUIReserve.PopText(
-					this,
-					// GetArrowAttackString(attack, critBonus),
-					totalAttack.ToString("N0"),
-					popTextColor
-				);
+				StartHitAnimationProcess(hitMagnitude);
+				if(critBonus > 0f){
+					Color popTextColor = new Color(1f, .6f, .2f);
+					thisPopUIReserve.PopText(
+						this,
+						"Great",
+						popTextColor
+					);
+				}
 			}
 			string GetArrowAttackString(float attack, float critBonus){
 				string result = attack.ToString("N0");
@@ -228,6 +257,41 @@ namespace AppleShooterProto{
 			float CalculateHitMagnitude(float delta){
 				return delta/thisOriginalHealth;
 			}
+			/* Hit Animation */
+				void StartHitAnimationProcess(float hitMagnitude){
+					thisInitialScaleValue = Mathf.Lerp(
+						thisMinHitScale,
+						thisMaxHitScale,
+						hitMagnitude
+					);
+					thisHitAnimationProcessSuite.Start();
+				}
+				float thisInitialScaleValue;
+				float thisMinHitScale{
+					get{
+						return thisShootingTargetAdaptor.GetMinHitScaleValue();
+					}
+				}
+				float thisMaxHitScale{
+					get{
+						return thisShootingTargetAdaptor.GetMaxHitScaleValue();
+					}
+				}
+				IProcessSuite thisHitAnimationProcessSuite;
+				void UpdateHitScale(float normalizedTime){
+					AnimationCurve scaleCurve = thisShootingTargetAdaptor.GetHitAnimationScaleCurve();
+					float processValue = scaleCurve.Evaluate(normalizedTime);
+					float newScaleValue = Mathf.Lerp(
+						thisInitialScaleValue,
+						1f,
+						processValue
+					);
+					thisShootingTargetAdaptor.SetHitAnimationScale(newScaleValue);
+				}
+				void ExpireHitAnimationProcess(){
+					if(thisHitAnimationProcessSuite.IsRunning())
+						thisHitAnimationProcessSuite.Expire();
+				}
 			/* Landed Arrows */
 				IShootingTargetNormalHitDetector thisNormalHitDetector;
 				public void SetShootingTargetNormalHitDetector(IShootingTargetNormalHitDetector detector){
@@ -332,10 +396,19 @@ namespace AppleShooterProto{
 						colorValue
 					);
 					thisShootingTargetAdaptor.SetColor(newColor);
+				}else if(suite == thisHitAnimationProcessSuite){
+					UpdateHitScale(normalizedTime);
+				}else if(suite == thisSpawnAnimationProcessSuite){
+					UpdateSpawnScale(normalizedTime);
 				}
 			}
 			public void OnProcessExpire(IProcessSuite suite){
-				thisShootingTargetAdaptor.SetColor(thisDefaultColor);	
+				if(suite == thisHitFlashProcessSuite)
+					thisShootingTargetAdaptor.SetColor(thisDefaultColor);	
+				else if(suite == thisHitAnimationProcessSuite)
+					UpdateHitScale(1f);
+				else if(suite == thisSpawnAnimationProcessSuite)
+					UpdateSpawnScale(1f);
 			}
 		/* Const */
 			public new interface IConstArg: AppleShooterSceneObject.IConstArg{

@@ -22,6 +22,13 @@ namespace AppleShooterProto{
 		public float GetRelativeRareChance(){
 			return rareRelativeProbability;
 		}
+		protected void DisableAllMeshRenderer(){
+			Component[] components = this.transform.GetComponentsInChildren<Component>();
+			foreach(Component comp in components){
+				if(comp is MeshRenderer)
+					((MeshRenderer)comp).enabled = false;
+			}
+		}
 	}
 }
 

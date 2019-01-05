@@ -16,7 +16,6 @@ namespace AppleShooterProto{
 
 		void SetIndex(int index);
 		void SetColor(Color color);
-		void PlayHitAnimation(float magnitude);
 
 		void SetMaterial(Material mat);
 		void SetTargetData(TargetData data);
@@ -30,8 +29,18 @@ namespace AppleShooterProto{
 		void PlayDestructionSound();
 		void ToggleRenderer(bool toggle);
 
+		/* hit animation */
+			float GetHitAnimationProcessTime();
+			float GetMinHitScaleValue();
+			float GetMaxHitScaleValue();
+			AnimationCurve GetHitAnimationScaleCurve();
+			void SetHitAnimationScale(float scaleValue);
+		/* spawn animation */
+			float GetSpawnAnimationProcessTime();
+			AnimationCurve GetSpawnAnimationScaleCurve();
+			void SetSpawnAnimationScale(float scaleValue);
+
 	}
-	[RequireComponent(typeof(Animator))]
 	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
 		public override void SetUp(){
 
@@ -41,19 +50,11 @@ namespace AppleShooterProto{
 			thisHealthBellCurve = CreateHealthBellCurve();
 			
 			thisShootingTarget = CreateShootingTarget();
-
-			thisAnimator = CollectAnimator();
-
-			thisHitTriggerHash = Animator.StringToHash("Hit");
-			thisHitMagnitudeHash = Animator.StringToHash("HitMagnitude");
 		}
 		int thisColorHash;
 		public MeshRenderer modelMeshRenderer;
 		public void ToggleRenderer(bool toggle){
 			modelMeshRenderer.enabled = toggle;
-		}
-		Animator CollectAnimator(){
-			return GetComponent<Animator>();
 		}
 		protected IShootingTarget thisShootingTarget;
 		protected abstract IShootingTarget CreateShootingTarget();
@@ -167,14 +168,7 @@ namespace AppleShooterProto{
 				return mat.GetColor(thisColorHash);
 			}
 
-		/* Animator */
-			Animator thisAnimator;
-			int thisHitTriggerHash;
-			int thisHitMagnitudeHash;
-			public void PlayHitAnimation(float magnitude){
-				thisAnimator.SetFloat(thisHitMagnitudeHash, magnitude);
-				thisAnimator.SetTrigger(thisHitTriggerHash);
-			}
+		/* Material */
 			public void SetMaterial(Material material){
 				modelMeshRenderer.material = material;
 			}
@@ -205,6 +199,39 @@ namespace AppleShooterProto{
 		public void SetAudioManagerAdaptor(IAudioManagerAdaptor adaptor){
 			thisAudioManagerAdaptor = adaptor;
 		}
-
+		/* Hit Animation */
+			public float GetHitAnimationProcessTime(){
+				return hitAnimationProcessTime;
+			}
+			public float hitAnimationProcessTime = .5f;
+			public float GetMinHitScaleValue(){
+				return minHitScaleValue;
+			}
+			public float minHitScaleValue = 1.1f;
+			public float GetMaxHitScaleValue(){
+				return maxHitScaleValue;
+			}
+			public float maxHitScaleValue = 1.5f;
+			public AnimationCurve GetHitAnimationScaleCurve(){
+				return hitAnimationScaleCurve;
+			}
+			public AnimationCurve hitAnimationScaleCurve;
+			public void SetHitAnimationScale(float scaleValue){
+				hitAnimationScaleTransform.localScale = Vector3.one * scaleValue;
+			}
+			public Transform hitAnimationScaleTransform;
+		/* Spawn Animation */
+			public float GetSpawnAnimationProcessTime(){
+				return spawnAnimationProcessTime;
+			}
+			public float spawnAnimationProcessTime = 1f;
+			public AnimationCurve GetSpawnAnimationScaleCurve(){
+				return spawnAnimationScaleCurve;
+			}
+			public AnimationCurve spawnAnimationScaleCurve;
+			public void SetSpawnAnimationScale(float scaleValue){
+				spawnAnimationScaleTransform.localScale = Vector3.one * scaleValue;
+			}
+			public Transform spawnAnimationScaleTransform;
 	}
 }

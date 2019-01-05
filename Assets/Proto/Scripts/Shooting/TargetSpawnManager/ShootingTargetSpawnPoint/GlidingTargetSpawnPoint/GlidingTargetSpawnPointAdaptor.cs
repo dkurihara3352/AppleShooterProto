@@ -10,6 +10,7 @@ namespace AppleShooterProto{
 		public GlidingTargetWaypointCurveAdaptor curveAdaptor;
 		public override void SetUp(){
 			thisSpawnPoint = CreateSpawnPoint();
+			DisableAllMeshRenderer();
 		}
 		IShootingTargetSpawnPoint CreateSpawnPoint(){
 			GlidingTargetSpawnPoint.IConstArg arg = new GlidingTargetSpawnPoint.ConstArg(

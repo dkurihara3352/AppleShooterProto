@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 
 		public override void SetUp(){
 			thisSpawnPoint = CreateSpawnPoint();
+			DisableAllMeshRenderer();
 		}
 		IStaticTargetSpawnPoint CreateSpawnPoint(){
 			StaticTargetSpawnPoint.IConstArg arg = new StaticTargetSpawnPoint.ConstArg(
