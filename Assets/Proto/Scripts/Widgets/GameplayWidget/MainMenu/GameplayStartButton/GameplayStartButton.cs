@@ -10,20 +10,21 @@ namespace AppleShooterProto{
 	}
 	public class GameplayStartButton: ValidatableUIElement, IGameplayStartButton{
 		public GameplayStartButton(IConstArg arg): base(arg){}
+		IGameplayStartButtonAdaptor thisGameplayStartButtonAdaptor{
+			get{
+				return (IGameplayStartButtonAdaptor)thisAdaptor;
+			}
+		}
 		protected override void OnTapImple(int tapCount){
 			base.OnTapImple(tapCount);
 			thisGameplayWidget.StartGameplay();
-			// thisGameplayWidget.StartGameplayWithTutorial();
+			// thisGameplayStartButtonAdaptor.ShowAD();
 
 		}
 		IGameplayWidget thisGameplayWidget;
 		public void SetGameplayWidget(IGameplayWidget widget){
 			thisGameplayWidget = widget;
 		}
-		// ITutorialManager thisTutorialManager;
-		// public void SetTutorialManager(ITutorialManager manager){
-		// 	thisTutorialManager = manager;
-		// }
 	}
 }
 

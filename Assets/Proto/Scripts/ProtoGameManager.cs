@@ -6,6 +6,10 @@ using DKUtility;
 
 namespace AppleShooterProto{
 	public class ProtoGameManager : MonoBehaviour{
+		bool thisGameIsReady = false;
+		public bool GameIsReady(){
+			return thisGameIsReady;
+		}
 		public void Start(){
 			StartUp();
 		}
@@ -21,6 +25,10 @@ namespace AppleShooterProto{
 
 			IStartupManager startupManager = startupManagerAdaptor.GetStartupManager();
 			startupManager.StartStartupSequence();
+
+			InitializeAD();
+
+			thisGameIsReady = true;
 		}
 		public StartupManagerAdaptor startupManagerAdaptor;
 		public void SetUp(){
@@ -154,6 +162,10 @@ namespace AppleShooterProto{
 			}
 			public AudioManagerAdaptor audioManagerAdaptor;
 
+			void InitializeAD(){
+				// thisADManager.Initialize();
+			}
+			// public ADManager thisADManager;
 		/*  */
 			
 

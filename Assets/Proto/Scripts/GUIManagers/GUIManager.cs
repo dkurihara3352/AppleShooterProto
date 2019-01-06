@@ -750,8 +750,13 @@ namespace AppleShooterProto{
 			}
 			public WaypointCurveCycleManagerAdaptor curveCycleManagerAdaptor;
 			bool thisCurvesAreReady = false;
+			bool thisGameIsReady{
+				get{
+					return gameManager.GameIsReady();
+				}
+			}
 			void DrawWaypointEvents(Rect rect){
-				if(thisCurvesAreReady){
+				if(thisGameIsReady){
 					string result = "";
 					IWaypointsFollower follower = waypointsFollowerAdaptor.GetWaypointsFollower();
 					float normalizedPosOnCurve = follower.GetNormalizedPositionInCurve();
@@ -843,11 +848,11 @@ namespace AppleShooterProto{
 			}
 			public PlayerDataManagerAdaptor playerDataManagerAdaptor;
 			void DrawBottomRight(){
-				Rect sub_0 = GetHorizontalSubRect(bottomRightRect, 0, 2);
-				Rect sub_1 = GetHorizontalSubRect(bottomRightRect, 1, 2);
-				DrawPlayerData(sub_0);
-				DrawBowData(sub_1);
-				// DrawWaypointEvents(bottomRightRect);
+				// Rect sub_0 = GetHorizontalSubRect(bottomRightRect, 0, 2);
+				// Rect sub_1 = GetHorizontalSubRect(bottomRightRect, 1, 2);
+				// DrawPlayerData(sub_0);
+				// DrawBowData(sub_1);
+				DrawWaypointEvents(bottomRightRect);
 				// DrawLandedArrows(bottomRightRect);
 				
 			}
