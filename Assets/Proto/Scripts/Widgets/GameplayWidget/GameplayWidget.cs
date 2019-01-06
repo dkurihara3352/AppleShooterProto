@@ -27,6 +27,7 @@ namespace AppleShooterProto{
 		void SetPlayerInputManager(IPlayerInputManager manager);
 		void SetFrostManager(IFrostManager manager);
 		void SetTutorialPane(ITutorialPane pane);
+		void SetColorSchemeManager(IColorSchemeManager manager);
 		
 		void StartGameplay();
 		void EndGameplay();
@@ -108,6 +109,7 @@ namespace AppleShooterProto{
 					StartWaitAndStartGameplay();
 					DisableRootScroller();
 					Defrost();
+					ChangeColorSchemeToZero();
 					// DefrostRootElement();
 				}
 			}
@@ -215,6 +217,14 @@ namespace AppleShooterProto{
 			public void SetRootElementFrostGlass(IFrostGlass glass){
 				thisRootElementFrostGlass = glass;
 			}
+			void ChangeColorSchemeToZero(){
+				thisColorSchemeManager.ChangeColorScheme(0, 10f);
+			}
+			IColorSchemeManager thisColorSchemeManager;
+			public void SetColorSchemeManager(IColorSchemeManager manager){
+				thisColorSchemeManager = manager;
+			}
+			
 		/* Tutorial */
 			bool TutorialIsDone(){
 				if(!thisPlayerDataManager.PlayerDataIsLoaded())
@@ -229,6 +239,7 @@ namespace AppleShooterProto{
 				DisableRootScroller();
 				Defrost();
 				ActivateTutorialPane();
+				ChangeColorSchemeToZero();
 			}
 			void ActivateTutorialPane(){
 				thisTutorialPane.ActivateThruBackdoor();

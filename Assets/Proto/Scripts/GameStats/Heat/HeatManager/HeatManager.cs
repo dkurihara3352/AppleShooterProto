@@ -8,6 +8,7 @@ namespace AppleShooterProto{
 		void SetHeatLevelText(IHeatLevelText text);
 		void SetShootingTargetReserves(IShootingTargetReserve[] reserves);
 		void SetGameplayWidget(IGameplayWidget widget);
+		void SetColorSchemeManager(IColorSchemeManager manager);
 
 		void InitializeHeat();
 		void SetHeatImage(IHeatImage heatImage);
@@ -173,6 +174,7 @@ namespace AppleShooterProto{
 				StartHeatLevelUpProcess();
 				thisHeatLevelText.StartLevelUpTo(thisHeatLevel);
 				SetAllTargetReserveTier(thisHeatLevel - 1);
+				thisColorSchemeManager.ChangeColorScheme(thisHeatLevel - 1, 10f);
 			}
 		}
 		int thisMaxHeatLevel = 3;
@@ -207,6 +209,11 @@ namespace AppleShooterProto{
 			thisHeatLevel = thisInitHeatLevel;
 			thisHeatLevelText.SetHeatLevelText(thisHeatLevel);
 			SetAllTargetReserveTier(thisHeatLevel - 1);
+		}
+
+		IColorSchemeManager thisColorSchemeManager;
+		public void SetColorSchemeManager(IColorSchemeManager manager){
+			thisColorSchemeManager = manager;
 		}
 		/*  */
 		public new interface IConstArg: AppleShooterSceneObject.IConstArg{

@@ -85,6 +85,9 @@ namespace AppleShooterProto{
 
 			ITutorialPane tutorialPane = tutorialPaneAdaptor.GetTutorialPane();
 			thisWidget.SetTutorialPane(tutorialPane);
+
+			IColorSchemeManager colorSchemeManager = colorSchemeManagerAdaptor.GetColorSchemeManager();
+			thisWidget.SetColorSchemeManager(colorSchemeManager);
 		}
 		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
@@ -105,6 +108,7 @@ namespace AppleShooterProto{
 		public PlayerInputManagerAdaptor playerInputManagerAdaptor;
 		public FrostManagerAdaptor frostManagerAdaptor;
 		public TutorialPaneAdaptor tutorialPaneAdaptor;
+		public ColorSchemeManagerAdaptor colorSchemeManagerAdaptor;
 	}
 }
 

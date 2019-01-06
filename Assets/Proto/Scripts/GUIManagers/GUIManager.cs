@@ -578,6 +578,7 @@ namespace AppleShooterProto{
 		/* Context Three */
 			void DrawContextThree(){
 				DrawGameplayControl(sTL_2);
+				DrawColorSchemeControl(sTL_3);
 			}
 
 			void DrawGameplayControl(Rect rect){
@@ -597,6 +598,32 @@ namespace AppleShooterProto{
 						heatManager.StopCountingDown();
 
 			}
+			void DrawColorSchemeControl(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 3);
+				Rect sub_1 = GetHorizontalSubRect(rect, 1, 3);
+				Rect sub_2 = GetHorizontalSubRect(rect, 2, 3);
+
+				if(GUI.Button(
+					sub_0,
+					"0"
+				))
+					ChangeColorScheme(0);
+				if(GUI.Button(
+					sub_1,
+					"1"
+				))
+					ChangeColorScheme(1);
+				if(GUI.Button(
+					sub_2,
+					"2"
+				))
+					ChangeColorScheme(2);
+			}
+			void ChangeColorScheme(int index){
+				IColorSchemeManager manager = colorSchemeManagerAdaptor.GetColorSchemeManager();
+				manager.ChangeColorScheme(index, 10f);
+			}
+			public ColorSchemeManagerAdaptor colorSchemeManagerAdaptor;
 		/* Bottom Left */
 			void DrawBottomLeft(){
 				// DrawArrowsState(bottomLeftRect);

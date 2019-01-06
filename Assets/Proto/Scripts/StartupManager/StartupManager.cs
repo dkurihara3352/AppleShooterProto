@@ -9,6 +9,7 @@ namespace AppleShooterProto{
 		void SetFadeImage(IFadeImage image);
 		void SetMainMenuUIElement(IMainMenuUIElement mainMenuUIElement);
 		void SetRootScroller(IUIElementGroupScroller scroller);
+		void SetColorSchemeManager(IColorSchemeManager manager);
 		void StartStartupSequence();
 		void OnStartUpMainMenuShowComplete();
 	}
@@ -35,6 +36,7 @@ namespace AppleShooterProto{
 		public void StartStartupSequence(){
 			thisRootScroller.DisableInputSelf();
 			thisMainMenuUIElement.DeactivateRecursively(true);
+			thisColorSchemeManager.ChangeColorScheme(0, 0f);
 			thisWaitForWarmupReadyProcessSuite.Start();
 		}
 		IMainMenuUIElement thisMainMenuUIElement;
@@ -91,6 +93,11 @@ namespace AppleShooterProto{
 		IFadeImage thisFadeImage;
 		public void SetFadeImage(IFadeImage image){
 			thisFadeImage = image;
+		}
+
+		IColorSchemeManager thisColorSchemeManager;
+		public void SetColorSchemeManager(IColorSchemeManager manager){
+			thisColorSchemeManager = manager;
 		}
 
 	}

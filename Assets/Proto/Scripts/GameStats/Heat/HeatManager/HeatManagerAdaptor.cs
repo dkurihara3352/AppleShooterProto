@@ -73,9 +73,13 @@ namespace AppleShooterProto{
 
 			IGameplayWidget widget = gameplayWidgetAdaptor.GetGameplayWidget();
 			thisHeatManager.SetGameplayWidget(widget);
+
+			IColorSchemeManager colorSchemeManager = colorSchemeManagerAdaptor.GetColorSchemeManager();
+			thisHeatManager.SetColorSchemeManager(colorSchemeManager);
 		}
 		public AbsShootingTargetReserveAdaptor[] shootingTargetReserveAdaptors;
 		public GameplayWidgetAdaptor gameplayWidgetAdaptor;
+		public ColorSchemeManagerAdaptor colorSchemeManagerAdaptor;
 		IShootingTargetReserve[] CollectShootingTargetReserves(){
 			List<IShootingTargetReserve> resultList = new List<IShootingTargetReserve>();
 			foreach(IShootingTargetReserveAdaptor adaptor in shootingTargetReserveAdaptors)

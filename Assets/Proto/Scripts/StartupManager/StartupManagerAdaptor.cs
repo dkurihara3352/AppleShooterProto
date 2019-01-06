@@ -43,10 +43,14 @@ namespace AppleShooterProto{
 
 			IUIElementGroupScroller rootScroller = (IUIElementGroupScroller)rootScrollerAdaptor.GetUIElement();
 			thisStartupManager.SetRootScroller(rootScroller);
+
+			IColorSchemeManager colorSchemeManager = colorSchemeManagerAdaptor.GetColorSchemeManager();
+			thisStartupManager.SetColorSchemeManager(colorSchemeManager);
 		}
 		public FadeImageAdaptor fadeImageAdaptor;
 		public MainMenuUIAdaptor mainMenuUIAdaptor;
 		public UIElementGroupScrollerAdaptor rootScrollerAdaptor;
+		public ColorSchemeManagerAdaptor colorSchemeManagerAdaptor;
 	}
 }
 
