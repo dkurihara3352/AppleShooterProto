@@ -28,7 +28,12 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			IGameplayWidget gameplayWidget = gameplayWidgetAdaptor.GetGameplayWidget();
 			thisGameplayStartButton.SetGameplayWidget(gameplayWidget);
+			
+			IInterstitialADManager interstitialADManager = interstitialADManagerAdaptor.GetInterstitialADManager();
+			thisGameplayStartButton.SetInterstitialADManager(interstitialADManager);
 		}
 		public GameplayWidgetAdaptor gameplayWidgetAdaptor;
+
+		public InterstitialADManagerAdaptor interstitialADManagerAdaptor;
 	}
 }

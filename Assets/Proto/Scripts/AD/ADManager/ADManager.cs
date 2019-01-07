@@ -5,19 +5,23 @@ using UnityEngine.Advertisements;
 using DKUtility;
 
 namespace AppleShooterProto{
-	public interface IDoubleEarnedCrystalsADManager: IAppleShooterSceneObject, IProcessHandler{
+	public interface IADManager: IAppleShooterSceneObject, IProcessHandler{
 		void SetADPopUp(IADPopUp popUp);
 		void SetADStatusPopUp(IADStatusPopUp popUp);
 		void SetEndGamePane(IEndGamePane pane);
-		void StartADSequence();
+		void SetInterstitialADManager(IInterstitialADManager manager);
+
+		void StartRewardedADSequence();
+		void StartNonRewardedADSequence();
 		void EndADSequence();
-		void OnWatchADComplete(ShowResult result);
+
+		
 		// void MarkADRemovalIsAlreadySuggested();
 
 		void TestToggleADReady(bool ready);
 	}
-	public class DoubleEarnedCrystalsADManager: AppleShooterSceneObject, IDoubleEarnedCrystalsADManager{
-		public DoubleEarnedCrystalsADManager(IConstArg arg): base(arg){
+	public class ADManager: AppleShooterSceneObject, IADManager{
+		public ADManager(IConstArg arg): base(arg){
 			thisADSequenceProcessSuite = new ProcessSuite(
 				thisProcessManager,
 				this,
@@ -31,19 +35,22 @@ namespace AppleShooterProto{
 				0f
 			);
 		}
-		IDoubleEarnedCrystalsADManagerAdaptor thisDoubleEarnedCrystalsADManagerAdaptor{
+		IADManagerAdaptor thisDoubleEarnedCrystalsADManagerAdaptor{
 			get{
-				return (IDoubleEarnedCrystalsADManagerAdaptor)thisAdaptor;
+				return (IADManagerAdaptor)thisAdaptor;
 			}
 		}
 
-		public void StartADSequence(){
+		public void StartRewardedADSequence(){
+			thisADIsRewarded = true;
 			thisADSequenceProcessSuite.Start();
-			/*  Show popUp at start
-				hide when expired
-			*/
-
 		}
+		public void StartNonRewardedADSequence(){
+			thisADIsRewarded = false;
+			thisADSequenceProcessSuite.Start();
+		}
+		bool thisADIsRewarded = false;
+
 		IProcessSuite thisADSequenceProcessSuite;
 		public void OnProcessRun(IProcessSuite suite){
 			if(suite == thisADSequenceProcessSuite){
@@ -68,12 +75,16 @@ namespace AppleShooterProto{
 			}
 		}
 		string thisDoubleEarnedCrystalsADPlacementID = "rewardedVideo";
+		string thisInterstitialADPlacementID = "video";
 		public void OnProcessExpire(IProcessSuite suite){
 			if(suite == thisADSequenceProcessSuite){
 				thisADPopUp.Hide(false);
 			}else if(suite == thisGetADReadyProcessSuite){
 				thisADPopUp.StopIndicateGetADReady();
-				ShowAD();
+				if(thisADIsRewarded)
+					ShowRewardedAD();
+				else
+					ShowNonRewardedAD();
 			}
 		}
 		bool IsADReady(){
@@ -84,10 +95,17 @@ namespace AppleShooterProto{
 		public void TestToggleADReady(bool ready){
 			thisADIsReadyTest = ready;
 		}
-		void ShowAD(){
+		void ShowRewardedAD(){
 			ShowOptions options = new ShowOptions();
-			options.resultCallback = OnWatchADComplete;
+			options.resultCallback = OnWatchRewardedADComplete;
 			Advertisement.Show(thisDoubleEarnedCrystalsADPlacementID, options);
+
+			thisADIsReadyTest = false;
+		}
+		void ShowNonRewardedAD(){
+			ShowOptions options = new ShowOptions();
+			options.resultCallback = OnWatchNonRewardedADComplete;
+			Advertisement.Show(thisInterstitialADPlacementID, options);
 
 			thisADIsReadyTest = false;
 		}
@@ -95,16 +113,17 @@ namespace AppleShooterProto{
 		public void SetADPopUp(IADPopUp popUp){
 			thisADPopUp = popUp;
 		}
-		public void OnWatchADComplete(ShowResult result){
+		void OnWatchRewardedADComplete(ShowResult result){
 			// IndicateADCompletionFailure();
 			// IndicateADSkip();
 			// OnADCompleteSuccess();
+			ResetInterstitialADManager();
 			switch(result){
 				case ShowResult.Failed:
 					IndicateADCompletionFailure();
 					break;
 				case ShowResult.Finished:
-					OnADCompleteSuccess();
+					OnRewardedADCompleteSuccess();
 					break;
 				case ShowResult.Skipped:
 					IndicateADSkip();
@@ -112,6 +131,10 @@ namespace AppleShooterProto{
 				default:
 					break;
 			}
+		}
+		void OnWatchNonRewardedADComplete(ShowResult result){
+			EndADSequence();
+			ResetInterstitialADManager();
 		}
 		void IndicateADCompletionFailure(){
 			ShowADCompletionFailurePopUp();
@@ -134,13 +157,23 @@ namespace AppleShooterProto{
 			thisADStatusPopUp.Show(false);
 			thisADStatusPopUp.SetText("AD skipped");
 		}
-		void OnADCompleteSuccess(){
+		void OnRewardedADCompleteSuccess(){
 			thisADSequenceProcessSuite.Expire();
 			thisEndGamePane.OnWatchADComplete();
 		}
 		IEndGamePane thisEndGamePane;
 		public void SetEndGamePane(IEndGamePane pane){
 			thisEndGamePane = pane;
+		}
+
+		void ResetInterstitialADManager(){
+			if(thisInterstitiaADManager.IsCountingDown())
+				thisInterstitiaADManager.StopCounting();
+			thisInterstitiaADManager.ResetTimerAndCounter();
+		}
+		IInterstitialADManager thisInterstitiaADManager;
+		public void SetInterstitialADManager(IInterstitialADManager manager){
+			thisInterstitiaADManager = manager;
 		}
 		// bool ADRemovalHasBeenSuggested(){
 		// 	return thisADRemovalIsSuggested;

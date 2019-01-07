@@ -33,10 +33,10 @@ namespace AppleShooterProto{
 
 		public override void SetUpReference(){
 			base.SetUpReference();
-			IDoubleEarnedCrystalsADManager doubleEarnedCrystalsADManager = doubleEarnedCrystalsADManagerAdaptor.GetADManager();
+			IADManager doubleEarnedCrystalsADManager = doubleEarnedCrystalsADManagerAdaptor.GetADManager();
 			thisADStatusPopUp.SetDoubleEarnedCrystalsADManager(doubleEarnedCrystalsADManager);
 		}
-		public DoubleEarnedCrystalsADManagerAdaptor doubleEarnedCrystalsADManagerAdaptor;
+		public ADManagerAdaptor doubleEarnedCrystalsADManagerAdaptor;
 
 		public UnityEngine.UI.Text textComp;
 		public void SetText(string text){

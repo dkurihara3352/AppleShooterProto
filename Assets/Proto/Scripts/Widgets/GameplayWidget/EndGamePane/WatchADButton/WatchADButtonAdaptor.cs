@@ -28,15 +28,15 @@ namespace AppleShooterProto{
 			base.SetUpReference();
 			IEndGamePane pane = endGamePaneAdaptor.GetEndGamePane();
 			thisButton.SetEndGamePane(pane);
-			IDoubleEarnedCrystalsADManager adManager = adManagerAdaptor.GetADManager();
-			thisButton.SetDoubleEarnedCrystalsADManager(adManager);
+			IADManager adManager = adManagerAdaptor.GetADManager();
+			thisButton.SetADManager(adManager);
 		}
 		public EndGamePaneAdaptor endGamePaneAdaptor;
 		public UnityEngine.UI.Text labelTextComp;
 		public void SetLabelText(string text){
 			labelTextComp.text = text;
 		}
-		public DoubleEarnedCrystalsADManagerAdaptor adManagerAdaptor;
+		public ADManagerAdaptor adManagerAdaptor;
 	}
 }
 

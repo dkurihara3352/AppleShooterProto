@@ -88,6 +88,9 @@ namespace AppleShooterProto{
 
 			IColorSchemeManager colorSchemeManager = colorSchemeManagerAdaptor.GetColorSchemeManager();
 			thisWidget.SetColorSchemeManager(colorSchemeManager);
+
+			IInterstitialADManager interstitialADManager = interstitialADManagerAdaptor.GetInterstitialADManager();
+			thisWidget.SetInterstitialADManager(interstitialADManager);
 		}
 		public GameplayUIAdaptor gameplayUIElementAdaptor;
 		public PlayerCharacterWaypointsFollowerAdaptor playerCharacterWaypointsFollowerAdaptor;
@@ -109,6 +112,7 @@ namespace AppleShooterProto{
 		public FrostManagerAdaptor frostManagerAdaptor;
 		public TutorialPaneAdaptor tutorialPaneAdaptor;
 		public ColorSchemeManagerAdaptor colorSchemeManagerAdaptor;
+		public InterstitialADManagerAdaptor interstitialADManagerAdaptor;
 	}
 }
 

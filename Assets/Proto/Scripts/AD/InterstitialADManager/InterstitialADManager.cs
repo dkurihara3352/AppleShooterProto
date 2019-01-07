@@ -18,13 +18,15 @@ namespace AppleShooterProto{
 			when reached max count, flag ready
 	*/
 	public interface IInterstitialADManager: IAppleShooterSceneObject, IProcessHandler{
+		void SetADManager(IADManager manager);
 		void ResetTimerAndCounter();
 		void StartCounting();
 		void StopCounting();
+		bool IsCountingDown();
 		void IncrementSessionCountPlayed();
 		bool ADIsDue();
 		void StartAD();
-		void MarkADIsRemoved();
+		string GetDebugString();
 	}
 	public class InterstitialADManager: AppleShooterSceneObject, IInterstitialADManager{
 		public InterstitialADManager(IConstArg arg): base(arg){
@@ -35,11 +37,11 @@ namespace AppleShooterProto{
 				0f
 			);
 		}
-		// IInterstitialADManagerAdaptor thisInterstitialADManagerAdaptor{
-		// 	get{
-		// 		return (IInterstitialADManagerAdaptor)thisAdaptor;
-		// 	}
-		// }
+		IInterstitialADManagerAdaptor thisInterstitialADManagerAdaptor{
+			get{
+				return (IInterstitialADManagerAdaptor)thisAdaptor;
+			}
+		}
 		IProcessSuite thisCountDownTimerProcessSuite;
 		float thisTimerExpireTime = 180f;
 		int thisMinSessionCount = 3;
@@ -59,6 +61,9 @@ namespace AppleShooterProto{
 		}
 		public void StopCounting(){
 			thisCountDownTimerProcessSuite.Expire();
+		}
+		public bool IsCountingDown(){
+			return thisCountDownTimerProcessSuite.IsRunning();
 		}
 		public void OnProcessRun(IProcessSuite suite){
 			if(suite == thisCountDownTimerProcessSuite){
@@ -93,8 +98,21 @@ namespace AppleShooterProto{
 				return thisSessionCountPlayed >= thisMinSessionCount; 
 			}
 		}
-		public void StartAD(){}
-		public void MarkADIsRemoved(){}
+		public void StartAD(){
+			thisADManager.StartNonRewardedADSequence();
+		}
+		IADManager thisADManager;
+		public void SetADManager(IADManager manager){
+			thisADManager = manager;
+		}
+
+		public string GetDebugString(){
+			string result = "";
+			result += "Due: " + this.ADIsDue().ToString() + "\n";
+			result += "elapsed: " + thisElapsedTime.ToString() + "\n";
+			result += "session#: " + thisSessionCountPlayed.ToString() + "\n";
+			return result;
+		}
 	}
 }
 

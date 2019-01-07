@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AppleShooterProto{
-	public interface IDoubleEarnedCrystalsADManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
-		IDoubleEarnedCrystalsADManager GetADManager();
+	public interface IADManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+		IADManager GetADManager();
 	}
-	public class DoubleEarnedCrystalsADManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IDoubleEarnedCrystalsADManagerAdaptor{
+	public class ADManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IADManagerAdaptor{
 		public override void SetUp(){
 			thisADManager = CreateADManager();
 		}
-		IDoubleEarnedCrystalsADManager thisADManager;
-		IDoubleEarnedCrystalsADManager CreateADManager(){
-			DoubleEarnedCrystalsADManager.IConstArg arg = new DoubleEarnedCrystalsADManager.ConstArg(
+		IADManager thisADManager;
+		IADManager CreateADManager(){
+			ADManager.IConstArg arg = new ADManager.ConstArg(
 				this
 			);
-			return new DoubleEarnedCrystalsADManager(arg);
+			return new ADManager(arg);
 		}
-		public IDoubleEarnedCrystalsADManager GetADManager(){
+		public IADManager GetADManager(){
 			return thisADManager;
 		}
 
@@ -30,10 +30,14 @@ namespace AppleShooterProto{
 
 			IEndGamePane pane = endGamePaneAdaptor.GetEndGamePane();
 			thisADManager.SetEndGamePane(pane);
+
+			IInterstitialADManager intersitialADManager = interstitialADManagerAdaptor.GetInterstitialADManager();
+			thisADManager.SetInterstitialADManager(intersitialADManager);
 		}
 		public ADPopUpAdaptor adPopUpAdaptor;
 		public ADStatusPopUpAdaptor adStatusPopUpAdaptor;
 		public EndGamePaneAdaptor endGamePaneAdaptor;
+		public InterstitialADManagerAdaptor interstitialADManagerAdaptor;
 	}
 }
 

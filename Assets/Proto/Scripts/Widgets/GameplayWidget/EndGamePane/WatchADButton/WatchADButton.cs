@@ -6,7 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IWatchADButton: IValidatableUIElement{
 		void SetEndGamePane(IEndGamePane pane);
-		void SetDoubleEarnedCrystalsADManager(IDoubleEarnedCrystalsADManager manager);
+		void SetADManager(IADManager manager);
 		void UpdateShowness(float normalizedTime);
 		void ResetWatchADButton();
 		void EnableInput();
@@ -37,10 +37,10 @@ namespace AppleShooterProto{
 		protected override void OnTapImple(int tapCount){
 			base.OnTapImple(tapCount);
 			// thisEndGamePane.OnWatchADComplete();
-			thisADManager.StartADSequence();
+			thisADManager.StartRewardedADSequence();
 		}
-		IDoubleEarnedCrystalsADManager thisADManager;
-		public void SetDoubleEarnedCrystalsADManager(IDoubleEarnedCrystalsADManager adManager){
+		IADManager thisADManager;
+		public void SetADManager(IADManager adManager){
 			thisADManager = adManager;
 		}
 		IEndGamePane thisEndGamePane;

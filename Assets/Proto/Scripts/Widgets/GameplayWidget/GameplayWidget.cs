@@ -28,6 +28,7 @@ namespace AppleShooterProto{
 		void SetFrostManager(IFrostManager manager);
 		void SetTutorialPane(ITutorialPane pane);
 		void SetColorSchemeManager(IColorSchemeManager manager);
+		void SetInterstitialADManager(IInterstitialADManager manager);
 		
 		void StartGameplay();
 		void EndGameplay();
@@ -156,6 +157,8 @@ namespace AppleShooterProto{
 				ActivateHUD();
 				ActivatePauseButton();
 				StartHeatCountDown();
+
+				StartInterstitialADManagerCountDown();
 			}
 			public void StartTargetSpawn(){
 				thisPlayerCharacterWaypointsFollower.StartExecutingSpawnEvents();
@@ -225,6 +228,15 @@ namespace AppleShooterProto{
 				thisColorSchemeManager = manager;
 			}
 			
+			void StartInterstitialADManagerCountDown(){
+				if(!thisInterstitialADManager.IsCountingDown())
+					thisInterstitialADManager.StartCounting();
+			}
+			IInterstitialADManager thisInterstitialADManager;
+			public void SetInterstitialADManager(IInterstitialADManager manager){
+				thisInterstitialADManager = manager;
+			}
+
 		/* Tutorial */
 			bool TutorialIsDone(){
 				if(!thisPlayerDataManager.PlayerDataIsLoaded())
@@ -273,6 +285,8 @@ namespace AppleShooterProto{
 				StartEndSequence();
 
 				Frost();
+
+				IncrementInterstitialADManagerSessionCount();
 			}
 			void RaisePointerOnInputScroller(){
 				if(thisPlayerInputMnanager.IsDrawing() || thisPlayerInputMnanager.IsLookingAround())
@@ -403,6 +417,9 @@ namespace AppleShooterProto{
 				thisFrostManager = manager;
 			}
 
+			void IncrementInterstitialADManagerSessionCount(){
+				thisInterstitialADManager.IncrementSessionCountPlayed();
+			}
 		/*  */
 		public void ToggleMainMenu(){
 			if(thisMainMenuUIElement.IsActivated())

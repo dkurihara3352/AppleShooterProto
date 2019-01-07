@@ -628,7 +628,7 @@ namespace AppleShooterProto{
 
 			void DrawADTestControl(Rect rect){
 				Rect sub_0 = GetHorizontalSubRect(rect, 0, 1);
-				IDoubleEarnedCrystalsADManager doubleEarnedCrystalsADmanager = doubleEarnedCrystalsADManagerAdaptor.GetADManager();
+				IADManager doubleEarnedCrystalsADmanager = doubleEarnedCrystalsADManagerAdaptor.GetADManager();
 				if(doubleEarnedCrystalsADmanager != null){
 					if(GUI.Button(
 						sub_0,
@@ -638,7 +638,7 @@ namespace AppleShooterProto{
 				}
 
 			}
-			public DoubleEarnedCrystalsADManagerAdaptor doubleEarnedCrystalsADManagerAdaptor;
+			public ADManagerAdaptor doubleEarnedCrystalsADManagerAdaptor;
 		/* Bottom Left */
 			void DrawBottomLeft(){
 				// DrawArrowsState(bottomLeftRect);
@@ -867,9 +867,10 @@ namespace AppleShooterProto{
 				// Rect sub_1 = GetHorizontalSubRect(bottomRightRect, 1, 2);
 				// DrawPlayerData(sub_0);
 				// DrawBowData(sub_1);
-				DrawWaypointEvents(bottomRightRect);
 				// DrawLandedArrows(bottomRightRect);
 				
+				// DrawWaypointEvents(bottomRightRect);
+				DrawInterstitialADManager(bottomRightRect);
 			}
 			void DrawPlayerData(Rect rect){
 				if(thisSystemIsReady){
@@ -915,7 +916,19 @@ namespace AppleShooterProto{
 					);
 				}
 			}
-
+			void DrawInterstitialADManager(Rect rect){
+				IInterstitialADManager interstitialADManager = interstitialADManagerAdaptor.GetInterstitialADManager();
+				string debugString;
+				if(interstitialADManager != null){
+					debugString = interstitialADManager.GetDebugString();
+				}else
+					debugString = "interstitialADManager not ready";
+				GUI.Label(
+					rect,
+					debugString
+				);
+			}	
+			public InterstitialADManagerAdaptor interstitialADManagerAdaptor;
 		/*  */
 	}
 }

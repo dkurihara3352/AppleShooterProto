@@ -26,7 +26,9 @@ namespace AppleShooterProto{
 			IStartupManager startupManager = startupManagerAdaptor.GetStartupManager();
 			startupManager.StartStartupSequence();
 
-			InitializeAD();
+			// InitializeAD();
+			ResetInterstitialADManager();
+
 
 			thisGameIsReady = true;
 		}
@@ -166,6 +168,11 @@ namespace AppleShooterProto{
 				// thisADManager.Initialize();
 			}
 			// public ADManager thisADManager;
+			void ResetInterstitialADManager(){
+				IInterstitialADManager manager = interstitialADManagerAdaptor.GetInterstitialADManager();
+				manager.ResetTimerAndCounter();
+			}
+			public InterstitialADManagerAdaptor interstitialADManagerAdaptor;
 		/*  */
 			
 

@@ -6,7 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IADStatusPopUp: IPopUp{
 		void SetText(string text);
-		void SetDoubleEarnedCrystalsADManager(IDoubleEarnedCrystalsADManager adManager);
+		void SetDoubleEarnedCrystalsADManager(IADManager adManager);
 	}
 	public class ADStatusPopUp: PopUp, IADStatusPopUp{
 		public ADStatusPopUp(IConstArg arg): base(arg){
@@ -27,8 +27,8 @@ namespace AppleShooterProto{
 			thisDoubleEarnedCrystalsADManager.EndADSequence();
 			Debug.Log("hidden");
 		}
-		IDoubleEarnedCrystalsADManager thisDoubleEarnedCrystalsADManager;
-		public void SetDoubleEarnedCrystalsADManager(IDoubleEarnedCrystalsADManager adManager){
+		IADManager thisDoubleEarnedCrystalsADManager;
+		public void SetDoubleEarnedCrystalsADManager(IADManager adManager){
 			thisDoubleEarnedCrystalsADManager = adManager;
 		}
 	}
