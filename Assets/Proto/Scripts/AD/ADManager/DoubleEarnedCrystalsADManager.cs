@@ -96,6 +96,8 @@ namespace AppleShooterProto{
 			thisADPopUp = popUp;
 		}
 		public void OnWatchADComplete(ShowResult result){
+			// IndicateADCompletionFailure();
+			// IndicateADSkip();
 			// OnADCompleteSuccess();
 			switch(result){
 				case ShowResult.Failed:
