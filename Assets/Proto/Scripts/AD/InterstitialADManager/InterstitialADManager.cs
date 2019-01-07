@@ -115,5 +115,3 @@ namespace AppleShooterProto{
 		}
 	}
 }
-
-
