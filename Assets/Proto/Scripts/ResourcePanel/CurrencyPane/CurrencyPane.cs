@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ICurrencyPane: IUIElement, IProcessHandler{
 		void StartCurrencyUpdateProcess(int currency);
 		void UpdateCurrency(int currency);

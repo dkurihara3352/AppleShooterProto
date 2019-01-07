@@ -6,8 +6,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace AppleShooterProto{
-	public interface IPlayerDataManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IPlayerDataManager: ISlickBowShootingSceneObject{
 		/* File Management */
 			string GetDirectory();
 			string GetBaseFileName();
@@ -60,7 +60,7 @@ namespace AppleShooterProto{
 		/* Other */
 			void ClearBowConfigData(int bowIndex);
 	}
-	public class PlayerDataManager : AppleShooterSceneObject, IPlayerDataManager {
+	public class PlayerDataManager : SlickBowShootingSceneObject, IPlayerDataManager {
 		public PlayerDataManager(
 			IConstArg arg
 		): base(arg){
@@ -480,10 +480,10 @@ namespace AppleShooterProto{
 				return result;
 			}
 		/*  */
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IPlayerDataManagerAdaptor adaptor
 			): base(

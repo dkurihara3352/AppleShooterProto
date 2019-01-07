@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IFlyingTargetAdaptor: IShootingTargetAdaptor{
 		IFlyingTarget GetFlyingTarget();
 		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);

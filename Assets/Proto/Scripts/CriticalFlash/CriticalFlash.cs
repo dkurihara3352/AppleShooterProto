@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ICriticalFlash: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ICriticalFlash: ISlickBowShootingSceneObject{
 		void Flash();
 
 		void SetFlashValue(float normalizedFlashValue);
 	}
-	public class CriticalFlash : AppleShooterSceneObject, ICriticalFlash {
+	public class CriticalFlash : SlickBowShootingSceneObject, ICriticalFlash {
 		public CriticalFlash(IConstArg arg): base(arg){}
 		ICriticalFlashAdaptor thisTypedAdaptor{
 			get{
@@ -25,7 +25,7 @@ namespace AppleShooterProto{
 			thisProcess = null;
 		}
 		void StartFlashProcess(){
-			thisProcess = thisAppleShooterProcessFactory.CreateCriticalFlashProcess(
+			thisProcess = thisSlickBowShootingProcessFactory.CreateCriticalFlashProcess(
 				this,
 				thisTypedAdaptor.GetFlashCurve(),
 				thisTypedAdaptor.GetFlashTime()
@@ -38,8 +38,8 @@ namespace AppleShooterProto{
 		}
 
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{}
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				ICriticalFlashAdaptor adaptor
 			): base(

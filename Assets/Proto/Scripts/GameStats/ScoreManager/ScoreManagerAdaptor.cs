@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IScoreManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IScoreManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IScoreManager GetScoreManager();
 	}
-	public class ScoreManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IScoreManagerAdaptor {
+	public class ScoreManagerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IScoreManagerAdaptor {
 
 		public override void SetUp(){
 			thisScoreManager = CreateScoreManager();

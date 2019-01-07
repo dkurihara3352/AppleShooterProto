@@ -5,8 +5,8 @@ using DKUtility;
 using UnityBase;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IAppleShooterProcessFactory: IUISystemProcessFactory{
+namespace SlickBowShooting{
+	public interface ISlickBowShootingProcessFactory: IUISystemProcessFactory{
 		IFollowWaypointProcess CreateFollowWaypointProcess(
 			IWaypointsFollower follower,
 			float speed,
@@ -111,10 +111,10 @@ namespace AppleShooterProto{
 		);
 	}
 
-	public class AppleShooterProcessFactory: UISystemProcessFactory, IAppleShooterProcessFactory {
-		public AppleShooterProcessFactory(
+	public class SlickBowShootingProcessFactory: UISystemProcessFactory, ISlickBowShootingProcessFactory {
+		public SlickBowShootingProcessFactory(
 			IProcessManager processManager,
-			IAppleShooterMonoBehaviourAdaptorManager adaptorManager
+			ISlickBowShootingMonoBehaviourAdaptorManager adaptorManager
 		): base(
 			processManager,
 			adaptorManager

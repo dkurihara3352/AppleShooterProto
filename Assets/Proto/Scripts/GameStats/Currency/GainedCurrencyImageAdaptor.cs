@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
-	public interface IGainedCurrencyImageAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IGainedCurrencyImageAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IGainedCurrencyImage GetGainedCurrencyImage();
 		void SetText(string text);
 	}
-	public class GainedCurrencyImageAdaptor: AppleShooterMonoBehaviourAdaptor, IGainedCurrencyImageAdaptor{
+	public class GainedCurrencyImageAdaptor: SlickBowShootingMonoBehaviourAdaptor, IGainedCurrencyImageAdaptor{
 		public override void SetUp(){
 			thisGainedCurrencyImage = CreateGainedCurrencyImage();
 		}

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IShootingObstacle: IArrowHitDetector{}
 	public class ShootingObstacle : ArrowHitDetector, IShootingObstacle {
 

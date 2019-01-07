@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IWaypointsFollowerChangeSpeedProcess: IProcess{}
 	public class WaypointsFollowerChangeSpeedProcess: AbsConstrainedProcess, IWaypointsFollowerChangeSpeedProcess{
 		public WaypointsFollowerChangeSpeedProcess(

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
-namespace AppleShooterProto{
-	public interface IDestroyedTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
+namespace SlickBowShooting{
+	public interface IDestroyedTarget: ISlickBowShootingSceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void ActivateAt(IShootingTarget shootingTarget);
 		void SetPopUIReserve(IPopUIReserve reserve);
 		void SetDestroyedTargetReserve(IDestroyedTargetReserve reserve);
@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 		void SetTargetTierDataOnQueue(TargetTierData data);
 		void PopText(string text, Color color);
 	}
-	public class DestroyedTarget : AppleShooterSceneObject, IDestroyedTarget {
+	public class DestroyedTarget : SlickBowShootingSceneObject, IDestroyedTarget {
 		public DestroyedTarget(
 			IConstArg arg
 		): base(
@@ -105,10 +105,10 @@ namespace AppleShooterProto{
 			thisTargetTierDataOnQueue = data;
 		}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				int index{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
 					IDestroyedTargetAdaptor adaptor

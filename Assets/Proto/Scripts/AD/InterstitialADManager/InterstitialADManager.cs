@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	/*  Interstitial AD plays when 
 			AD is NOT removed yet
 			AND 3 mins have passed since last watch 
@@ -17,7 +17,7 @@ namespace AppleShooterProto{
 		Counter
 			when reached max count, flag ready
 	*/
-	public interface IInterstitialADManager: IAppleShooterSceneObject, IProcessHandler{
+	public interface IInterstitialADManager: ISlickBowShootingSceneObject, IProcessHandler{
 		void SetADManager(IADManager manager);
 		void ResetTimerAndCounter();
 		void StartCounting();
@@ -28,7 +28,7 @@ namespace AppleShooterProto{
 		void StartAD();
 		string GetDebugString();
 	}
-	public class InterstitialADManager: AppleShooterSceneObject, IInterstitialADManager{
+	public class InterstitialADManager: SlickBowShootingSceneObject, IInterstitialADManager{
 		public InterstitialADManager(IConstArg arg): base(arg){
 			thisCountDownTimerProcessSuite = new ProcessSuite(
 				thisProcessManager,

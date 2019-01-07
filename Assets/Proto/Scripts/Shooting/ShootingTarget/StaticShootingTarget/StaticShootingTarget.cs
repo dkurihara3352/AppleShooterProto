@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IStaticShootingTarget: IShootingTarget{
 		void SetStaticShootingTargetReserve(
 			IStaticShootingTargetReserve reserve

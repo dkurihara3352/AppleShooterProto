@@ -4,12 +4,12 @@ using UnityEngine;
 using UISystem;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface IGameplayWidgetAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IGameplayWidgetAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IGameplayWidget GetGameplayWidget();
 		float GetStartWaitTime();
 	}
-	public class GameplayWidgetAdaptor: AppleShooterMonoBehaviourAdaptor, IGameplayWidgetAdaptor{
+	public class GameplayWidgetAdaptor: SlickBowShootingMonoBehaviourAdaptor, IGameplayWidgetAdaptor{
 		public override void SetUp(){
 			GameplayWidget.IConstArg arg = new GameplayWidget.ConstArg(
 				this

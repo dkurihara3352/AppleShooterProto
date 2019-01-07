@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IGameplayPauseAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IGameplayPauseAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IGameplayPause GetGameplayPause();
 		void SetTimeScale(float scale);
 		float GetTimeScale();
 		float GetFrostTime();
 
 	}
-	public class GameplayPauseAdaptor : AppleShooterMonoBehaviourAdaptor, IGameplayPauseAdaptor {
+	public class GameplayPauseAdaptor : SlickBowShootingMonoBehaviourAdaptor, IGameplayPauseAdaptor {
 		
 		public float unpauseTime;
 		IGameplayPause thisPause;

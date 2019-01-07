@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IHeatCountDownProcess: IProcess{}
 	public class HeatCountDownProcess : AbsProcess, IHeatCountDownProcess {
 		public HeatCountDownProcess(IConstArg arg): base(arg){

@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IResourcePanel: IUIElement, IProcessHandler{
 		void Show();
 		void Hide();

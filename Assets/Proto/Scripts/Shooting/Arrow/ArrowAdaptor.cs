@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IArrowAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IArrowAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IArrow GetArrow();
 
 		void SetArrowReserveAdaptor(IArrowReserveAdaptor adaptor);
@@ -24,7 +24,7 @@ namespace AppleShooterProto{
 		void PlayArrowReleaseSound();
 		void ToggleRenderer(bool toggle);
 	}
-	public class ArrowAdaptor : AppleShooterMonoBehaviourAdaptor, IArrowAdaptor {
+	public class ArrowAdaptor : SlickBowShootingMonoBehaviourAdaptor, IArrowAdaptor {
 		
 		/* Ref */
 		public void SetCollisionDetectionIntervalFrameCount(int count){

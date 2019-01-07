@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface ITutorialManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ITutorialManager: ISlickBowShootingSceneObject{
 		void SetMainMenuUIElement(IMainMenuUIElement uie);
 		void SetGameplayUIElement(IGameplayUIElement uie);
 		void SetRootScroller(IUIElementGroupScroller scroller);
@@ -17,7 +17,7 @@ namespace AppleShooterProto{
 		void StartTutorial();
 		void StartLookAroundTutorial();
 	}
-	public class TutorialManager: AppleShooterSceneObject, ITutorialManager{
+	public class TutorialManager: SlickBowShootingSceneObject, ITutorialManager{
 		public TutorialManager(IConstArg arg): base(arg){}
 		ITutorialManagerAdaptor thisTutorialManagerAdaptor{
 			get{

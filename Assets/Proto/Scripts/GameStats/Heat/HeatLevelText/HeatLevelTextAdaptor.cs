@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
-	public interface IHeatLevelTextAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IHeatLevelTextAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IHeatLevelText GetHeatLevelText();
 		void SetText(string text);
 		AnimationCurve GetScaleValueCurve();
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		void SetScale(float scaleValue);
 		float GetTextSwapPoint();
 	}
-	public class HeatLevelTextAdaptor: AppleShooterMonoBehaviourAdaptor, IHeatLevelTextAdaptor{
+	public class HeatLevelTextAdaptor: SlickBowShootingMonoBehaviourAdaptor, IHeatLevelTextAdaptor{
 		public override void SetUp(){
 			thisHeatLevelText = CreateHeatLevelText();
 		}

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IPCWaypointCurve: IWaypointCurve{
 		void SetLevelSectionShootingTargetSpawner(ILevelSectionShootingTargetSpawner spawner);
 		void SetUpTargetSpawnEvents();

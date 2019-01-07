@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPoint: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IShootingTargetSpawnPoint: ISlickBowShootingSceneObject{
 		void SetTarget(IShootingTarget target);
 		void CheckAndClearTarget(IShootingTarget target);
 		IShootingTarget GetSpawnedTarget();
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		float GetEventPoint();
 		float GetRelativeRareChance();
 	}
-	public abstract class AbsShootingTargetSpawnPoint: AppleShooterSceneObject, IShootingTargetSpawnPoint{
+	public abstract class AbsShootingTargetSpawnPoint: SlickBowShootingSceneObject, IShootingTargetSpawnPoint{
 		public AbsShootingTargetSpawnPoint(
 			IConstArg arg
 		): base(
@@ -50,10 +50,10 @@ namespace AppleShooterProto{
 		public float GetRelativeRareChance(){
 			return thisShootingTargetSpawnPointAdaptor.GetRelativeRareChance();
 		}
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float eventPoint{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				float eventPoint,
 				IShootingTargetSpawnPointAdaptor adaptor

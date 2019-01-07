@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace AppleShooterProto{
-	public interface ILevelSectionShootingTargetSpawner: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ILevelSectionShootingTargetSpawner: ISlickBowShootingSceneObject{
 		void SetPlayerCharacterWaypointsFollower(IPlayerCharacterWaypointsFollower follower);
 		void SetLevelSectionTargetSpawnDataInput(
 			TargetSpawnDataInput[] input
@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 		void Despawn();
 		bool ShouldSpawnTargets();
 	}
-	public class LevelSectionShootingTargetSpawner : AppleShooterSceneObject, ILevelSectionShootingTargetSpawner {
+	public class LevelSectionShootingTargetSpawner : SlickBowShootingSceneObject, ILevelSectionShootingTargetSpawner {
 
 		public LevelSectionShootingTargetSpawner(
 			IConstArg arg
@@ -196,10 +196,10 @@ namespace AppleShooterProto{
 			return thisPlayerCharacterWaypointsFollower.ShouldSpawnTargets();
 		}
 		/*  */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				int spawnValueLimit{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					ILevelSectionShootingTargetSpawnerAdaptor adaptor,
 					int spawnValueLimit

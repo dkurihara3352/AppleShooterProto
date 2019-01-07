@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IPlayerCamera: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IPlayerCamera: ISlickBowShootingSceneObject{
 		void Pan(
 			float normalizedCameraPosition,
 			int axis
@@ -16,7 +16,7 @@ namespace AppleShooterProto{
 		float GetCurrentFOV();
 		void SetFOV(float fov);
 	}
-	public class PlayerCamera : AppleShooterSceneObject, IPlayerCamera {
+	public class PlayerCamera : SlickBowShootingSceneObject, IPlayerCamera {
 		/*  Make CameraParents the parent of both lookAtTarget and the Camera itself
 				this makes sure cam and target moves the same
 			Hiearchy
@@ -78,7 +78,7 @@ namespace AppleShooterProto{
 
 		readonly float thisSmoothCoefficient;
 		public void StartSmoothZoom(){
-			ISmoothZoomProcess process = thisAppleShooterProcessFactory.CreateSmoothZoomProcess(
+			ISmoothZoomProcess process = thisSlickBowShootingProcessFactory.CreateSmoothZoomProcess(
 				this,
 				thisSmoothCoefficient
 			);
@@ -109,14 +109,14 @@ namespace AppleShooterProto{
 			float result = Mathf.Tan(targetFOVInRadian) / thisDefaultTangent;
 			return result;
 		}
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			Vector2 rotationCoefficient{get;}
 			UnityBase.IMonoBehaviourAdaptor lookAtPivot{get;}
 			Camera camera{get;}
 			float defaultFOV{get;}
 			float smoothCoefficient{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IPlayerCameraAdaptor adaptor,
 

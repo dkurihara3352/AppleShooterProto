@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ITestShootingManagerAdaptor: IShootingManagerAdaptor{}
 	public class TestShootingManagerAdaptor: ShootingManagerAdaptor, IShootingManagerAdaptor{
 		public override void SetUpReference(){

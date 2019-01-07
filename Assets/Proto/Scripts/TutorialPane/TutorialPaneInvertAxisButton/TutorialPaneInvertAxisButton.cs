@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ITutorialPaneInvertAxisButton: IValidatableUIElement{
 		void SetTutorialPane(ITutorialPane pane);
 		void SetToggleText(bool toggled);

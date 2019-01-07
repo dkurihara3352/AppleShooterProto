@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IBowDataCalculator{
 		void CalcAttributeData();
 		float GetAttributeValue(int level);

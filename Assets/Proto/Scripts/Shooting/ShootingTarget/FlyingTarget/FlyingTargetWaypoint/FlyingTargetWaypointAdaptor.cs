@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IFlyingTargetWaypointAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IFlyingTargetWaypointAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IFlyingTargetWaypoint GetWaypoint();
 	}
-	public class FlyingTargetWaypointAdaptor : AppleShooterMonoBehaviourAdaptor, IFlyingTargetWaypointAdaptor {
+	public class FlyingTargetWaypointAdaptor : SlickBowShootingMonoBehaviourAdaptor, IFlyingTargetWaypointAdaptor {
 
 		public override void SetUp(){
 			FlyingTargetWaypoint.IConstArg arg =  new FlyingTargetWaypoint.ConstArg(

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IShootingDataManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IShootingDataManager: ISlickBowShootingSceneObject{
 		void SetPlayerDataManager(IPlayerDataManager playerDataManager);
 		void SetBowDataCalculator(IBowDataCalculator calculator);
 		void CalculateShootingData();
@@ -14,7 +14,7 @@ namespace AppleShooterProto{
 		float GetMaxDrawStrength();
 		float GetCriticalMultiplier();
 	}
-	public class ShootingDataManager: AppleShooterSceneObject, IShootingDataManager{
+	public class ShootingDataManager: SlickBowShootingSceneObject, IShootingDataManager{
 		public ShootingDataManager(IConstArg arg): base(arg){
 			
 		}
@@ -134,8 +134,8 @@ namespace AppleShooterProto{
 
 		/*  */
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{}
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IShootingDataManagerAdaptor adaptor
 			): base(

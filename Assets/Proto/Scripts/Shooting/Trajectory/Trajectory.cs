@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ITrajectory: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ITrajectory: ISlickBowShootingSceneObject{
 		void DrawTrajectory(
 			Vector3 aimDirection,
 			float initialSpeed,
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		);
 		void Clear();
 	}
-	public class Trajectory : AppleShooterSceneObject, ITrajectory {
+	public class Trajectory : SlickBowShootingSceneObject, ITrajectory {
 
 		public Trajectory(
 			IConstArg arg
@@ -56,11 +56,11 @@ namespace AppleShooterProto{
 			thisTypedAdaptor.Clear();
 		}
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float maxT{get;}
 			int resolution{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				ITrajectoryAdaptor adaptor,
 				float maxT,

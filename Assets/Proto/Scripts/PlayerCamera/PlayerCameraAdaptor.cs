@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IPlayerCameraAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IPlayerCameraAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IPlayerCamera GetPlayerCamera();
 		Vector2 GetDefaultFOVs();
 		Vector2 GetMaxPanAngle();
 	}
-	public class PlayerCameraAdaptor : AppleShooterMonoBehaviourAdaptor, IPlayerCameraAdaptor {
+	public class PlayerCameraAdaptor : SlickBowShootingMonoBehaviourAdaptor, IPlayerCameraAdaptor {
 		public Vector2 maxPanAngle;
 		public Vector2 GetMaxPanAngle(){
 			return maxPanAngle;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IChangeCameraPivotLATargetWaypointEventAdaptor: IWaypointEventAdaptor{}
-	public class ChangeCameraPivotLATargetWaypointEventAdaptor: AppleShooterMonoBehaviourAdaptor, IChangeCameraPivotLATargetWaypointEventAdaptor{
+	public class ChangeCameraPivotLATargetWaypointEventAdaptor: SlickBowShootingMonoBehaviourAdaptor, IChangeCameraPivotLATargetWaypointEventAdaptor{
 		public override void SetUp(){
 			ChangeCameraPivotLATargetWaypointEvent.IConstArg arg = new ChangeCameraPivotLATargetWaypointEvent.ConstArg(
 				eventPoint,

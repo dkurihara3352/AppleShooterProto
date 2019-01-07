@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IWaypointsFollowerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IWaypointsFollowerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IWaypointsFollower GetWaypointsFollower();
 		float GetSpeed();
 		float GetSmoothStartTime();
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		float GetSmoothStopTime();
 		AnimationCurve GetSmoothStopCurve();
 	}
-	public class WaypointsFollowerAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointsFollowerAdaptor {
+	public class WaypointsFollowerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IWaypointsFollowerAdaptor {
 		public float followSpeed;
 		public float GetSpeed(){return followSpeed;}
 		public WaypointCurveCycleManagerAdaptor waypointsManagerAdaptor;

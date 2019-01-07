@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 using UnityEngine.UI;
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IBowAttributeLevelUpHoldButtonAdaptor: IHoldButtonAdaptor{
 		IBowAttributeLevelUpHoldButton GetBowAttributeLevelUpHoldButton();
 		int GetAttributeIndex();

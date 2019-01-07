@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface ILandedArrowReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ILandedArrowReserveAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ILandedArrowReserve GetLandedArrowReserve();
 	}
-	public class LandedArrowReserveAdaptor: AppleShooterMonoBehaviourAdaptor, ILandedArrowReserveAdaptor{
+	public class LandedArrowReserveAdaptor: SlickBowShootingMonoBehaviourAdaptor, ILandedArrowReserveAdaptor{
 		ILandedArrowReserve thisReserve;
 		public ILandedArrowReserve GetLandedArrowReserve(){
 			return thisReserve;

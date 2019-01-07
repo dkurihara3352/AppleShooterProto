@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IArrowTrailReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IArrowTrailReserveAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IArrowTrailReserve GetArrowTrailReserve();
 		Color GetMinDrawColor();
 		Color GetMaxDrawColor();
 	}
-	public class ArrowTrailReserveAdaptor: AppleShooterMonoBehaviourAdaptor, IArrowTrailReserveAdaptor{
+	public class ArrowTrailReserveAdaptor: SlickBowShootingMonoBehaviourAdaptor, IArrowTrailReserveAdaptor{
 		public Color minDrawColor = Color.white;
 		public Color GetMinDrawColor(){
 			return minDrawColor;

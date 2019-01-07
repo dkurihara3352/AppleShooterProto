@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IHeatManager: IAppleShooterSceneObject, IHeatManagerStateHandler{
+namespace SlickBowShooting{
+	public interface IHeatManager: ISlickBowShootingSceneObject, IHeatManagerStateHandler{
 		void SetHeatLevelText(IHeatLevelText text);
 		void SetShootingTargetReserves(IShootingTargetReserve[] reserves);
 		void SetGameplayWidget(IGameplayWidget widget);
@@ -25,7 +25,7 @@ namespace AppleShooterProto{
 
 		bool IsCountingDown();
 	}	
-	public class HeatManager: AppleShooterSceneObject, IHeatManager{
+	public class HeatManager: SlickBowShootingSceneObject, IHeatManager{
 		
 		public HeatManager(
 			IConstArg arg
@@ -58,7 +58,7 @@ namespace AppleShooterProto{
 			HeatManagerStateEngine.IConstArg stateEngineArg = new HeatManagerStateEngine.ConstArg(
 				this,
 				thisHeatDecayRate,
-				thisAppleShooterProcessFactory
+				thisSlickBowShootingProcessFactory
 			);
 			return new HeatManagerStateEngine(stateEngineArg);
 		}
@@ -182,7 +182,7 @@ namespace AppleShooterProto{
 		int thisInitHeatLevel = 1;
 		void StartHeatLevelUpProcess(){
 			float targetMaxHeat = thisMaxHeat * thisLevelUpMultiplier;
-			IHeatLevelUpProcess process = thisAppleShooterProcessFactory.CreateHeatLevelUpProcess(
+			IHeatLevelUpProcess process = thisSlickBowShootingProcessFactory.CreateHeatLevelUpProcess(
 				this,
 				targetMaxHeat,
 				thisLevelUpTime
@@ -216,7 +216,7 @@ namespace AppleShooterProto{
 			thisColorSchemeManager = manager;
 		}
 		/*  */
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float initialHeat{get;}
 			float heatDecayRate{get;}
 			float followSmoothTime{get;}
@@ -224,7 +224,7 @@ namespace AppleShooterProto{
 			float initialMaxHeat{get;}
 			float levelUpTime{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IHeatManagerAdaptor adaptor,
 				float initialHeat,

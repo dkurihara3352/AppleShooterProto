@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IFadeImage: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IFadeImage: ISlickBowShootingSceneObject{
 		void SetFadeness(float fadeness);//0 => total black, 1=> alpha 0
 	}
-	public class FadeImage: AppleShooterSceneObject, IFadeImage{
+	public class FadeImage: SlickBowShootingSceneObject, IFadeImage{
 		public FadeImage(IConstArg arg): base(arg){
 			SetFadeness(0f);
 		}

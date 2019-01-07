@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IGlidingTargetSpawnPoint: IShootingTargetSpawnPoint{
 		IGlidingTargetWaypointCurve GetGlidingTargetWaypointCurve();
 		void SetGlidingTargetWaypointCurve(IGlidingTargetWaypointCurve curve);

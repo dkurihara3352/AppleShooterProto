@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPointAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IShootingTargetSpawnPointAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IShootingTargetSpawnPoint GetSpawnPoint();
 		float GetEventPoint();
 		float GetRelativeRareChance();
 	}
-	public abstract class AbsShootingTargetSpawnPointAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetSpawnPointAdaptor{
+	public abstract class AbsShootingTargetSpawnPointAdaptor: SlickBowShootingMonoBehaviourAdaptor, IShootingTargetSpawnPointAdaptor{
 		protected IShootingTargetSpawnPoint thisSpawnPoint;
 		public IShootingTargetSpawnPoint GetSpawnPoint(){
 			return thisSpawnPoint;

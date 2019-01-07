@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IGameStatsTrackerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IGameStatsTrackerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IGameStatsTracker GetTracker();
 	}
-	public class GameStatsTrackerAdaptor : AppleShooterMonoBehaviourAdaptor, IGameStatsTrackerAdaptor {
+	public class GameStatsTrackerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IGameStatsTrackerAdaptor {
 
 		public override void SetUp(){
 			thisTracker = CreateTracker();

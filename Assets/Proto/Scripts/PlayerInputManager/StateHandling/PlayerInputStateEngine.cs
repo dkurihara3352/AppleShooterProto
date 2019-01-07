@@ -5,7 +5,7 @@ using DKUtility;
 using UISystem;
 
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IPlayerInputHandler{
 		void OnTouch(int touchCount);
 		void OnDrag(ICustomEventData eventData);
@@ -175,13 +175,13 @@ namespace AppleShooterProto{
 	public interface IPlayerInputStateEngineConstArg{
 		IPlayerInputManager playerInputManager{get;}
 		float drawDeltaThreshold{get;}
-		IAppleShooterProcessFactory processFactory{get;}
+		ISlickBowShootingProcessFactory processFactory{get;}
 	}
 	public struct PlayerInputStateEngineConstArg: IPlayerInputStateEngineConstArg{
 		public PlayerInputStateEngineConstArg(
 			IPlayerInputManager playerInputManager,
 			float drawDeltaThreshold,
-			IAppleShooterProcessFactory processFactory
+			ISlickBowShootingProcessFactory processFactory
 		){
 			thisInputManager = playerInputManager;
 			thisDrawDeltaThreshold = drawDeltaThreshold;
@@ -193,7 +193,7 @@ namespace AppleShooterProto{
 		}
 		readonly float thisDrawDeltaThreshold;
 		public float drawDeltaThreshold{get{return thisDrawDeltaThreshold;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+		readonly ISlickBowShootingProcessFactory thisProcessFactory;
+		public ISlickBowShootingProcessFactory processFactory{get{return thisProcessFactory;}}
 	}
 }

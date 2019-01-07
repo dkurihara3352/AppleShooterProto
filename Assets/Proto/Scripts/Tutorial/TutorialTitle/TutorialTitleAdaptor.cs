@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ITutorialTitleAdaptor : IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ITutorialTitleAdaptor : ISlickBowShootingMonoBehaviourAdaptor{
 		ITutorialTitle GetTutorialTitle();
 		float GetShowProcessTime();
 		void SetAlpha(float value);
 	}
-	public class TutorialTitleAdaptor: AppleShooterMonoBehaviourAdaptor, ITutorialTitleAdaptor{
+	public class TutorialTitleAdaptor: SlickBowShootingMonoBehaviourAdaptor, ITutorialTitleAdaptor{
 		public override void SetUp(){
 			thisTutorialTitle = CreateTutorialTitle();
 		}

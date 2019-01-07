@@ -4,15 +4,15 @@ using UnityEngine;
 using DKUtility;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface ISmoothLooker: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ISmoothLooker: ISlickBowShootingSceneObject{
 		void StartSmoothLook();
 		void StopSmoothLook();
 		void SetLookAtTarget(IMonoBehaviourAdaptor target);
 		void RotateToward(Quaternion to, float step);
 		void SetSmoothCoefficient(float k);
 	}
-	public class SmoothLooker : AppleShooterSceneObject, ISmoothLooker {
+	public class SmoothLooker : SlickBowShootingSceneObject, ISmoothLooker {
 		public SmoothLooker(
 			IConstArg arg
 		): base(arg){
@@ -34,7 +34,7 @@ namespace AppleShooterProto{
 		}
 		readonly int thisProcessOrder;
 		public void StartSmoothLook(){
-			thisProcess = thisAppleShooterProcessFactory.CreateSmoothLookProcess(
+			thisProcess = thisSlickBowShootingProcessFactory.CreateSmoothLookProcess(
 				this,
 				thisLookAtTarget,
 				thisSmoothCoefficient,
@@ -52,11 +52,11 @@ namespace AppleShooterProto{
 			thisAdaptor.SetRotation(newRotation);
 		}
 		/*  */
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float smoothCoefficient{get;}
 			int processOrder{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				ISmoothLookerAdaptor adaptor,
 				float smoothCoefficient,

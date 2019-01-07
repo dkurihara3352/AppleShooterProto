@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IPlayerInputState: ISwitchableState, IPlayerInputHandler{
 		string GetName();
 	}
@@ -18,7 +18,7 @@ namespace AppleShooterProto{
 		}
 		readonly protected IPlayerInputStateEngine thisEngine;
 		readonly float thisDrawDeltaThreshold;
-		readonly protected IAppleShooterProcessFactory thisProcessFactory;
+		readonly protected ISlickBowShootingProcessFactory thisProcessFactory;
 		protected bool PointerDeltaIsWithinDrawThreshold(Vector3 velocity){
 			return velocity.sqrMagnitude <= thisDrawDeltaThreshold * thisDrawDeltaThreshold;
 		}
@@ -41,13 +41,13 @@ namespace AppleShooterProto{
 	public interface IPlayerInputStateConstArg{
 		IPlayerInputStateEngine engine{get;}
 		float drawDeltaThreshold{get;}
-		IAppleShooterProcessFactory processFactory{get;}
+		ISlickBowShootingProcessFactory processFactory{get;}
 	}
 	public class PlayerInputStateConstArg: IPlayerInputStateConstArg{
 		public PlayerInputStateConstArg(
 			IPlayerInputStateEngine engine,
 			float drawDeltaThreshold,
-			IAppleShooterProcessFactory processFactory
+			ISlickBowShootingProcessFactory processFactory
 		){
 			thisEngine = engine;
 			thisDrawDeltaThreshold = drawDeltaThreshold;
@@ -57,8 +57,8 @@ namespace AppleShooterProto{
 		public IPlayerInputStateEngine engine{get{return thisEngine;}}
 		readonly float thisDrawDeltaThreshold;
 		public float drawDeltaThreshold{get{return thisDrawDeltaThreshold;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+		readonly ISlickBowShootingProcessFactory thisProcessFactory;
+		public ISlickBowShootingProcessFactory processFactory{get{return thisProcessFactory;}}
 	}
 	public abstract class AbsPlayerInputPointerUpState: AbsPlayerInputState{
 		public AbsPlayerInputPointerUpState(

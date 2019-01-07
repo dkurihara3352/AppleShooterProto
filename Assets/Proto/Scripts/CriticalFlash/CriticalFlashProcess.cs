@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ICriticalFlashProcess: IProcess{}
 	public class CriticalFlashProcess : AbsConstrainedProcess, ICriticalFlashProcess {
 		public CriticalFlashProcess(

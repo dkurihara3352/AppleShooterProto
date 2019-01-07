@@ -2,7 +2,7 @@
 // using System.Collections.Generic;
 // using UnityEngine;
 
-// namespace AppleShooterProto{
+// namespace SlickBowShooting{
 // 	public class DoubleHandleCurveControlPoint : CurveControlPoint, ICurveControlPoint {
 
 // 		Transform foreHandle;

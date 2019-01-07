@@ -3,7 +3,7 @@
 // using UnityEngine;
 // using DKUtility;
 
-// namespace AppleShooterProto{
+// namespace SlickBowShooting{
 // 	public interface IHeatImageWaitForNextAdditionProcess: IProcess{}
 // 	public class HeatImageWaitForNextAdditionProcess : AbsConstrainedProcess, IHeatImageWaitForNextAdditionProcess {
 		

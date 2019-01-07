@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility.CurveUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 
-	public interface IWaypointCurveAdaptor: IAppleShooterMonoBehaviourAdaptor, IDrawableCurve{
+	public interface IWaypointCurveAdaptor: ISlickBowShootingMonoBehaviourAdaptor, IDrawableCurve{
 		IWaypointCurve GetWaypointCurve();
 		float GetTotalDistance();
 		Vector3 GetPositionOnCurve(float normalizedPosition);
 	}
-	public abstract class AbsWaypointCurveAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointCurveAdaptor{
+	public abstract class AbsWaypointCurveAdaptor : SlickBowShootingMonoBehaviourAdaptor, IWaypointCurveAdaptor{
 		public Color lineColor = new Color(.2f, 1f, 1f, 1f);
 		public Color GetLineColor(){
 			return lineColor;

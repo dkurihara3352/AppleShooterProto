@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IMainMenuButtonCluster: IAlphaVisibilityTogglableUIElement{
 		void SetEndGamePane(IEndGamePane pane);
 		void EnableInput();

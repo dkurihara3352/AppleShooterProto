@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IPCWaypointsManager: IWaypointCurveCycleManager{
 		List<IPCWaypointCurve> GetAllPCWaypointCurves();
 		IPCWaypointCurve GetCurrentPCCurve();

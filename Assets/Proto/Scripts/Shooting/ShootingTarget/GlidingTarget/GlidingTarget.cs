@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IGlidingTarget: IShootingTarget{
 		void SetWaypointsFollower(IWaypointsFollower follower);
 		void SetGlidingTargetReserve(IGlidingTargetReserve reserve);

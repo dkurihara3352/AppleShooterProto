@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IWaypointCurveCycleManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IWaypointCurveCycleManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IWaypointCurveCycleManager GetWaypointsManager();
 	}
-	public class WaypointCurveCycleManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IWaypointCurveCycleManagerAdaptor {
+	public class WaypointCurveCycleManagerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IWaypointCurveCycleManagerAdaptor {
 		
 		public override void SetUp(){
 			MakeSureCycleStartIndexIsValid();

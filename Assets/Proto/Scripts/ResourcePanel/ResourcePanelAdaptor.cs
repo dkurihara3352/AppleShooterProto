@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IResourcePanelAdaptor: IUIAdaptor{
 		IResourcePanel GetResourcePanel();
 		float GetAlpha();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ILandedArrowReserve: ISceneObjectReserve<ILandedArrow>{
 		void ActivateLandedArrowAt(
 			// IShootingTarget target,

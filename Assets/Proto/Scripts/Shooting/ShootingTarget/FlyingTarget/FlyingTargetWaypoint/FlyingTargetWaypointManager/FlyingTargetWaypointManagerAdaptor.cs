@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IFlyingTargetWaypointManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IFlyingTargetWaypointManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IFlyingTargetWaypointManager GetFlyingTargetWaypointManager();
 	}
-	public class FlyingTargetWaypointManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IFlyingTargetWaypointManagerAdaptor{
+	public class FlyingTargetWaypointManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, IFlyingTargetWaypointManagerAdaptor{
 		public override void SetUp(){
 			thisManager = CreateManager();
 			thisWaypointAdaptors = CollectWaypointAdaptors();

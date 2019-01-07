@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using LeTai.Asset.TranslucentImage;
 
-namespace AppleShooterProto{
-	public interface IFrostManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IFrostManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IFrostManager GetFrostManager();
 		void SetFrostValue(float value);
 		float GetFrostValue();
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		float GetProcessTime();
 		AnimationCurve GetProcessCurve();
 	}
-	public class FrostManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IFrostManagerAdaptor{
+	public class FrostManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, IFrostManagerAdaptor{
 		public override void SetUp(){
 			FrostManager.IConstArg arg = new FrostManager.ConstArg(
 				this

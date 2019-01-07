@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility.CurveUtility;
 
-namespace AppleShooterProto{
-	public interface IWaypointCurve: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IWaypointCurve: ISlickBowShootingSceneObject{
 
 		void CalculateCurve();
 
@@ -36,7 +36,7 @@ namespace AppleShooterProto{
 		/*  */
 			void PrintCurve();
 	}
-	public abstract class AbsWaypointCurve: AppleShooterSceneObject, IWaypointCurve{
+	public abstract class AbsWaypointCurve: SlickBowShootingSceneObject, IWaypointCurve{
 		/* SetUp */
 			public AbsWaypointCurve(
 				IConstArg arg
@@ -253,11 +253,11 @@ namespace AppleShooterProto{
 			public virtual void OnUnreserve(){
 			}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				ICurveControlPoint[] controlPoints{get;}
 				ICurvePoint[] curvePoints{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IWaypointCurveAdaptor adaptor,
 					ICurveControlPoint[] controlPoints,

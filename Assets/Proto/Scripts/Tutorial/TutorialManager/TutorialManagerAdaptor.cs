@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface ITutorialManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ITutorialManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ITutorialManager GetTutorialManager();
 	}
-	public class TutorialManagerAdaptor: AppleShooterMonoBehaviourAdaptor, ITutorialManagerAdaptor{
+	public class TutorialManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, ITutorialManagerAdaptor{
 		public override void SetUp(){
 			thisTutorialManager = CreateTutorialManager();
 		}

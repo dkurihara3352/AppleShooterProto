@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IShootingTargetReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IShootingTargetReserveAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IShootingTargetReserve GetReserve();
 		int GetSpawnValue();
 		TargetType GetTargetType();
@@ -11,7 +11,7 @@ namespace AppleShooterProto{
 		TargetData GetTargetDataForTier(int tier);
 		float GetTargetTypeRareProbability();
 	}
-	public abstract class AbsShootingTargetReserveAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingTargetReserveAdaptor {
+	public abstract class AbsShootingTargetReserveAdaptor : SlickBowShootingMonoBehaviourAdaptor, IShootingTargetReserveAdaptor {
 		public override void SetUpReference(){
 			IDestroyedTargetReserve destroyedTargetReserve = destroyedTargetReserveAdaptor.GetDestroyedTargetReserve();
 			thisReserve.SetDestroyedTargetReserve(destroyedTargetReserve);

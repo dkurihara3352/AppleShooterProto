@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface IDestroyedTargetAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IDestroyedTargetAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IDestroyedTarget GetDestroyedTarget();
 
 		void SetDestroyedTargetReserveAdaptor(IDestroyedTargetReserveAdaptor adaptor);
@@ -20,7 +20,7 @@ namespace AppleShooterProto{
 		int GetIndex();
 		void SetMaterial(Material mat);
 	}
-	public class DestroyedTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IDestroyedTargetAdaptor{
+	public class DestroyedTargetAdaptor: SlickBowShootingMonoBehaviourAdaptor, IDestroyedTargetAdaptor{
 		public override void SetUp(){
 			base.SetUp();
 			thisDestroyedTarget = CreateDestroyedTarget();
@@ -66,7 +66,7 @@ namespace AppleShooterProto{
 			IDestroyedTargetParticleProcess thisProcess;
 			void StartParticleProcess(){
 				StopParticleProcess();
-				thisProcess = thisAppleShooterProcessFactory.CreateDestroyedTargetParticleProcess(
+				thisProcess = thisSlickBowShootingProcessFactory.CreateDestroyedTargetParticleProcess(
 					this,
 					particleSystemLifeTime
 				);

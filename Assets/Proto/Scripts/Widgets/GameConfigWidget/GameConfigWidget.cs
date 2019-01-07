@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityBase;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IGameConfigWidget: IAppleShooterSceneObject, IActivationStateImplementor, IActivationStateHandler{
+namespace SlickBowShooting{
+	public interface IGameConfigWidget: ISlickBowShootingSceneObject, IActivationStateImplementor, IActivationStateHandler{
 		void SetPlayerDataManager(IPlayerDataManager manager);
 		void SetInputScroller(ICoreGameplayInputScroller scorller);
 		void SetGameConfigPopText(IPopText popText);
@@ -23,7 +23,7 @@ namespace AppleShooterProto{
 		void SetSFXVolume(float volume);
 	}
 
-	public class GameConfigWidget: AppleShooterSceneObject, IGameConfigWidget{
+	public class GameConfigWidget: SlickBowShootingSceneObject, IGameConfigWidget{
 		public GameConfigWidget(IConstArg arg): base(arg){
 			thisActivationStateEngine = new ActivationStateEngine(this);
 		}

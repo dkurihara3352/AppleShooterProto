@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IArrowReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IArrowReserveAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IArrowReserve GetArrowReserve();
 	}
-	public class ArrowReserveAdaptor: AppleShooterMonoBehaviourAdaptor, IArrowReserveAdaptor{
+	public class ArrowReserveAdaptor: SlickBowShootingMonoBehaviourAdaptor, IArrowReserveAdaptor{
 		public override void SetUp(){
 			thisReserve = CreateArrowReserve();
 			thisArrowAdaptors = CreateArrowAdaptors();

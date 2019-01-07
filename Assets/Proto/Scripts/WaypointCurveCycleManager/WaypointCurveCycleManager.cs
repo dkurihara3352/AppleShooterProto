@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IWaypointCurveCycleManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IWaypointCurveCycleManager: ISlickBowShootingSceneObject{
 
 		void SetWaypointsFollower(IWaypointsFollower follower);
 		void CheckAndClearWaypointsFollower(IWaypointsFollower follower);
@@ -28,7 +28,7 @@ namespace AppleShooterProto{
 		void RemoveWaypointCurveToReserve(IWaypointCurve curve);
 	}
 
-	public class WaypointCurveCycleManager : AppleShooterSceneObject, IWaypointCurveCycleManager{
+	public class WaypointCurveCycleManager : SlickBowShootingSceneObject, IWaypointCurveCycleManager{
 		/* SetUp */
 			public WaypointCurveCycleManager(
 				IConstArg arg
@@ -256,14 +256,14 @@ namespace AppleShooterProto{
 				return thisCurveSequence.IndexOf(currentCurve);
 			}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				Transform curveReserveTransform{get;}
 				int curvesCountInSequence{get;}
 				Vector3 initialCurvePosition{get;}
 				Quaternion initialCurveRotation{get;}
 				int cycleStartIndex{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IWaypointCurveCycleManagerAdaptor adaptor,
 					Transform curveReserveTransform,

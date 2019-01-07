@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IPrintStringWaypointEventAdaptor: IAppleShooterMonoBehaviourAdaptor, IWaypointEventAdaptor{
+namespace SlickBowShooting{
+	public interface IPrintStringWaypointEventAdaptor: ISlickBowShootingMonoBehaviourAdaptor, IWaypointEventAdaptor{
 	}
-	public class PrintStringWaypointEventAdaptor : AppleShooterMonoBehaviourAdaptor, IPrintStringWaypointEventAdaptor {
+	public class PrintStringWaypointEventAdaptor : SlickBowShootingMonoBehaviourAdaptor, IPrintStringWaypointEventAdaptor {
 		public string stringToPrint;
 		public float eventPoint;
 		public WaypointsFollowerAdaptor waypointsFollowerAdaptor;

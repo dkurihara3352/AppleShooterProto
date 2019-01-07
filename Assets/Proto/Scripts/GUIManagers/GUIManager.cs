@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using System.Text.RegularExpressions;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public class GUIManager : AbsGUIManager {
 		// void Awake(){
 		// 	CalcRects();

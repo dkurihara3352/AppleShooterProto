@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IScoreImage: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IScoreImage: ISlickBowShootingSceneObject{
 		void UpdateImage(int score);
 	}
-	public class ScoreImage : AppleShooterSceneObject, IScoreImage {
+	public class ScoreImage : SlickBowShootingSceneObject, IScoreImage {
 		public ScoreImage(
 			IConstArg arg
 		): base(
@@ -21,8 +21,8 @@ namespace AppleShooterProto{
 				return (IScoreImageAdaptor)thisAdaptor;
 			}
 		}
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{}
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IScoreImageAdaptor adaptor
 			): base(

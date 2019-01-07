@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace AppleShooterProto{
-	public interface IScoreManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IScoreManager: ISlickBowShootingSceneObject{
 		void SetScoreImage(IScoreImage image);
 		void AddScore(int score);
 		void ClearScore();
@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 		void SetHighScore(int score);
 		int GetHighScore();
 	}
-	public class ScoreManager : AppleShooterSceneObject, IScoreManager {
+	public class ScoreManager : SlickBowShootingSceneObject, IScoreManager {
 
 		public ScoreManager(
 			IConstArg arg
@@ -53,8 +53,8 @@ namespace AppleShooterProto{
 			return thisHighScore;
 		}
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{}
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IScoreManagerAdaptor adaptor
 			): base(

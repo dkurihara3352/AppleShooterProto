@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IHeatManagerStateHandler{
 		void StartCountingDown();
 		void StopCountingDown();
@@ -38,7 +38,7 @@ namespace AppleShooterProto{
 		public void SwitchToCountingDownState(){
 			TrySwitchState(thisCountingDownState);
 		}
-		IAppleShooterProcessFactory thisProcessFactory;
+		ISlickBowShootingProcessFactory thisProcessFactory;
 		IHeatCountDownProcess thisCountDownProcess;
 		float thisHeatDecayRate;
 		public void StartCountDownProcess(){
@@ -119,21 +119,21 @@ namespace AppleShooterProto{
 		/* ConstArg */
 			public interface IConstArg{
 				IHeatManager heatManager{get;}
-				IAppleShooterProcessFactory processFactory{get;}
+				ISlickBowShootingProcessFactory processFactory{get;}
 				float heatDecayRate{get;}
 			}
 			public class ConstArg: IConstArg{
 				public ConstArg(
 					IHeatManager heatManager,
 					float heatDecayRate,
-					IAppleShooterProcessFactory processFactory
+					ISlickBowShootingProcessFactory processFactory
 				){
 					thisHeatManager = heatManager;
 					thisHeatDecayRate = heatDecayRate;
 					thisProcessFactory = processFactory;
 				}
-				readonly IAppleShooterProcessFactory thisProcessFactory;
-				public IAppleShooterProcessFactory processFactory{
+				readonly ISlickBowShootingProcessFactory thisProcessFactory;
+				public ISlickBowShootingProcessFactory processFactory{
 					get{return thisProcessFactory;}
 				}
 				readonly IHeatManager thisHeatManager;

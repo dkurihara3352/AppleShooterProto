@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IGlidingTargetStartGlideWaypointEventAdaptor: IWaypointEventAdaptor{
 
 	}
-	public class GlidingTargetStartGlideWaypointEventAdaptor: AppleShooterMonoBehaviourAdaptor, IGlidingTargetStartGlideWaypointEventAdaptor{
+	public class GlidingTargetStartGlideWaypointEventAdaptor: SlickBowShootingMonoBehaviourAdaptor, IGlidingTargetStartGlideWaypointEventAdaptor{
 		IGlidingTargetStartGlideWaypointEvent thisEvent;
 		public IWaypointEvent GetWaypointEvent(){
 			return thisEvent;

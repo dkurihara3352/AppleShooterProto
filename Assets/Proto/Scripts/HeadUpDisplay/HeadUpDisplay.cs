@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityBase;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IHeadUpDisplay: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IHeadUpDisplay: ISlickBowShootingSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
 	}
-	public class HeadUpDisplay : AppleShooterSceneObject, IHeadUpDisplay {
+	public class HeadUpDisplay : SlickBowShootingSceneObject, IHeadUpDisplay {
 		public HeadUpDisplay(
 			IConstArg arg
 		): base(
@@ -84,9 +84,9 @@ namespace AppleShooterProto{
 		}
 
 		/*  */
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IHeadUpDisplayAdaptor adaptor
 			): base(

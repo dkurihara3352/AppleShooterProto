@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IWaypointEventManager{
 		void CheckForWaypointEvent(float normalizedPositionOnCurve);
 		void SetNewCurve(IWaypointCurve curve);

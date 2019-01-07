@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace AppleShooterProto{
-	public interface IFadeImageAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IFadeImageAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IFadeImage GetFadeImage();
 		void SetAlpha(float alpha);
 	}
-	public class FadeImageAdaptor: AppleShooterMonoBehaviourAdaptor, IFadeImageAdaptor{
+	public class FadeImageAdaptor: SlickBowShootingMonoBehaviourAdaptor, IFadeImageAdaptor{
 		public override void SetUp(){
 			FadeImage.IConstArg arg = new FadeImage.ConstArg(
 				this

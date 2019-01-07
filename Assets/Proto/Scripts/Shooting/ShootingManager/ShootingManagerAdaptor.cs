@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IShootingManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IShootingManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IShootingManager GetShootingManager();
 		float GetGravity();
 		AnimationCurve GetBowDrawProfileCurve();
@@ -22,7 +22,7 @@ namespace AppleShooterProto{
 		void StopDrawSound();
 		void PauseDrawSound();
 	}
-	public class ShootingManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingManagerAdaptor{
+	public class ShootingManagerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IShootingManagerAdaptor{
 
 		public int drawProcessOrder;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 using UnityBase;
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ISmoothFollowTargetProcess: IProcess{
 		void UpdateFollowTarget(IMonoBehaviourAdaptor newTarget);
 	}

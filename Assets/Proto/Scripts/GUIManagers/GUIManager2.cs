@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public class GUIManager2 : AbsGUIManager {
 
 		public void Awake(){
@@ -51,7 +51,7 @@ namespace AppleShooterProto{
 		Rect sTR_1;
 		Rect sTR_2;
 		Rect sTR_3;
-		public AppleShooterMonoBehaviourAdaptorManager monoBehaviourAdaptorManager;
+		public SlickBowShootingMonoBehaviourAdaptorManager monoBehaviourAdaptorManager;
 		public FlyingTargetReserveAdaptor flyingTargetReserveAdaptor;
 		/*  */
 		bool thisSystemIsReady = false;

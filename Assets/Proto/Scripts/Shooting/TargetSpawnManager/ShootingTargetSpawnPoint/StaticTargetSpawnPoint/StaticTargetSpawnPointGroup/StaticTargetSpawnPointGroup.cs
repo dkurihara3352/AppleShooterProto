@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IStaticTargetSpawnPointGroup: IShootingTargetSpawnPointGroup{
 	}
 	public class StaticTargetSpawnPointGroup : AbsShootingTargetSpawnPointGroup, IStaticTargetSpawnPointGroup {

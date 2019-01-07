@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IHeatImage: IAppleShooterSceneObject, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IHeatImage: ISlickBowShootingSceneObject, IProcessHandler{
 
 		void SetHeatManager(IHeatManager manager);
 
@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 		float GetComboValue();
 		bool IsInCombo();
 	}
-	public class HeatImage : AppleShooterSceneObject, IHeatImage {
+	public class HeatImage : SlickBowShootingSceneObject, IHeatImage {
 		public HeatImage(
 			IConstArg arg
 		): base(
@@ -126,9 +126,9 @@ namespace AppleShooterProto{
 			return thisIsInCombo;
 		}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IHeatImageAdaptor adaptor
 				): base(adaptor){

@@ -2,7 +2,7 @@
 // using System.Collections.Generic;
 // using UnityEngine;
 // using UnityBase;
-// namespace AppleShooterProto{
+// namespace SlickBowShooting{
 // 	public interface IGlidingTargetWaypointCurvePoolAdaptor: ISceneObjectPoolAdaptor<IGlidingTargetWaypointCurveAdaptor>{}
 // 	public class GlidingTargetWaypointCurvePoolAdaptor : SceneObjectPoolAdaptor<IGlidingTargetWaypointCurveAdaptor>, IGlidingTargetWaypointCurvePoolAdaptor{
 

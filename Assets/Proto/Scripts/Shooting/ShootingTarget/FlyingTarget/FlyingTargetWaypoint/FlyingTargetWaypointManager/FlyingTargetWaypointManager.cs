@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IFlyingTargetWaypointManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IFlyingTargetWaypointManager: ISlickBowShootingSceneObject{
 		IFlyingTargetWaypoint[] GetWaypoints();
 		void SetWaypoints(IFlyingTargetWaypoint[] waypoints);
 	}
-	public class FlyingTargetWaypointManager : AppleShooterSceneObject, IFlyingTargetWaypointManager {
+	public class FlyingTargetWaypointManager : SlickBowShootingSceneObject, IFlyingTargetWaypointManager {
 		public FlyingTargetWaypointManager(
 			IConstArg arg
 		): base(arg){

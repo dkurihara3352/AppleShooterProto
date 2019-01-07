@@ -5,8 +5,8 @@ using UnityBase;
 using DKUtility;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IGameplayWidget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IGameplayWidget: ISlickBowShootingSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
 		void SetGameplayUIElement(IGameplayUIElement uiElement);
 		void SetPlayerCharacterWaypointsFollower(IPlayerCharacterWaypointsFollower follower);
 		void SetGameStatsTracker(IGameStatsTracker tracker);
@@ -38,7 +38,7 @@ namespace AppleShooterProto{
 		void DeactivateMainMenu();
 		void ToggleMainMenu();
 	}
-	public class GameplayWidget: AppleShooterSceneObject, IGameplayWidget{
+	public class GameplayWidget: SlickBowShootingSceneObject, IGameplayWidget{
 		public GameplayWidget(IConstArg arg): base(arg){
 			thisActivationEngine = new ActivationStateEngine(this);
 			thisWaitAndStartProcessSuite = new ProcessSuite(

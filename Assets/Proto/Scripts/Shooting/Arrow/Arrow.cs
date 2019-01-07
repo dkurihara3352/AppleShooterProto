@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IArrow: IAppleShooterSceneObject, IArrowStateHandler, IArrowStateImplementor{
+namespace SlickBowShooting{
+	public interface IArrow: ISlickBowShootingSceneObject, IArrowStateHandler, IArrowStateImplementor{
 		void SetLaunchPoint(ILaunchPoint launchPoint);
 		void SetShootingManager(IShootingManager shootingManager);
 		void SetArrowReserve(IArrowReserve reserve);
@@ -38,7 +38,7 @@ namespace AppleShooterProto{
 
 		Vector3 GetPrevPosition();
 	}
-	public class Arrow : AppleShooterSceneObject, IArrow{
+	public class Arrow : SlickBowShootingSceneObject, IArrow{
 		/* Setup */
 			public Arrow(
 				IConstArg arg
@@ -140,7 +140,7 @@ namespace AppleShooterProto{
 			IArrowFlightProcess thisFlightProcess;
 			public void StartFlight(){
 				StopFlight();
-				thisFlightProcess = thisAppleShooterProcessFactory.CreateArrowFlightProcess(
+				thisFlightProcess = thisSlickBowShootingProcessFactory.CreateArrowFlightProcess(
 					this,
 					thisShootingManager.GetFlightSpeed(),
 					thisShootingManager.GetFlightDirection(),
@@ -219,10 +219,10 @@ namespace AppleShooterProto{
 				thisNormalizedDraw = drawValue;
 			}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				int index{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
 					IArrowAdaptor adaptor

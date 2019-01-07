@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IBowStarsPane: IUIElement, IProcessHandler{
 		void UpdateLevel(int level);
 		void StartUpdateLevelProcess(int level);

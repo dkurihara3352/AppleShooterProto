@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IPlayerInputManager: IPlayerInputHandler{
 		void SetPlayerCamera(IPlayerCamera playerCamera);
 		void SetInputScroller(ICoreGameplayInputScroller inputScroller);
@@ -184,14 +184,14 @@ namespace AppleShooterProto{
 	public interface IPlayerInputManagerConstArg{
 		float defaultFOV{get;}
 		float drawDeltaThreshold{get;}
-		IAppleShooterProcessFactory processFactory{get;}
+		ISlickBowShootingProcessFactory processFactory{get;}
 		IPlayerInputManagerAdaptor adaptor{get;}
 	}
 	public struct PlayerInputManagerConstArg: IPlayerInputManagerConstArg{
 		public PlayerInputManagerConstArg(
 			float defaultFOV,
 			float drawDeltaThreshold,
-			IAppleShooterProcessFactory processFactory,
+			ISlickBowShootingProcessFactory processFactory,
 			IPlayerInputManagerAdaptor adaptor
 
 		){
@@ -204,8 +204,8 @@ namespace AppleShooterProto{
 		public float defaultFOV{get{return thisDefaultFOV;}}
 		readonly float thisDrawDeltaThreshold;
 		public float drawDeltaThreshold{get{return thisDrawDeltaThreshold;}}
-		readonly IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory processFactory{get{return thisProcessFactory;}}
+		readonly ISlickBowShootingProcessFactory thisProcessFactory;
+		public ISlickBowShootingProcessFactory processFactory{get{return thisProcessFactory;}}
 		readonly IPlayerInputManagerAdaptor thisAdaptor;
 		public IPlayerInputManagerAdaptor adaptor{get{return thisAdaptor;}}
 	}

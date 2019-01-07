@@ -4,12 +4,12 @@ using UnityEngine;
 using DKUtility;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface ISmoothLookerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ISmoothLookerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ISmoothLooker GetSmoothLooker();
 		void LookAt(Vector3 position);
 	}
-	public class SmoothLookerAdaptor: AppleShooterMonoBehaviourAdaptor, ISmoothLookerAdaptor{
+	public class SmoothLookerAdaptor: SlickBowShootingMonoBehaviourAdaptor, ISmoothLookerAdaptor{
 		public float smoothCoefficient = 1f;
 		public MonoBehaviourAdaptor lookAtTarget;
 		public int processOrder = 100;

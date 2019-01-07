@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IArrowHitDetector: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IArrowHitDetector: ISlickBowShootingSceneObject{
 		void Hit(IArrow arrow);
 		void AddLandedArrow(ILandedArrow arrow);
 		void RemoveLandedArrow(ILandedArrow arrow);
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		void ToggleCollider(bool toggle);
 		bool ShouldSpawnLandedArrow();
 	}
-	public abstract class ArrowHitDetector : AppleShooterSceneObject, IArrowHitDetector {
+	public abstract class ArrowHitDetector : SlickBowShootingSceneObject, IArrowHitDetector {
 		public ArrowHitDetector(IConstArg arg): base(arg){}
 		IArrowHitDetectorAdaptor thisArrowHitDetectorAdaptor{
 			get{
@@ -48,8 +48,8 @@ namespace AppleShooterProto{
 		public virtual bool ShouldSpawnLandedArrow(){
 			return true;
 		}
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{}
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IArrowHitDetectorAdaptor adaptor
 			): base(adaptor){}

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ICurrencyManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ICurrencyManager: ISlickBowShootingSceneObject{
 		void SetGainedCurrencyImage(IGainedCurrencyImage image);
 		void AddGainedCurrency(int addedCurrency);
 		int GetGainedCurrency();
 		void ClearGainedCurrency();
 	}
-	public class CurrencyManager: AppleShooterSceneObject, ICurrencyManager{
+	public class CurrencyManager: SlickBowShootingSceneObject, ICurrencyManager{
 
 		public CurrencyManager(IConstArg arg): base(arg){}
 

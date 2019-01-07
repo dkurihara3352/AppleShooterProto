@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public class ProtoGameManager : MonoBehaviour{
 		bool thisGameIsReady = false;
 		public bool GameIsReady(){
@@ -42,7 +42,7 @@ namespace AppleShooterProto{
 			mbAdaptorManager.SetUpAdaptorReference();
 			mbAdaptorManager.FinalizeSetUp();
 		}
-		public AppleShooterMonoBehaviourAdaptorManager mbAdaptorManager;
+		public SlickBowShootingMonoBehaviourAdaptorManager mbAdaptorManager;
 		void SetUpSceneObjectRefs(){
 			thisPCWaypointsManager = pcWaypointsManagerAdaptor.GetPCWaypointsManager();
 			thisPlayerCharacterWaypointsFollower = GetPlayerCharacterWaypointsFollower();

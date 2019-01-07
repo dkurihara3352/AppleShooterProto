@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IFlyingTargetWaypoint: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IFlyingTargetWaypoint: ISlickBowShootingSceneObject{
 	}
-	public class FlyingTargetWaypoint: AppleShooterSceneObject, IFlyingTargetWaypoint{
+	public class FlyingTargetWaypoint: SlickBowShootingSceneObject, IFlyingTargetWaypoint{
 		public FlyingTargetWaypoint(
 			IConstArg arg
 		): base(
@@ -13,9 +13,9 @@ namespace AppleShooterProto{
 		){
 		}
 		/* Const */
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IFlyingTargetWaypointAdaptor adaptor
 			): base(

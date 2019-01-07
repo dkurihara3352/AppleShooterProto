@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IPopText: IUIElement, IProcessHandler{
 		void Pop(
 			string text,

@@ -4,7 +4,7 @@ using UnityEngine;
 using DKUtility;
 using UnityBase;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IStaticShootingTargetReserveAdaptor: IShootingTargetReserveAdaptor{
 		IStaticShootingTargetReserve GetStaticShootingTargetReserve();
 	}

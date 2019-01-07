@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IADStatusPopUp: IPopUp{
 		void SetText(string text);
 		void SetDoubleEarnedCrystalsADManager(IADManager adManager);

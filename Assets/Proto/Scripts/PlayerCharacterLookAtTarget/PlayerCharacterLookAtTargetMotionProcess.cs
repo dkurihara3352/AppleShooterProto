@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IPlayerCharacterLookAtTargetMotionProcess: IProcess{}
 	public class PlayerCharacterLookAtTargetMotionProcess: AbsProcess, IPlayerCharacterLookAtTargetMotionProcess{
 		public PlayerCharacterLookAtTargetMotionProcess(

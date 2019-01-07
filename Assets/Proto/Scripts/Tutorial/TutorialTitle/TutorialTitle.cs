@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityBase;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface ITutorialTitle: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, ITutorialBaseTapListener, IProcessHandler{
+namespace SlickBowShooting{
+	public interface ITutorialTitle: ISlickBowShootingSceneObject, IActivationStateHandler, IActivationStateImplementor, ITutorialBaseTapListener, IProcessHandler{
 		void SetTutorialBaseUIElement(ITutorialBaseUIElement baseUIElement);
 		void SetTutorialManager(ITutorialManager manager);
 	}
-	public class TutorialTitle: AppleShooterSceneObject, ITutorialTitle{
+	public class TutorialTitle: SlickBowShootingSceneObject, ITutorialTitle{
 		public TutorialTitle(IConstArg arg)	: base(arg){
 			thisActivationStateEngine = new ActivationStateEngine(this);
 			thisProcessSuite = new ProcessSuite(

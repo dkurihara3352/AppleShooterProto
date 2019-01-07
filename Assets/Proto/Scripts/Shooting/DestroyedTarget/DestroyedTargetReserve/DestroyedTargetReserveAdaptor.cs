@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
-namespace AppleShooterProto{
-	public interface IDestroyedTargetReserveAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IDestroyedTargetReserveAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IDestroyedTargetReserve GetDestroyedTargetReserve();
 	}
-	public class DestroyedTargetReserveAdaptor : AppleShooterMonoBehaviourAdaptor, IDestroyedTargetReserveAdaptor {
+	public class DestroyedTargetReserveAdaptor : SlickBowShootingMonoBehaviourAdaptor, IDestroyedTargetReserveAdaptor {
 
 		public override void SetUp(){
 			thisReserve = CreateDestroyedTargetReserve();

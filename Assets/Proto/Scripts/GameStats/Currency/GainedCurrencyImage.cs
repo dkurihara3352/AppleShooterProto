@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IGainedCurrencyImage: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IGainedCurrencyImage: ISlickBowShootingSceneObject{
 		void UpdateCurrencyText(int currency);
 	}
-	public class GainedCurrencyImage: AppleShooterSceneObject, IGainedCurrencyImage{
+	public class GainedCurrencyImage: SlickBowShootingSceneObject, IGainedCurrencyImage{
 		public GainedCurrencyImage(IConstArg arg): base(arg){}
 		IGainedCurrencyImageAdaptor thisGainedCurrencyImageAdaptor{
 			get{

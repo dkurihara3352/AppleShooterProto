@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IFollowWaypointProcess: IProcess{
 		float GetNormalizedPositionOnCurve();
 		void SetTimeScale(float timeScale);

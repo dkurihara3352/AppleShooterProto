@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IColorSchemeManager: IAppleShooterSceneObject, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IColorSchemeManager: ISlickBowShootingSceneObject, IProcessHandler{
 		void ChangeColorScheme(int index, float time);
 	}
-	public class ColorSchemeManager: AppleShooterSceneObject, IColorSchemeManager{
+	public class ColorSchemeManager: SlickBowShootingSceneObject, IColorSchemeManager{
 		public ColorSchemeManager(IConstArg arg): base(arg){
 			thisChangeColorSchemeProcessSuite = new ProcessSuite(
 				thisProcessManager,

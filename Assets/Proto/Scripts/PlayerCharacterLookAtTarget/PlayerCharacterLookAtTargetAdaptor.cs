@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IPlayerCharacterLookAtTargetAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IPlayerCharacterLookAtTargetAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IPlayerCharacterLookAtTarget GetLookAtTarget();
 	}
-	public class PlayerCharacterLookAtTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IPlayerCharacterLookAtTargetAdaptor{
+	public class PlayerCharacterLookAtTargetAdaptor: SlickBowShootingMonoBehaviourAdaptor, IPlayerCharacterLookAtTargetAdaptor{
 		IPlayerCharacterLookAtTarget thisLookAtTarget;
 		public int processOrder;
 		public override void SetUp(){

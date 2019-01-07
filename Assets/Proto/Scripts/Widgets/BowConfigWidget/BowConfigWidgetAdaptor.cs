@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IBowConfigWidgetAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IBowConfigWidgetAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IBowConfigWidget GetBowConfigWidget();
 	}
-	public class BowConfigWidgetAdaptor: AppleShooterMonoBehaviourAdaptor, IBowConfigWidgetAdaptor{
+	public class BowConfigWidgetAdaptor: SlickBowShootingMonoBehaviourAdaptor, IBowConfigWidgetAdaptor{
 		public override void SetUp(){
 			thisWidget = CreateBowConfigWidget();
 		}

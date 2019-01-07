@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IShootingManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IShootingManager: ISlickBowShootingSceneObject{
 
 		void SetInputManager(IPlayerInputManager inputManager);
 		void SetLaunchPoint(ILaunchPoint launchPoint);
@@ -65,7 +65,7 @@ namespace AppleShooterProto{
 
 		string GetDebugString();
 	}
-	public class ShootingManager : AppleShooterSceneObject, IShootingManager {
+	public class ShootingManager : SlickBowShootingSceneObject, IShootingManager {
 		/* SetUp */
 			public ShootingManager(
 				IConstArg arg
@@ -124,7 +124,7 @@ namespace AppleShooterProto{
 		/* Draw */
 			public void StartDraw(){
 				StopDraw();
-				thisDrawProcess = thisAppleShooterProcessFactory.CreateDrawProcess(
+				thisDrawProcess = thisSlickBowShootingProcessFactory.CreateDrawProcess(
 					this,
 					thisDrawProcessOrder
 				);
@@ -369,7 +369,7 @@ namespace AppleShooterProto{
 
 					thisShotInBuffer = new Shot(arrow);
 					if(thisShootingProcess == null){
-						thisShootingProcess = thisAppleShooterProcessFactory.CreateShootingProcess(
+						thisShootingProcess = thisSlickBowShootingProcessFactory.CreateShootingProcess(
 							this,
 							thisFireRate
 						);
@@ -461,7 +461,7 @@ namespace AppleShooterProto{
 				MarkAimNotDone();
 			}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				int drawProcessOrder{get;}
 
 				AnimationCurve bowDrawProfileCurve{get;}
@@ -475,7 +475,7 @@ namespace AppleShooterProto{
 
 				float flightTime{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					IShootingManagerAdaptor adaptor,
 

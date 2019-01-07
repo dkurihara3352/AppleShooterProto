@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
-	public interface IScoreImageAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IScoreImageAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IScoreImage GetScoreImage();
 		void SetText(string scoreText);
 	}
-	public class ScoreImageAdaptor : AppleShooterMonoBehaviourAdaptor, IScoreImageAdaptor {
+	public class ScoreImageAdaptor : SlickBowShootingMonoBehaviourAdaptor, IScoreImageAdaptor {
 
 		public override void SetUp(){
 			thisScoreImage = CreateScoreImage();

@@ -4,22 +4,22 @@ using UnityEngine;
 using UnityBase;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IAppleShooterMonoBehaviourAdaptorManager: IUISystemMonoBehaviourAdaptorManager{
-		IAppleShooterProcessFactory GetAppleShooterProcessFactory();
+namespace SlickBowShooting{
+	public interface ISlickBowShootingMonoBehaviourAdaptorManager: IUISystemMonoBehaviourAdaptorManager{
+		ISlickBowShootingProcessFactory GetSlickBowShootingProcessFactory();
 	}
-	public class AppleShooterMonoBehaviourAdaptorManager : MonoBehaviourAdaptorManager, IAppleShooterMonoBehaviourAdaptorManager {
+	public class SlickBowShootingMonoBehaviourAdaptorManager : MonoBehaviourAdaptorManager, ISlickBowShootingMonoBehaviourAdaptorManager {
 		void Awake(){
 			thisProcessFactory = CreateProcessFactory();
 		}
-		IAppleShooterProcessFactory CreateProcessFactory(){
-			return new AppleShooterProcessFactory(
+		ISlickBowShootingProcessFactory CreateProcessFactory(){
+			return new SlickBowShootingProcessFactory(
 				processManager,
 				this
 			);
 		}
-		IAppleShooterProcessFactory thisProcessFactory;
-		public IAppleShooterProcessFactory GetAppleShooterProcessFactory(){
+		ISlickBowShootingProcessFactory thisProcessFactory;
+		public ISlickBowShootingProcessFactory GetSlickBowShootingProcessFactory(){
 			return thisProcessFactory;
 		}
 		public override IUnityBaseProcessFactory GetProcessFactory(){

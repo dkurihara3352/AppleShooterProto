@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IGameplayUnpauseProcess: IProcess{}
 	public class GameplayUnpauseProcess : AbsConstrainedProcess, IGameplayUnpauseProcess {
 		public GameplayUnpauseProcess(

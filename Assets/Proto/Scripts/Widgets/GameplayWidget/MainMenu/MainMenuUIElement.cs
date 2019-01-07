@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IMainMenuUIElement: IAlphaVisibilityTogglableUIElement{
 		void SetStartupManager(IStartupManager manager);
 		void ShowForStartup();

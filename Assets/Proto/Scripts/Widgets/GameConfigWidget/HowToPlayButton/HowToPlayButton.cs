@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IHowToPlayButton: IValidatableUIElement{
 		void SetHowToPlayPopUp(IPopUp popUp);
 		void SetHowToPlayScroller(IUIElementGroupScroller scroller);

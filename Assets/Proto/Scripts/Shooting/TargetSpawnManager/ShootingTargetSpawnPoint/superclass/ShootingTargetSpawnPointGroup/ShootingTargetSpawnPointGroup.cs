@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPointGroup: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IShootingTargetSpawnPointGroup: ISlickBowShootingSceneObject{
 		void SetSpawnPoints(IShootingTargetSpawnPoint[] spawnPoints);
 		IShootingTargetSpawnPoint Draw();
 		void Log();
 		void ClearLog();
 	}	
-	public abstract class AbsShootingTargetSpawnPointGroup : AppleShooterSceneObject, IShootingTargetSpawnPointGroup {
+	public abstract class AbsShootingTargetSpawnPointGroup : SlickBowShootingSceneObject, IShootingTargetSpawnPointGroup {
 		public AbsShootingTargetSpawnPointGroup(
 			IConstArg arg
 		): base(
@@ -45,10 +45,10 @@ namespace AppleShooterProto{
 			thisIndexPool.Log();
 		}
 		/*  */
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IShootingTargetSpawnPointGroupAdaptor adaptor
 			): base(

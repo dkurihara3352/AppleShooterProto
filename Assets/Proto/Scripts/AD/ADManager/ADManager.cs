@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Advertisements;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IADManager: IAppleShooterSceneObject, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IADManager: ISlickBowShootingSceneObject, IProcessHandler{
 		void SetADPopUp(IADPopUp popUp);
 		void SetADStatusPopUp(IADStatusPopUp popUp);
 		void SetEndGamePane(IEndGamePane pane);
@@ -20,7 +20,7 @@ namespace AppleShooterProto{
 
 		void TestToggleADReady(bool ready);
 	}
-	public class ADManager: AppleShooterSceneObject, IADManager{
+	public class ADManager: SlickBowShootingSceneObject, IADManager{
 		public ADManager(IConstArg arg): base(arg){
 			thisADSequenceProcessSuite = new ProcessSuite(
 				thisProcessManager,

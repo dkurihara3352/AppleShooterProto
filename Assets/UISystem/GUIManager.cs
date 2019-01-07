@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using AppleShooterProto;
+using SlickBowShooting;
 namespace UISystem{
 	public class GUIManager : MonoBehaviour {
 		void Awake(){

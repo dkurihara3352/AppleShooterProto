@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ITargetSpawnWaypointEventAdaptor: IWaypointEventAdaptor{
 	}
-	public class TargetSpawnWaypointEventAdaptor : AppleShooterMonoBehaviourAdaptor, ITargetSpawnWaypointEventAdaptor {
+	public class TargetSpawnWaypointEventAdaptor : SlickBowShootingMonoBehaviourAdaptor, ITargetSpawnWaypointEventAdaptor {
 		public float eventPoint;
 		public override void SetUp(){
 			SetUpEventsOnNextCurveWaypointEvent.IConstArg arg = new SetUpEventsOnNextCurveWaypointEvent.ConstArg(

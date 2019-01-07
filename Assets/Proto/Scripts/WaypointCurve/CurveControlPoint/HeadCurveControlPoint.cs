@@ -2,7 +2,7 @@
 // using System.Collections.Generic;
 // using UnityEngine;
 
-// namespace AppleShooterProto{
+// namespace SlickBowShooting{
 // 	public class HeadCurveControlPoint : SingleHandleCurveControlPoint{
 // 		protected override void InitializeHandles(){
 // 			// handle = this.transform.GetChild(0);

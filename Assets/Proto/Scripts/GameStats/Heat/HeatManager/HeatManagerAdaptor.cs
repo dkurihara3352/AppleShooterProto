@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IHeatManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IHeatManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IHeatManager GetHeatManager();
 		float GetStandardComboTime();
 		float GetMaxComboTimeMultiplier();
@@ -11,7 +11,7 @@ namespace AppleShooterProto{
 		float GetMaxComboValue();
 		float GetLevelUpMultiplier();
 	}
-	public class HeatManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IHeatManagerAdaptor {
+	public class HeatManagerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IHeatManagerAdaptor {
 
 		IHeatManager thisHeatManager;
 		public IHeatManager GetHeatManager(){

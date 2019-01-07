@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IHeatLevelText: IAppleShooterSceneObject, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IHeatLevelText: ISlickBowShootingSceneObject, IProcessHandler{
 		void SetHeatLevelText(int level);
 		void StartLevelUpTo(int newLevel);
 	}
-	public class HeatLevelText : AppleShooterSceneObject, IHeatLevelText {
+	public class HeatLevelText : SlickBowShootingSceneObject, IHeatLevelText {
 		public HeatLevelText(IConstArg arg): base(arg){
 			thisLevelUpProcessSuite = new ProcessSuite(
 				thisProcessManager,
@@ -51,8 +51,8 @@ namespace AppleShooterProto{
 		public void OnProcessExpire(IProcessSuite suite){
 			thisHeatLevelTextAdaptor.SetScale(1f);
 		}
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{}
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IHeatLevelTextAdaptor adaptor
 			): base(adaptor){

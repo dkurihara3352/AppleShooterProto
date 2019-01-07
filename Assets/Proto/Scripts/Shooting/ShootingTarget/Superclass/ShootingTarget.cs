@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityBase;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IShootingTarget: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IShootingTarget: ISlickBowShootingSceneObject, IActivationStateHandler, IActivationStateImplementor, IProcessHandler{
 		
 		void SetShootingTargetNormalHitDetector(IShootingTargetNormalHitDetector detector);
 		void SetShootingTargetCriticalHitDetector(IShootingTargetCriticalHitDetector detector);
@@ -37,7 +37,7 @@ namespace AppleShooterProto{
 		int GetTier();
 		void SetTargetTierDataOnQueue(TargetTierData tierData);
 	}
-	public abstract class AbsShootingTarget : AppleShooterSceneObject, IShootingTarget {
+	public abstract class AbsShootingTarget : SlickBowShootingSceneObject, IShootingTarget {
 		public AbsShootingTarget(
 			IConstArg arg
 		): base(
@@ -411,12 +411,12 @@ namespace AppleShooterProto{
 					UpdateSpawnScale(1f);
 			}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				int index{get;}
 				IBellCurve healthBellCurve{get;}
 				ITargetData targetData{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					int index,
 					IBellCurve healthBellCurve,

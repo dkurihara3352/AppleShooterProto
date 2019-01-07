@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface ISmoothFollower: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ISmoothFollower: ISlickBowShootingSceneObject{
 		void SetFollowTarget(IMonoBehaviourAdaptor target);
 		void StartFollow();
 		void StopFollow();
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		void SetVelocity(Vector3 velocity);
 		Vector3 GetVelocity();
 	}
-	public class SmoothFollower : AppleShooterSceneObject, ISmoothFollower{
+	public class SmoothFollower : SlickBowShootingSceneObject, ISmoothFollower{
 		public SmoothFollower(
 			IConstArg arg
 		): base(
@@ -34,7 +34,7 @@ namespace AppleShooterProto{
 		ISmoothFollowTargetProcess thisProcess;
 		readonly  int thisProcessOrder;
 		public void StartFollow(){
-			thisProcess = thisAppleShooterProcessFactory.CreateSmoothFollowTargetProcess(
+			thisProcess = thisSlickBowShootingProcessFactory.CreateSmoothFollowTargetProcess(
 				this,
 				thisFollowTarget,
 				thisSmoothCoefficient,
@@ -58,12 +58,12 @@ namespace AppleShooterProto{
 			return thisVelocity;
 		}
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float smoothCoefficient{get;}
 			IMonoBehaviourAdaptor followTarget{get;}
 			int processOrder{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				ISmoothFollowerAdaptor adaptor,
 				float smoothCoefficient,

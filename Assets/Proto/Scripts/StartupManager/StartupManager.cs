@@ -4,8 +4,8 @@ using UnityEngine;
 using DKUtility;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IStartupManager: IAppleShooterSceneObject, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IStartupManager: ISlickBowShootingSceneObject, IProcessHandler{
 		void SetFadeImage(IFadeImage image);
 		void SetMainMenuUIElement(IMainMenuUIElement mainMenuUIElement);
 		void SetRootScroller(IUIElementGroupScroller scroller);
@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 		void StartStartupSequence();
 		void OnStartUpMainMenuShowComplete();
 	}
-	public class StartupManager: AppleShooterSceneObject, IStartupManager{
+	public class StartupManager: SlickBowShootingSceneObject, IStartupManager{
 		public StartupManager(IConstArg arg): base(arg){
 			thisWaitForWarmupReadyProcessSuite = new ProcessSuite(
 				thisProcessManager,

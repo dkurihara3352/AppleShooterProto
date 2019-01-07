@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
-	public interface IHeatImageAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IHeatImageAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IHeatImage GetHeatImage();
 
 		void UpdateMainHeatImageFill(float heat);
 		void UpdateDeltaHeatImageFill(float heat);
 	}
-	public class HeatImageAdaptor : AppleShooterMonoBehaviourAdaptor, IHeatImageAdaptor {
+	public class HeatImageAdaptor : SlickBowShootingMonoBehaviourAdaptor, IHeatImageAdaptor {
 		public Image thisMainImage;
 		public Image thisDeltaImage;
 		IHeatImage thisHeatImage;

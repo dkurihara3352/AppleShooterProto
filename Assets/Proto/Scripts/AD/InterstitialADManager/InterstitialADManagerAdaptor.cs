@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IInterstitialADManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IInterstitialADManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IInterstitialADManager GetInterstitialADManager();
 	}
-	public class InterstitialADManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IInterstitialADManagerAdaptor{
+	public class InterstitialADManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, IInterstitialADManagerAdaptor{
 		public override void SetUp(){
 			thisInterstitialADManager = CreateInterstitialADManager();
 		}

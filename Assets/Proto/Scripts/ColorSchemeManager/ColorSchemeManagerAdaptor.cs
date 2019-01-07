@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IColorSchemeManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IColorSchemeManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 
 		IColorSchemeManager GetColorSchemeManager();
 
@@ -23,7 +23,7 @@ namespace AppleShooterProto{
 		void SetFogColor(Color color);
 		void SetCameraBackgroundColor(Color color);
 	}
-	public class ColorSchemeManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IColorSchemeManagerAdaptor{
+	public class ColorSchemeManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, IColorSchemeManagerAdaptor{
 		public override void SetUp(){
 			thisColorSchemeManager = CreateColorSchemeManager();
 		}

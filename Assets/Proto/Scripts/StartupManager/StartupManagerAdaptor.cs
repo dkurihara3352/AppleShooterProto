@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IStartupManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IStartupManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IStartupManager GetStartupManager();
 		float GetWaitForWarmupReadyTime();
 		float GetFadeInTime();
 		AnimationCurve GetFadeInProcessCurve();
 	}
-	public class StartupManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IStartupManagerAdaptor{
+	public class StartupManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, IStartupManagerAdaptor{
 		public override void SetUp(){
 			StartupManager.IConstArg arg = new StartupManager.ConstArg(
 				this

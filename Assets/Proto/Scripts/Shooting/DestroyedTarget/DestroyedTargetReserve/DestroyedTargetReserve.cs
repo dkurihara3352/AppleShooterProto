@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IDestroyedTargetReserve: ISceneObjectReserve<IDestroyedTarget>{
 		void ActivateDestoryedTargetAt(IShootingTarget target);
 		IDestroyedTarget[] GetTargets();

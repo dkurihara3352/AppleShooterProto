@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface IArrowTrail: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
+namespace SlickBowShooting{
+	public interface IArrowTrail: ISlickBowShootingSceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void SetArrowTrailReserve(IArrowTrailReserve reserve);
 		void ActivateAt(IArrow arrow);
 		void Detach();
@@ -13,7 +13,7 @@ namespace AppleShooterProto{
 
 		void SetColor(Color color);
 	}
-	public class ArrowTrail : AppleShooterSceneObject, IArrowTrail {
+	public class ArrowTrail : SlickBowShootingSceneObject, IArrowTrail {
 
 		public ArrowTrail(
 			IConstArg arg
@@ -73,7 +73,7 @@ namespace AppleShooterProto{
 		readonly float thisFadeTime;
 		void StartFade(){
 			StopFade();
-			thisProcess = thisAppleShooterProcessFactory.CreateArrowTrailFadeProcess(
+			thisProcess = thisSlickBowShootingProcessFactory.CreateArrowTrailFadeProcess(
 				thisFadeTime,
 				this,
 				thisTypedAdaptor.GetAlpha()
@@ -92,10 +92,10 @@ namespace AppleShooterProto{
 			thisTypedAdaptor.SetColor(color);
 		}
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float fadeTime{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IArrowTrailAdaptor adaptor,
 				float fadeTime

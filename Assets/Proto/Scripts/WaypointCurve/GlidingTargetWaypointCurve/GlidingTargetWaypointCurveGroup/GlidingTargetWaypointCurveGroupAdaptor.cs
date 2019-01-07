@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IGlidingTargetWaypointCurveGroupAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IGlidingTargetWaypointCurveGroupAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IGlidingTargetWaypointCurveGroup GetCurveGroup();
 		IGlidingTargetWaypointCurveAdaptor[] GetCurveAdaptors();
 	}
-	public class GlidingTargetWaypointCurveGroupAdaptor: AppleShooterMonoBehaviourAdaptor, IGlidingTargetWaypointCurveGroupAdaptor{
+	public class GlidingTargetWaypointCurveGroupAdaptor: SlickBowShootingMonoBehaviourAdaptor, IGlidingTargetWaypointCurveGroupAdaptor{
 		IGlidingTargetWaypointCurveGroup thisGroup;
 		public IGlidingTargetWaypointCurveGroup GetCurveGroup(){
 			return thisGroup;

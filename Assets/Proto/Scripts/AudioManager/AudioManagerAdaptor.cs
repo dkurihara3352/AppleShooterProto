@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IAudioManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IAudioManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 
 		IAudioManager GetAudioManager();
 		void SetSFXVolume(float volume);
 		void SetBGMVolume(float volume);
 	}
-	public class AudioManagerAdaptor: AppleShooterMonoBehaviourAdaptor, IAudioManagerAdaptor{
+	public class AudioManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, IAudioManagerAdaptor{
 		
 		public override void SetUp(){
 			thisAudioManager = CreateAudioManager();

@@ -2,7 +2,7 @@
 // using System.Collections.Generic;
 // using UnityEngine;
 
-// namespace AppleShooterProto{
+// namespace SlickBowShooting{
 // 	public class NonLockedHeadControlPoint : HeadCurveControlPoint {
 
 // 		protected override void LockTransform(){

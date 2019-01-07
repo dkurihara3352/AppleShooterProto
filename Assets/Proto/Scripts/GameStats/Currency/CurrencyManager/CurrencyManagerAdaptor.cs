@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ICurrencyManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ICurrencyManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ICurrencyManager GetCurrencyManager();
 	}
-	public class CurrencyManagerAdaptor: AppleShooterMonoBehaviourAdaptor, ICurrencyManagerAdaptor{
+	public class CurrencyManagerAdaptor: SlickBowShootingMonoBehaviourAdaptor, ICurrencyManagerAdaptor{
 		public override void SetUp(){
 			thisManager = CreateCurrencyManager();
 		}

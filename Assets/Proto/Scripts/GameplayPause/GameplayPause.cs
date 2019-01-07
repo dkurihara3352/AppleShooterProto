@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
-namespace AppleShooterProto{
-	public interface IGameplayPause: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IGameplayPause: ISlickBowShootingSceneObject{
 		void SetInputScroller(ICoreGameplayInputScroller scroller);
 		void SetGameplayPauseButton(IGameplayPauseButton button);
 		void SetPauseMenuPopUp(IPopUp popUp);
@@ -18,7 +18,7 @@ namespace AppleShooterProto{
 
 		void ExpireUnpauseProcess();
 	}
-	public class GameplayPause : AppleShooterSceneObject, IGameplayPause {
+	public class GameplayPause : SlickBowShootingSceneObject, IGameplayPause {
 		public GameplayPause(
 			IConstArg arg
 		): base(
@@ -60,7 +60,7 @@ namespace AppleShooterProto{
 		readonly float thisUnpauseTime; 
 		void StartUnpauseProcess(){
 			StopUnpauseProcess();
-			thisProcess = thisAppleShooterProcessFactory.CreateGameplayUnpauseProcess(
+			thisProcess = thisSlickBowShootingProcessFactory.CreateGameplayUnpauseProcess(
 				this,
 				thisUnpauseTime
 			);
@@ -95,10 +95,10 @@ namespace AppleShooterProto{
 			}
 			thisProcess = null;
 		}
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float unpauseTime{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IGameplayPauseAdaptor adaptor,
 				float unpauseTime

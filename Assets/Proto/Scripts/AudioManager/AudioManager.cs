@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IAudioManager: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IAudioManager: ISlickBowShootingSceneObject{
 		float GetSFXVolume();
 		void SetSFXVolume(float volume);
 		float GetBGMVolume();
 		void SetBGMVolume(float volume);
 	}
-	public class AudioManager: AppleShooterSceneObject, IAudioManager{
+	public class AudioManager: SlickBowShootingSceneObject, IAudioManager{
 		public AudioManager(IConstArg arg): base(arg){}
 		public IAudioManagerAdaptor thisAudioManagerAdaptor{
 			get{

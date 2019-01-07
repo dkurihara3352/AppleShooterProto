@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IEndGamePane: IUIElement, IProcessHandler{
 		void SetPlayerDataManager(IPlayerDataManager manager);
 		void SetRootScroller(IUIElementGroupScroller scroller);

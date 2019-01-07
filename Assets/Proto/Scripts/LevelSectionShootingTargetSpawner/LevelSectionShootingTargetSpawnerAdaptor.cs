@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ILevelSectionShootingTargetSpawnerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ILevelSectionShootingTargetSpawnerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ILevelSectionShootingTargetSpawner GetSpawner();
 		IShootingTargetReserve[] GetRareTargetReserves();
 	}	
-	public class LevelSectionShootingTargetSpawnerAdaptor : AppleShooterMonoBehaviourAdaptor, ILevelSectionShootingTargetSpawnerAdaptor {
+	public class LevelSectionShootingTargetSpawnerAdaptor : SlickBowShootingMonoBehaviourAdaptor, ILevelSectionShootingTargetSpawnerAdaptor {
 		public override void SetUp(){
 			thisSpawner = CreateSpawner();
 		}

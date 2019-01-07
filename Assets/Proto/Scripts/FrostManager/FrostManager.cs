@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IFrostManager: IAppleShooterSceneObject, IProcessHandler{
+namespace SlickBowShooting{
+	public interface IFrostManager: ISlickBowShootingSceneObject, IProcessHandler{
 		void Frost(float time);
 		void Defrost(float time);
 	}
-	public class FrostManager: AppleShooterSceneObject, IFrostManager{
+	public class FrostManager: SlickBowShootingSceneObject, IFrostManager{
 		public FrostManager(IConstArg arg): base(arg){
 			thisProcessSuite = new ProcessSuite(
 				thisProcessManager,

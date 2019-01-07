@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
-	public interface IWaypointsFollower: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IWaypointsFollower: ISlickBowShootingSceneObject{
 		void SetWaypointsManager(IWaypointCurveCycleManager wayointsManager);
 		float GetFollowSpeed();
 		void StartFollowing();
@@ -28,7 +28,7 @@ namespace AppleShooterProto{
 
 		void ResetFollower();
 	}
-	public class WaypointsFollower: AppleShooterSceneObject, IWaypointsFollower{
+	public class WaypointsFollower: SlickBowShootingSceneObject, IWaypointsFollower{
 		public WaypointsFollower(
 			IConstArg arg
 		): base(
@@ -55,7 +55,7 @@ namespace AppleShooterProto{
 			thisProcess.Run();
 		}
 		IFollowWaypointProcess CreateFollowProcess(){
-			return thisAppleShooterProcessFactory.CreateFollowWaypointProcess(
+			return thisSlickBowShootingProcessFactory.CreateFollowWaypointProcess(
 				this,
 				thisFollowSpeed,
 				thisProcessOrder,
@@ -112,7 +112,7 @@ namespace AppleShooterProto{
 			thisProcess = CreateFollowProcess();
 			thisProcess.SetTimeScale(0f);
 			thisProcess.Run();
-			thisChangeSpeedProcess = thisAppleShooterProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
+			thisChangeSpeedProcess = thisSlickBowShootingProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
 				thisProcess,
 				thisTypedAdaptor.GetSmoothStartTime(),
 				thisTypedAdaptor.GetSmoothStartCurve()
@@ -127,7 +127,7 @@ namespace AppleShooterProto{
 
 		public void SmoothStop(){
 			StopChangeSpeed();
-			thisChangeSpeedProcess = thisAppleShooterProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
+			thisChangeSpeedProcess = thisSlickBowShootingProcessFactory.CreateWaypointsFollowerChangeSpeedProcess(
 				thisProcess,
 				thisTypedAdaptor.GetSmoothStopTime(),
 				thisTypedAdaptor.GetSmoothStopCurve()
@@ -143,11 +143,11 @@ namespace AppleShooterProto{
 			thisElapsedTimeOnCurrentCurve = 0f;
 		}
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			float followSpeed{get;}
 			int processOrder{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IWaypointsFollowerAdaptor adaptor,
 				float followSpeed,

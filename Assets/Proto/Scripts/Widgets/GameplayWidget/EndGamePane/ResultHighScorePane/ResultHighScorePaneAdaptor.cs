@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IResultHighScorePaneAdaptor: IAlphaVisibilityTogglableUIAdaptor{
 		IResultHighScorePane GetResultHighScorePane();
 		AnimationCurve GetUpdateHighScoreProcessCurve();

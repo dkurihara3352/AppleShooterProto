@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IWatchADButton: IValidatableUIElement{
 		void SetEndGamePane(IEndGamePane pane);
 		void SetADManager(IADManager manager);

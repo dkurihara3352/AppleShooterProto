@@ -4,7 +4,7 @@ using UnityEngine;
 using UISystem;
 using UnityEngine.UI;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IBowStarsPaneAdaptor: IUIAdaptor{
 		IBowStarsPane GetBowStarsPane();
 		float GetProcessTime();

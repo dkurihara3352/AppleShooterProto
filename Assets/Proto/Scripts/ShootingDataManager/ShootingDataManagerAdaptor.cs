@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IShootingDataManagerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IShootingDataManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IShootingDataManager GetShootingDataManager();
 
 		float[] GetGlobalMinDrawStrengthLimit();
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		float[] GetGlobalDrawTimeLimit();
 		float[] GetGlobalCriticalLimit();
 	}
-	public class ShootingDataManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingDataManagerAdaptor {
+	public class ShootingDataManagerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IShootingDataManagerAdaptor {
 
 		public override void SetUp(){
 			base.SetUp();

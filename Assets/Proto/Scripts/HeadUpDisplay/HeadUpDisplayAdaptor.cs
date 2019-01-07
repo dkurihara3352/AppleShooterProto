@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IHeadUpDisplayAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IHeadUpDisplayAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		void SetAlpha(float alpha);
 		float GetAlpha();
 		float GetActivationTime();
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		IHeadUpDisplay GetHeadUpDisplay();
 	}
 	[RequireComponent(typeof(CanvasGroup))]
-	public class HeadUpDisplayAdaptor : AppleShooterMonoBehaviourAdaptor, IHeadUpDisplayAdaptor {
+	public class HeadUpDisplayAdaptor : SlickBowShootingMonoBehaviourAdaptor, IHeadUpDisplayAdaptor {
 
 		public override void SetUp(){
 			thisHeadUpDisplay = CreateHeadUpDisplay();

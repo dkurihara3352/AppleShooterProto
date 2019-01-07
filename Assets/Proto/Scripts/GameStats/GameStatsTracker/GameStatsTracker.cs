@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IGameStatsTracker: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IGameStatsTracker: ISlickBowShootingSceneObject{
 		void SetHeatManager(IHeatManager manager);
 		void SetScoreManager(IScoreManager scoreManager);
 		void SetCurrencyManager(ICurrencyManager currencyManager);
@@ -12,7 +12,7 @@ namespace AppleShooterProto{
 		void ResetStats();
 		void MarkGameplayEnded();
 	}
-	public class GameStatsTracker : AppleShooterSceneObject, IGameStatsTracker {
+	public class GameStatsTracker : SlickBowShootingSceneObject, IGameStatsTracker {
 
 		public GameStatsTracker(
 			IConstArg arg
@@ -74,10 +74,10 @@ namespace AppleShooterProto{
 			thisGameplayIsEnded = true;
 		}
 		/*  */
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IGameStatsTrackerAdaptor adaptor
 			): base(adaptor){

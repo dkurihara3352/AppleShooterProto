@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IBowPanel: IUIElement{
 		void SetBowConfigWidget(IBowConfigWidget widget);
 		void SetBowLockPane(IBowLockPane pane);

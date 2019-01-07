@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IFlyingTarget: IShootingTarget{
 		void SetSmoothLooker(ISmoothLooker looker);
 		void SetFlyingTargetReserve(IFlyingTargetReserve reserve);
@@ -63,7 +63,7 @@ namespace AppleShooterProto{
 		readonly float thisSpeed;
 		void StartFlight(){
 			StopFlight();
-			thisFlightProcess = thisAppleShooterProcessFactory.CreateFlyingTargetFlightProcess(
+			thisFlightProcess = thisSlickBowShootingProcessFactory.CreateFlyingTargetFlightProcess(
 				this,
 				thisInitialVelocity,
 				thisDistThreshold,

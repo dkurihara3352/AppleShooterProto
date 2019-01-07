@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ICurvePoint{
 		Vector3 GetPosition();
 		Vector3 GetUpDirection();

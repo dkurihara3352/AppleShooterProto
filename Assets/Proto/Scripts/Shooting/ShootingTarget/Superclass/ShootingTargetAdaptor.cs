@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface IShootingTargetAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IShootingTargetAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		void SetUpDetectorAdaptors();
 
 		IShootingTarget GetShootingTarget();
@@ -41,7 +41,7 @@ namespace AppleShooterProto{
 			void SetSpawnAnimationScale(float scaleValue);
 
 	}
-	public abstract class AbsShootingTargetAdaptor: AppleShooterMonoBehaviourAdaptor, IShootingTargetAdaptor{
+	public abstract class AbsShootingTargetAdaptor: SlickBowShootingMonoBehaviourAdaptor, IShootingTargetAdaptor{
 		public override void SetUp(){
 
 			thisColorHash = Shader.PropertyToID("_Color");

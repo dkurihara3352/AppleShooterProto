@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ICurveControlPoint{
 		Transform GetForeHandle();
 		Transform GetBackHandle();

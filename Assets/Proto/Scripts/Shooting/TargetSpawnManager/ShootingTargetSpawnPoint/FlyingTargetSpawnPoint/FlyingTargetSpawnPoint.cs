@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IFlyingTargetSpawnPoint: IShootingTargetSpawnPoint{
 		void SetWaypointManager(IFlyingTargetWaypointManager manager);
 		IFlyingTargetWaypointManager GetWaypointManager();

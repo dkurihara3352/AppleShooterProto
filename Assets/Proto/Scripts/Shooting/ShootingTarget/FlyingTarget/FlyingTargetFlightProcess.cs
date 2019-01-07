@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IFlyingTargetFlightProcess: IProcess{}
 	public class FlyingTargetFlightProcess : AbsProcess, IFlyingTargetFlightProcess {
 

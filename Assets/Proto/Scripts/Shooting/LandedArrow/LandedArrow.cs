@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityBase;
-namespace AppleShooterProto{
-	public interface ILandedArrow: IAppleShooterSceneObject, IActivationStateHandler, IActivationStateImplementor{
+namespace SlickBowShooting{
+	public interface ILandedArrow: ISlickBowShootingSceneObject, IActivationStateHandler, IActivationStateImplementor{
 		void SetLandedArrowReserve(ILandedArrowReserve reserve);
 		void ActivateAt(
 			IArrowHitDetector detector,
@@ -15,7 +15,7 @@ namespace AppleShooterProto{
 		int GetIndex();
 		void SetArrowTwang(IArrowTwang twang);
 	}
-	public class LandedArrow: AppleShooterSceneObject, ILandedArrow{
+	public class LandedArrow: SlickBowShootingSceneObject, ILandedArrow{
 		public LandedArrow(
 			IConstArg arg
 		): base(
@@ -102,10 +102,10 @@ namespace AppleShooterProto{
 				thisReserve.Reserve(this);
 			}
 		/* Const */
-			public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+			public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 				int index{get;}
 			}
-			public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+			public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 				public ConstArg(
 					ILandedArrowAdaptor adaptor,
 					int index

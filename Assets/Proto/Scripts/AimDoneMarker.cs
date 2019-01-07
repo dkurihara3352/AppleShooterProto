@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public class AimDoneMarker : MonoBehaviour {
 
 		public void CallShootingManagerMarkAimDone(){

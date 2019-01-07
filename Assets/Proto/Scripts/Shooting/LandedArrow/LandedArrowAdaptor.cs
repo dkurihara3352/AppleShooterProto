@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ILandedArrowAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ILandedArrowAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ILandedArrow GetLandedArrow();
 		void SetLandedArrowReserveAdaptor(ILandedArrowReserveAdaptor landedArrowReserveAdaptor);
 		void SetIndex(int index);
 		void ToggleRenderer(bool toggle);
 	}
-	public class LandedArrowAdaptor : AppleShooterMonoBehaviourAdaptor, ILandedArrowAdaptor {
+	public class LandedArrowAdaptor : SlickBowShootingMonoBehaviourAdaptor, ILandedArrowAdaptor {
 		ILandedArrow thisLandedArrow;
 		public ILandedArrow GetLandedArrow(){
 			return thisLandedArrow;

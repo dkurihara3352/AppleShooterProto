@@ -4,11 +4,11 @@ using UnityEngine;
 using DKUtility;
 using UnityBase;
 
-namespace AppleShooterProto{
-	public interface ISmoothFollowerAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ISmoothFollowerAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ISmoothFollower GetSmoothFollower();
 	}
-	public class SmoothFollowerAdaptor : AppleShooterMonoBehaviourAdaptor, ISmoothFollowerAdaptor {
+	public class SmoothFollowerAdaptor : SlickBowShootingMonoBehaviourAdaptor, ISmoothFollowerAdaptor {
 		public MonoBehaviourAdaptor followTarget;
 		public float smoothCoefficient;
 		public int processOrder = 100;

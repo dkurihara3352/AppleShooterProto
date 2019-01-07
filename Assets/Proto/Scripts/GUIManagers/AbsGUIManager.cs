@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public abstract class AbsGUIManager: MonoBehaviour{
 		protected Rect GetGUIRect(
 			Vector2 normalizedSize,

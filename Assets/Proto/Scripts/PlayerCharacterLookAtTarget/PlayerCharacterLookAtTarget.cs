@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IPlayerCharacterLookAtTarget: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface IPlayerCharacterLookAtTarget: ISlickBowShootingSceneObject{
 		void StartLookAtTargetMotion();
 		void SetDirection(Vector3 direction);
 		Vector3 GetDirection();
 		void SetSmoothLooker(ISmoothLooker looker);
 	}
-	public class PlayerCharacterLookAtTarget : AppleShooterSceneObject, IPlayerCharacterLookAtTarget {
+	public class PlayerCharacterLookAtTarget : SlickBowShootingSceneObject, IPlayerCharacterLookAtTarget {
 		public PlayerCharacterLookAtTarget(
 			IConstArg arg
 		): base(
@@ -23,7 +23,7 @@ namespace AppleShooterProto{
 		}
 		readonly int thisProcessOrder;
 		public void StartLookAtTargetMotion(){
-			IPlayerCharacterLookAtTargetMotionProcess process = thisAppleShooterProcessFactory.CreateLookAtTargetMotionProcess(
+			IPlayerCharacterLookAtTargetMotionProcess process = thisSlickBowShootingProcessFactory.CreateLookAtTargetMotionProcess(
 				this,
 				thisSmoothLooker,
 				thisProcessOrder
@@ -45,10 +45,10 @@ namespace AppleShooterProto{
 		}
 
 
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 			int processOrder{get;}
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				IPlayerCharacterLookAtTargetAdaptor adaptor,
 				int processOrder

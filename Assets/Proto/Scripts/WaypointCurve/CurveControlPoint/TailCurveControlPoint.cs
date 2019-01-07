@@ -2,7 +2,7 @@
 // using System.Collections.Generic;
 // using UnityEngine;
 
-// namespace AppleShooterProto{
+// namespace SlickBowShooting{
 // 	public class TailCurveControlPoint : SingleHandleCurveControlPoint{
 // 		public override Transform GetForeHandle(){
 // 			// return handle;

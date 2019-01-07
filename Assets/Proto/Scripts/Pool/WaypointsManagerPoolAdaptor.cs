@@ -3,7 +3,7 @@
 // using UnityEngine;
 // using UnityBase;
 
-// namespace AppleShooterProto{
+// namespace SlickBowShooting{
 // 	public interface IWaypointsManagerPoolAdaptor: ISceneObjectPoolAdaptor<IWaypointCurveCycleManager>{
 // 	}
 // 	public class WaypointsManagerPoolAdaptor : SceneObjectPoolAdaptor<IWaypointCurveCycleManager>, IWaypointsManagerPoolAdaptor {

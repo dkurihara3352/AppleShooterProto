@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ILaunchPoint: IAppleShooterSceneObject{
+namespace SlickBowShooting{
+	public interface ILaunchPoint: ISlickBowShootingSceneObject{
 		Vector3 GetForwardDirection();
 		void SetDrawPosition(float drawAmount);
 	}
-	public class LaunchPoint : AppleShooterSceneObject, ILaunchPoint {
+	public class LaunchPoint : SlickBowShootingSceneObject, ILaunchPoint {
 		public LaunchPoint(
 			IConstArg arg
 		): base(arg){
@@ -31,9 +31,9 @@ namespace AppleShooterProto{
 			);
 			this.SetLocalPosition(newDrawPosition);
 		}
-		public new interface IConstArg: AppleShooterSceneObject.IConstArg{
+		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{
 		}
-		public new class ConstArg: AppleShooterSceneObject.ConstArg, IConstArg{
+		public new class ConstArg: SlickBowShootingSceneObject.ConstArg, IConstArg{
 			public ConstArg(
 				ILaunchPointAdaptor adaptor
 			): base(

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalculator.IAdaptor{
+public class BowDataGUIManager : MonoBehaviour, SlickBowShooting.BowDataCalculator.IAdaptor{
 
 	[Range(0f, 1f)]
 	public float topLeftWidthRatio = .5f;
@@ -57,16 +57,16 @@ public class BowDataGUIManager : MonoBehaviour, AppleShooterProto.BowDataCalcula
 	}
 	void OnEnable(){
 		if(thisCalculator == null)
-			thisCalculator = new AppleShooterProto.BowDataCalculator(this);
+			thisCalculator = new SlickBowShooting.BowDataCalculator(this);
 		InitFields();
 
 	}
 	void Awake(){
 		if(thisCalculator == null)
-			thisCalculator = new AppleShooterProto.BowDataCalculator(this);
+			thisCalculator = new SlickBowShooting.BowDataCalculator(this);
 		InitFields();
 	}
-	AppleShooterProto.IBowDataCalculator thisCalculator;
+	SlickBowShooting.IBowDataCalculator thisCalculator;
 	void OnGUI(){
 		CalcRect();
 		DrawTopLeft();

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IArrowHitDetectorAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IArrowHitDetectorAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IArrowHitDetector GetArrowHitDetector();
 		void ToggleCollider(bool toggle);
 	}
-	public abstract class ArrowHitDetectorAdaptor: AppleShooterMonoBehaviourAdaptor, IArrowHitDetectorAdaptor{
+	public abstract class ArrowHitDetectorAdaptor: SlickBowShootingMonoBehaviourAdaptor, IArrowHitDetectorAdaptor{
 		protected IArrowHitDetector thisDetector;
 		public IArrowHitDetector GetArrowHitDetector(){
 			return thisDetector;

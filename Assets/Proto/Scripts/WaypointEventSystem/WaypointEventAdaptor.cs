@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IWaypointEventAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IWaypointEventAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IWaypointEvent GetWaypointEvent();
 	}
 }

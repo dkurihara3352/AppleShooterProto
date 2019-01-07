@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ITrajectoryAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ITrajectoryAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		void DrawTrajectory(Vector3[] trajectoryPoints);
 		ITrajectory GetTrajectory();
 		void Clear();
 	}
-	public class TrajectoryAdaptor : AppleShooterMonoBehaviourAdaptor, ITrajectoryAdaptor {
+	public class TrajectoryAdaptor : SlickBowShootingMonoBehaviourAdaptor, ITrajectoryAdaptor {
 		public LineRenderer lineRenderer;
 		public void DrawTrajectory(
 			Vector3[] trajectoryPoints

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DKUtility.CurveUtility;
 
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface ICurveSegment{
 		void UpdateCurvePoints();
 		ICurvePoint[] GetCurvePoints();

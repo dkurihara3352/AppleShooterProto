@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ILaunchPointAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ILaunchPointAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ILaunchPoint GetLaunchPoint();
 		Vector3 GetMinDrawPosition();
 		Vector3 GetMaxDrawPosition();
 	}
-	public class LaunchPointAdaptor : AppleShooterMonoBehaviourAdaptor, ILaunchPointAdaptor {
+	public class LaunchPointAdaptor : SlickBowShootingMonoBehaviourAdaptor, ILaunchPointAdaptor {
 		ILaunchPoint thisLaunchPoint;
 		public override void SetUp(){
 			thisLaunchPoint = CreateLaunchPoint();

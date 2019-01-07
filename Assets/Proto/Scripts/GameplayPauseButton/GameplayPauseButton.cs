@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
-namespace AppleShooterProto{
+namespace SlickBowShooting{
 	public interface IGameplayPauseButton: IUIElement{
 		void SetGameplayPause(IGameplayPause pause);
 

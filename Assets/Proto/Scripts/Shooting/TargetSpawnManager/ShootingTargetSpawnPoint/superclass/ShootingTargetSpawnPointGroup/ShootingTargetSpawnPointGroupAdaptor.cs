@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IShootingTargetSpawnPointGroupAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface IShootingTargetSpawnPointGroupAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		IShootingTargetSpawnPointGroup GetGroup();
 		IShootingTargetSpawnPointAdaptor[] GetAdaptors();
 	}
-	public abstract class AbsShootingTargetSpawnPointGroupAdaptor : AppleShooterMonoBehaviourAdaptor, IShootingTargetSpawnPointGroupAdaptor {
+	public abstract class AbsShootingTargetSpawnPointGroupAdaptor : SlickBowShootingMonoBehaviourAdaptor, IShootingTargetSpawnPointGroupAdaptor {
 
 		public override void SetUp(){
 			thisGroup = CreateGroup();

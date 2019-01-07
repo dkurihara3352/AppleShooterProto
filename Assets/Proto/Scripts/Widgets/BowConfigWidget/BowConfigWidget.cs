@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityBase;
 using UISystem;
 
-namespace AppleShooterProto{
-	public interface IBowConfigWidget: IAppleShooterSceneObject, IActivationStateImplementor, IActivationStateHandler{
+namespace SlickBowShooting{
+	public interface IBowConfigWidget: ISlickBowShootingSceneObject, IActivationStateImplementor, IActivationStateHandler{
 		void SetBowPanelGroupScroller(IUIElementGroupScroller scroller);
 		void SetBowPanels(IBowPanel[] panels);
 		void SetPlayerDataManager(IPlayerDataManager manager);
@@ -19,7 +19,7 @@ namespace AppleShooterProto{
 		void IncreaseAttributeLevel(int attributeIndex);
 		void UnlockPanel(int panelIndex);
 	}
-	public class BowConfigWidget: AppleShooterSceneObject, IBowConfigWidget{
+	public class BowConfigWidget: SlickBowShootingSceneObject, IBowConfigWidget{
 		public BowConfigWidget(IConstArg arg): base(arg){
 			thisActivationStateEngine = new ActivationStateEngine(this);
 		}

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface ICriticalFlashAdaptor: IAppleShooterMonoBehaviourAdaptor{
+namespace SlickBowShooting{
+	public interface ICriticalFlashAdaptor: ISlickBowShootingMonoBehaviourAdaptor{
 		ICriticalFlash GetCriticalFlash();
 		AnimationCurve GetFlashCurve();
 		float GetFlashTime();
 		void SetFlashValue(float value);
 	}
-	public class CriticalFlashAdaptor : AppleShooterMonoBehaviourAdaptor, ICriticalFlashAdaptor {
+	public class CriticalFlashAdaptor : SlickBowShootingMonoBehaviourAdaptor, ICriticalFlashAdaptor {
 		ICriticalFlash thisFlash;
 		public override void SetUp(){
 			thisFlash = CreateFlash();

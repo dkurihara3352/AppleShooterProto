@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AppleShooterProto{
-	public interface IPlayerDataManagerAdaptor: IAppleShooterMonoBehaviourAdaptor, BowDataCalculator.IAdaptor{
+namespace SlickBowShooting{
+	public interface IPlayerDataManagerAdaptor: ISlickBowShootingMonoBehaviourAdaptor, BowDataCalculator.IAdaptor{
 		IPlayerDataManager GetPlayerDataManager();
 		int[] GetBowUnlockCostArray();
 	}
-	public class PlayerDataManagerAdaptor : AppleShooterMonoBehaviourAdaptor, IPlayerDataManagerAdaptor {
+	public class PlayerDataManagerAdaptor : SlickBowShootingMonoBehaviourAdaptor, IPlayerDataManagerAdaptor {
 
 		public override void SetUp(){
 			thisManager = CreatePlayerDataManager();
