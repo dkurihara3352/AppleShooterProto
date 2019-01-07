@@ -579,6 +579,7 @@ namespace AppleShooterProto{
 			void DrawContextThree(){
 				DrawGameplayControl(sTL_2);
 				DrawColorSchemeControl(sTL_3);
+				DrawADTestControl(sTL_4);
 			}
 
 			void DrawGameplayControl(Rect rect){
@@ -624,6 +625,20 @@ namespace AppleShooterProto{
 				manager.ChangeColorScheme(index, 10f);
 			}
 			public ColorSchemeManagerAdaptor colorSchemeManagerAdaptor;
+
+			void DrawADTestControl(Rect rect){
+				Rect sub_0 = GetHorizontalSubRect(rect, 0, 1);
+				IDoubleEarnedCrystalsADManager doubleEarnedCrystalsADmanager = doubleEarnedCrystalsADManagerAdaptor.GetADManager();
+				if(doubleEarnedCrystalsADmanager != null){
+					if(GUI.Button(
+						sub_0,
+						"AD Ready"
+					))
+						doubleEarnedCrystalsADmanager.TestToggleADReady(true);
+				}
+
+			}
+			public DoubleEarnedCrystalsADManagerAdaptor doubleEarnedCrystalsADManagerAdaptor;
 		/* Bottom Left */
 			void DrawBottomLeft(){
 				// DrawArrowsState(bottomLeftRect);

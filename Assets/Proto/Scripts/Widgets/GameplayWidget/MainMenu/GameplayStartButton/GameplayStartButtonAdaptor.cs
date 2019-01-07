@@ -6,7 +6,6 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IGameplayStartButtonAdaptor: IUIAdaptor{
 		IGameplayStartButton GetGameplayStartButton();
-		void ShowAD();
 	}
 	public class GameplayStartButtonAdaptor: UIAdaptor, IGameplayStartButtonAdaptor{
 		protected override IUIElement CreateUIElement(){
@@ -31,9 +30,5 @@ namespace AppleShooterProto{
 			thisGameplayStartButton.SetGameplayWidget(gameplayWidget);
 		}
 		public GameplayWidgetAdaptor gameplayWidgetAdaptor;
-		// public TestInterstitialADPlacement placement;
-		public void ShowAD(){
-			// placement.ShowAd();
-		}
 	}
 }

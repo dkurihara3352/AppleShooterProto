@@ -6,6 +6,7 @@ using UISystem;
 namespace AppleShooterProto{
 	public interface IWatchADButton: IValidatableUIElement{
 		void SetEndGamePane(IEndGamePane pane);
+		void SetDoubleEarnedCrystalsADManager(IDoubleEarnedCrystalsADManager manager);
 		void UpdateShowness(float normalizedTime);
 		void ResetWatchADButton();
 		void EnableInput();
@@ -33,19 +34,14 @@ namespace AppleShooterProto{
 		public void EnableInput(){
 			EnableInputRecursively();
 		}
-		public override void BecomeSelectableImple(){
-			base.BecomeSelectableImple();
-			// Debug.Log(DKUtility.DebugHelper.StringInColor("become selectable, isValid: " + thisIsValid.ToString(), Color.blue));
-		}
-		public override void BecomeUnselectableImple(){
-			base.BecomeUnselectableImple();
-			// Debug.Log(DKUtility.DebugHelper.StringInColor("become unselectable", Color.red));
-		}
 		protected override void OnTapImple(int tapCount){
 			base.OnTapImple(tapCount);
-			// Debug.Log("making money!");
-			//below is temp
-				thisEndGamePane.OnWatchADComplete();
+			// thisEndGamePane.OnWatchADComplete();
+			thisADManager.StartADSequence();
+		}
+		IDoubleEarnedCrystalsADManager thisADManager;
+		public void SetDoubleEarnedCrystalsADManager(IDoubleEarnedCrystalsADManager adManager){
+			thisADManager = adManager;
 		}
 		IEndGamePane thisEndGamePane;
 		public void SetEndGamePane(IEndGamePane pane){

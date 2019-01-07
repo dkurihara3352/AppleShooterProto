@@ -62,7 +62,12 @@ namespace UISystem{
 			return new PopUp(arg);
 		}
 		public override void ToggleRaycastTarget(bool blocks){
+			if(thisCanvasGroup == null)
+				thisCanvasGroup = CollectCanvasGroup();
 			thisCanvasGroup.blocksRaycasts = blocks;
+		}
+		CanvasGroup CollectCanvasGroup(){
+			return GetComponent<CanvasGroup>();
 		}
 		public float GetPopValue(){
 			switch(popUpMode){
