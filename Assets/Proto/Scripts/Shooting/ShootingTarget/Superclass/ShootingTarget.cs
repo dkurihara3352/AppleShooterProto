@@ -97,20 +97,12 @@ namespace SlickBowShooting{
 			}
 			IBellCurve thisHealthBellCurve;
 			public virtual void ActivateImple(){
-				// ToggleGameObject(true);
 				thisOriginalHealth = ResetHealth();
-				if(this.thisIsRare)
-					thisOriginalHealth *= 2;
 				thisHealth = thisOriginalHealth;
 				thisShootingTargetAdaptor.SetColor(thisDefaultColor);
 				ToggleCollider(true);
 				ToggleRenderer(true);
 
-				// thisPopUIReserve.PopText(
-				// 	this,
-				// 	GetActivationString(),
-				// 	Color.white
-				// );
 				StartSpawnAnimationProcess();
 			}
 			int ResetHealth(){
@@ -396,15 +388,30 @@ namespace SlickBowShooting{
 						colorValue
 					);
 					thisShootingTargetAdaptor.SetColor(newColor);
+
+					Color newEmissionColor = Color.Lerp(
+						thisOriginalEmissionColor,
+						thisFlashTargetColor,
+						colorValue
+					);
+					thisShootingTargetAdaptor.SetEmissionColor(newEmissionColor);
+
 				}else if(suite == thisHitAnimationProcessSuite){
 					UpdateHitScale(normalizedTime);
 				}else if(suite == thisSpawnAnimationProcessSuite){
 					UpdateSpawnScale(normalizedTime);
 				}
 			}
+			Color thisOriginalEmissionColor{
+				get{
+					return thisShootingTargetAdaptor.GetOriginalEmissionColor();
+				}
+			}
 			public void OnProcessExpire(IProcessSuite suite){
-				if(suite == thisHitFlashProcessSuite)
+				if(suite == thisHitFlashProcessSuite){
 					thisShootingTargetAdaptor.SetColor(thisDefaultColor);	
+					thisShootingTargetAdaptor.SetEmissionColor(thisOriginalEmissionColor);
+				}
 				else if(suite == thisHitAnimationProcessSuite)
 					UpdateHitScale(1f);
 				else if(suite == thisSpawnAnimationProcessSuite)

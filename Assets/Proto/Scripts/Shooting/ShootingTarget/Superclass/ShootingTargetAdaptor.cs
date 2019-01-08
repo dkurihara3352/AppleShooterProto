@@ -24,6 +24,8 @@ namespace SlickBowShooting{
 		float GetFlashProcessTime();
 		AnimationCurve GetFlashColorValueCurve();
 		Color GetDefaultColor();
+		Color GetOriginalEmissionColor();
+		void SetEmissionColor(Color color);
 
 		bool IsRare();
 		void PlayDestructionSound();
@@ -45,8 +47,9 @@ namespace SlickBowShooting{
 		public override void SetUp(){
 
 			thisColorHash = Shader.PropertyToID("_Color");
+			thisEmissionHash = Shader.PropertyToID("_Emission");
 			thisDefaultColor = GetColor();
-
+			thisOriginalEmissionColor = GetEmissionColor();
 			thisHealthBellCurve = CreateHealthBellCurve();
 			
 			thisShootingTarget = CreateShootingTarget();
@@ -166,6 +169,19 @@ namespace SlickBowShooting{
 			Color GetColor(){
 				Material mat = modelMeshRenderer.material;
 				return mat.GetColor(thisColorHash);
+			}
+			protected Color thisOriginalEmissionColor;
+			public Color GetOriginalEmissionColor(){
+				return thisOriginalEmissionColor;
+			}
+			int thisEmissionHash;
+			public Color GetEmissionColor(){
+				Material mat = modelMeshRenderer.material;
+				return mat.GetColor(thisEmissionHash);
+			}
+			public void SetEmissionColor(Color color){
+				Material mat = modelMeshRenderer.material;
+				mat.SetColor(thisEmissionHash, color);
 			}
 
 		/* Material */

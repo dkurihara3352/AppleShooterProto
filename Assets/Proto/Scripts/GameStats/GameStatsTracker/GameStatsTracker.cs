@@ -56,7 +56,7 @@ namespace SlickBowShooting{
 		}
 		int CalculateCurrencyGained(int tier){
 			if(tier == 0)
-				return 10;
+				return 20;
 			else if(tier == 1)
 				return 100;
 			else if(tier == 2)
