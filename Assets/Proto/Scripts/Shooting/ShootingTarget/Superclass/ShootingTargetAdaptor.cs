@@ -47,7 +47,7 @@ namespace SlickBowShooting{
 		public override void SetUp(){
 
 			thisColorHash = Shader.PropertyToID("_Color");
-			thisEmissionHash = Shader.PropertyToID("_Emission");
+			thisEmissionHash = Shader.PropertyToID("_EmissionColor");
 			thisDefaultColor = GetColor();
 			thisOriginalEmissionColor = GetEmissionColor();
 			thisHealthBellCurve = CreateHealthBellCurve();

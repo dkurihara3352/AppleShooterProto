@@ -311,7 +311,8 @@ namespace SlickBowShooting{
 				thisGameplayPause = pause;
 			}
 			void StopCountDownHeat(){
-				thisHeatManager.StopCountingDown();
+				thisHeatManager.StopProcessAndCountDown();
+				// thisHeatManager.StopCountingDown();
 			}
 			void MarkGameStatsTrackerGameplayEnded(){
 				thisGameStatsTracker.MarkGameplayEnded();

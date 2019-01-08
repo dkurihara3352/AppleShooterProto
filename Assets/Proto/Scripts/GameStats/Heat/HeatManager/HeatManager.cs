@@ -24,6 +24,8 @@ namespace SlickBowShooting{
 		void OnLevelUpExpire();
 
 		bool IsCountingDown();
+
+		void StopProcessAndCountDown();
 	}	
 	public class HeatManager: SlickBowShootingSceneObject, IHeatManager{
 		
@@ -209,11 +211,18 @@ namespace SlickBowShooting{
 			thisHeatLevel = thisInitHeatLevel;
 			thisHeatLevelText.SetHeatLevelText(thisHeatLevel);
 			SetAllTargetReserveTier(thisHeatLevel - 1);
+
+			thisHeatImage.UpdateHeat(thisHeat);
 		}
 
 		IColorSchemeManager thisColorSchemeManager;
 		public void SetColorSchemeManager(IColorSchemeManager manager){
 			thisColorSchemeManager = manager;
+		}
+
+		public void StopProcessAndCountDown(){
+			thisHeatImage.StopComboProcess();
+			this.StopCountingDown();
 		}
 		/*  */
 		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{

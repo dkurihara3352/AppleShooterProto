@@ -18,6 +18,8 @@ namespace SlickBowShooting{
 
 		float GetComboValue();
 		bool IsInCombo();
+
+		void StopComboProcess();
 	}
 	public class HeatImage : SlickBowShootingSceneObject, IHeatImage {
 		public HeatImage(
@@ -78,8 +80,9 @@ namespace SlickBowShooting{
 				thisComboProcessSuite.SetConstraintValue(GetComboWindowTime());
 				thisComboProcessSuite.Start();
 			}
-			void StopComboProcess(){
-				thisComboProcessSuite.Stop();
+			public void StopComboProcess(){
+				if(thisComboProcessSuite.IsRunning())
+					thisComboProcessSuite.Stop();
 			}
 			public void OnProcessRun(IProcessSuite suite){
 				return;

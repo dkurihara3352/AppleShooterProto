@@ -29,6 +29,7 @@ namespace SlickBowShooting{
 			// InitializeAD();
 			ResetInterstitialADManager();
 
+			PlayBGM();
 
 			thisGameIsReady = true;
 		}
@@ -173,6 +174,12 @@ namespace SlickBowShooting{
 				manager.ResetTimerAndCounter();
 			}
 			public InterstitialADManagerAdaptor interstitialADManagerAdaptor;
+
+			void PlayBGM(){
+				IBGMPlayer player = BGMPlayerAdaptor.GetBGMPlayer();
+				player.PlayBGM();
+			}
+			public BGMPlayerAdaptor BGMPlayerAdaptor;
 		/*  */
 			
 

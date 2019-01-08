@@ -22,7 +22,8 @@ namespace SlickBowShooting{
 		public IAudioManager GetAudioManager(){
 			return thisAudioManager;
 		}
-		public AudioSource BGMAudioSource;
+		public AudioSource BGMIntroSource;
+		public AudioSource BGMLoopSource;
 		public float minBGMVolume;
 		public float maxBGMVolume; 
 		public void SetBGMVolume(float volume){
@@ -31,7 +32,8 @@ namespace SlickBowShooting{
 				maxBGMVolume,
 				volume
 			);
-			BGMAudioSource.volume = newVolume;
+			BGMIntroSource.volume = newVolume;
+			BGMLoopSource.volume = newVolume;
 		}
 		public AudioSourceMinMaxVolumeData[] SFXAudioSourceData;
 		public void SetSFXVolume(float volume){
