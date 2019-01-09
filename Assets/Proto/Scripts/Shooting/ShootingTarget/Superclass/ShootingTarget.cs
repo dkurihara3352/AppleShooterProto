@@ -379,6 +379,14 @@ namespace SlickBowShooting{
 				IProcessSuite suite
 			){
 				if(suite == thisHitFlashProcessSuite){
+					UpdateColor(normalizedTime);
+				}else if(suite == thisHitAnimationProcessSuite){
+					UpdateHitScale(normalizedTime);
+				}else if(suite == thisSpawnAnimationProcessSuite){
+					UpdateSpawnScale(normalizedTime);
+				}
+			}
+			void UpdateColor(float normalizedTime){
 					AnimationCurve flashColorValueCurve = thisShootingTargetAdaptor.GetFlashColorValueCurve();
 					float colorValue = flashColorValueCurve.Evaluate(normalizedTime);
 					//0 => default, 1f => flashColor
@@ -388,19 +396,14 @@ namespace SlickBowShooting{
 						colorValue
 					);
 					thisShootingTargetAdaptor.SetColor(newColor);
-
-					Color newEmissionColor = Color.Lerp(
-						thisOriginalEmissionColor,
-						thisFlashTargetColor,
-						colorValue
-					);
-					thisShootingTargetAdaptor.SetEmissionColor(newEmissionColor);
-
-				}else if(suite == thisHitAnimationProcessSuite){
-					UpdateHitScale(normalizedTime);
-				}else if(suite == thisSpawnAnimationProcessSuite){
-					UpdateSpawnScale(normalizedTime);
-				}
+					if(!thisIsRare){
+						Color newEmissionColor = Color.Lerp(
+							thisOriginalEmissionColor,
+							thisFlashTargetColor,
+							colorValue
+						);
+						thisShootingTargetAdaptor.SetEmissionColor(newEmissionColor);
+					}
 			}
 			Color thisOriginalEmissionColor{
 				get{
@@ -409,8 +412,7 @@ namespace SlickBowShooting{
 			}
 			public void OnProcessExpire(IProcessSuite suite){
 				if(suite == thisHitFlashProcessSuite){
-					thisShootingTargetAdaptor.SetColor(thisDefaultColor);	
-					thisShootingTargetAdaptor.SetEmissionColor(thisOriginalEmissionColor);
+					UpdateColor(1f);
 				}
 				else if(suite == thisHitAnimationProcessSuite)
 					UpdateHitScale(1f);
