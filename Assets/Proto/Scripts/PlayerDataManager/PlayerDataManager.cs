@@ -59,6 +59,7 @@ namespace SlickBowShooting{
 			string GetDebugString();
 		/* Other */
 			void ClearBowConfigData(int bowIndex);
+			void ClearAllBowConfigData();
 	}
 	public class PlayerDataManager : SlickBowShootingSceneObject, IPlayerDataManager {
 		public PlayerDataManager(
@@ -212,6 +213,23 @@ namespace SlickBowShooting{
 							result = i;
 					}
 					return result;
+				}
+
+				// public void ClearPlayerDataFile(){
+				// 	if(PlayerDataIsLoaded())
+				// 		Save();
+				// 	string filePath = GetFilePaths()[thisFileIndex];
+				// 	System.IO.File.Delete(filePath);
+				// 	MakeSurePlayerDataFileExists();
+				// }	
+				public void ClearAllBowConfigData(){
+					if(!PlayerDataIsLoaded())
+						Load();
+					
+					IBowConfigData[] bowConfigDataArray = CreateInitializedBowCofigDataArray();
+					thisPlayerData.SetBowConfigDataArray(bowConfigDataArray);
+					SetEquippedBow(0);
+					Save();
 				}
 		/* Fields */
 			int thisBowCount = 3;

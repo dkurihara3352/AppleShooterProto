@@ -30,6 +30,7 @@ namespace SlickBowShooting{
 		public GameObject landedArrowPrefab;
 		ILandedArrowAdaptor[] thisLandedArrowAdaptors;
 		IArrowTwangAdaptor[] thisArrowTwangAdaptors;
+		public ParticleSystem hitParticle;
 		ILandedArrowAdaptor[] CreateLandedArrowAdaptors(){
 
 			List<ILandedArrowAdaptor> resultList = new List<ILandedArrowAdaptor>();

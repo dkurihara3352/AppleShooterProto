@@ -580,6 +580,7 @@ namespace SlickBowShooting{
 				DrawGameplayControl(sTL_2);
 				DrawColorSchemeControl(sTL_3);
 				DrawADTestControl(sTL_4);
+				DrawFileClear(sTL_5);
 			}
 
 			void DrawGameplayControl(Rect rect){
@@ -639,6 +640,19 @@ namespace SlickBowShooting{
 
 			}
 			public ADManagerAdaptor doubleEarnedCrystalsADManagerAdaptor;
+
+			void DrawFileClear(Rect rect){
+				IPlayerDataManager playerDataManager = playerDataManagerAdaptor.GetPlayerDataManager();
+				if(playerDataManager != null){
+					if(GUI.Button(
+						rect,
+						"Clear Bow Config Data"
+					))
+						playerDataManager.ClearAllBowConfigData();
+				}
+			}
+
+
 		/* Bottom Left */
 			void DrawBottomLeft(){
 				// DrawArrowsState(bottomLeftRect);

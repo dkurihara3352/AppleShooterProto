@@ -17,7 +17,7 @@ namespace SlickBowShooting{
 		}
 		public void PlayBGM(){
 			thisBGMPlayerAdaptor.PlayIntroAudioSource();
-			thisBGMPlayerAdaptor.PlayLoopAudioSourceDelayed();
+			// thisBGMPlayerAdaptor.PlayLoopAudioSourceDelayed();
 		}
 	}
 }
