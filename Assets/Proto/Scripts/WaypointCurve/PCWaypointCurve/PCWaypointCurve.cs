@@ -6,13 +6,17 @@ namespace SlickBowShooting{
 	public interface IPCWaypointCurve: IWaypointCurve{
 		void SetLevelSectionShootingTargetSpawner(ILevelSectionShootingTargetSpawner spawner);
 		void SetUpTargetSpawnEvents();
-		void DespawnTargets();
 		void SetSubordinateCurves(IWaypointCurve[] curves);
+		void SetLevelMechanisms(ILevelMechanism[] mechanisms);
+		void DespawnTargets();
 	}
 	public class PCWaypointCurve: AbsWaypointCurve, IPCWaypointCurve{
 		public PCWaypointCurve(IConstArg arg): base(arg){}
 		public override void OnReserve(){
 			DespawnTargets();
+			ToggleObstacleColliders(false);
+			ToggleRenderers(false);
+			CallAllLevelMechanismsOnLevelDeactivate();
 		}
 		IPCWaypointCurveAdaptor thisPCWaypointCurveAdaptor{
 			get{
@@ -27,8 +31,6 @@ namespace SlickBowShooting{
 			
 			public void DespawnTargets(){
 				thisSpawner.Despawn();
-				ToggleObstacleColliders(false);
-				ToggleRenderers(false);
 			}
 			IShootingTargetSpawnWaypointEvent[] thisSpawnEvents;
 			public override IWaypointEvent[] GetWaypointEvents(){
@@ -67,12 +69,26 @@ namespace SlickBowShooting{
 			public override void OnUnreserve(){
 				ToggleObstacleColliders(true);
 				ToggleRenderers(true);
+				CallAllLevelMechanismOnLevelActivate();
 			}
 			void ToggleObstacleColliders(bool toggled){
 				thisPCWaypointCurveAdaptor.ToggleObstacleColliders(toggled);
 			}
 			void ToggleRenderers(bool toggled){
 				thisPCWaypointCurveAdaptor.ToggleRenderers(toggled);
+			}
+		/*  */
+			void CallAllLevelMechanismsOnLevelDeactivate(){
+				foreach(ILevelMechanism mech in thisLevelMechanisms)
+					mech.OnLevelDeactivate();
+			}
+			void CallAllLevelMechanismOnLevelActivate(){
+				foreach(ILevelMechanism mech in thisLevelMechanisms)
+					mech.OnLevelActivate();
+			}
+			ILevelMechanism[] thisLevelMechanisms;
+			public void SetLevelMechanisms(ILevelMechanism[] mechanisms){
+				thisLevelMechanisms = mechanisms;
 			}
 	}
 }

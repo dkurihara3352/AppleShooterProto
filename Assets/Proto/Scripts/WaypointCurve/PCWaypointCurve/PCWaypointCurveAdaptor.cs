@@ -30,6 +30,9 @@ namespace SlickBowShooting{
 
 			IWaypointCurve[] subordinateCurves = CollectSubordinateCurves();
 			thisTypedCurve.SetSubordinateCurves(subordinateCurves);
+
+			ILevelMechanism[] mechanisms = CollectLevelMechanisms();
+			thisTypedCurve.SetLevelMechanisms(mechanisms);
 		}
 		public GlidingTargetWaypointCurveGroupAdaptor gliderWaypointCurveGroupAdaptor;
 		IWaypointCurve[] CollectSubordinateCurves(){
@@ -57,5 +60,17 @@ namespace SlickBowShooting{
 		MeshRenderer[] CollectMeshRenderers(){
 			return levelParent.GetComponentsInChildren<MeshRenderer>();
 		}
+		ILevelMechanism[] CollectLevelMechanisms(){
+			List<ILevelMechanism> resultList = new List<ILevelMechanism>();
+			Component[] components = levelMechanismParent.GetComponentsInChildren<Component>();
+			foreach(Component comp in components){
+				if(comp is ILevelMechanismAdaptor){
+					ILevelMechanism mech = ((ILevelMechanismAdaptor)comp).GetLevelMechanism();
+					resultList.Add(mech);
+				}
+			}
+			return resultList.ToArray();
+		}
+		public Transform levelMechanismParent;
 	}
 }
