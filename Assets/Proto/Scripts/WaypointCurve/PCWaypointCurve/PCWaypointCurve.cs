@@ -28,6 +28,7 @@ namespace SlickBowShooting{
 			public void DespawnTargets(){
 				thisSpawner.Despawn();
 				ToggleObstacleColliders(false);
+				ToggleRenderers(false);
 			}
 			IShootingTargetSpawnWaypointEvent[] thisSpawnEvents;
 			public override IWaypointEvent[] GetWaypointEvents(){
@@ -65,9 +66,13 @@ namespace SlickBowShooting{
 		/*  */
 			public override void OnUnreserve(){
 				ToggleObstacleColliders(true);
+				ToggleRenderers(true);
 			}
 			void ToggleObstacleColliders(bool toggled){
 				thisPCWaypointCurveAdaptor.ToggleObstacleColliders(toggled);
+			}
+			void ToggleRenderers(bool toggled){
+				thisPCWaypointCurveAdaptor.ToggleRenderers(toggled);
 			}
 	}
 }
