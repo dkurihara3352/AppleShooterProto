@@ -14,7 +14,11 @@ namespace SlickBowShooting{
 		public override void OnReserve(){
 			DespawnTargets();
 		}
-
+		IPCWaypointCurveAdaptor thisPCWaypointCurveAdaptor{
+			get{
+				return (IPCWaypointCurveAdaptor)thisAdaptor;
+			}
+		}
 		ILevelSectionShootingTargetSpawner thisSpawner;
 		public void SetLevelSectionShootingTargetSpawner(ILevelSectionShootingTargetSpawner spawner){
 			thisSpawner = spawner;
@@ -23,6 +27,7 @@ namespace SlickBowShooting{
 			
 			public void DespawnTargets(){
 				thisSpawner.Despawn();
+				ToggleObstacleColliders(false);
 			}
 			IShootingTargetSpawnWaypointEvent[] thisSpawnEvents;
 			public override IWaypointEvent[] GetWaypointEvents(){
@@ -58,6 +63,12 @@ namespace SlickBowShooting{
 				}
 			}
 		/*  */
+			public override void OnUnreserve(){
+				ToggleObstacleColliders(true);
+			}
+			void ToggleObstacleColliders(bool toggled){
+				thisPCWaypointCurveAdaptor.ToggleObstacleColliders(toggled);
+			}
 	}
 }
 

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlickBowShooting{
-	public interface IPCWaypointCurveAdaptor: IWaypointCurveAdaptor{}
+	public interface IPCWaypointCurveAdaptor: IWaypointCurveAdaptor{
+		void ToggleObstacleColliders(bool toggled);
+	}
 	public class PCWaypointCurveAdaptor: AbsWaypointCurveAdaptor, IPCWaypointCurveAdaptor{
 		public override void SetUp(){
 			Calculate();
@@ -13,6 +15,7 @@ namespace SlickBowShooting{
 				thisCurvePoints
 			);
 			thisWaypointCurve = new PCWaypointCurve(arg);
+			thisLevelColliders = CollectLevelColliders();
 		}
 		IPCWaypointCurve thisTypedCurve{
 			get{return thisWaypointCurve as IPCWaypointCurve;}
@@ -34,6 +37,15 @@ namespace SlickBowShooting{
 				resultList.Add(curveAdaptor.GetWaypointCurve());
 			}
 			return resultList.ToArray();
+		}
+		public void ToggleObstacleColliders(bool toggled){
+			foreach(Collider col in thisLevelColliders)
+				col.enabled = toggled;
+		}
+		public Transform levelParent;
+		Collider[] thisLevelColliders;
+		Collider[] CollectLevelColliders(){
+			return levelParent.GetComponentsInChildren<Collider>();
 		}
 	}
 }
