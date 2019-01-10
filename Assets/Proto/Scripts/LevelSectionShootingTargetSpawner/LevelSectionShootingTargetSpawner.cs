@@ -43,23 +43,23 @@ namespace SlickBowShooting{
 			List<IShootingTargetSpawnWaypointEvent> resultList = new List<IShootingTargetSpawnWaypointEvent>();
 
 			foreach(TargetSpawnData.Entry entry in entries){
-			
-				int spawnCount = entry.numToCreate;
-				IShootingTargetSpawnPoint[] spawnPoints = entry.spawnPoints;
-				int spawnPointCount = spawnPoints.Length;
-
-				int[] spawnPointIndicesToSpawn = DKUtility.Calculator.GetRandomIntegers(
-					count: spawnCount, 
-					maxNumber: spawnPointCount -1
-				);
-				
-				IShootingTargetSpawnWaypointEvent[] eventsForEntry = CreateSpawnEventsForEntry(
-					// entry,
-					spawnPoints,
-					entry.reserve,
-					spawnPointIndicesToSpawn
-				);
-				resultList.AddRange(eventsForEntry);
+				if(entry.numToCreate != 0){
+					int spawnCount = entry.numToCreate;
+					IShootingTargetSpawnPoint[] spawnPoints = entry.spawnPoints;
+					int spawnPointCount = spawnPoints.Length;
+					int[] spawnPointIndicesToSpawn = DKUtility.Calculator.GetRandomIntegers(
+						count: spawnCount, 
+						maxNumber: spawnPointCount -1
+					);
+					
+					IShootingTargetSpawnWaypointEvent[] eventsForEntry = CreateSpawnEventsForEntry(
+						// entry,
+						spawnPoints,
+						entry.reserve,
+						spawnPointIndicesToSpawn
+					);
+					resultList.AddRange(eventsForEntry);
+				}
 
 			}
 			return resultList.ToArray();

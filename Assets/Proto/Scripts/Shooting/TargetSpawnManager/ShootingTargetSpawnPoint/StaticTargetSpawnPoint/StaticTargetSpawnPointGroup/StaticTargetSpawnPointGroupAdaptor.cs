@@ -23,8 +23,10 @@ namespace SlickBowShooting{
 			return new StaticTargetSpawnPointGroup(arg);
 		}
 		protected override IShootingTargetSpawnPointAdaptor[] CollectSpawnPointAdaptors(){
-			return CollectTypedSpawnPointAdaptorFromChildren<IStaticTargetSpawnPointAdaptor>();
+			// return CollectTypedSpawnPointAdaptorFromChildren<IStaticTargetSpawnPointAdaptor>();
+			return staticSpawnPointAdaptors;
 		}
+		public StaticTargetSpawnPointAdaptor[] staticSpawnPointAdaptors;
 	}
 }
 
