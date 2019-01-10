@@ -20,7 +20,7 @@ namespace SlickBowShooting{
 		public void SetSmoothLooker(ISmoothLooker looker){
 			thisCameraPivotSmoothLooker = looker;
 		}
-		protected override void ExecuteImple(){
+		protected override void ExecuteImple(IWaypointsFollower follower){
 			thisCameraPivotSmoothLooker.SetSmoothCoefficient(thisSmoothCoefficient);
 			thisCameraPivotSmoothLooker.SetLookAtTarget(thisTargetMBAdaptor);
 		}

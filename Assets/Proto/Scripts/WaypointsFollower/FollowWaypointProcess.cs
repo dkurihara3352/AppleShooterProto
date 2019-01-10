@@ -73,7 +73,10 @@ namespace SlickBowShooting{
 						);
 						thisCycleManager.CycleCurve();
 						MoveFollower();
-						thisWaypointEventManager.ExecuteWaypointEventsUpTo(residualTime);
+						thisWaypointEventManager.ExecuteWaypointEventsUpTo(
+							thisFollower,
+							residualTime
+						);
 					}else{
 						Expire();
 					}
@@ -108,7 +111,10 @@ namespace SlickBowShooting{
 				targetForwardDirection,
 				targetUpDirection
 			);
-			thisWaypointEventManager.CheckForWaypointEvent(normalizedTime);
+			thisWaypointEventManager.CheckForWaypointEvent(
+				thisFollower,
+				normalizedTime
+			);
 
 			thisFollower.SetElapsedTimeOnCurrentCurve(thisTotalElapsedTimeOnCurrentCurve);
 		}

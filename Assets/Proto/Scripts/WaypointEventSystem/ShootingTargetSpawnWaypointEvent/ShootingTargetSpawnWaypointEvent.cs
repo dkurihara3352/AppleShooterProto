@@ -17,7 +17,7 @@ namespace SlickBowShooting{
 			thisShootingTargetSpawnPoint = arg.shootingTargetSpawnPoint;
 			thisSpawner = arg.targetSpawner;
 		}
-		protected override void ExecuteImple(){
+		protected override void ExecuteImple(IWaypointsFollower follower){
 			thisShootingTargetReserve.ActivateShootingTargetAt(thisShootingTargetSpawnPoint);
 		}
 		IShootingTargetSpawnPoint thisShootingTargetSpawnPoint;

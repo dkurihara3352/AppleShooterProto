@@ -17,7 +17,7 @@ namespace SlickBowShooting{
 		public void SetFollower(IWaypointsFollower follower){
 			thisFollower = follower;
 		}
-		protected override void ExecuteImple(){
+		protected override void ExecuteImple(IWaypointsFollower follower){
 			Debug.Log(
 				"normPos: " + thisFollower.GetNormalizedPositionInCurve().ToString() + ", \n" +
 				thisString

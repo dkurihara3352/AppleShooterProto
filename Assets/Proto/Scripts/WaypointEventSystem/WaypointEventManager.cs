@@ -4,10 +4,16 @@ using UnityEngine;
 
 namespace SlickBowShooting{
 	public interface IWaypointEventManager{
-		void CheckForWaypointEvent(float normalizedPositionOnCurve);
+		void CheckForWaypointEvent(
+			IWaypointsFollower follower,
+			float normalizedPositionOnCurve
+		);
 		void SetNewCurve(IWaypointCurve curve);
 		void SetInitialEventPoint(float eventPoint);
-		void ExecuteWaypointEventsUpTo(float eventPoint);
+		void ExecuteWaypointEventsUpTo(
+			IWaypointsFollower follower,
+			float eventPoint
+		);
 	}
 	public class WaypointEventManager : IWaypointEventManager {
 		IWaypointCurve thisCurrentCurve;
@@ -36,7 +42,10 @@ namespace SlickBowShooting{
 			}
 			return result;
 		}
-		public void CheckForWaypointEvent(float normalizedPositionOnCurve){
+		public void CheckForWaypointEvent(
+			IWaypointsFollower follower,
+			float normalizedPositionOnCurve
+		){
 			while(true){
 				if(thisCurrentWaypontCurveEvents.Count != 0){
 					IWaypointEvent nextWaypontEvent = thisCurrentWaypontCurveEvents.Peek();
@@ -45,7 +54,7 @@ namespace SlickBowShooting{
 						if(eventPoint >= thisInitialEventPoint){
 							nextWaypontEvent = thisCurrentWaypontCurveEvents.Dequeue();
 							if(!nextWaypontEvent.IsExecuted())
-								nextWaypontEvent.Execute();
+								nextWaypontEvent.Execute(follower);
 						}
 					}else{
 						break;
@@ -55,11 +64,14 @@ namespace SlickBowShooting{
 				}
 			}
 		}
-		public void ExecuteWaypointEventsUpTo(float eventPoint){
+		public void ExecuteWaypointEventsUpTo(
+			IWaypointsFollower follower,
+			float eventPoint
+		){
 
 			foreach(IWaypointEvent wpEvent in thisCurrentCurve.GetWaypointEvents())
 				if(wpEvent.GetEventPoint() < eventPoint)
-					wpEvent.Execute();
+					wpEvent.Execute(follower);
 		}
 	}
 }

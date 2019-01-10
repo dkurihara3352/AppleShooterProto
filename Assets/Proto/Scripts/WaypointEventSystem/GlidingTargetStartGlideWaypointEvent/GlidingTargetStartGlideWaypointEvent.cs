@@ -18,7 +18,7 @@ namespace SlickBowShooting{
 		public void SetGlidingTargetSpawnPoint(IGlidingTargetSpawnPoint point){
 			thisGlidingTargetSpawnPoint = point;
 		}
-		protected override void ExecuteImple(){
+		protected override void ExecuteImple(IWaypointsFollower follower){
 			thisGlidingTargetReserve.ActivateShootingTargetAt(
 				thisGlidingTargetSpawnPoint
 			);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SlickBowShooting{
 	public interface IWaypointEvent{
-		void Execute();
+		void Execute(IWaypointsFollower follower);
 		float GetEventPoint();
 		string GetName();
 		bool IsExecuted();
@@ -25,14 +25,14 @@ namespace SlickBowShooting{
 		public bool IsExecuted(){
 			return thisIsExecuted;
 		}
-		public void Execute(){
+		public void Execute(IWaypointsFollower follwer){
 			if(this.IsExecutable()){
 				thisIsExecuted = true;
-				ExecuteImple();
+				ExecuteImple(follwer);
 			}
 		}
 		protected virtual bool IsExecutable(){return true;}
-		protected abstract void ExecuteImple();
+		protected abstract void ExecuteImple(IWaypointsFollower follower);
 		public abstract string GetName();
 		public virtual void Reset(){
 			thisIsExecuted = false;

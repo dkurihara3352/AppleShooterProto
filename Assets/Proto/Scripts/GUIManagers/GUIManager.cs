@@ -883,8 +883,8 @@ namespace SlickBowShooting{
 				// DrawBowData(sub_1);
 				// DrawLandedArrows(bottomRightRect);
 				
-				// DrawWaypointEvents(bottomRightRect);
-				DrawInterstitialADManager(bottomRightRect);
+				DrawWaypointEvents(bottomRightRect);
+				// DrawInterstitialADManager(bottomRightRect);
 			}
 			void DrawPlayerData(Rect rect){
 				if(thisSystemIsReady){

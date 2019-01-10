@@ -16,7 +16,7 @@ namespace SlickBowShooting{
 		public void SetPCWaypointsManager(IPCWaypointsManager pcWaypointsManager){
 			thisPCWaypointsManager = pcWaypointsManager;
 		}
-		protected override void ExecuteImple(){
+		protected override void ExecuteImple(IWaypointsFollower follower){
 			IPCWaypointCurve nextCurve = thisPCWaypointsManager.GetNextPCCurve();
 			if(nextCurve != null)
 				nextCurve.SetUpTargetSpawnEvents();
