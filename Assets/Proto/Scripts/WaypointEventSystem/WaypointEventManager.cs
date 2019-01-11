@@ -53,8 +53,13 @@ namespace SlickBowShooting{
 					if(eventPoint <= normalizedPositionOnCurve){
 						if(eventPoint >= thisInitialEventPoint){
 							nextWaypontEvent = thisCurrentWaypontCurveEvents.Dequeue();
-							if(!nextWaypontEvent.IsExecuted())
+							if(!nextWaypontEvent.IsExecuted()){
+								Debug.Log(
+									"eventPoint: " + eventPoint.ToString() + ", " +
+									"normPoint: " + normalizedPositionOnCurve.ToString()
+								);
 								nextWaypontEvent.Execute(follower);
+							}
 						}
 					}else{
 						break;

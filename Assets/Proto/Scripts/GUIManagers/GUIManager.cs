@@ -39,7 +39,7 @@ namespace SlickBowShooting{
 				normalizedPosition: new Vector2(0f, 1f)
 			);
 			bottomRightRect = GetGUIRect(
-				normalizedSize: new Vector2(.5f, .5f),
+				normalizedSize: new Vector2(.5f, 1f),
 				normalizedPosition: new Vector2(1f, 1f)
 			);
 		}

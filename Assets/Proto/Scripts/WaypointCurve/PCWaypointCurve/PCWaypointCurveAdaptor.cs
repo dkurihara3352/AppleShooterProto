@@ -6,6 +6,9 @@ namespace SlickBowShooting{
 	public interface IPCWaypointCurveAdaptor: IWaypointCurveAdaptor{
 		void ToggleObstacleColliders(bool toggled);
 		void ToggleRenderers(bool toggled);
+
+		void EnableGameObject();
+		void DisableGameObject();
 	}
 	public class PCWaypointCurveAdaptor: AbsWaypointCurveAdaptor, IPCWaypointCurveAdaptor{
 		public override void SetUp(){
@@ -72,5 +75,11 @@ namespace SlickBowShooting{
 			return resultList.ToArray();
 		}
 		public Transform levelMechanismParent;
+		public void EnableGameObject(){
+			this.gameObject.SetActive(true);
+		}
+		public void DisableGameObject(){
+			this.gameObject.SetActive(false);
+		}
 	}
 }

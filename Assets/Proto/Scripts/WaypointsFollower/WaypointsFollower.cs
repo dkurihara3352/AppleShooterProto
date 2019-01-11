@@ -55,6 +55,7 @@ namespace SlickBowShooting{
 			thisProcess.Run();
 		}
 		IFollowWaypointProcess CreateFollowProcess(){
+			Debug.Log(GetName() + " is starting to follow, elapsedTime is " + thisElapsedTimeOnCurrentCurve.ToString());
 			return thisSlickBowShootingProcessFactory.CreateFollowWaypointProcess(
 				this,
 				thisFollowSpeed,
@@ -141,6 +142,7 @@ namespace SlickBowShooting{
 		public void ResetFollower(){
 			StopFollowing();
 			thisElapsedTimeOnCurrentCurve = 0f;
+			Debug.Log(GetName() + " is reset follower");
 		}
 
 		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{

@@ -13,10 +13,15 @@ namespace SlickBowShooting{
 		public override string GetName(){
 			return "DeactivateGliderWaypointEvent";
 		}
-		protected override void ExecuteImple(IWaypointsFollower follower){
-			IGliderWaypointsFollower gliderWaypointsFollower = (IGliderWaypointsFollower)follower;
-			IGlidingTarget glider = gliderWaypointsFollower.GetGlider();
-			glider.Deactivate();
+		protected override void ExecuteImple(
+			IWaypointsFollower follower
+		){
+			if(follower.GetCurrentWaypointCurve() == thisDeactivateGliderWaypointEventAdaptor.GetThisGlidingTargetWaypointCurve()){
+				IGliderWaypointsFollower gliderWaypointsFollower = (IGliderWaypointsFollower)follower;
+				IGlidingTarget glider = gliderWaypointsFollower.GetGlider();
+				Debug.Log(glider.GetName() + " is Deactivated");
+				glider.Deactivate();
+			}
 		}
 
 		/* Const */
