@@ -9,7 +9,7 @@ namespace SlickBowShooting{
 
 		public override void SetUp(){
 			thisSpawnPoint = CreateSpawnPoint();
-			DisableAllMeshRenderer();
+			// DisableAllMeshRenderer();
 		}
 		IStaticTargetSpawnPoint CreateSpawnPoint(){
 			StaticTargetSpawnPoint.IConstArg arg = new StaticTargetSpawnPoint.ConstArg(

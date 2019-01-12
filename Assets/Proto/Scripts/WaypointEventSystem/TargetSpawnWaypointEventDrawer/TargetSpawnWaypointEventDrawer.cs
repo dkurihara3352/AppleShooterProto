@@ -22,7 +22,8 @@ namespace SlickBowShooting{
 					resultList.AddRange(groupAdaptor.GetAdaptors());
 			return resultList.ToArray();
 		}
-
+		public TriggerMotorMechanismWaypointEventAdaptor[] triggerMotorMechanismWaypointEventAdaptors;
+		public bool drawTriggers = true;
 
 		public Color lineColor;
 		public bool drawsStatics = true;
@@ -42,6 +43,18 @@ namespace SlickBowShooting{
 							
 							Gizmos.DrawLine(position, eventPointPosition);
 						}
+					}
+				}
+			}
+			if(drawTriggers){
+				foreach(ITriggerMotorMechanismWaypointEventAdaptor adaptor in triggerMotorMechanismWaypointEventAdaptors){
+					// ITriggerMotorMechanismWaypointEvent wpEvent = adaptor.GetTriggerMotorMechanismWaypointEvent();
+					Vector3 position = adaptor.GetMechanismPosition();
+					float eventPoint = adaptor.GetEventPoint();
+					if(pcWaypointCurveAdaptor != null){
+						Vector3 eventPointPosition = pcWaypointCurveAdaptor.GetPositionOnCurve(eventPoint);
+						
+						Gizmos.DrawLine(position, eventPointPosition);
 					}
 				}
 			}
