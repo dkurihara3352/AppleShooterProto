@@ -142,7 +142,6 @@ namespace SlickBowShooting{
 		public void ResetFollower(){
 			StopFollowing();
 			thisElapsedTimeOnCurrentCurve = 0f;
-			Debug.Log(GetName() + " is reset follower");
 		}
 
 		public new interface IConstArg: SlickBowShootingSceneObject.IConstArg{

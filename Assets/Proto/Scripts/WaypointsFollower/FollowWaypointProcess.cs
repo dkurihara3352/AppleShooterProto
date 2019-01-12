@@ -45,7 +45,6 @@ namespace SlickBowShooting{
 			thisFollower.SetWaypointCurve(curve);
 			thisRequiredTimeForCurrentCurve = curve.GetTotalDistance() / thisSpeed;
 			thisTotalElapsedTimeOnCurrentCurve = initialTime;
-			Debug.Log("initTime: "+ initialTime.ToString());
 			thisWaypointEventManager.SetNewCurve(curve);
 			float initialEventPoint = 0f;
 			if(initialTime != 0f)

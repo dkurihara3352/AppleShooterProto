@@ -18,7 +18,6 @@ namespace SlickBowShooting{
 			Deactivate();
 			SetSpawnPoint(point);
 			Activate();
-			Debug.Log(GetName() + " is Activated at " + point.GetName());
 		}
 		IGlidingTargetSpawnPoint thisSpawnPoint;
 		void SetSpawnPoint(IGlidingTargetSpawnPoint point){
@@ -32,7 +31,6 @@ namespace SlickBowShooting{
 			ClearSpawnPoint();
 			StopGlide();
 			thisWaypointsFollower.ResetFollower();
-			// Debug.Log(DKUtility.DebugHelper.StringInColor(GetName() + " is deac'd", Color.red));
 		}
 		void ClearSpawnPoint(){
 			if(thisSpawnPoint != null)
@@ -42,10 +40,6 @@ namespace SlickBowShooting{
 			thisWaypointsFollower.SetWaypointCurve(null);
 		}
 		public override void ActivateImple(){
-			// Debug.Log(
-			// 	DKUtility.DebugHelper.StringInColor(GetName() + "'s ActivateImple is called", Color.green)
-			// );
-			Debug.Log(GetName() + "'s ActivateImple is reached");
 			base.ActivateImple();
 			StartGlide();
 		}
