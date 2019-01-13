@@ -11,13 +11,14 @@ namespace SlickBowShooting{
 				return CollectDrawableCurve();
 			}
 		}
+		public bool drawsGliderCurves = false;
 		IDrawableCurve[] CollectDrawableCurve(){
 			List<IDrawableCurve> resultList = new List<IDrawableCurve>();
 			if(waypointsCurveAdaptors != null)
 				foreach(IWaypointCurveAdaptor curveAdaptor in waypointsCurveAdaptors){
 					resultList.Add((IDrawableCurve)curveAdaptor);
 				}
-			if(glidingTargetWaypointCurveGroupAdaptors != null){
+			if(glidingTargetWaypointCurveGroupAdaptors != null && drawsGliderCurves){
 				foreach(IGlidingTargetWaypointCurveGroupAdaptor waypointCurveGroupAdaptor in glidingTargetWaypointCurveGroupAdaptors){
 					if(waypointCurveGroupAdaptor != null)
 						resultList.AddRange(waypointCurveGroupAdaptor.GetCurveAdaptors());
@@ -46,29 +47,19 @@ namespace SlickBowShooting{
 					Color handleColor = curve.GetHandleColor();
 					Gizmos.color = handleColor;
 					Vector3 foreHandlePosition = controlPoint.GetForeHandle().position;
-					// Gizmos.DrawCube(
-					// 	foreHandlePosition,
-					// 	curve.GetControlPointHandleSize()
-					// );
+
 					Gizmos.DrawLine(
 						controlPointPosition,
 						foreHandlePosition
 					);
 					Vector3 backHandlePosition = controlPoint.GetBackHandle().position;
-					// Gizmos.DrawCube(
-					// 	backHandlePosition,
-					// 	curve.GetControlPointHandleSize()
-					// );
 					Gizmos.DrawLine(
 						controlPointPosition,
 						backHandlePosition
 					);
 
 					Gizmos.color = curve.GetControlPointColor();
-					// Gizmos.DrawCube(
-					// 	controlPointPosition,
-					// 	curve.GetControlPointDrawSize()
-					// );
+
 				}
 
 				ICurvePoint[] curvePoints = curve.GetCurvePoints();
