@@ -78,22 +78,22 @@ namespace SlickBowShooting{
 		public ArrowReserveAdaptor arrowReserveAdaptor;
 		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		void OnGUI(){
-			CalcRects();
+			// CalcRects();
 			/* left */
-				DrawControl();
-				DrawBottomLeft();
+				// DrawControl();
+				// DrawBottomLeft();
 			/* right */
 				// DrawCurrentState(sTR_1);
 				// DrawScrollMultiplier();
 				// DrawLaunchAngle();
 				// DrawFlightSpeed();
 				// DrawWaypointsFollower(sTR_1);
-				DrawCurveSequence(sTR_2);
+				// DrawCurveSequence(sTR_2);
 				// DrawSpawnIndices(sTR_4);
 				// DrawShootingMetrics(sTR_3);
 				// DrawWaypointEvents(bottomRightRect);
 				// DrawScrollerDebug(bottomRightRect);
-				DrawBottomRight();
+				// DrawBottomRight();
 		}
 		/* left */
 			int thisControlContext = 0;
