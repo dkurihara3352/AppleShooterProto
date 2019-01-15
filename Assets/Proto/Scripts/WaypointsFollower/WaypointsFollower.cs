@@ -55,7 +55,6 @@ namespace SlickBowShooting{
 			thisProcess.Run();
 		}
 		IFollowWaypointProcess CreateFollowProcess(){
-			Debug.Log(GetName() + " is starting to follow, elapsedTime is " + thisElapsedTimeOnCurrentCurve.ToString());
 			return thisSlickBowShootingProcessFactory.CreateFollowWaypointProcess(
 				this,
 				thisFollowSpeed,
