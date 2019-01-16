@@ -78,9 +78,9 @@ namespace SlickBowShooting{
 		public ArrowReserveAdaptor arrowReserveAdaptor;
 		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		void OnGUI(){
-			// CalcRects();
+			CalcRects();
 			/* left */
-				// DrawControl();
+				DrawControl();
 				// DrawBottomLeft();
 			/* right */
 				// DrawCurrentState(sTR_1);
@@ -93,7 +93,7 @@ namespace SlickBowShooting{
 				// DrawShootingMetrics(sTR_3);
 				// DrawWaypointEvents(bottomRightRect);
 				// DrawScrollerDebug(bottomRightRect);
-				// DrawBottomRight();
+				DrawBottomRight();
 		}
 		/* left */
 			int thisControlContext = 0;
@@ -796,34 +796,34 @@ namespace SlickBowShooting{
 					IWaypointCurve currentCurve = curveManager.GetAllWaypointCurves()[currentCurveIndex];
 					IWaypointEvent[] evnets = currentCurve.GetWaypointEvents();
 					result += "curve id: " + currentCurve.GetIndex().ToString() + "\n";
-					foreach(IWaypointEvent wpEvent in evnets){
-						string thisEventString = "\n";
-						thisEventString += wpEvent.GetName() + ": " + wpEvent.GetEventPoint().ToString("N2");
-						TargetType thisType = TargetType.Flyer;
-						bool isRare = false;
-						if(wpEvent is IShootingTargetSpawnWaypointEvent){
-							IShootingTargetSpawnWaypointEvent spawnEvent = (IShootingTargetSpawnWaypointEvent)wpEvent;
-							isRare = spawnEvent.IsRare();
-							thisType = spawnEvent.GetTargetType();
-							IShootingTargetSpawnPoint spawnPoint = spawnEvent.GetSpawnPoint();
-							thisEventString += ", sp: " + spawnPoint.GetName();
-							IShootingTarget target = spawnPoint.GetSpawnedTarget();
-							if(target != null)
-								thisEventString += ", tar: " + target.GetName();
-							else
-								thisEventString += ", tar: null";
+					// foreach(IWaypointEvent wpEvent in evnets){
+					// 	string thisEventString = "\n";
+					// 	thisEventString += wpEvent.GetName() + ": " + wpEvent.GetEventPoint().ToString("N2");
+					// 	TargetType thisType = TargetType.Flyer;
+					// 	bool isRare = false;
+					// 	if(wpEvent is IShootingTargetSpawnWaypointEvent){
+					// 		IShootingTargetSpawnWaypointEvent spawnEvent = (IShootingTargetSpawnWaypointEvent)wpEvent;
+					// 		isRare = spawnEvent.IsRare();
+					// 		thisType = spawnEvent.GetTargetType();
+					// 		IShootingTargetSpawnPoint spawnPoint = spawnEvent.GetSpawnPoint();
+					// 		thisEventString += ", sp: " + spawnPoint.GetName();
+					// 		IShootingTarget target = spawnPoint.GetSpawnedTarget();
+					// 		if(target != null)
+					// 			thisEventString += ", tar: " + target.GetName();
+					// 		else
+					// 			thisEventString += ", tar: null";
 
-						}
-						Color col = GetStringColorForType(thisType, isRare);
-						thisEventString = DKUtility.DebugHelper.StringInColor(thisEventString, col);
-						result += thisEventString;
-						string executedString = ", ";
-						if(!wpEvent.IsExecuted())
-							executedString += "pending";
-						else
-							executedString += DKUtility.DebugHelper.RedString("executed");
-						result += executedString;
-					}
+					// 	}
+					// 	Color col = GetStringColorForType(thisType, isRare);
+					// 	thisEventString = DKUtility.DebugHelper.StringInColor(thisEventString, col);
+					// 	result += thisEventString;
+					// 	string executedString = ", ";
+					// 	if(!wpEvent.IsExecuted())
+					// 		executedString += "pending";
+					// 	else
+					// 		executedString += DKUtility.DebugHelper.RedString("executed");
+					// 	result += executedString;
+					// }
 					GUI.Label(
 						rect,
 						result
@@ -883,7 +883,7 @@ namespace SlickBowShooting{
 				// DrawBowData(sub_1);
 				// DrawLandedArrows(bottomRightRect);
 				
-				// DrawWaypointEvents(bottomRightRect);
+				DrawWaypointEvents(bottomRightRect);
 				// DrawInterstitialADManager(bottomRightRect);
 			}
 			void DrawPlayerData(Rect rect){
