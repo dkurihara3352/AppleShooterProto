@@ -19,7 +19,6 @@ namespace SlickBowShooting{
 			if(follower.GetCurrentWaypointCurve() == thisDeactivateGliderWaypointEventAdaptor.GetThisGlidingTargetWaypointCurve()){
 				IGliderWaypointsFollower gliderWaypointsFollower = (IGliderWaypointsFollower)follower;
 				IGlidingTarget glider = gliderWaypointsFollower.GetGlider();
-				Debug.Log(glider.GetName() + " is Deactivated");
 				glider.Deactivate();
 			}
 		}
