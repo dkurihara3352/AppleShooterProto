@@ -7,6 +7,8 @@ namespace SlickBowShooting{
 	public interface IVolumeControlScroller: IGenericSingleElementScroller{
 		void SetGameConfigWidget(IGameConfigWidget widget);
 		void SetVolumeVisual(float volume);
+
+		void SetReady();
 	}
 	public class VolumeControlScroller: GenericSingleElementScroller, IVolumeControlScroller{
 		public VolumeControlScroller(IConstArg arg): base(arg){
@@ -19,16 +21,21 @@ namespace SlickBowShooting{
 		public void SetVolumeVisual(float volume){
 			PlaceScrollerElement(1f - volume, 0);
 		}
+		bool thisIsReady = false;
+		public void SetReady(){
+			thisIsReady = true;
+		}
 		protected override void OnScrollerElementDisplace(float normalizedCursoredPositionOnAxis, int dimension){
-			if(thisGameConfigWidget != null){
-				if(dimension == 0){
-					float newVolume = 1f - normalizedCursoredPositionOnAxis;
-					if(thisControlsBGM)
-						thisGameConfigWidget.SetBGMVolume(newVolume);
-					else
-						thisGameConfigWidget.SetSFXVolume(newVolume);
+			if(thisIsReady)
+				if(thisGameConfigWidget != null){
+					if(dimension == 0){
+						float newVolume = 1f - normalizedCursoredPositionOnAxis;
+						if(thisControlsBGM)
+							thisGameConfigWidget.SetBGMVolume(newVolume);
+						else
+							thisGameConfigWidget.SetSFXVolume(newVolume);
+					}
 				}
-			}
 		}
 		bool thisControlsBGM{
 			get{

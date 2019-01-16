@@ -12,18 +12,26 @@ namespace SlickBowShooting{
 			return thisGameIsReady;
 		}
 		void OnEnable(){
+			// SceneManager.activeSceneChanged += OnSceneChange;
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 		public void OnSceneLoaded(Scene scene, LoadSceneMode mode){
-			if(scene.buildIndex == 0){
-				Debug.Log("scene 0 loaded");
+			if(scene.buildIndex == 1){
+				Debug.Log("scene 1 loaded");
 				StartUp();
 			}
 		}
+		// public void OnSceneChange(Scene from, Scene to){
+		// 	Debug.Log("from: " + from.buildIndex.ToString() + ", to: " + to.buildIndex.ToString());
+		// 	if(to.buildIndex ==  1){
+		// 		StartUp();
+		// 	}
+		// }
 		// public void Start(){
 		// 	StartUp();
 		// }
 		public void StartUp(){
+			SetActiveUIRoots();
 			SetUp();
 			ActivateRootUI();
 			WarmUp();
@@ -42,6 +50,12 @@ namespace SlickBowShooting{
 			PlayBGM();
 
 			thisGameIsReady = true;
+		}
+		public Canvas sceneUICanvas;
+		public GameObject rootUIGO;
+		void SetActiveUIRoots(){
+			sceneUICanvas.gameObject.SetActive(true);
+			rootUIGO.SetActive(true);
 		}
 		public StartupManagerAdaptor startupManagerAdaptor;
 		public void SetUp(){

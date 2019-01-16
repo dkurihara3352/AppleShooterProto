@@ -111,9 +111,11 @@ namespace SlickBowShooting{
 				thisPlayerDataManager.Load();
 			float bgmVolume = thisPlayerDataManager.GetBGMVolume();
 			thisBGMVolumeControlScroller.SetVolumeVisual(bgmVolume);
+			thisBGMVolumeControlScroller.SetReady();
 
 			float sfxVolume = thisPlayerDataManager.GetSFXVolume();
 			thisSFXVolumeControlScroller.SetVolumeVisual(sfxVolume);
+			thisSFXVolumeControlScroller.SetReady();
 		}
 		IVolumeControlScroller thisBGMVolumeControlScroller;
 		public void SetBGMVolumeControlScroller(IVolumeControlScroller scroller){
