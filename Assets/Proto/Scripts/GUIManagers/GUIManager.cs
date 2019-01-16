@@ -78,9 +78,9 @@ namespace SlickBowShooting{
 		public ArrowReserveAdaptor arrowReserveAdaptor;
 		public UISystem.UIManagerAdaptor uiManagerAdaptor;
 		void OnGUI(){
-			CalcRects();
+			// CalcRects();
 			/* left */
-				DrawControl();
+				// DrawControl();
 				// DrawBottomLeft();
 			/* right */
 				// DrawCurrentState(sTR_1);

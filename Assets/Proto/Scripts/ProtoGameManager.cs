@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UISystem;
 using DKUtility;
+using UnityEngine.SceneManagement;
 
 namespace SlickBowShooting{
 	public class ProtoGameManager : MonoBehaviour{
@@ -10,9 +11,18 @@ namespace SlickBowShooting{
 		public bool GameIsReady(){
 			return thisGameIsReady;
 		}
-		public void Start(){
-			StartUp();
+		void OnEnable(){
+			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
+		public void OnSceneLoaded(Scene scene, LoadSceneMode mode){
+			if(scene.buildIndex == 0){
+				Debug.Log("scene 0 loaded");
+				StartUp();
+			}
+		}
+		// public void Start(){
+		// 	StartUp();
+		// }
 		public void StartUp(){
 			SetUp();
 			ActivateRootUI();
